@@ -1089,6 +1089,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
             limit: 6
         }
     },
+    
+
 
 
 };

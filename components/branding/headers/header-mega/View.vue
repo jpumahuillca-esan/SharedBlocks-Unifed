@@ -8,7 +8,7 @@
     <header class="navbar-main">
       <div class="navbar-container-wrapper">
         <!-- Logo -->
-        <component :is="linkTag" v-bind="getLinkProps('/')" class="logo-box">
+        <component :is="linkTag" v-bind="getLinkProps(safeConfig.urlRedict)" class="logo-box">
           <img 
             v-if="safeConfig.logoUrl || 'http://127.0.0.1:8000/storage/media/main/2026/08/1787694395_logoesan.webp'" 
             :src="safeConfig.logoUrl || 'http://127.0.0.1:8000/storage/media/main/2026/08/1787694395_logoesan.webp'" 
@@ -93,6 +93,7 @@ const verifySearchAcademicUnit = computed(() => {
 
 const safeConfig = computed(() => ({
   logoUrl: props.config?.logoUrl || '',
+  urlRedict: props.config?.urlRedict || '/',
   logoHeight: Number(props.config?.logoHeight) || 65,
   sticky: props.config?.sticky ?? true,
 }));

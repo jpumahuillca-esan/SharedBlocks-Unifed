@@ -54,6 +54,7 @@ export const EDITOR_REGISTRY: Record<string, any> = {
     DirectorioAutoridadesAll: defineAsyncComponent(() => import('../components/riesgo/grid/updates/DirectorioAutoridadesAllEditor.vue')),
     DirectorioEspecialistas: defineAsyncComponent(() => import('../components/riesgo/grid/updates/DirectorioEspecialistasEditor.vue')),
     HeroWelcome: defineAsyncComponent(() => import('../components/sections/hero/editors/HeroWelcomeEditor.vue'))
+    
 };
 
 export const resolveEditor = (type: string) => EDITOR_REGISTRY[type] || null;
