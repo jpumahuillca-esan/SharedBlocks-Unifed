@@ -131,7 +131,7 @@
 </template>
 
 <script setup lang="ts">
-import AtomHeading from '../../../../ui/atoms/AtomHeading.vue';
+import AtomHeading from '../../../../atoms/AtomHeading.vue';
 import { ref, computed, watch } from 'vue';
 import { useDynamicLink } from '../../../../../composables/useDynamicLink';
 

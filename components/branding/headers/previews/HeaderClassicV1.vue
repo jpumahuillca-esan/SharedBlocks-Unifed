@@ -160,7 +160,7 @@
 </template>
 
 <script setup lang="ts">
-import AtomHeading from '../../../ui/atoms/AtomHeading.vue';
+import AtomHeading from '../../../atoms/AtomHeading.vue';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({

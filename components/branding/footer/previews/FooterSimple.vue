@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AtomText from '../../../ui/atoms/AtomText.vue';
+import AtomText from '../../../atoms/AtomText.vue';
 import { computed } from 'vue';
 
 const props = defineProps<{ config: any }>();

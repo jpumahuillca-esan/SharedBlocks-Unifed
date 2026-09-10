@@ -56,8 +56,8 @@
 </template>
 
 <script setup lang="ts">
-import AtomHeading from '../../../ui/atoms/AtomHeading.vue';
-import AtomText from '../../../ui/atoms/AtomText.vue';
+import AtomHeading from '../../../atoms/AtomHeading.vue';
+import AtomText from '../../../atoms/AtomText.vue';
 
 type AgreementColor = 'red' | 'blue'
 interface Agreement {

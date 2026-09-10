@@ -82,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import AtomText from '../../../ui/atoms/AtomText.vue';
+import AtomText from '../../../atoms/AtomText.vue';
 interface CTAButton {
   text: string;
   url: string;
