@@ -1,0 +1,68 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Button Group (control segmentado de selección única,
+   texto o solo ícono).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Button Group ---", ~líneas
+   2072-2109) y assets/js/main.js, función initButtonGroups() (~línea
+   433): click en un ítem desactiva a sus hermanos y se activa a sí
+   mismo (selección única). Acá esa lógica se resuelve con v-model en
+   MoleculeButtonGroup.vue, no manipulando el DOM a mano como en
+   webunificada.
+
+   COLISIÓN CONFIRMADA con Bootstrap 5: ".btn-group" es un nombre de
+   clase EXACTO de Bootstrap 5 (su propio grupo de botones — ya se usa
+   así, con markup Bootstrap nativo, en varios paneles de editor, ver
+   Editor.vue de acuerdos-scroll-hub/section-mission-vision/
+   mision-vision). Igual que con .card/.form-select/.progress/
+   .pagination/.breadcrumb, el markup real de webunificada usa
+   ".btn-group" SOLO en su caso base (sin modificador:
+   "<div class="btn-group">"), así que se inventa el mismo marcador
+   técnico "--arcis" que agrega MoleculeButtonGroup.vue automáticamente,
+   para que la regla real exija selector compuesto y nunca coincida con
+   un <div class="btn-group"> plano de Bootstrap.
+
+   ".btn-group__item" es BEM y no colisiona con Bootstrap (que arma sus
+   grupos con ".btn" normales, no con ".btn-group__item"), va bare.
+   ============================================================ */
+
+.arcis-scope {
+  .btn-group.btn-group--arcis {
+    display: inline-flex;
+    border: var(--border-width-sm) solid var(--border-color-light);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .btn-group__item {
+    padding: var(--space-2) var(--space-5);
+    font-size: var(--text-sm);
+    font-family: var(--font-body);
+    color: var(--arcis-color-text-secondary);
+    background-color: var(--neutrals-0);
+    border-right: var(--border-width-sm) solid var(--border-color-light);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    transition: background-color var(--ease-fast), color var(--ease-fast);
+  }
+
+  .btn-group__item:last-child {
+    border-right: none;
+  }
+
+  .btn-group__item svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .btn-group__item:hover {
+    background-color: var(--neutrals-50);
+  }
+
+  .btn-group__item.is-active {
+    background-color: var(--arcis-color-global-main);
+    color: var(--arcis-color-text-inverse);
+  }
+}

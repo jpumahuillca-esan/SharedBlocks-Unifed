@@ -1,0 +1,45 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Utilidades responsivas (clases atómicas tipo Tailwind/Bootstrap).
+
+   webunificada no define ninguna clase utilitaria — es un sistema
+   de clases de componente (.btn, .card, .badge...), no utility-first.
+   Esto es infraestructura nueva de nuestra librería, construida
+   sobre los breakpoints reales de webunificada (breakpoints.scss).
+
+   Arranca con utilidades de "display" (la más pedida en la práctica:
+   mostrar/ocultar según el tamaño de pantalla). Se agregan más
+   categorías (spacing, texto, etc.) a medida que se necesiten,
+   siguiendo el mismo patrón.
+
+   Nomenclatura: estilo Bootstrap (infijo, sin ":"), para no
+   necesitar escapar el selector y quedar consistente con el resto
+   del stack (front/public-site ya cargan Bootstrap).
+   Base:        .d-none, .d-block, .d-inline, .d-inline-block, .d-flex, .d-grid
+   Responsiva:  .d-{sm|md|lg|xl}-none, .d-{sm|md|lg|xl}-flex, etc.
+   (activa desde ese breakpoint hacia arriba, mobile-first — igual
+   que Bootstrap Grid, que es la escala de la que salen los valores).
+   ============================================================ */
+
+@use './breakpoints' as bp;
+
+$display-values: none, inline, inline-block, block, flex, grid, inline-flex;
+$responsive-breakpoints: 'sm', 'md', 'lg', 'xl';
+
+.arcis-scope {
+  @each $value in $display-values {
+    .d-#{$value} {
+      display: #{$value} !important;
+    }
+  }
+
+  @each $name in $responsive-breakpoints {
+    @include bp.breakpoint-up($name) {
+      @each $value in $display-values {
+        .d-#{$name}-#{$value} {
+          display: #{$value} !important;
+        }
+      }
+    }
+  }
+}

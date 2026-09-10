@@ -1,0 +1,75 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Progress bars (barra lineal con etiqueta, variantes
+   semánticas).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Progress bars ---", ~líneas
+   1843-1882).
+
+   COLISIÓN CONFIRMADA con Bootstrap 5: ".progress" es un nombre de
+   clase EXACTO de Bootstrap 5 (el contenedor de su propia barra de
+   progreso, con las mismas propiedades: height/background/border-radius/
+   overflow). Aunque hoy no hay un bloque real usándolo, front ya carga
+   Bootstrap Vue Next globalmente — mismo riesgo que .btn/.badge/.card/
+   .alert/.form-select/.form-check, así que se protege igual de forma
+   preventiva.
+
+   Igual que con .card/.form-select (ver _cards.scss/_forms.scss), el
+   markup real de webunificada usa ".progress" SOLO en su caso base (sin
+   modificador: "<div class="progress">"), así que se inventa el mismo
+   marcador técnico "--arcis" que agrega AtomProgress.vue automáticamente,
+   para que la regla real exija selector compuesto y nunca coincida con
+   un <div class="progress"> plano de Bootstrap.
+
+   ".progress.progress--sm" (no ".progress--sm" a secas): necesita igual
+   especificidad que la base compuesta (".progress.progress--arcis") para
+   poder pisarle la altura — si tuviera menos especificidad, perdería
+   aunque venga después (mismo bug ya visto en .btn--sm/.badge--brand-solid).
+
+   ".progress-group"/".progress-group__meta"/".progress__bar" no
+   colisionan con Bootstrap (Bootstrap usa ".progress-bar", un solo
+   guion, nombre distinto de nuestro ".progress__bar" BEM), van bare.
+   ============================================================ */
+
+.arcis-scope {
+  .progress-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .progress-group__meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--text-sm);
+    color: var(--arcis-color-text-secondary);
+  }
+
+  .progress.progress--arcis {
+    width: 100%;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background-color: var(--neutrals-200);
+    overflow: hidden;
+  }
+
+  .progress__bar {
+    height: 100%;
+    border-radius: var(--radius-full);
+    background-color: var(--arcis-color-global-main);
+    transition: width var(--ease-slow);
+  }
+
+  .progress.progress--sm {
+    height: 4px;
+  }
+
+  .progress--success .progress__bar {
+    background-color: var(--success-dark);
+  }
+
+  .progress--warning .progress__bar {
+    background-color: var(--warning-dark);
+  }
+}

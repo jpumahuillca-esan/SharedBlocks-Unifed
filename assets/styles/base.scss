@@ -1,0 +1,138 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Reset y reglas base de elemento (h1-h6, a, button, listas,
+   inputs, foco).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", líneas 199-272 — sección "2. RESET").
+
+   Esto es lo que da estilo real a los átomos de tipografía
+   (ui/atoms/AtomHeading.vue, AtomText.vue): los átomos no
+   redeclaran tamaños/pesos propios, dependen de que estas
+   reglas de elemento ya estén cargadas.
+
+   IMPORTANTE — por qué está todo bajo .arcis-scope:
+   Esta librería la consume tanto public-site (Nuxt, dueño de
+   toda la página, ahí SÍ correspondería un reset a nivel de
+   documento como en webunificada) como front (SPA de admin que
+   YA tiene su propio documento con Bootstrap Vue Next). Importar
+   un reset universal (*, html, body) sin aislar rompe el panel
+   de administración completo: un `*{margin:0;padding:0}` global
+   descuadra el layout de Bootstrap, y los `h1`-`h6` de aquí pisan
+   la tipografía del admin. Por eso todo queda bajo `.arcis-scope`:
+   solo se aplica donde algo la incluya explícitamente en su
+   template (hoy: los contenedores de front donde se renderizan
+   bloques del constructor de páginas — ver CanvasArea.vue,
+   PageView.vue, etc). public-site puede envolver su layout raíz
+   completo con esta misma clase cuando adopte estos estilos.
+   ============================================================ */
+
+.arcis-scope {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  font-weight: var(--weight-regular);
+  color: var(--arcis-color-text-primary);
+  /* Sin esto, el contenido se pinta sobre lo que sea que tenga de fondo el
+     contenedor donde se renderiza (ej. el gris del canvas del editor en
+     front), en vez de un fondo propio — un bloque/elemento real siempre
+     debe verse sobre blanco, como en una página real. */
+  background-color: var(--neutrals-0);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  ul,
+  ol {
+    list-style: none;
+  }
+
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: var(--weight-semibold);
+    line-height: 1.15;
+  }
+
+  h1 { font-size: var(--text-h1); }
+  h2 { font-size: var(--text-h2); }
+  h3 { font-size: var(--text-h3); }
+  h4 { font-size: var(--text-h4); }
+  h5 { font-size: var(--text-h5); }
+  h6 { font-size: var(--text-h6); }
+
+  /* Foco visible siempre — accesibilidad de teclado */
+  :focus-visible {
+    outline: 2px solid var(--arcis-color-global-main);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ============================================================
+   Reset a nivel de documento (html/body/scroll-behavior).
+   Deliberadamente NO se activa por defecto — solo tiene sentido
+   cuando esta librería controla la página completa (public-site).
+   Importar y usar explícitamente (@use './base' as base; luego
+   @include base.document-reset;) desde la app que sí sea dueña
+   de todo el documento.
+   ============================================================ */
+@mixin document-reset {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    font-weight: var(--weight-regular);
+    color: var(--arcis-color-text-primary);
+    background-color: var(--neutrals-0);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}

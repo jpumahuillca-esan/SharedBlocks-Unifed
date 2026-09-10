@@ -1,0 +1,233 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Botones.
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Botones ---", ~líneas 984-1158).
+
+   Igual que en base.scss: todo va bajo .arcis-scope porque la
+   clase ".btn" de ARCIS colisiona con la ".btn" de Bootstrap (que
+   ya usa front). Sin aislar, esto pisaría el estilo de TODOS los
+   botones del panel de administración, no solo los de los bloques.
+
+   IMPORTANTE — por qué las reglas base usan ".btn.btn--*" en vez
+   de ".btn" a secas: varios bloques reales (HeroWelcome, AcuerdosScrollHub,
+   NoticiasEventosHub, HeaderBtn, Form, etc.) ya traían sus propios botones
+   con clases nativas de Bootstrap, class="btn btn-primary" (guion simple).
+   Un selector ".btn" a secas (misma especificidad que el ".btn" de
+   Bootstrap, cargado después) les pisaba el tamaño/padding/display a
+   ESOS botones también, no solo a los de AtomButton — rompía el layout
+   de cualquier bloque con botones nativos apenas se renderizaba dentro
+   del editor. Exigir un modificador ARCIS (doble guion, "--") junto a
+   ".btn" hace que la regla solo aplique a botones que de verdad pasan
+   por AtomButton.vue (que siempre agrega "btn--{variant}"), y nunca a
+   "btn btn-primary" de Bootstrap.
+
+   Nota: la guía viva ui-kit.html describe los botones como "forma
+   pill (--radius-full)", pero el CSS real usa --radius-xs (4px).
+   Se portó el CSS real (fuente de verdad), no la descripción textual
+   desactualizada — pendiente de corregir en origen (webunificada).
+   ============================================================ */
+
+.arcis-scope {
+  .btn.btn--primary,
+  .btn.btn--secondary,
+  .btn.btn--terciary,
+  .btn.btn--white,
+  .btn.btn--link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    border-radius: var(--radius-xs);
+    font-family: var(--font-display);
+    font-weight: var(--weight-medium);
+    font-size: var(--text-body);
+    line-height: 1;
+    min-height: var(--space-7);
+    white-space: nowrap;
+    cursor: pointer;
+    border: var(--border-width-md) solid transparent;
+    padding: var(--space-3) var(--space-6);
+    transition: background-color var(--ease-fast), color var(--ease-fast), border-color var(--ease-fast), transform var(--ease-fast);
+  }
+
+  .btn.btn--primary svg,
+  .btn.btn--secondary svg,
+  .btn.btn--terciary svg,
+  .btn.btn--white svg,
+  .btn.btn--link svg {
+    width: 16px;
+    height: 16px;
+    transition: transform var(--ease-fast);
+  }
+
+  .btn.btn--primary:active,
+  .btn.btn--secondary:active,
+  .btn.btn--terciary:active,
+  .btn.btn--white:active,
+  .btn.btn--link:active {
+    transform: scale(0.97);
+  }
+
+  .btn.btn--primary:disabled,
+  .btn.btn--secondary:disabled,
+  .btn.btn--terciary:disabled,
+  .btn.btn--white:disabled,
+  .btn.btn--link:disabled,
+  .btn.is-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* .btn.btn--sm (no ".btn--sm" a secas): necesita la misma especificidad
+     que la regla base de arriba (.btn.btn--{variante}) para poder pisarle
+     el padding/font-size — si tuviera menos especificidad, la regla base
+     seguiría ganando aunque venga después en el archivo, y los 3 tamaños
+     se verían idénticos (bug real que pasó antes de este ajuste). */
+  .btn.btn--sm {
+    padding: var(--space-2) var(--space-5);
+    font-size: var(--text-sm);
+    min-height: var(--space-5);
+  }
+
+  .btn.btn--lg {
+    padding: var(--space-4) var(--space-7);
+    font-size: var(--text-body-lg);
+  }
+
+  .btn.btn--primary {
+    background-color: var(--arcis-color-global-main);
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .btn.btn--secondary {
+    background-color: transparent;
+    border-color: var(--arcis-color-global-main);
+    color: var(--arcis-color-global-main);
+    transition: color var(--ease-slow), border-color var(--ease-fast), transform var(--ease-fast);
+  }
+
+  .btn.btn--secondary:hover {
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .btn.btn--terciary {
+    background-color: var(--arcis-color-text-primary);
+    color: var(--arcis-color-text-inverse);
+  }
+
+  /* Variante "white": CTA principal sobre fondos rojos/oscuros (ej. Hero) */
+  .btn.btn--white {
+    background-color: var(--neutrals-0);
+    color: var(--arcis-color-global-main);
+  }
+
+  /* Hover "persiana horizontal": lamas que se despliegan de izquierda a derecha
+     revelando el tono de acento, como una persiana al cerrarse */
+  .btn--primary,
+  .btn--secondary,
+  .btn--terciary,
+  .btn--white {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .btn--primary::before,
+  .btn--secondary::before,
+  .btn--terciary::before,
+  .btn--white::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--ease-slow);
+  }
+
+  .btn--primary::before {
+    background: var(--corp-primary-dark);
+  }
+
+  .btn--secondary::before {
+    background: var(--corp-primary-dark);
+  }
+
+  .btn--terciary::before {
+    background: var(--corp-secondary-dark);
+  }
+
+  .btn--white::before {
+    background: var(--corp-primary-dark);
+  }
+
+  .btn--primary:hover::before,
+  .btn--secondary:hover::before,
+  .btn--terciary:hover::before,
+  .btn--white:hover::before {
+    transform: scaleX(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn--primary::before,
+    .btn--secondary::before,
+    .btn--terciary::before,
+    .btn--white::before {
+      transition: none;
+    }
+
+    .btn--secondary {
+      transition: color var(--ease-fast), border-color var(--ease-fast), transform var(--ease-fast);
+    }
+  }
+
+  /* Variante "inverse": btn--secondary y btn--link legibles sobre fondos oscuros */
+  .btn--secondary.btn--negative {
+    border-color: var(--arcis-color-text-inverse);
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .btn--secondary.btn--negative::before {
+    background: var(--neutrals-0);
+  }
+
+  .btn--secondary.btn--negative:hover {
+    color: var(--arcis-color-global-main);
+  }
+
+  .btn.btn--link {
+    border-radius: 0;
+    padding: 0;
+    background: none;
+    color: var(--arcis-color-global-main);
+    font-weight: var(--weight-semibold);
+  }
+
+  .btn.btn--link:hover {
+    color: var(--arcis-color-global-main);
+  }
+
+  .btn.btn--link:hover svg {
+    transform: translateX(4px);
+  }
+
+  .btn.btn--link.btn--negative {
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .btn.btn--link.btn--negative:hover {
+    color: var(--arcis-color-text-inverse);
+  }
+
+  /* .btn.btn--icon (no ".btn--icon" a secas): igual razón que .btn--sm/.btn--lg
+     más arriba — sin el prefijo ".btn", su "padding" pierde contra la regla
+     base y el botón queda ancho en vez de cuadrado, apretando/recortando
+     visualmente cualquier ícono adentro. */
+  .btn.btn--icon {
+    padding: var(--space-3);
+    aspect-ratio: 1;
+  }
+}

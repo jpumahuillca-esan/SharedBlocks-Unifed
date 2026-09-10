@@ -4,8 +4,8 @@
             <div class="col-lg-8">
                 <div class="mb-4 text-center">
                     <span v-if="data.category_name" class="badge bg-primary mb-3">{{ data.category_name }}</span>
-                    <h1 class="fw-bold display-5 mb-3">{{ data.title }}</h1>
-                    <p v-if="data.excerpt" class="lead text-muted">{{ data.excerpt }}</p>
+                    <AtomHeading :level="1" class="fw-bold display-5 mb-3">{{ data.title }}</AtomHeading>
+                    <AtomText v-if="data.excerpt" class="lead text-muted">{{ data.excerpt }}</AtomText>
                     
                     <div class="d-flex align-items-center justify-content-center gap-3 mt-4 text-muted small">
                         <div v-if="authorName" class="d-flex align-items-center">
@@ -34,6 +34,8 @@
 </template>
 
 <script setup lang="ts">
+import AtomHeading from '../../ui/atoms/AtomHeading.vue';
+import AtomText from '../../ui/atoms/AtomText.vue';
 import { computed } from 'vue';
 import { formatImageUrl } from '../../../helpers/url';
 

@@ -1,16 +1,17 @@
 {
   "name": "shared-blocks",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Libreria de componentes Vue 3 compartida entre front y public-site. Se consume como codigo fuente via el alias @shared (no tiene build propio ni entry point unico): cada archivo se importa por su ruta directa, nunca por el nombre del paquete.",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
+    "@lucide/vue": "^1.43.0",
     "@vueup/vue-quill": "^1.2.0",
     "axios": "^1.16.0",
     "bootstrap-vue-next": "^0.45.1",

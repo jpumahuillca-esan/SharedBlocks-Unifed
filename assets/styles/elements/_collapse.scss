@@ -1,0 +1,111 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Collapse (panel expandible individual — pieza base de un
+   acordeón de FAQs).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Collapse ---", ~líneas
+   2111-2169) y assets/js/main.js, función initCollapse() (~línea 445):
+   cada ".collapse" alterna su propio "is-open" al hacer click en su
+   trigger — son independientes entre sí, no es un acordeón exclusivo
+   (abrir uno no cierra los demás). Acá esa lógica es un simple toggle
+   por instancia en MoleculeCollapse.vue, no manipulación del DOM.
+
+   COLISIÓN CONFIRMADA con Bootstrap 5: ".collapse" es un nombre de
+   clase EXACTO de Bootstrap 5 (su propia utilidad de colapsar, con su
+   propio plugin JS). Igual que con .card/.form-select/.progress/
+   .pagination/.breadcrumb/.btn-group, el markup real de webunificada
+   usa ".collapse" SOLO en su caso base (sin modificador estructural —
+   "is-open" es un estado, no cuenta), así que se inventa el mismo
+   marcador técnico "--arcis" que agrega MoleculeCollapse.vue
+   automáticamente, para que la regla real exija selector compuesto y
+   nunca coincida con un <div class="collapse"> plano de Bootstrap.
+
+   COLISIÓN EN SENTIDO INVERSO (nueva, no vista en los Elementos
+   anteriores): front carga el SCSS completo de Bootstrap 5 en
+   app.scss ("@import node_modules/bootstrap/scss/bootstrap"), que
+   define ".collapse:not(.show) { display: none; }". Nuestro elemento
+   sigue teniendo la clase base ".collapse" (nunca ".show", usamos
+   ".is-open"), así que ESA regla de Bootstrap lo sigue alcanzando y
+   lo oculta por completo (todo el bloque queda en blanco), sin importar
+   que ".collapse--arcis" evite que NUESTRAS reglas pisen markup de
+   Bootstrap — el marcador "--arcis" solo protege en un sentido, no
+   evita que Bootstrap nos alcance a nosotros. Por eso acá SÍ hace falta
+   declarar "display: block" explícito (webunificada no lo necesita, no
+   tiene Bootstrap cargado) — es la única forma de ganarle a esa regla,
+   ya que si no declaramos "display" en absoluto no hay nada que
+   comparar en la cascada y la de Bootstrap simplemente aplica.
+
+   ".collapse + .collapse" (paneles apilados sin doble borde entre sí,
+   como un acordeón) también se protege con el marcador en ambos lados,
+   por consistencia.
+
+   ".collapse__trigger"/".collapse__panel"/".collapse__panel-inner"/
+   ".collapse__body" son BEM y no colisionan con Bootstrap, van bare.
+
+   La animación usa "display: grid; grid-template-rows: 0fr → 1fr"
+   (truco moderno de CSS, sin necesidad de calcular alturas en JS) —
+   se porta tal cual, ningún ajuste.
+   ============================================================ */
+
+.arcis-scope {
+  .collapse.collapse--arcis {
+    display: block;
+    border: var(--border-width-sm) solid var(--border-color-light);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .collapse.collapse--arcis + .collapse.collapse--arcis {
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .collapse__trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-5);
+    text-align: left;
+    background-color: var(--neutrals-0);
+    font-family: var(--font-body);
+    font-weight: var(--weight-medium);
+    font-size: var(--text-body);
+    color: var(--arcis-color-text-primary);
+  }
+
+  .collapse__trigger svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--arcis-color-text-secondary);
+    transition: transform var(--ease-base);
+  }
+
+  .collapse.collapse--arcis.is-open .collapse__trigger svg {
+    transform: rotate(180deg);
+  }
+
+  .collapse__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--ease-base);
+  }
+
+  .collapse.collapse--arcis.is-open .collapse__panel {
+    grid-template-rows: 1fr;
+  }
+
+  .collapse__panel-inner {
+    overflow: hidden;
+  }
+
+  .collapse__body {
+    padding: 0 var(--space-5) var(--space-4);
+    color: var(--arcis-color-text-secondary);
+    font-size: var(--text-body);
+  }
+}

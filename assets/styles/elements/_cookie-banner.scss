@@ -1,0 +1,84 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Cookie Banner (aviso fijo al pie, variante oscura y clara).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Cookie Banner ---", ~líneas
+   1975-2034) y assets/js/main.js, función initCookieBanner() (~línea
+   404): guarda el consentimiento en localStorage (clave
+   "arcis-cookie-consent"), oculta el banner si ya hay un valor
+   guardado, muestra el banner si no. Ese comportamiento vive en
+   MoleculeCookieBanner.vue, no acá.
+
+   ".cookie-banner"/".cookie-banner__*"/".cookie-banner--light" no son
+   clases de Bootstrap ni colisionan con nada en components/blocks
+   (verificado), así que van bare, sin el modificador obligatorio que sí
+   necesitan .btn/.badge/.card/.alert/.progress/.pagination.
+
+   ".cookie-banner--preview" (position: absolute, transform: none en vez
+   de fixed/translateY) se porta por la misma razón que
+   ".scroll-top--preview": sin ella, el banner real (position: fixed)
+   se escaparía del recuadro de vista previa.
+   ============================================================ */
+
+.arcis-scope {
+  .cookie-banner {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding: var(--space-5) var(--space-6);
+    background-color: var(--neutrals-900);
+    color: var(--arcis-color-text-inverse);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(100%);
+    transition: transform var(--ease-slow);
+    z-index: 95;
+  }
+
+  .cookie-banner.is-visible {
+    transform: translateY(0);
+  }
+
+  .cookie-banner--preview {
+    position: absolute;
+    transform: none;
+  }
+
+  .cookie-banner__text {
+    max-width: 640px;
+    font-size: var(--text-sm);
+    color: var(--neutrals-300);
+  }
+
+  .cookie-banner__text a {
+    color: var(--arcis-color-text-inverse);
+    text-decoration: underline;
+  }
+
+  .cookie-banner__actions {
+    display: flex;
+    gap: var(--space-3);
+    flex-shrink: 0;
+  }
+
+  .cookie-banner--light {
+    background-color: var(--neutrals-100);
+    color: var(--arcis-color-text-primary);
+    border-top: var(--border-width-sm) solid var(--border-color-light);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .cookie-banner--light .cookie-banner__text {
+    color: var(--arcis-color-text-secondary);
+  }
+
+  .cookie-banner--light .cookie-banner__text a {
+    color: var(--arcis-color-text-primary);
+  }
+}

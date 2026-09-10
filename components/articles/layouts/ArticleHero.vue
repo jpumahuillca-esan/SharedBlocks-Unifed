@@ -18,13 +18,13 @@
                             {{ data.category_name }}
                         </span>
                         
-                        <h1 class="fw-bold display-4 text-white mb-3" style="line-height: 1.2; word-break: break-word;">
+                        <AtomHeading :level="1" class="fw-bold display-4 text-white mb-3" style="line-height: 1.2; word-break: break-word;">
                             {{ data.title || 'Título de la Noticia' }}
-                        </h1>
+                        </AtomHeading>
                         
-                        <p v-if="data.excerpt" class="lead text-light mb-4 opacity-75">
+                        <AtomText v-if="data.excerpt" class="lead text-light mb-4 opacity-75">
                             {{ data.excerpt }}
-                        </p>
+                        </AtomText>
                         
                         <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-3 mt-4">
                             <img v-if="authorAvatar" 
@@ -58,9 +58,9 @@
                     </div>
 
                     <div v-if="tags && tags.length" class="mt-5 pt-4 border-top">
-                        <h6 class="text-muted fw-bold mb-3 text-uppercase small tracking-wide">
+                        <AtomHeading :level="6" class="text-muted fw-bold mb-3 text-uppercase small tracking-wide">
                             Temas relacionados
-                        </h6>
+                        </AtomHeading>
                         <div class="d-flex flex-wrap gap-2">
                             <span v-for="tag in tags" :key="tag" 
                                   class="badge bg-light text-secondary border px-3 py-2 fw-normal">
@@ -76,6 +76,8 @@
 </template>
 
 <script setup lang="ts">
+import AtomHeading from '../../ui/atoms/AtomHeading.vue';
+import AtomText from '../../ui/atoms/AtomText.vue';
 import { computed } from 'vue';
 import { formatImageUrl } from '../../../helpers/url';
 

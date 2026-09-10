@@ -1,0 +1,59 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Breadcrumb (ruta de navegación jerárquica; el último
+   ítem no es un link).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Breadcrumb ---", ~líneas
+   2036-2070).
+
+   COLISIÓN CONFIRMADA con Bootstrap 5: ".breadcrumb" es un nombre de
+   clase EXACTO de Bootstrap 5 (su propio contenedor de breadcrumb).
+   Igual que con .card/.form-select/.progress/.pagination, el markup
+   real de webunificada usa ".breadcrumb" SOLO en su caso base (sin
+   modificador: "<nav class="breadcrumb">"), así que se inventa el
+   mismo marcador técnico "--arcis" que agrega MoleculeBreadcrumb.vue
+   automáticamente, para que la regla real exija selector compuesto y
+   nunca coincida con un <nav class="breadcrumb"> plano de Bootstrap.
+
+   ".breadcrumb__item"/".breadcrumb__link"/".breadcrumb__current" son
+   BEM y no colisionan con Bootstrap (que usa ".breadcrumb-item", un
+   solo guion, nombre distinto), van bare.
+   ============================================================ */
+
+.arcis-scope {
+  .breadcrumb.breadcrumb--arcis {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--arcis-color-text-secondary);
+  }
+
+  .breadcrumb__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .breadcrumb__item svg {
+    width: 14px;
+    height: 14px;
+    color: var(--neutrals-400);
+  }
+
+  .breadcrumb__link {
+    color: var(--arcis-color-text-secondary);
+    transition: color var(--ease-fast);
+  }
+
+  .breadcrumb__link:hover {
+    color: var(--arcis-color-global-main);
+  }
+
+  .breadcrumb__current {
+    color: var(--arcis-color-text-primary);
+    font-weight: var(--weight-medium);
+  }
+}

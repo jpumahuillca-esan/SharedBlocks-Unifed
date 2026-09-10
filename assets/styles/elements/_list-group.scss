@@ -1,0 +1,82 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > List Group (lista vertical con ítems interactivos —
+   menú de configuración, pasos de un trámite).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- List Group ---", ~líneas
+   2243-2300).
+
+   COLISIÓN CONFIRMADA con Bootstrap 5: ".list-group" es un nombre de
+   clase EXACTO de Bootstrap 5 (su propia lista, con ".list-group-item"
+   —un solo guion— para los ítems). Bootstrap declara "display: flex"
+   igual que nosotros (sin trampa de display:none como en .collapse),
+   pero igual se protege con el marcador "--arcis" por consistencia con
+   .card/.form-select/.progress/.pagination/.breadcrumb/.btn-group/
+   .collapse/.dropdown, ya que el resto de sus propiedades (border,
+   radius) sí difieren de las de Bootstrap.
+
+   ".list-group__item"/".list-group__item-label" son BEM (guion bajo
+   doble) y no colisionan con ".list-group-item" de Bootstrap (un solo
+   guion), van bare.
+   ============================================================ */
+
+.arcis-scope {
+  .list-group.list-group--arcis {
+    display: flex;
+    flex-direction: column;
+    border: var(--border-width-sm) solid var(--border-color-light);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .list-group__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-5);
+    font-size: var(--text-body);
+    color: var(--arcis-color-text-primary);
+    border-bottom: var(--border-width-sm) solid var(--border-color-light);
+    background-color: var(--neutrals-0);
+    transition: background-color var(--ease-fast), color var(--ease-fast);
+  }
+
+  .list-group__item:last-child {
+    border-bottom: none;
+  }
+
+  .list-group__item-label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .list-group__item-label svg {
+    width: 18px;
+    height: 18px;
+    color: var(--arcis-color-text-secondary);
+  }
+
+  a.list-group__item:hover {
+    background-color: var(--neutrals-50);
+  }
+
+  .list-group__item.is-active {
+    background-color: rgba(227, 23, 62, 0.08);
+    color: var(--arcis-color-global-main);
+    font-weight: var(--weight-medium);
+  }
+
+  .list-group__item.is-active .list-group__item-label svg {
+    color: var(--arcis-color-global-main);
+  }
+
+  .list-group__item > svg {
+    width: 16px;
+    height: 16px;
+    color: var(--neutrals-400);
+    flex-shrink: 0;
+  }
+}

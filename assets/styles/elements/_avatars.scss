@@ -1,0 +1,79 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Avatars (imagen, iniciales, indicador de estado, grupo apilado).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Avatars ---", ~líneas 1622-1684).
+
+   ".avatar"/".avatar--sm"/".avatar--lg"/".avatar__status"/".avatar-group"
+   no son clases de Bootstrap. Hay bloques reales con "avatar" en el
+   nombre de su clase (".avatar-gradient", ".avatar-inner", ".avatar-img",
+   ".avatar-svg", ".document-icon-avatar"), pero ninguno coincide
+   exactamente con estos cinco nombres (verificado), así que van bare,
+   sin el modificador obligatorio que sí necesitan .btn/.badge/.card/.alert.
+   ============================================================ */
+
+.arcis-scope {
+  .avatar {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    background-color: var(--neutrals-200);
+    color: var(--arcis-color-text-secondary);
+    font-family: var(--font-display);
+    font-weight: var(--weight-semibold);
+    font-size: var(--text-sm);
+    flex-shrink: 0;
+  }
+
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+  }
+
+  .avatar--sm {
+    width: 32px;
+    height: 32px;
+    font-size: var(--text-xs);
+  }
+
+  .avatar--lg {
+    width: 64px;
+    height: 64px;
+    font-size: var(--text-body);
+  }
+
+  .avatar__status {
+    position: absolute;
+    right: -1px;
+    bottom: -1px;
+    width: 12px;
+    height: 12px;
+    border-radius: var(--radius-full);
+    border: var(--border-width-md) solid var(--neutrals-0);
+    background-color: var(--neutrals-400);
+  }
+
+  .avatar__status--online {
+    background-color: var(--success-dark);
+  }
+
+  .avatar-group {
+    display: flex;
+  }
+
+  .avatar-group .avatar {
+    border: var(--border-width-md) solid var(--neutrals-0);
+    margin-left: -12px;
+  }
+
+  .avatar-group .avatar:first-child {
+    margin-left: 0;
+  }
+}

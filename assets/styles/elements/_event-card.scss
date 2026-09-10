@@ -1,0 +1,175 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Event Card (card de evento con bloque de fecha destacado,
+   para calendario o agenda académica).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Event Card ---", ~líneas
+   2748-2902).
+
+   ".event-card"/".event-card__*" no son clases de Bootstrap ni
+   colisionan con nada en components/blocks (verificado), así que van
+   bare, sin el modificador obligatorio que sí necesitan .btn/.badge/
+   .card/.alert/.progress/.pagination/.breadcrumb/.btn-group/.collapse/
+   .dropdown/.list-group.
+   ============================================================ */
+
+.arcis-scope {
+  .event-card {
+    display: flex;
+    padding: var(--space-5);
+    background-color: var(--neutrals-0);
+    border: var(--border-width-sm) solid var(--border-color-light);
+    border-radius: var(--radius-sm);
+    transition: box-shadow var(--ease-base);
+  }
+
+  .event-card:hover {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .event-card__date {
+    flex-shrink: 0;
+    width: 64px;
+    text-align: center;
+    padding: var(--space-3) var(--space-2);
+    border-radius: var(--radius-sm);
+    background-color: var(--neutrals-50);
+    border: var(--border-width-sm) solid var(--border-color-light);
+  }
+
+  .event-card__date-day {
+    display: block;
+    font-family: var(--font-accent);
+    font-size: var(--text-h3);
+    font-weight: var(--weight-bold);
+    line-height: 1;
+    color: var(--arcis-color-global-main);
+  }
+
+  .event-card__date-month {
+    display: block;
+    margin-top: var(--space-1);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--arcis-color-text-secondary);
+  }
+
+  .event-card__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding-left: var(--space-4);
+  }
+
+  .event-card__title {
+    font-size: var(--text-h6);
+    font-family: var(--font-body);
+    font-weight: var(--weight-semibold);
+  }
+
+  .event-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--arcis-color-text-secondary);
+  }
+
+  .event-card__meta-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .event-card__meta-item svg {
+    width: 15px;
+    height: 15px;
+    color: var(--arcis-color-text-disabled);
+  }
+
+  /* Variante "media": imagen superior + badge de fecha en la esquina */
+  .event-card--media {
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .event-card--media:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .event-card__media {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+
+  .event-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--ease-slow);
+  }
+
+  .event-card:hover .event-card__media img {
+    transform: scale(1.04);
+  }
+
+  .event-card__date-badge {
+    position: absolute;
+    top: 0;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 58px;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    overflow: hidden;
+    background-color: var(--neutrals-0);
+    box-shadow: var(--shadow-md);
+  }
+
+  .event-card__date-badge::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 4px;
+    background-color: var(--arcis-color-global-main);
+    flex-shrink: 0;
+  }
+
+  .event-card__date-badge-day {
+    padding-top: var(--space-2);
+    font-family: var(--font-accent);
+    font-size: var(--text-h4);
+    font-weight: var(--weight-bold);
+    line-height: 1;
+    color: var(--arcis-color-text-primary);
+  }
+
+  .event-card__date-badge-month {
+    padding-bottom: var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--arcis-color-text-secondary);
+  }
+
+  .event-card__media-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-5);
+  }
+
+  .event-card--media .event-card__title {
+    font-weight: var(--weight-bold);
+    line-height: 1.3;
+  }
+}
