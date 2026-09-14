@@ -1,0 +1,109 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Dropdown (menú contextual — se cierra al hacer click
+   afuera, al elegir una opción o con Escape).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Dropdown ---", ~líneas
+   2171-2241) y assets/js/main.js, función initDropdowns() (~línea 457):
+   abrir un dropdown cierra todos los demás en la página (exclusivo),
+   se cierra con click afuera, al elegir un ítem, o con Escape. Esa
+   coordinación entre instancias vive en MoleculeDropdown.vue vía un
+   estado compartido a nivel de módulo (ref fuera de <script setup>,
+   ver ese archivo), no manipulación del DOM como en webunificada.
+
+   ".dropdown" es un nombre de clase de Bootstrap 5, pero ahí Bootstrap
+   solo declara "position: relative" (nada que colisione de verdad con
+   nuestras propiedades — verificado en bootstrap/dist/css/bootstrap.css).
+   Aun así se protege con el marcador "--arcis" por consistencia con
+   .card/.form-select/.progress/.pagination/.breadcrumb/.btn-group/
+   .collapse, para no depender de que eso siga siendo inofensivo si
+   Bootstrap cambia esa regla en el futuro.
+
+   OJO — a diferencia de ".collapse", acá NO hace falta declarar
+   "display" explícito: ".dropdown__menu" (con doble guion bajo) es un
+   nombre BEM propio que NO coincide con ".dropdown-menu" (un solo
+   guion) de Bootstrap, así que la regla de Bootstrap
+   ".dropdown-menu { display: none; }" nunca alcanza a nuestro menú —
+   fue precisamente para evitar ese problema (ver Collapse) que acá se
+   ocultan/muestran con opacity/visibility en vez de con display.
+
+   ".dropdown__trigger"/".dropdown__menu"/".dropdown__item"/
+   ".dropdown__divider" son BEM y no colisionan con Bootstrap (que usa
+   ".dropdown-toggle"/".dropdown-menu"/".dropdown-item"/
+   ".dropdown-divider", un solo guion), van bare.
+   ============================================================ */
+
+.arcis-scope {
+  .dropdown.dropdown--arcis {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropdown__trigger svg {
+    transition: transform var(--ease-fast);
+  }
+
+  .dropdown.dropdown--arcis.is-open .dropdown__trigger svg {
+    transform: rotate(180deg);
+  }
+
+  .dropdown__menu {
+    position: absolute;
+    top: calc(100% + var(--space-2));
+    left: 0;
+    min-width: 220px;
+    background-color: var(--neutrals-0);
+    border: var(--border-width-sm) solid var(--border-color-light);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-md);
+    padding: var(--space-2);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity var(--ease-fast), transform var(--ease-fast), visibility var(--ease-fast);
+    z-index: 30;
+  }
+
+  .dropdown.dropdown--arcis.is-open .dropdown__menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .dropdown__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-xs);
+    font-size: var(--text-sm);
+    color: var(--arcis-color-text-primary);
+    text-align: left;
+    transition: background-color var(--ease-fast);
+  }
+
+  .dropdown__item svg {
+    width: 16px;
+    height: 16px;
+    color: var(--arcis-color-text-secondary);
+  }
+
+  .dropdown__item:hover {
+    background-color: var(--neutrals-100);
+  }
+
+  .dropdown__divider {
+    border: none;
+    border-top: var(--border-width-sm) solid var(--border-color-light);
+    margin: var(--space-2) 0;
+  }
+
+  /* Variante "right": abre alineado al borde derecho, para triggers
+     cerca del límite del viewport */
+  .dropdown.dropdown--arcis.dropdown--right .dropdown__menu {
+    left: auto;
+    right: 0;
+  }
+}

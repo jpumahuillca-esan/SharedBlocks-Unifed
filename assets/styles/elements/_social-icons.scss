@@ -1,0 +1,58 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Iconos Sociales.
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Iconos Sociales ---", ~líneas 1334-1371).
+
+   ".social-icon" no es una clase de Bootstrap (verificado: no colisiona
+   con nada de front), así que no necesita el modificador obligatorio que
+   sí les puse a .btn/.badge/.card.
+
+   Nota: existe una tercera variante en el CSS real, .social-icon--flat
+   (~línea 3347, sin círculo ni borde), pero no aparece en la sección
+   documentada "Iconos Sociales" de la guía viva — solo se portaron las
+   dos que sí están ahí (.social-icon y .social-icon--inverse).
+   ============================================================ */
+
+.arcis-scope {
+  .social-icons {
+    display: flex;
+    gap: var(--space-3);
+  }
+
+  .social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    border: var(--border-width-sm) solid var(--border-color-light);
+    color: var(--arcis-color-text-secondary);
+    transition: background-color var(--ease-fast), color var(--ease-fast), border-color var(--ease-fast);
+  }
+
+  .social-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .social-icon:hover {
+    background-color: var(--arcis-color-global-main);
+    border-color: var(--arcis-color-global-main);
+    color: var(--arcis-color-text-inverse);
+  }
+
+  /* Variante para footer / fondos oscuros */
+  .social-icon--inverse {
+    border-color: rgba(255, 255, 255, 0.24);
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .social-icon--inverse:hover {
+    background-color: var(--arcis-color-text-inverse);
+    border-color: var(--arcis-color-text-inverse);
+    color: var(--arcis-color-global-main);
+  }
+}

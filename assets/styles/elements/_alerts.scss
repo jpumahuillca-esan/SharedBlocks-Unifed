@@ -1,0 +1,98 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Alerts (4 tokens semánticos: info/success/warning/error).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Alerts ---", ~líneas 1447-1518).
+
+   Misma razón que en _buttons.scss/_badges.scss/_cards.scss: ".alert"
+   es un nombre de clase EXACTO de Bootstrap (front ya usa Bootstrap Vue
+   Next). Igual que con los botones, el markup real de webunificada
+   siempre trae ".alert" junto a un modificador ARCIS ("alert alert--info"),
+   así que la regla base se escribe compuesta (".alert.alert--info", etc.)
+   para no pisar ningún <div class="alert alert-info"> de Bootstrap si
+   alguna vez aparece en un bloque real.
+
+   ".alert__body", ".alert__title" y ".alert__text" son BEM (doble guion
+   bajo) y no colisionan con nada de Bootstrap, van bare.
+   ============================================================ */
+
+.arcis-scope {
+  .alert.alert--info,
+  .alert.alert--success,
+  .alert.alert--warning,
+  .alert.alert--error {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius-sm);
+    border-left: 4px solid transparent;
+  }
+
+  .alert.alert--info svg,
+  .alert.alert--success svg,
+  .alert.alert--warning svg,
+  .alert.alert--error svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .alert__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .alert__title {
+    font-weight: var(--weight-semibold);
+    font-size: var(--text-body);
+  }
+
+  .alert__text {
+    font-size: var(--text-sm);
+    color: var(--arcis-color-text-secondary);
+  }
+
+  .alert.alert--info {
+    background-color: var(--info-light);
+    border-left-color: var(--info-dark);
+  }
+
+  .alert--info svg,
+  .alert--info .alert__title {
+    color: var(--info-dark);
+  }
+
+  .alert.alert--success {
+    background-color: var(--success-light);
+    border-left-color: var(--success-dark);
+  }
+
+  .alert--success svg,
+  .alert--success .alert__title {
+    color: var(--success-dark);
+  }
+
+  .alert.alert--warning {
+    background-color: var(--warning-light);
+    border-left-color: var(--warning-dark);
+  }
+
+  .alert--warning svg,
+  .alert--warning .alert__title {
+    color: var(--warning-dark);
+  }
+
+  .alert.alert--error {
+    background-color: var(--error-light);
+    border-left-color: var(--error-dark);
+  }
+
+  .alert--error svg,
+  .alert--error .alert__title {
+    color: var(--error-dark);
+  }
+}

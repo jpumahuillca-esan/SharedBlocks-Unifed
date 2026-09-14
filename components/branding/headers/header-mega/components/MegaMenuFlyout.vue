@@ -116,7 +116,7 @@
                     <span>Banner</span>
                   </div>
                   <div v-else-if="activeTab.banner_title" class="banner-overlay-info">
-                    <h5 class="banner-caption">{{ activeTab.banner_title }}</h5>
+                    <AtomHeading :level="5" class="banner-caption">{{ activeTab.banner_title }}</AtomHeading>
                   </div>
                 </component>
               </div>
@@ -131,6 +131,7 @@
 </template>
 
 <script setup lang="ts">
+import AtomHeading from '../../../../atoms/AtomHeading.vue';
 import { ref, computed, watch } from 'vue';
 import { useDynamicLink } from '../../../../../composables/useDynamicLink';
 

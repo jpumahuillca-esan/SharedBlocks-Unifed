@@ -1,0 +1,82 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Tooltips (CSS puro vía atributo data-tooltip, sin JS).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Tooltips ---", ~líneas 1730-1793).
+
+   Funciona con ::before/::after leyendo attr(data-tooltip) — visible con
+   :hover y con :focus-visible (navegación por teclado), sin JS. El
+   elemento con la clase debe tener el atributo data-tooltip="texto".
+
+   ".tooltip-trigger"/".tooltip-trigger--bottom" no son clases de
+   Bootstrap ni colisionan con nada en components/blocks (verificado),
+   así que van bare, sin el modificador obligatorio que sí necesitan
+   .btn/.badge/.card/.alert.
+   ============================================================ */
+
+.arcis-scope {
+  .tooltip-trigger {
+    position: relative;
+  }
+
+  .tooltip-trigger::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-xs);
+    background-color: var(--neutrals-900);
+    color: var(--arcis-color-text-inverse);
+    font-size: var(--text-xs);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ease-fast), transform var(--ease-fast);
+    z-index: 20;
+  }
+
+  .tooltip-trigger::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--neutrals-900);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ease-fast);
+  }
+
+  .tooltip-trigger:hover::after,
+  .tooltip-trigger:focus-visible::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .tooltip-trigger:hover::before,
+  .tooltip-trigger:focus-visible::before {
+    opacity: 1;
+  }
+
+  .tooltip-trigger--bottom::after {
+    bottom: auto;
+    top: calc(100% + 10px);
+    transform: translateX(-50%) translateY(-4px);
+  }
+
+  .tooltip-trigger--bottom::before {
+    bottom: auto;
+    top: calc(100% + 4px);
+    border-top-color: transparent;
+    border-bottom-color: var(--neutrals-900);
+  }
+
+  .tooltip-trigger--bottom:hover::after,
+  .tooltip-trigger--bottom:focus-visible::after {
+    transform: translateX(-50%) translateY(0);
+  }
+}

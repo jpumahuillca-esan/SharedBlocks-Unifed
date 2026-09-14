@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import AtomHeading from '../../../atoms/AtomHeading.vue';
+import AtomText from '../../../atoms/AtomText.vue';
 import { computed } from 'vue';
 
 // --- CONTRATOS DE TIPADO ESTRICTOS ---
@@ -77,8 +79,8 @@ const safeConfig = computed(() => ({
           class="footer-logo" 
           :style="{ height: safeConfig.logoHeight + 'px' }"
         />
-        <h2 v-else class="fallback-brand-title">RIESGIRD</h2>
-        <p class="brand-description-text">{{ safeConfig.description }}</p>
+        <AtomHeading :level="2" v-else class="fallback-brand-title">RIESGIRD</AtomHeading>
+        <AtomText class="brand-description-text">{{ safeConfig.description }}</AtomText>
       </div>
 
       <div class="footer-links-grid" v-if="safeConfig.footerColumns.length > 0">
@@ -87,7 +89,7 @@ const safeConfig = computed(() => ({
           :key="i" 
           class="links-column"
         >
-          <h3 class="column-title">{{ col.title }}</h3>
+          <AtomHeading :level="3" class="column-title">{{ col.title }}</AtomHeading>
           <ul class="links-list" v-if="col.links && col.links.length > 0">
             <li v-for="(link, li) in col.links" :key="li">
               <component :is="linkTag" :to="link.url" class="interactive-anchor">
@@ -102,9 +104,9 @@ const safeConfig = computed(() => ({
     </div>
 
     <div class="footer-bottom-bar">
-      <p class="copyright-text">
+      <AtomText class="copyright-text">
         © Copyright {{ new Date().getFullYear() }} - {{ safeConfig.copyrightText }}
-      </p>
+      </AtomText>
     </div>
   </footer>
 </template>

@@ -1,0 +1,176 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Testimonials (card individual de testimonio — la pieza
+   que compondrá un carrusel o grid de testimonios).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Testimonials (card individual) ---",
+   ~líneas 2516-2667).
+
+   ".testimonial-card"/".testimonial-card__*" no son clases de Bootstrap
+   ni colisionan con nada en components/blocks (verificado — hay un
+   bloque real "testimonial-slider" pero no reutiliza estos nombres),
+   así que van bare, sin el modificador obligatorio que sí necesitan
+   .btn/.badge/.card/.alert/.progress/.pagination/.breadcrumb/
+   .btn-group/.collapse/.dropdown/.list-group.
+
+   ".testimonial-card__cta" no tiene regla base propia en el CSS real:
+   en la guía viva siempre va JUNTO a ".btn.btn--link"
+   (<a class="btn btn--link testimonial-card__cta">), solo aporta un
+   color distinto para legibilidad sobre el overlay oscuro del video —
+   se porta tal cual, sin inventarle una regla base que no existe.
+   ============================================================ */
+
+.arcis-scope {
+  .testimonial-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    padding: var(--space-7);
+    background-color: var(--neutrals-0);
+    border: var(--border-width-sm) solid var(--border-color-light);
+    border-radius: var(--radius-sm);
+  }
+
+  .testimonial-card__rating {
+    display: flex;
+    gap: var(--space-1);
+    color: var(--univ-yellow-100);
+  }
+
+  .testimonial-card__rating svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  .testimonial-card__quote {
+    font-family: var(--font-display);
+    font-size: var(--text-body);
+    font-weight: var(--weight-medium);
+    line-height: 1.35;
+    color: var(--arcis-color-text-primary);
+  }
+
+  .testimonial-card__author {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: auto;
+  }
+
+  .testimonial-card__author-name {
+    font-weight: var(--weight-semibold);
+    font-size: var(--text-body);
+  }
+
+  .testimonial-card__author-role {
+    font-size: var(--text-body-lg);
+    color: var(--arcis-color-text-secondary);
+  }
+
+  /* Variante "video": testimonio en formato video, foto a sangre + overlay */
+  .testimonial-card--video {
+    position: relative;
+    display: block;
+    aspect-ratio: 3 / 4;
+    padding: 0;
+    background-color: var(--neutrals-900);
+    border: none;
+    overflow: hidden;
+  }
+
+  .testimonial-card__media {
+    position: absolute;
+    inset: 0;
+  }
+
+  .testimonial-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--ease-slow);
+  }
+
+  .testimonial-card--video:hover .testimonial-card__media img {
+    transform: scale(1.04);
+  }
+
+  .testimonial-card--video::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(11, 12, 16, 0) 42%, rgba(11, 12, 16, 0.92) 100%);
+  }
+
+  .testimonial-card__play {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .testimonial-card__play-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-full);
+    background-color: rgba(255, 255, 255, 0.14);
+    border: 1.5px solid rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: transform var(--ease-fast);
+  }
+
+  .testimonial-card--video:hover .testimonial-card__play-btn {
+    transform: scale(1.08);
+  }
+
+  .testimonial-card__play-btn svg {
+    width: 20px;
+    height: 20px;
+    color: var(--arcis-color-text-inverse);
+    margin-left: 2px;
+  }
+
+  .testimonial-card__overlay {
+    position: absolute;
+    left: var(--space-5);
+    right: var(--space-5);
+    bottom: var(--space-5);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  .testimonial-card__accent {
+    width: 32px;
+    height: 3px;
+    border-radius: var(--radius-full);
+    background-color: var(--arcis-color-global-main);
+  }
+
+  .testimonial-card__overlay .testimonial-card__author-name {
+    font-size: var(--text-h6);
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .testimonial-card__overlay .testimonial-card__author-role {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .testimonial-card--video .testimonial-card__cta {
+    margin-top: var(--space-1);
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .testimonial-card--video .testimonial-card__cta:hover {
+    color: var(--arcis-color-global-main);
+  }
+}

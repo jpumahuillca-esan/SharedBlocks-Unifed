@@ -11,7 +11,7 @@
 import { computed, ref } from 'vue';
 import NewsArticle from './components/NewsArticle.vue';
 import NewsAside from './components/NewsAside.vue';
-import HeroDefault from '../../riesgo/hero/default/Block.vue'
+import HeroDefault from '../../blocks/hero/hero-default/Block.vue'
 type AgreementColor = 'red' | 'blue'
 
 interface Agreement {

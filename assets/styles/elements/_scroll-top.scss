@@ -1,0 +1,78 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Scroll top (botón flotante fijo que aparece al hacer scroll).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Scroll top ---", ~líneas
+   1884-1922, más el override responsivo en @media (max-width: 520px)
+   ~línea 4534) y assets/js/main.js, función initScrollTop() (~línea 385):
+   aparece cuando window.scrollY > 400, scroll suave al hacer click
+   (respetando prefers-reduced-motion), vía JS — no hay forma de lograr
+   ese comportamiento con CSS puro, así que ese pedazo vive en
+   AtomScrollTop.vue, no acá.
+
+   ".scroll-top" no es una clase de Bootstrap ni colisiona con nada en
+   components/blocks (verificado), así que va bare, sin el modificador
+   obligatorio que sí necesitan .btn/.badge/.card/.alert/.progress.
+
+   ".scroll-top--preview" (position: absolute en vez de fixed) también
+   se porta: sin ella, el botón real (position: fixed) se escaparía del
+   recuadro de vista previa y quedaría pegado a la ventana del navegador
+   real en vez de quedarse dentro del flyout de hover del sidebar —
+   mismo problema que resuelve en la propia página de webunificada.
+
+   No hace falta declarar border/background/cursor acá: el <button>
+   real ya se resetea globalmente en base.scss (button { border: none;
+   background: none; cursor: pointer; ... }), igual que en el reset de
+   webunificada — duplicarlo acá sería redundante.
+   ============================================================ */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .scroll-top {
+    position: fixed;
+    right: var(--space-6);
+    bottom: var(--space-6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    background-color: var(--arcis-color-global-main);
+    color: var(--arcis-color-text-inverse);
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: opacity var(--ease-base), transform var(--ease-base), background-color var(--ease-fast);
+    z-index: 90;
+  }
+
+  .scroll-top svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .scroll-top:hover {
+    background-color: var(--arcis-color-global-dark);
+  }
+
+  .scroll-top.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .scroll-top--preview {
+    position: absolute;
+  }
+
+  @include bp.breakpoint-down('cta') {
+    .scroll-top {
+      right: var(--space-4);
+      bottom: var(--space-4);
+    }
+  }
+}

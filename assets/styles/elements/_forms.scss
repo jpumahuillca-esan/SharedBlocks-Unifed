@@ -1,0 +1,116 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Formularios (campos, checkbox/radio, estado de error).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Formularios ---", ~líneas 1377-1445).
+
+   COLISIÓN CONFIRMADA con Bootstrap 5: ".form-select" y ".form-check"
+   son nombres de clase EXACTOS de Bootstrap 5, y el bloque real
+   components/blocks/form/lead-form-hero/Form.vue YA los usa con su
+   markup nativo de Bootstrap (una sola clase, sin modificador). Ese
+   bloque se renderiza dentro de .arcis-scope (ver CanvasArea.vue /
+   PageView.vue en front), así que una regla ".arcis-scope .form-select"
+   bare pisaría ese formulario real (mismo bug que .btn/.badge/.card).
+
+   ".form-label" es también un nombre exacto de Bootstrap 5. No hay
+   colisión activa hoy, pero se protege igual por el mismo motivo,
+   siguiendo la instrucción de cerciorarse de que este bug no se repita.
+
+   A diferencia de .btn/.badge (donde el markup real de webunificada YA
+   trae un segundo modificador junto a la clase base, ej. "btn btn--primary"),
+   acá webunificada usa estas clases SOLAS (<select class="form-select">,
+   <label class="form-check">) — no hay un segundo modificador natural del
+   que colgarse. Igual que con .card (ver _cards.scss, card--default), se
+   inventa un marcador técnico propio "--arcis" que nuestros átomos Vue
+   agregan automáticamente junto a la clase base, para que la regla real
+   exija AMBAS clases (selector compuesto) y nunca coincida con markup
+   Bootstrap plano de una sola clase. Es una desviación deliberada de la
+   guía viva, documentada acá y en los átomos que la aplican.
+
+   ".form-group", ".form-input", ".form-textarea" y ".form-help" NO
+   existen en Bootstrap 5 (Bootstrap usa .mb-3/.form-control/.form-text
+   respectivamente), así que van bare, sin necesidad de marcador.
+   ============================================================ */
+
+.arcis-scope {
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    max-width: 360px;
+  }
+
+  .form-label.form-label--arcis {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--arcis-color-text-primary);
+  }
+
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--arcis-color-text-primary);
+    background-color: var(--neutrals-0);
+    border: var(--border-width-sm) solid var(--border-color-light);
+    border-radius: var(--radius-sm);
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+  }
+
+  .form-select.form-select--arcis {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--arcis-color-text-primary);
+    background-color: var(--neutrals-0);
+    border: var(--border-width-sm) solid var(--border-color-light);
+    border-radius: var(--radius-sm);
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 96px;
+  }
+
+  .form-input:focus-visible,
+  .form-textarea:focus-visible,
+  .form-select.form-select--arcis:focus-visible {
+    outline: none;
+    border-color: var(--arcis-color-global-main);
+    box-shadow: 0 0 0 3px rgba(227, 23, 62, 0.15);
+  }
+
+  .form-help {
+    font-size: var(--text-xs);
+    color: var(--arcis-color-text-secondary);
+  }
+
+  .form-group.has-error .form-input,
+  .form-group.has-error .form-textarea,
+  .form-group.has-error .form-select.form-select--arcis {
+    border-color: var(--error-dark);
+  }
+
+  .form-group.has-error .form-help {
+    color: var(--error-dark);
+  }
+
+  .form-check.form-check--arcis {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-body);
+    color: var(--arcis-color-text-primary);
+  }
+
+  .form-check.form-check--arcis input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--arcis-color-global-main);
+  }
+}

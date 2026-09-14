@@ -1,0 +1,59 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Breakpoints (variables Sass + mixins).
+
+   Fuente de verdad: webunificada/ui-kit/ui-kit.html, sección
+   Foundations > Breakpoints. Los 4 primeros son exactamente los
+   que la propia tabla etiqueta como "Bootstrap grid"; los otros
+   dos son los que la misma tabla marca como propios del proyecto
+   (sin nombre asignado ahí — se los di aquí para poder referirlos
+   por mixin).
+
+   Por qué esto es Sass y no variables CSS (--breakpoint-*):
+   una variable CSS (var(--x)) no se puede usar dentro de la
+   condición de un @media — el navegador exige un valor literal
+   ahí. webunificada es CSS puro, por eso ni siquiera lo intenta
+   (usa 768px/520px escritos a mano en cada @media). Nosotros sí
+   usamos Sass, y las variables Sass ($x) se resuelven en tiempo
+   de compilación, así que SÍ pueden usarse dentro de un @media.
+   Esto no es "portar" nada de webunificada, es una pieza nueva
+   que nuestra librería puede tener y la fuente original no puede.
+   ============================================================ */
+
+$breakpoints: (
+  'sm': 576px,
+  'md': 768px,
+  'lg': 992px,
+  'xl': 1200px,
+  // Breakpoints propios del proyecto (no son parte de la escala
+  // Bootstrap sm/md/lg/xl, son puntos de quiebre específicos que
+  // la tabla de webunificada documenta aparte):
+  // ≤768px: Hero y grids a 1 columna, menú off-canvas.
+  // ≤520px: CTAs a ancho completo.
+  // "mobile" coincide en valor con "md" pero se nombra distinto
+  // porque su intención es otra (punto de quiebre de contenido,
+  // no de la grilla).
+  'mobile': 768px,
+  'cta': 520px,
+);
+
+@function bp($name) {
+  @if not map-has-key($breakpoints, $name) {
+    @error 'Breakpoint "#{$name}" no existe. Breakpoints disponibles: #{map-keys($breakpoints)}.';
+  }
+  @return map-get($breakpoints, $name);
+}
+
+/* min-width: el estilo aplica desde ese breakpoint hacia arriba (mobile-first) */
+@mixin breakpoint-up($name) {
+  @media (min-width: bp($name)) {
+    @content;
+  }
+}
+
+/* max-width: el estilo aplica hasta ese breakpoint hacia abajo */
+@mixin breakpoint-down($name) {
+  @media (max-width: bp($name)) {
+    @content;
+  }
+}

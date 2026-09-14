@@ -5,8 +5,8 @@
                 <div class="max-w-md mx-auto ms-lg-auto me-lg-5 w-100" style="max-width: 600px;">
                     
                     <span v-if="data.category_name" class="text-uppercase fw-bold text-primary small tracking-wide mb-2 d-block">{{ data.category_name }}</span>
-                    <h1 class="fw-bold display-4 mb-4" style="font-family: 'Playfair Display', serif;">{{ data.title }}</h1>
-                    <p v-if="data.excerpt" class="fs-4 text-muted border-start border-4 border-primary ps-3 mb-5">{{ data.excerpt }}</p>
+                    <AtomHeading :level="1" class="fw-bold display-4 mb-4" style="font-family: 'Playfair Display', serif;">{{ data.title }}</AtomHeading>
+                    <AtomText v-if="data.excerpt" class="fs-4 text-muted border-start border-4 border-primary ps-3 mb-5">{{ data.excerpt }}</AtomText>
                     
                     <div class="d-flex align-items-center mb-5 pb-4 border-bottom">
                         <img v-if="authorAvatar" :src="formatImageUrl(authorAvatar)" class="rounded-circle me-3 shadow-sm" width="50" height="50" style="object-fit: cover;">
@@ -30,6 +30,8 @@
 </template>
 
 <script setup lang="ts">
+import AtomHeading from '../../atoms/AtomHeading.vue';
+import AtomText from '../../atoms/AtomText.vue';
 import { computed } from 'vue';
 import { formatImageUrl } from '../../../helpers/url';
 

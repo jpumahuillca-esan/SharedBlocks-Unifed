@@ -36,7 +36,7 @@
                          alt="Logo" 
                          class="logo-img transition-all"
                          :style="{ height: currentLogoHeight + 'px' }" />
-                    <h2 v-else class="mb-0 fw-bold brand-text">Institución</h2>
+                    <AtomHeading :level="2" v-else class="mb-0 fw-bold brand-text">Institución</AtomHeading>
                 </component>
 
                 <nav class="desktop-menu d-none d-lg-flex align-items-center gap-4">
@@ -160,6 +160,7 @@
 </template>
 
 <script setup lang="ts">
+import AtomHeading from '../../../atoms/AtomHeading.vue';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({

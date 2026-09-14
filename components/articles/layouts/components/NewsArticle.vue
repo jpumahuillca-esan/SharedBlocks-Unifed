@@ -1,9 +1,9 @@
 <template>
     <article class="article">
         <!-- <header class="article__header">
-            <h1 class="article__title">
+            <AtomHeading :level="1" class="article__title">
                 {{ title }}
-            </h1>
+            </AtomHeading>
             <div class="article__title-line" />
         </header> -->
         
@@ -24,13 +24,13 @@
         />
         
         <section v-if="agreements && agreements.length > 0" class="article__agreements">
-            <h2 class="agreements__title">
+            <AtomHeading :level="2" class="agreements__title">
                 {{ agreementsTitle }}
-            </h2>
+            </AtomHeading>
             <div class="agreements__line" />
-            <p class="agreements__description">
+            <AtomText class="agreements__description">
                 {{ agreementsDescription }}
-            </p>
+            </AtomText>
             
             <div class="agreements__grid">
                 <article 
@@ -41,12 +41,12 @@
                     <div class="agreement-card__icon">
                         <i class="bi bi-search"></i>
                     </div>
-                    <h3 class="agreement-card__title">
+                    <AtomHeading :level="3" class="agreement-card__title">
                         {{ agreement.title }}
-                    </h3>
-                    <p class="agreement-card__text">
+                    </AtomHeading>
+                    <AtomText class="agreement-card__text">
                         {{ agreement.text }}
-                    </p>
+                    </AtomText>
                 </article>
             </div>
         </section>
@@ -56,6 +56,8 @@
 </template>
 
 <script setup lang="ts">
+import AtomHeading from '../../../atoms/AtomHeading.vue';
+import AtomText from '../../../atoms/AtomText.vue';
 
 type AgreementColor = 'red' | 'blue'
 interface Agreement {

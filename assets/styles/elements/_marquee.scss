@@ -1,0 +1,94 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Marquee (franja de desplazamiento continuo —
+   reconocimientos, alianzas o cifras clave).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Marquee ---", ~líneas
+   3107-3170).
+
+   ".marquee"/".marquee__*" no son clases de Bootstrap ni colisionan con
+   nada en components/blocks (verificado), así que van bare, sin el
+   modificador obligatorio que sí necesitan .btn/.badge/.card/.alert/
+   .progress/.pagination/.breadcrumb/.btn-group/.collapse/.dropdown/
+   .list-group.
+
+   "respeta prefers-reduced-motion" (nota de la guía viva) ya lo cubre
+   la regla global en base.scss (animation-duration: 0.01ms !important
+   para *, *::before, *::after) — no hace falta repetirlo acá, mismo
+   caso que en _loaders.scss.
+
+   IMPORTANTE — el truco del loop infinito: ".marquee__track" anima
+   "translateX(-50%)", así que necesita el MISMO set de ítems repetido
+   2 veces adentro (webunificada lo aclara en su propio snippet: "repetir
+   el mismo set de ítems 2 veces para el loop continuo") — sin la
+   segunda copia, a la mitad de la animación se vería un salto/hueco en
+   vez de un scroll continuo. MoleculeMarquee.vue duplica los ítems
+   internamente, el consumidor solo pasa un set.
+   ============================================================ */
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.arcis-scope {
+  .marquee {
+    overflow: hidden;
+    width: 100%;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    gap: var(--space-9);
+    animation: marquee-scroll 24s linear infinite;
+  }
+
+  .marquee__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    white-space: nowrap;
+    font-family: var(--font-accent);
+    font-size: var(--text-h5);
+    font-weight: var(--weight-semibold);
+    color: var(--neutrals-400);
+  }
+
+  .marquee__item svg {
+    width: 18px;
+    height: 18px;
+    color: var(--neutrals-300);
+  }
+
+  .marquee--dark {
+    background-color: var(--neutrals-900);
+    border-radius: var(--radius-md);
+    padding: var(--space-6) 0;
+  }
+
+  .marquee--dark .marquee__item {
+    color: var(--arcis-color-global-main);
+  }
+
+  .marquee--dark .marquee__item svg {
+    color: var(--arcis-color-global-main);
+  }
+
+  .marquee--brand {
+    background-color: var(--arcis-color-global-main);
+    border-radius: var(--radius-md);
+    padding: var(--space-6) 0;
+  }
+
+  .marquee--brand .marquee__item {
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .marquee--brand .marquee__item svg {
+    color: var(--arcis-color-text-inverse);
+  }
+}

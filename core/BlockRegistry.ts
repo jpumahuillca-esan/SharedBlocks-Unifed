@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+import { ELEMENTS_REGISTRY } from '../components/pre_elements/ElementsRegistry';
 
 
 
@@ -9,8 +10,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         label: '🚀 Hero Bienvenida',
         icon: 'bi bi-star-fill',
         group: 'Hero',
-        previewImage: '../../assets', component: defineAsyncComponent(() => import('../components/sections/hero/blocks/HeroWelcome.vue')),
-        // editor: defineAsyncComponent(() => import('../components/sections/hero/editors/HeroWelcomeEditor.vue')),
+        previewImage: '../../assets', component: defineAsyncComponent(() => import('../components/blocks/hero/hero-welcome/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/hero/hero-welcome/Editor.vue')),
         initialData: {
             title: '',
             subtitle: 'Formación profesional universitaria de adultos con experiencia laboral',
@@ -28,8 +29,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         label: '📝 Footer Simple',
         icon: 'las la-shoe-prints',
         group: 'Footer',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/sections/footer/blocks/FooterSimple.vue')),
-        // editor: defineAsyncComponent(() => import('../components/sections/footer/editors/FooterSimpleEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/footer/footer-simple/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/footer/footer-simple/Editor.vue')),
         initialData: {
             bgColor: '#151515',
             textColor: '#a3a3a3',
@@ -41,8 +42,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         label: '🌟 Header Transparente',
         icon: 'las la-bars',
         group: 'Header',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/sections/header/blocks/HeaderDynamic.vue')),
-        // editor: defineAsyncComponent(() => import('../components/sections/header/editors/HeaderDynamicEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/header/header-dynamic/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/header/header-dynamic/Editor.vue')),
         initialData: {
             logoDesktop: '',
             logoMobile: '',
@@ -59,8 +60,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         label: '📝 Formulario Hero (Marketing)',
         icon: 'las la-address-card',
         group: 'Form',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/sections/forms/blocks/LeadFormSection.vue')),
-        // editor: defineAsyncComponent(() => import('../components/sections/forms/editors/LeadFormSectionEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/form/lead-form-hero/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/form/lead-form-hero/Editor.vue')),
         initialData: {
             bgImage: 'https://www.ue.edu.pe/img/home/fondo-carreras-dpa.jpg',
             formPosition: 'derecha',
@@ -87,8 +88,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         label: '💬 Slider de Testimonios',
         icon: 'las la-quote-right',
         group: 'Testimonios',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/sections/testimonials/blocks/TestimonialSlider.vue')),
-        // editor: defineAsyncComponent(() => import('../components/sections/testimonials/editors/TestimonialSliderEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/testimonios/testimonial-slider/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/testimonios/testimonial-slider/Editor.vue')),
         initialData: {
             bgType: 'color',
             bgColor: '#2a1515',
@@ -116,8 +117,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         label: '🖼️ Hero Institucional Collage',
         icon: 'las la-th-large',
         group: 'Hero',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/banner/views/HeroCollage.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/banner/updates/HeroCollageEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/hero/hero-collage/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/hero/hero-collage/Editor.vue')),
         initialData: {
             title: 'RED PERUANA DE INSTITUCIONES DE EDUCACIÓN SUPERIOR UNIVERSITARIA PARA LA GESTIÓN INTEGRAL DEL RIESGO DE DESASTRES Y LA ADAPTACIÓN AL CAMBIO CLIMÁTICO',
             logoUrl: 'https://images.unsplash.com/photo-1594732832278-abd644401426?auto=format&fit=crop&q=80&w=300',
@@ -132,8 +133,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
     HeroDefault: {
         label: 'Hero Default',
         group: 'Hero',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/hero/default/Block.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/hero/default/Editor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/hero/hero-default/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/hero/hero-default/Editor.vue')),
         initialData: {
             title: 'Título principal',
             subtitle: 'Subtítulo',
@@ -146,8 +147,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         label: '📊 Cuadrícula de Métricas',
         icon: 'las la-chart-bar',
         group: 'Grillas', // Se auto-asignará al grupo "Grillas y Contenido"
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/StatsGrid.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/StatsGridEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/grillas/stats-grid/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/grillas/stats-grid/Editor.vue')),
         initialData: {
             cardBgColor: '#db143c',
             metricas: [
@@ -162,7 +163,7 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         label: '📣 Banner CTA Gradiente',
         icon: 'las la-bullhorn',
         group: 'Conversion', // Se auto-indexará dinámicamente en tu pestaña "Conversión y CTA"
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/banner/views/CtaBanner.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/conversion/cta-banner/Block.vue')),
         // editor: defineAsyncComponent(() => import('../components/riesgo/banner/updates/CtaBannerEditor.vue')),
         initialData: {
             text: 'Únete a la Red',
@@ -176,8 +177,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-users',
         group: 'Institucional',
         isBoxed: true,
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/QuienesSomos.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates/QuienesSomosEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/quienes-somos/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/quienes-somos/Editor.vue')),
         initialData: {
             title: '¿Quiénes somos?',
             text: 'La Red Interuniversitaria <strong>RIESGIRD-ACC Perú</strong> es un espacio de articulación académica que reúne a universidades comprometidas con la gestión integral del riesgo de desastres y la adaptación al cambio climático. Su labor se centra en promover la incorporación transversal de estos enfoques en la gobernanza, formación, investigación y responsabilidad social universitaria, considerando las particularidades territoriales.',
@@ -189,8 +190,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-bullseye',
         group: 'Institucional',
         isBoxed: true,
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/MisionVision.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates/MisionVisionEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/mision-vision/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/mision-vision/Editor.vue')),
         initialData: {
             visionTitle: 'Nuestra Visión',
             visionText: 'Ser la red líder en América Latina en la promoción de la gestión integral del riesgo de desastres y la adaptación al cambio climático desde la educación superior, formando profesionales comprometidos con la resiliencia territorial.',
@@ -206,8 +207,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-bullseye',
         group: 'Institucional',
         isBoxed: true, // 👈 ENCAJA PERFECTAMENTE EN TU ARQUITECTURA DE LIENZO INTEGRADO
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/NuestrosObjetivos.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates//NuestrosObjetivosEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/nuestros-objetivos/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/nuestros-objetivos/Editor.vue')),
         initialData: {
             title: 'Nuestros Objetivos',
             introText: 'La Red Interuniversitaria para la Gestión Integral del Riesgo de Desastres y la Adaptación al Cambio Climático (RIESGIRD-ACC Perú) es un espacio de articulación académica que agrupa a las universidades del país comprometidas con la seguridad y la resiliencia climática.',
@@ -228,8 +229,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-bullseye',
         group: 'Institucional',
         isBoxed: true, // 👈 ENCAJA PERFECTAMENTE EN TU ARQUITECTURA DE LIENZO INTEGRADO
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/NuestrosObjetivosV2.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates//NuestrosObjetivosEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/nuestros-objetivos2/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/nuestros-objetivos/Editor.vue')),
         initialData: {
             title: 'Nuestros Objetivos',
             introText: 'La Red Interuniversitaria para la Gestión Integral del Riesgo de Desastres y la Adaptación al Cambio Climático (RIESGIRD-ACC Perú) es un espacio de articulación académica que agrupa a las universidades del país comprometidas con la seguridad y la resiliencia climática.',
@@ -250,8 +251,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-list-ul',
         group: 'Institucional',
         isBoxed: true, // 👈 ENCAJA PERFECTAMENTE EN TU ARQUITECTURA DE CONTENEDOR UNIFICADO
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/Lineamientos.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates/LineamientosEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/lineamientos/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/lineamientos/Editor.vue')),
         initialData: {
             title: 'Lineamientos',
             titleLink: '/lineamiento',
@@ -271,8 +272,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-handshake',
         group: 'Institucional',
         isBoxed: true, // 👈 TOTALMENTE ADAPTADO PARA TU SISTEMA DE CAJA BLANCA UNIFICADA
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/sliderH/views/AliadosSlider.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/sliderH/updates/AliadosSliderEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/aliados-slider/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/aliados-slider/Editor.vue')),
         initialData: {
             title: 'Aliados',
             logos: [
@@ -288,8 +289,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-newspaper',
         group: 'Grillas',
         isBoxed: true,
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/EventosNoticias.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/EventosNoticiasEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/grillas/eventos-noticias/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/grillas/eventos-noticias/Editor.vue')),
         initialData: {
             title: 'Eventos y Noticias Destacados',
             limit: 4,
@@ -301,8 +302,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-newspaper',
         group: 'Grillas', // Se auto-indexa en tu barra lateral de "Grillas y Contenido"
         isBoxed: true, // 👈 INTEGRADO EN TU ARQUITECTURA DE CONTENEDOR SECCIONAL UNIFICADO
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/ProcessPhases/Block.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/ProcessPhases/Editor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/grillas/fases-proceso/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/grillas/fases-proceso/Editor.vue')),
         initialData: {
             title: 'Fases del Proceso',
             cards: [
@@ -320,8 +321,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-user-tie',
         group: 'Grillas',
         isBoxed: true,
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/DirectorioRectores.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/DirectorioRectoresEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/grillas/directorio-rectores/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/grillas/directorio-rectores/Editor.vue')),
         initialData: {
             title: 'Directorio',
             introText: 'Sección destinada al registro y archivo oficial de las actividades, acuerdos y reuniones sostenidas por los directivos en el marco de la red.',
@@ -333,8 +334,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-sitemap',
         isBoxed: true,
         group: 'Grillas',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/EstructuraRiesGird.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/EstructuraRiesGirdEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/grillas/estructura-organizacional/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/grillas/estructura-organizacional/Editor.vue')),
         initialData: {
             title: 'Estructura de la RiesGIRD-ACC/Perú',
             universidades: [
@@ -350,8 +351,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-image',
         isBoxed: true,
         group: 'Grillas',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/EstructuraImagen.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates/EstructuraImagenEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/grillas/estructura-imagen/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/grillas/estructura-imagen/Editor.vue')),
         initialData: {
             title: 'Estructura de la RiesGIRD-ACC/Perú',
             imageUrl: ''
@@ -362,8 +363,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-users-cog',
         isBoxed: true, // Se integra milimétricamente dentro de las cajas .content-wrapper del layout
         group: 'Grillas',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/ConsejoDirectivo.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates/ConsejoDirectivoEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/grillas/consejo-directivo/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/grillas/consejo-directivo/Editor.vue')),
         initialData: {
             title: 'Consejo Directivo',
             introText: 'El Consejo Directivo es el órgano encargado de dirigir, administrar y representar legalmente a la Red. Su función principal es ejecutar los acuerdos de la Asamblea General de Rectores y evaluar la admisión de nuevas universidades miembro.',
@@ -399,10 +400,10 @@ export const BLOCK_REGISTRY: Record<string, any> = {
     MembershipCertificate: {
         label: '📜 Certificado de Membresía',
         icon: 'las la-certificate',
-        group: 'Hero',
+        group: 'Institucional',
         // isBoxed: false,
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/MembershipCertificate/Block.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/MembershipCertificate/Editor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/membership-certificate/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/membership-certificate/Editor.vue')),
         initialData: {
             title: 'Certificado de Membresía',
             description: 'Al completar el proceso de adscripción, tu universidad recibirá un certificado oficial que acredita su membresía en la RiesGrid-ACC Perú.',
@@ -413,10 +414,10 @@ export const BLOCK_REGISTRY: Record<string, any> = {
     RequirementDocument: {
         label: '📜 Requisitos y Documentos',
         icon: 'las la-certificate',
-        group: 'Hero',
+        group: 'Institucional',
         // isBoxed: false,
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/RequerimentDocument/Block.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/RequerimentDocument/Editor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/requirement-document/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/requirement-document/Editor.vue')),
         initialData: {
             titleRequirements: 'Requisitos',
             requirements: [{
@@ -435,8 +436,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
     // HeroDefault: {
     //     label: 'Hero Default',
     //     group: 'Hero',
-    //     previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/hero/default/Block.vue')),
-    //     // editor: defineAsyncComponent(()=> import('../components/riesgo/hero/default/Editor.vue')),
+    //     previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/hero/hero-default/Block.vue')),
+    //     // editor: defineAsyncComponent(()=> import('../components/blocks/hero/hero-default/Editor.vue')),
     //     initialData: {
     //         title: 'Título principal',
     //         subtitle: 'Subtítulo',
@@ -450,8 +451,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-user-tie',
         isBoxed: true, // Auto-acoplable dentro de las cajas blancas del layout general
         group: 'Grillas',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/SecretariaTecnica.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates/SecretariaTecnicaEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/grillas/secretaria-tecnica/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/grillas/secretaria-tecnica/Editor.vue')),
         initialData: {
             title: 'Secretaría Técnica',
             description1: 'La Secretaría Técnica es el brazo operativo y articulador de la RiesGIRD-ACC Perú. Está encargada de coordinar la ejecución del plan de trabajo, centralizar la información técnica y articular los esfuerzos de los equipos de especialistas de todas nuestras universidades miembro.',
@@ -490,8 +491,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-microscope',
         isBoxed: true,
         group: 'Institucional',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/CienciaExtremoExtremo.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates/CienciaExtremoExtremoEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/ciencia-extremo-extremo/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/ciencia-extremo-extremo/Editor.vue')),
         initialData: {
             title: 'Conectando la ciencia de extremo a extremo',
             description: 'La Red de investigadores de la RIESGIRD - ACC Perú es nuestra comunidad científica. Un espacio donde docentes, specialists y tesistas de distintas universidades colaboran para generar evidencia que fortalezca la gestión del riesgo y resiliencia climática.',
@@ -503,8 +504,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-info-circle',
         isBoxed: true,
         group: 'Institucional',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/QueHacemosRedInvestigadores.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates/QueHacemosRedInvestigadoresEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/que-hacemos-red-investigadores/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/que-hacemos-red-investigadores/Editor.vue')),
         initialData: {
             title: '¿Qué hacemos en la Red de Investigadores?',
             text: 'Fomentamos la creación de equipos multidisciplinarios e interinstitucionales. Creemos que un geólogo en sur, un climatólogo en la selva y un sociólogo en el norte puede trabajar juntos para entender mejor nuestras vulnerabilidades. Esta red facilita el intercambio de datos, la postilación conjunta a fondos de investigación y el desarrollo de proyectos de alto impacto.',
@@ -516,8 +517,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-microscope',
         isBoxed: true, // Se queda en false para estirar su fondo #f4f7fc de borde a borde
         group: 'Institucional',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/LineasInvestigacion.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates/LineasInvestigacionEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/lineas-investigacion/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/lineas-investigacion/Editor.vue')),
         initialData: {
             title: 'Nuestras Líneas Prioritarias de Investigación',
             introText: 'Todas las investigaciones respaldadas por la Red se enmarcan en las siguientes áreas clave:',
@@ -551,8 +552,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-archive',
         isBoxed: true,
         group: 'Contenido',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/NuestroRepositorio.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates/NuestroRepositorioEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/contenido/nuestro-repositorio/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/contenido/nuestro-repositorio/Editor.vue')),
         initialData: {
             title: 'Nuestro Repositorio',
             introText: 'Transferimos la ciencia a la práctica a través de recursos de libre acceso.',
@@ -584,9 +585,9 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         label: '📢 Banner de Llamado (CTA)',
         icon: 'las la-bullhorn',
         isBoxed: true, // Se extiende de borde a borde para romper la monotonía del lienzo
-        group: 'Contenido',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/CtaBanner.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates/CtaBannerEditor.vue')),
+        group: 'Conversion', // Mismo criterio que CtaBanner: los bloques de CTA van en "Conversión y CTA"
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/conversion/cta-banner-section/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/conversion/cta-banner/Editor.vue')),
         initialData: {
             title: 'Sube tu investigación',
             buttonText: 'Aporta al Repositorio',
@@ -600,8 +601,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-file-pdf',
         isBoxed: true,
         group: 'Contenido',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/DocumentacionFormal.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/DocumentacionFormalEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/contenido/documentacion-formal/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/contenido/documentacion-formal/Editor.vue')),
         initialData: {
             title: 'Documentación Formal y Respaldo',
             introText: 'Toda nuestra estrategia de transversalización está respaldada por marcos normativos nacionales e internacionales. Ponemos a disposición de la comunidad universitaria los siguientes documentos base:',
@@ -621,8 +622,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-graduation-cap',
         isBoxed: true,
         group: 'Contenido',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/EstructuraOferta.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/EstructuraOfertaEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/contenido/estructura-oferta/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/contenido/estructura-oferta/Editor.vue')),
         initialData: {
             title: '¿Cómo estructuramos la oferta?',
             introText: 'El camino hacia una oferta consolidada ha sido progresivo. Empezamos con esfuerzos aislados de algunos docentes y la creación de diplomados esporádicos. Hoy, gracias a la articulación de la Red, hemos logrado estandarizar competencias, compartir recursos entre universidades y alcanzar logros significativos, como la acreditación de programas conjuntos y la creación de maestrías especializadas que responden a la demanda del Estado y el sector privado.',
@@ -647,8 +648,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-trophy',
         isBoxed: true, // Se extiende de borde a borde para que luzca limpio en la landing page
         group: 'Contenido',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/CasoExitoAlianza.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates/CasoExitoAlianzaEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/contenido/caso-exito-alianza/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/contenido/caso-exito-alianza/Editor.vue')),
         initialData: {
             title: 'Caso de Éxito y Alianzas',
             subTitle: 'Maestría Conjunta en Gestión de Riesgos y Sostenibilidad',
@@ -663,8 +664,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-handshake',
         isBoxed: true, // Se expande de borde a borde para lucir espectacular en la landing
         group: 'Institucional',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/ComoColaboramos.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates/ComoColaboramosEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/como-colaboramos/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/como-colaboramos/Editor.vue')),
         initialData: {
             title: '¿Cómo colaboramos?',
             introText: 'Nuestra red transforma la competencia académica en cooperación estratégica. Trabajamos bajo un esquema de apoyo mutuo que nos permite potenciar las capacidades de cada región:',
@@ -692,8 +693,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-flask',
         isBoxed: true, // Se queda en false para estirarse con su fondo #f2f5fa de extremo a extremo
         group: 'Contenido',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/LaboratorioTerritorial.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates/LaboratorioTerritorialEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/contenido/laboratorio-territorial/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/contenido/laboratorio-territorial/Editor.vue')),
         initialData: {
             title: '¿Qué es un Laboratorio Territorial?',
             text: 'A diferencia de un laboratorio tradicional de cuatro paredes, un Living Lab es una zona geográfica específica (una cuenca, una ciudad, un valle agrícola) donde implementamos y validamos tecnologías y estrategias sociales junto con las personas que habitan el lugar.'
@@ -704,8 +705,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-file-contract',
         isBoxed: true,
         group: 'Contenido',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/AsambleasGenerales.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/AsambleasGeneralesEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/contenido/asambleas-generales/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/contenido/asambleas-generales/Editor.vue')),
         initialData: {
             title: 'Asambleas Generales',
             limit: 6,
@@ -717,8 +718,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-university',
         isBoxed: true,
         group: 'Institucional',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/DirectorioMiembros.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/DirectorioMiembrosEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/directorio-miembros/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/directorio-miembros/Editor.vue')),
         initialData: {
             title: 'Directorio de Miembros',
             limit: 8
@@ -729,8 +730,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-users-cog',
         isBoxed: true,
         group: 'Institucional',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/DirectorioAutoridades.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/DirectorioAutoridadesEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/directorio-autoridades/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/directorio-autoridades/Editor.vue')),
         initialData: {
             title: 'Directorio',
             limit: 6
@@ -741,8 +742,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-handshake',
         isBoxed: true,
         group: 'Institucional',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/Aliados.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/AliadosEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/aliados-buscar/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/aliados-buscar/Editor.vue')),
         initialData: {
             title: 'Busca su Aliado',
             limit: 12
@@ -753,8 +754,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-trophy',
         isBoxed: true, // Rompe contenedores rígidos para expandirse de forma imponente
         group: 'Contenido',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/MemoriasCongreso.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/MemoriasCongresoEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/contenido/memorias-congreso/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/contenido/memorias-congreso/Editor.vue')),
         initialData: {
             title: 'Memorias de Congresos Internacionales RiesGIRD-ACC',
             introText: 'Revive las ponencias, debates y acuerdos de nuestros principales espacios de articulación. Aquí encontrarás las presentaciones, actas y grabaciones de los congresos, foros y asambleas impulsados por la RIESGIRD-ACC Perú.',
@@ -791,8 +792,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-folder-open',
         isBoxed: true, // Rompe contenedores rígidos para lucir imponente de extremo a extremo
         group: 'Contenido',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/GestionConocimiento.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/GestionConocimientoEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/contenido/gestion-conocimiento/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/contenido/gestion-conocimiento/Editor.vue')),
         initialData: {
             title: 'Encuentre su Memoria',
             introText: 'Accede a los documentos oficiales que rigen el funcionamiento de nuestra Red, así como a los planes de trabajo, actas del Consejo Directivo y lineamientos técnicos internos para nuestras universidades miembro.',
@@ -824,8 +825,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-microscope',
         isBoxed: true, // Se despliega libre en la grilla para máxima fidelidad móvil
         group: 'Contenido',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/InvestigacionesProducidas.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/InvestigacionesProducidasEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/contenido/investigaciones-producidas/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/contenido/investigaciones-producidas/Editor.vue')),
         initialData: {
             title: 'Encuentra su investigacion',
             introText: 'Explora nuestra base de datos de producción científica. Documentos, tesis, policy briefs y artículos desarrollados por los investigadores de nuestras universidades miembro, orientados a resolver los desafíos territoriales del país.',
@@ -856,8 +857,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-calendar-check',
         isBoxed: true,
         group: 'Institucional',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/AsambleaRectores.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/AsambleaRectoresEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/asamblea-rectores/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/asamblea-rectores/Editor.vue')),
         initialData: {
             title: 'Asamblea de Rectores',
             introText: 'Las asambleas de rectores son el máximo órgano de gobierno de la red, donde se toman las decisiones estratégicas institucionales.',
@@ -907,8 +908,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-images',
         isBoxed: true,
         group: 'Hero',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/CooperacionSlider.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates/CooperacionSliderEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/hero/cooperacion-slider/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/hero/cooperacion-slider/Editor.vue')),
         initialData: {
             items: [
                 {
@@ -933,8 +934,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-newspaper',
         isBoxed: false, // Permite que rompa envolturas rígidas y maneje su propio layout fluido
         group: 'Contenido',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/NoticiasEventosHub.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/NoticiasEventosHubEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/contenido/noticias-eventos-hub/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/contenido/noticias-eventos-hub/Editor.vue')),
         initialData: {
             bannerText: 'Entérate de las últimas novedades, participa en nuestros próximos encuentros y únete a las iniciativas que impulsan el desarrollo territorial sostenible.'
         }
@@ -944,8 +945,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-ad',
         isBoxed: false, // Permite que maneje sus propios márgenes fluidos
         group: 'Institucional',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/views/BannerInformativo.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/updates/BannerInformativoEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/banner-informativo/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/banner-informativo/Editor.vue')),
         initialData: {
             bannerText: 'Entérate de las últimas novedades, participa en nuestros próximos encuentros y únete a las iniciativas que impulsan el desarrollo territorial sostenible.'
         }
@@ -955,8 +956,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-th-large',
         isBoxed: false, // Rompe cajas estáticas para alineación fluida en la landing
         group: 'Contenido',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/DynamicContentGrid.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/DynamicContentGridEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/contenido/dynamic-content-grid/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/contenido/dynamic-content-grid/Editor.vue')),
         initialData: {
             title: 'Últimas Novedades de la Red',
             introText: 'Mantente al tanto de las actividades, acuerdos y novedades científicas impulsadas por nuestros nodos regionales.',
@@ -990,8 +991,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-archive',
         isBoxed: false,
         group: 'Contenido',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/AcuerdosScrollHub.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/AcuerdosScrollHubEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/contenido/acuerdos-scroll-hub/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/contenido/acuerdos-scroll-hub/Editor.vue')),
         initialData: {
             title: 'Repositorio Documental de Acuerdos',
             accentColor: 'blue',
@@ -1007,8 +1008,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'bi bi-type-h1',
         group: 'Contenido',
         isBoxed: true,
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/title/SectionTitle.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/title/Editor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/_shared/SectionTitle/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/_shared/SectionTitle/Editor.vue')),
         initialData: {
             title: 'Título de la sección',
             introText: '',
@@ -1024,8 +1025,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'bi bi-bullseye',
         group: 'Contenido',
         isBoxed: true,
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/section/MissionVision/Block.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/section/MissionVision/Editor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/contenido/section-mission-vision/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/contenido/section-mission-vision/Editor.vue')),
         initialData: {
             misionTitle: 'Nuestra Misión',
             misionText: 'Promover la institucionalización de la Gestión Integral del Riesgo de Desastres (GIRD) y la Adaptación al Cambio Climático (ACC) en el sistema de educación superior peruano.',
@@ -1042,8 +1043,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-th-large',
         isBoxed: true,
         group: 'Contenido',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/DynamicGridInfinite.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/DynamicGridInfiniteEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/contenido/dynamic-grid-infinite/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/contenido/dynamic-grid-infinite/Editor.vue')),
 
         initialData: {
             title: 'Eventos y Noticias Destacados',
@@ -1058,8 +1059,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-university',
         isBoxed: true,
         group: 'Institucional',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/DirectorioMiembrosAll.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/DirectorioMiembrosAllEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/directorio-miembros-all/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/directorio-miembros-all/Editor.vue')),
         initialData: {
             title: 'Directorio de Miembros Detalle',
             limit: 8
@@ -1070,8 +1071,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-users-cog',
         isBoxed: true,
         group: 'Institucional',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/DirectorioAutoridadesAll.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/DirectorioAutoridadesAllEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/directorio-autoridades-all/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/directorio-autoridades-all/Editor.vue')),
         initialData: {
             title: 'Directorio de Autoridades Detalle',
             limit: 6
@@ -1082,8 +1083,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-users-cog',
         isBoxed: true,
         group: 'Institucional',
-        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/riesgo/grid/views/DirectorioEspecialistas.vue')),
-        // editor: defineAsyncComponent(() => import('../components/riesgo/grid/updates/DirectorioEspecialistasEditor.vue')),
+        previewImage: 'https://redgirdaccperu.edu.pe/storage/media/pregrado/2026/06/1781038771_logoriesgird.webp', component: defineAsyncComponent(() => import('../components/blocks/institucional/directorio-especialistas/Block.vue')),
+        // editor: defineAsyncComponent(() => import('../components/blocks/institucional/directorio-especialistas/Editor.vue')),
         initialData: {
             title: 'Directorio',
             limit: 6
@@ -1142,5 +1143,13 @@ export const blockIcons = Object.keys(BLOCK_REGISTRY).reduce((acc, key) => {
 }, {} as Record<string, string>);
 
 //Resolvedores limpios de lógica pública
-export const resolveBlock = (type: string) => BlockComponents[type] || null;
+// resolveBlock también resuelve components/pre_elements (ELEMENTS_REGISTRY) como
+// fallback: así el mismo mecanismo de "agregar bloque" (addBlock en
+// usePageBuilder.ts) sirve para insertar un elemento en el canvas para verlo
+// en contexto real. No tienen entrada en editorRegistry.ts a propósito: al no
+// existir editor para su type, resolveEditor(type) devuelve null y el panel
+// de edición simplemente no muestra nada para ellos — sin necesitar una
+// bandera "sin editor" aparte, es el mismo comportamiento que ya tienen otros
+// bloques de este registry con su editor comentado.
+export const resolveBlock = (type: string) => BlockComponents[type] || ELEMENTS_REGISTRY[type]?.component || null;
 export const getInitialData = (type: string) => JSON.parse(JSON.stringify(BLOCK_REGISTRY[type]?.initialData || {}));

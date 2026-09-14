@@ -1,0 +1,139 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Cards.
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Cards ---", ~líneas 1237-1331).
+
+   Mismo problema que con .btn y .badge, pero más grave: 79 bloques
+   ya usan class="card" nativo de Bootstrap. A diferencia de botones/
+   badges, la variante "estándar" de card en webunificada NO tiene
+   ningún modificador propio — su HTML real es solo class="card", sin
+   "--algo". Eso significa que no hay forma de distinguirla de un
+   .card de Bootstrap con el mismo truco que usamos antes (exigir un
+   modificador junto a la clase base), porque en este caso no existe
+   tal modificador en el HTML original.
+
+   Por eso, solo para Card, se agrega un modificador propio que
+   webunificada NO tiene: "card--default", que AtomCard/MoleculeCard
+   agrega siempre (incluso en la variante estándar) como marca técnica
+   interna. Es una desviación deliberada del HTML tal cual lo muestra
+   webunificada, necesaria en este proyecto en particular por la
+   colisión real encontrada. Las variantes card--service y card--image
+   sí existen en el HTML original tal cual.
+
+   Los elementos internos (card__media, card__body, card__title,
+   card__text, card__link, card-service__number) usan notación BEM con
+   doble guion bajo, distinta a la de Bootstrap (que usa guion simple:
+   .card-body, .card-title) — esos no colisionan y se portan tal cual.
+   ============================================================ */
+
+.arcis-scope {
+  .card.card--default,
+  .card.card--service,
+  .card.card--image {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--neutrals-0);
+    border: var(--border-width-sm) solid var(--border-color-light);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--ease-base), transform var(--ease-base);
+  }
+
+  .card.card--default:hover,
+  .card.card--service:hover,
+  .card.card--image:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+  }
+
+  .card__media {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+
+  .card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    flex: 1;
+  }
+
+  .card__title {
+    font-size: var(--text-h4);
+  }
+
+  .card__text {
+    color: var(--arcis-color-text-secondary);
+    font-size: var(--text-body);
+  }
+
+  .card__link {
+    margin-top: auto;
+    padding-top: var(--space-2);
+  }
+
+  /* Card servicio — única variante autorizada a usar numeración secuencial.
+     Hoy "padding"/"gap" no colisionan con la regla base, pero se deja en
+     forma compuesta (.card.card--service) de todas formas: si en el futuro
+     alguien agrega esas propiedades a la regla base de arriba, esta seguirá
+     ganando sin que nadie tenga que acordarse de este detalle. */
+  .card.card--service {
+    padding: var(--space-6);
+    gap: var(--space-4);
+  }
+
+  .card-service__number {
+    font-family: var(--font-accent);
+    font-size: var(--text-giant);
+    font-weight: var(--weight-bold);
+    line-height: 1;
+    color: var(--neutrals-200);
+  }
+
+  /* Card imagen con overlay oscuro — portfolio / hero cards.
+     .card.card--image (no ".card--image" a secas): esta es la que de verdad
+     colisionaba — su "border: none" perdía contra el "border" con borde real
+     de la regla base de arriba por tener menos especificidad, así que esta
+     variante seguía mostrando un borde que no debía tener. */
+  .card.card--image {
+    position: relative;
+    min-height: 360px;
+    color: var(--arcis-color-text-inverse);
+    border: none;
+  }
+
+  .card--image img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card--image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.82) 100%);
+  }
+
+  .card--image .card__body {
+    position: relative;
+    z-index: 1;
+    margin-top: auto;
+  }
+
+  .card--image .card__text {
+    color: var(--neutrals-200);
+  }
+}

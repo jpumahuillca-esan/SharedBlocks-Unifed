@@ -66,7 +66,7 @@
         </div>
       </section>
     </div>
-    <!-- <p>{{ buttons }}</p> -->
+    <!-- <AtomText>{{ buttons }}</AtomText> -->
     <div v-if="buttons && buttons.length" class="sidebar__bottom">
       <a v-for="(button, index) in buttons" :key="index" :href="button.url" target="_blank" rel="noopener noreferrer"
         class="sidebar__cta">
@@ -82,6 +82,7 @@
 </template>
 
 <script setup lang="ts">
+import AtomText from '../../../atoms/AtomText.vue';
 interface CTAButton {
   text: string;
   url: string;

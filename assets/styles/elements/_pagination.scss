@@ -1,0 +1,67 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Pagination (navegación de páginas para listados).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Pagination ---", ~líneas
+   1930-1973).
+
+   COLISIÓN CONFIRMADA con Bootstrap 5: ".pagination" es un nombre de
+   clase EXACTO de Bootstrap 5 (su propio contenedor de paginación).
+   Igual que con .card/.form-select/.progress, el markup real de
+   webunificada usa ".pagination" SOLO en su caso base (sin modificador:
+   "<nav class="pagination">"), así que se inventa el mismo marcador
+   técnico "--arcis" que agrega MoleculePagination.vue automáticamente,
+   para que la regla real exija selector compuesto y nunca coincida con
+   un <nav class="pagination"> plano de Bootstrap.
+
+   ".pagination__item"/".pagination__ellipsis" son BEM y no colisionan
+   con Bootstrap (que usa ".page-item"/".page-link", nombres distintos),
+   van bare.
+   ============================================================ */
+
+.arcis-scope {
+  .pagination.pagination--arcis {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .pagination__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding-inline: var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    color: var(--arcis-color-text-secondary);
+    transition: background-color var(--ease-fast), color var(--ease-fast);
+  }
+
+  .pagination__item:hover {
+    background-color: var(--neutrals-100);
+    color: var(--arcis-color-text-primary);
+  }
+
+  .pagination__item.is-active {
+    background-color: var(--arcis-color-global-main);
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .pagination__item.is-disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .pagination__item svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .pagination__ellipsis {
+    color: var(--arcis-color-text-disabled);
+    padding-inline: var(--space-1);
+  }
+}

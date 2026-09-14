@@ -1,0 +1,44 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Dividers (horizontal, con etiqueta, vertical).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Dividers ---", ~líneas 1520-1547).
+
+   ".divider"/".divider--label"/".divider--vertical" no son clases de
+   Bootstrap (verificado: no colisionan con nada de front — hay bloques
+   reales con "divider" en el nombre de su clase, como
+   ".vertical-divider-red" o ".divider-bicolor-vertical", pero ninguno
+   coincide exactamente con estos tres nombres), así que van bare, sin
+   el modificador obligatorio que sí necesitan .btn/.badge/.card/.alert.
+   ============================================================ */
+
+.arcis-scope {
+  .divider {
+    border: none;
+    border-top: var(--border-width-sm) solid var(--border-color-light);
+    margin: 0;
+  }
+
+  .divider--label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    color: var(--arcis-color-text-secondary);
+    font-size: var(--text-sm);
+  }
+
+  .divider--label::before,
+  .divider--label::after {
+    content: '';
+    flex: 1;
+    height: var(--border-width-sm);
+    background-color: var(--border-color-light);
+  }
+
+  .divider--vertical {
+    width: var(--border-width-sm);
+    align-self: stretch;
+    background-color: var(--border-color-light);
+  }
+}

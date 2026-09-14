@@ -1,0 +1,91 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Steppers (indicador de progreso de varios pasos).
+
+   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
+   (proyecto "webunificada", sección "--- Steppers ---", ~líneas 1549-1620).
+
+   ".stepper"/".step"/".step__*"/".is-complete"/".is-active" no son
+   clases de Bootstrap ni colisionan con nada en components/blocks
+   (verificado), así que van bare, sin el modificador obligatorio que sí
+   necesitan .btn/.badge/.card/.alert.
+
+   OJO con ".step.is-complete + .step__connector": es un combinador de
+   hermano adyacente, así que el paso y su conector deben ser hermanos
+   directos en el DOM (no uno dentro del otro) — así arma el markup
+   MoleculeStepper.vue, igual que webunificada.
+   ============================================================ */
+
+.arcis-scope {
+  .stepper {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    text-align: center;
+  }
+
+  .step__index {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-full);
+    border: var(--border-width-md) solid var(--border-color-light);
+    color: var(--arcis-color-text-disabled);
+    font-family: var(--font-display);
+    font-weight: var(--weight-semibold);
+    font-size: var(--text-sm);
+    background-color: var(--neutrals-0);
+    transition: background-color var(--ease-fast), border-color var(--ease-fast), color var(--ease-fast);
+  }
+
+  .step__index svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .step__label {
+    font-size: var(--text-sm);
+    color: var(--arcis-color-text-disabled);
+    max-width: 110px;
+  }
+
+  .step__connector {
+    flex: 1;
+    height: var(--border-width-md);
+    background-color: var(--border-color-light);
+    margin-top: 17px;
+    min-width: 32px;
+  }
+
+  .step.is-complete .step__index {
+    background-color: var(--arcis-color-global-main);
+    border-color: var(--arcis-color-global-main);
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .step.is-complete .step__label {
+    color: var(--arcis-color-text-primary);
+  }
+
+  .step.is-complete + .step__connector {
+    background-color: var(--arcis-color-global-main);
+  }
+
+  .step.is-active .step__index {
+    border-color: var(--arcis-color-global-main);
+    color: var(--arcis-color-global-main);
+  }
+
+  .step.is-active .step__label {
+    color: var(--arcis-color-text-primary);
+    font-weight: var(--weight-medium);
+  }
+}

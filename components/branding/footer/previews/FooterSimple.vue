@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AtomText from '../../../atoms/AtomText.vue';
 import { computed } from 'vue';
 
 const props = defineProps<{ config: any }>();
@@ -12,6 +13,10 @@ const safeConfig = computed(() => ({
     copyrightText: props.config?.copyrightText || '',
     socialLinks: props.config?.socialLinks || []
 }));
+
+
+
+console.log(safeConfig)
 </script>
 
 <template>
@@ -32,7 +37,7 @@ const safeConfig = computed(() => ({
                         </li>
                     </ul>
                     
-                    <p class="mb-0 fs-copyright">{{ safeConfig.copyrightText }}</p>
+                    <AtomText class="mb-0 fs-copyright">{{ safeConfig.copyrightText }}sdsdsd</AtomText>
                 
                 </div>
 
