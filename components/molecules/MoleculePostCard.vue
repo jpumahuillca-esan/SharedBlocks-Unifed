@@ -35,6 +35,13 @@ withDefaults(defineProps<{
   eyebrow?: string;
   /** Solo "news": etiqueta sobre la imagen, ej. "Actualidad". */
   tag?: string;
+  /**
+   * Solo "news": varias etiquetas sobre la imagen.
+   *
+   * Tiene prioridad sobre `tag`, que se conserva para el caso de una sola y
+   * para no romper a quien ya lo usaba.
+   */
+  badges?: string[];
   /** Solo "news": fecha simple, ej. "09/07/2026". */
   date?: string;
   title?: string;
@@ -56,14 +63,30 @@ withDefaults(defineProps<{
 <template>
   <article :class="['post-card', variant === 'news' ? 'post-card--news' : null]">
     <div class="post-card__media">
-      <img :src="image" :alt="imageAlt || ''" loading="lazy" />
-      <span v-if="variant === 'news' && tag" class="post-card__tag">{{ tag }}</span>
+      <!-- Sin imagen no se emite <img>: un src vacío da un icono roto. -->
+      <img v-if="image" :src="image" :alt="imageAlt || ''" loading="lazy" />
+      <div v-if="variant === 'news' && badges?.length" class="post-card__tags">
+        <p v-for="(badge, i) in badges" :key="i" class="post-card__tag">{{ badge }}</p>
+      </div>
+      <p v-else-if="variant === 'news' && tag" class="post-card__tag">{{ tag }}</p>
     </div>
 
     <div class="post-card__body">
       <template v-if="variant === 'news'">
-        <span v-if="date" class="post-card__date">{{ date }}</span>
-        <AtomHeading v-if="title" :level="4" class="post-card__title">{{ title }}</AtomHeading>
+        <p v-if="date" class="post-card__date">{{ date }}</p>
+        <!--
+          Nivel y tamaño son cosas distintas y por eso se pasan por separado.
+
+          El nivel es jerarquía: la tarjeta vive dentro de una sección cuyo
+          título es un h2, así que le corresponde h3. Saltar a h4 dejaría un
+          hueco en el esquema de la página.
+
+          `size` es obligatorio: AtomHeading fija el tamaño como estilo en línea
+          y un estilo en línea gana sobre la hoja de estilos. Sin él, el título
+          se dibujaría al tamaño que le toque al nivel y la regla de
+          .post-card__title (--text-h6) nunca llegaría a aplicarse.
+        -->
+        <AtomHeading v-if="title" :level="3" size="h6" class="post-card__title">{{ title }}</AtomHeading>
         <AtomDivider />
         <AtomButton variant="link" class="post-card__link" :href="href || '#'">
           {{ ctaLabel }}
@@ -73,12 +96,12 @@ withDefaults(defineProps<{
 
       <template v-else>
         <AtomEyebrow v-if="eyebrow">{{ eyebrow }}</AtomEyebrow>
-        <AtomHeading v-if="title" :level="4" class="post-card__title">{{ title }}</AtomHeading>
+        <AtomHeading v-if="title" :level="3" size="h6" class="post-card__title">{{ title }}</AtomHeading>
         <AtomText v-if="excerpt" class="post-card__excerpt">{{ excerpt }}</AtomText>
         <div v-if="publishedDate || readingTime" class="post-card__meta">
-          <span v-if="publishedDate">{{ publishedDate }}</span>
-          <span v-if="publishedDate && readingTime">·</span>
-          <span v-if="readingTime">{{ readingTime }}</span>
+          <p v-if="publishedDate">{{ publishedDate }}</p>
+          <p v-if="publishedDate && readingTime" aria-hidden="true">·</p>
+          <p v-if="readingTime">{{ readingTime }}</p>
         </div>
       </template>
     </div>

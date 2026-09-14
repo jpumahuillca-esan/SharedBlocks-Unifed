@@ -2,14 +2,16 @@
 /**
  * AtomButton — átomo de botón (ARCIS Design System).
  *
- * Envuelve las clases .btn/.btn--* portadas en assets/styles/components.scss
+ * Envuelve las clases .btn/.btn--* portadas en assets/styles/elements/_buttons
  * (fuente: webunificada/ui-kit/assets/css/main.css). No redeclara estilos
- * propios: cambiar el look de los botones se hace una sola vez en ese
- * archivo y se propaga a todo lo que use este átomo.
+ * propios: cambiar el look de los botones se hace una sola vez en ese archivo
+ * y se propaga a todo lo que use este átomo.
  *
- * Se renderiza como <a> si se pasa `href`, o como <button> en caso
- * contrario (igual que en la guía viva de webunificada, donde los CTA
- * de navegación son <a class="btn ..."> y las acciones son <button>).
+ * SIEMPRE se renderiza como <a>, nunca como <button>, por decisión de proyecto
+ * (criterio de posicionamiento). Eso tiene una consecuencia de accesibilidad
+ * que se compensa aquí: un ancla sin destino no es interactiva por sí sola, así
+ * que cuando no hay `href` se le da rol de botón, se la hace enfocable y se
+ * atiende Enter y Espacio, que es lo que un <button> haría de fábrica.
  */
 import { computed } from 'vue';
 
@@ -24,16 +26,15 @@ const props = withDefaults(defineProps<{
   /** Legible sobre fondos oscuros (equivale a btn--negative en ARCIS). */
   negative?: boolean;
   disabled?: boolean;
-  /** Si se pasa, se renderiza como <a href="...">. */
+  /** Destino. Sin él, el átomo actúa como disparador de una acción. */
   href?: string;
-  type?: 'button' | 'submit' | 'reset';
 }>(), {
   variant: 'primary',
   size: 'md',
-  type: 'button',
 });
 
-const tag = computed(() => (props.href ? 'a' : 'button'));
+/** Sin destino, el ancla es un disparador de acción, no un enlace. */
+const isAction = computed(() => !props.href);
 
 const classes = computed(() => [
   'btn',
@@ -41,17 +42,29 @@ const classes = computed(() => [
   props.size !== 'md' ? `btn--${props.size}` : null,
   props.icon ? 'btn--icon' : null,
   props.negative ? 'btn--negative' : null,
+  // El sistema ofrece .is-disabled porque :disabled no aplica a un <a>.
+  props.disabled ? 'is-disabled' : null,
 ]);
+
+const onKeydown = (event: KeyboardEvent) => {
+  if (props.disabled || !isAction.value) return;
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+
+  // Un <button> se activa con ambas teclas; un <a> sin href, con ninguna.
+  event.preventDefault();
+  (event.currentTarget as HTMLElement).click();
+};
 </script>
 
 <template>
-  <component
-    :is="tag"
-    :href="href"
-    :type="tag === 'button' ? type : undefined"
-    :disabled="tag === 'button' ? disabled : undefined"
+  <a
+    :href="disabled ? undefined : href"
+    :role="isAction ? 'button' : undefined"
+    :tabindex="disabled ? -1 : (isAction ? 0 : undefined)"
+    :aria-disabled="disabled ? 'true' : undefined"
     :class="classes"
+    @keydown="onKeydown"
   >
     <slot />
-  </component>
+  </a>
 </template>

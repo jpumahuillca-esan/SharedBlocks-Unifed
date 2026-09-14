@@ -6,6 +6,164 @@ import { ELEMENTS_REGISTRY } from '../components/pre_elements/ElementsRegistry';
 
 export const BLOCK_REGISTRY: Record<string, any> = {
 
+    /* ---------------------------------------------------------------------
+       BETA — bloques portados de los componentes de webunificada.
+
+       Se marcan con `beta: true` y su `group` no coincide con ninguno de
+       `baseGroups`, así que quedan fuera del catálogo clásico: el panel
+       izquierdo los lista aparte, en su propia pestaña.
+       --------------------------------------------------------------------- */
+
+    EventsFeatured: {
+        label: 'Eventos destacados',
+        icon: 'las la-calendar',
+        group: 'Events',
+        beta: true,
+        isBoxed: true,
+        component: defineAsyncComponent(() => import('../components/block-beta/events/events-featured/Block.vue')),
+        initialData: {
+            title: 'Eventos',
+            linkLabel: 'Ver todos los eventos',
+            linkUrl: '',
+            cardCount: 4,
+            cards: [
+                {
+                    id: 'ev-1', variant: 'media', date: '2026-03-12', day: '', month: '',
+                    title: 'Conferencia de liderazgo y gestión pública',
+                    href: '', time: '', location: '', ctaLabel: '',
+                    image: '', imageAlt: '', tag: '', badges: ['Conferencia', 'Presencial'],
+                },
+                {
+                    id: 'ev-2', variant: 'media', date: '2026-03-18', day: '', month: '',
+                    title: 'Taller de transformación digital para directivos',
+                    href: '', time: '', location: '', ctaLabel: '',
+                    image: '', imageAlt: '', tag: '', badges: ['Taller', 'Híbrido'],
+                },
+                {
+                    id: 'ev-3', variant: 'media', date: '2026-03-25', day: '', month: '',
+                    title: 'Encuentro de egresados y networking profesional',
+                    href: '', time: '', location: '', ctaLabel: '',
+                    image: '', imageAlt: '', tag: '', badges: ['Encuentro', 'Virtual'],
+                },
+                {
+                    id: 'ev-4', variant: 'media', date: '2026-04-02', day: '', month: '',
+                    title: 'Seminario de innovación y emprendimiento',
+                    href: '', time: '', location: '', ctaLabel: '',
+                    image: '', imageAlt: '', tag: '', badges: ['Conferencia', 'Presencial'],
+                },
+            ],
+        },
+    },
+
+    PostsFeatured: {
+        label: 'Publicaciones destacadas',
+        icon: 'las la-newspaper',
+        group: 'Events',
+        beta: true,
+        isBoxed: true,
+        component: defineAsyncComponent(() => import('../components/block-beta/events/posts-featured/Block.vue')),
+        initialData: {
+            title: 'Conexión ESAN',
+            linkLabel: 'Ver todas las publicaciones',
+            linkUrl: '',
+            cardCount: 4,
+            cards: [
+                {
+                    id: 'po-1', image: '', imageAlt: '',
+                    title: 'ESAN acompaña logro de escolar peruano premiado en mundial de robótica',
+                    date: '2026-07-09', badges: ['Actualidad'], ctaLabel: 'Leer artículo', href: '',
+                },
+                {
+                    id: 'po-2', image: '', imageAlt: '',
+                    title: 'Tendencias que están redefiniendo la gestión directiva',
+                    date: '2026-07-02', badges: ['Actualidad'], ctaLabel: 'Leer artículo', href: '',
+                },
+                {
+                    id: 'po-3', image: '', imageAlt: '',
+                    title: 'Decisiones financieras en escenarios de incertidumbre',
+                    date: '2026-06-24', badges: ['Actualidad'], ctaLabel: 'Leer artículo', href: '',
+                },
+                {
+                    id: 'po-4', image: '', imageAlt: '',
+                    title: 'El rol de las empresas en la agenda ambiental',
+                    date: '2026-06-18', badges: ['Actualidad'], ctaLabel: 'Leer artículo', href: '',
+                },
+            ],
+        },
+    },
+
+    CtaBandImage: {
+        label: 'CTA con imagen',
+        icon: 'las la-image',
+        group: 'CtaBrands',
+        beta: true,
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/cta/ctaband-image/Block.vue')),
+        initialData: {
+            eyebrow: 'Educación Ejecutiva',
+            title: 'Lleva la gestión de tu empresa al siguiente nivel',
+            desc: 'Programas para gerentes y directivos en actividad, diseñados junto a las principales empresas del país.',
+            image: '',
+            imageAlt: '',
+            buttonCount: 2,
+            primary: { label: 'Ver programas ejecutivos', url: '' },
+            secondary: { label: 'Habla con un asesor', url: '' },
+        },
+    },
+
+    CtaBandFullImage: {
+        label: 'CTA con imagen de fondo',
+        icon: 'las la-images',
+        group: 'CtaBrands',
+        beta: true,
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/cta/ctaband-full-image/Block.vue')),
+        initialData: {
+            eyebrow: 'Admisión 2026',
+            title: 'Título del CTA band hasta 2 líneas de contenido',
+            desc: 'Texto de apoyo del CTA band hasta 2 líneas de contenido, para acompañar al título.',
+            image: '',
+            imageAlt: '',
+            buttonCount: 2,
+            primary: { label: 'Botón primario', url: '' },
+            secondary: { label: 'Botón secundario', url: '' },
+        },
+    },
+
+    CtaBandSolid: {
+        label: 'CTA sólido de marca',
+        icon: 'las la-bullhorn',
+        group: 'CtaBrands',
+        beta: true,
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/cta/ctaband-solid/Block.vue')),
+        initialData: {
+            eyebrow: 'Admisión 2026',
+            title: '¿Listo para dar el siguiente paso?',
+            desc: 'Inicia tu postulación hoy y asegura tu vacante en el proceso de admisión 2026.',
+            buttonCount: 1,
+            primary: { label: 'Postula ahora', url: '' },
+            secondary: { label: '', url: '' },
+        },
+    },
+
+    CtaBandCompact: {
+        label: 'CTA compacto',
+        icon: 'las la-info-circle',
+        group: 'CtaBrands',
+        beta: true,
+        // Pensado para insertarse dentro de una columna de contenido.
+        isBoxed: true,
+        component: defineAsyncComponent(() => import('../components/block-beta/cta/ctaband-compact/Block.vue')),
+        initialData: {
+            icon: 'help-circle',
+            title: '¿Tienes dudas sobre el proceso de admisión?',
+            desc: 'Nuestros asesores académicos te acompañan en cada paso.',
+            linkLabel: 'Habla con un asesor',
+            linkUrl: '',
+        },
+    },
+
     HeroWelcome: {
         label: '🚀 Hero Bienvenida',
         icon: 'bi bi-star-fill',
@@ -1126,6 +1284,43 @@ export const blockGroups = baseGroups.map(group => {
         )
     };
 });
+
+/* -------------------------------------------------------------------------- */
+/* BETA — catálogo propio                                                      */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Categorías de los bloques beta.
+ *
+ * Son independientes de `baseGroups` a propósito: ningún id coincide con los
+ * del catálogo clásico, así que los bloques beta nunca aparecen mezclados con
+ * él. El panel izquierdo los agrupa por estas categorías en su propia pestaña.
+ */
+const betaBaseGroups = [
+    { id: 'CtaBrands', label: 'CTA & Brands', color: 'outline-danger', icon: 'las la-bullhorn' },
+    { id: 'Events', label: 'Events', color: 'outline-primary', icon: 'las la-calendar' },
+];
+
+/** Claves de los bloques marcados como beta, sin agrupar. */
+export const betaBlockKeys = Object.keys(BLOCK_REGISTRY).filter(
+    key => BLOCK_REGISTRY[key].beta === true
+);
+
+/** Bloques beta agrupados por categoría, en el mismo formato que blockGroups. */
+export const betaBlockGroups = betaBaseGroups.map(group => ({
+    ...group,
+    keys: betaBlockKeys.filter(key => BLOCK_REGISTRY[key].group === group.id),
+}));
+
+/**
+ * Bloques beta sin categoría reconocida.
+ *
+ * Existe para que un bloque nuevo no desaparezca del panel por olvidar darle
+ * una categoría o por escribirla mal: se muestra aparte en lugar de perderse.
+ */
+export const betaUngroupedKeys = betaBlockKeys.filter(
+    key => !betaBaseGroups.some(group => group.id === BLOCK_REGISTRY[key].group)
+);
 
 export const BlockComponents = Object.keys(BLOCK_REGISTRY).reduce((acc, key) => {
     acc[key] = BLOCK_REGISTRY[key].component;

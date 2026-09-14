@@ -1,0 +1,204 @@
+/* =========================================================================
+   CARD SECTION — ARCIS Design System
+
+   Sección con encabezado y una fila de tarjetas: título a la izquierda,
+   enlace de "ver todos" a la derecha, y debajo la grilla.
+
+   ATENCIÓN: no es un porte literal. El kit de este repositorio documenta las
+   tarjetas sueltas (event-card, post-card) pero no la sección que las envuelve;
+   ésta se reconstruyó a partir de una captura, siguiendo las convenciones del
+   resto del sistema. Conviene reconciliarla cuando el kit se actualice.
+
+   El número de columnas lo fija el bloque con --card-section-columns, para que
+   el editor pueda ofrecer 2, 3 o 4 sin duplicar reglas.
+
+   Todo bajo .arcis-scope por la razón explicada en base.scss.
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+
+  .card-section {
+    /*
+     * Margen lateral de la sección. Se guarda en una variable porque la fila de
+     * tarjetas lo compensa con margen negativo para poder sangrar hasta el
+     * borde, y ambos valores tienen que coincidir.
+     */
+    --card-section-padding-x: var(--space-6);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+
+    /*
+     * Ancho del contenedor: el que el sistema documenta en --container-max
+     * (1280px). Se usa el token y no el número, para que si el sistema cambia
+     * ese ancho estas secciones lo sigan sin tocar nada.
+     */
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+
+    padding-inline: var(--card-section-padding-x);
+    box-sizing: border-box;
+  }
+
+  .card-section__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .card-section__title {
+    font-size: var(--text-h3);
+    font-weight: var(--weight-bold);
+    color: var(--arcis-color-text-primary);
+  }
+
+  .card-section__link {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--arcis-color-global-main);
+    white-space: nowrap;
+  }
+
+  .card-section__link svg {
+    width: 16px;
+    height: 16px;
+    transition: transform var(--ease-base);
+  }
+
+  .card-section__link:hover svg {
+    transform: translateX(4px);
+  }
+
+  /*
+   * Grilla de tarjetas. El número de columnas viene del bloque como variable,
+   * así que cambiar de 2 a 4 en el editor no necesita una clase por cada caso.
+   */
+  /*
+   * Carril de tarjetas: SIEMPRE una sola fila.
+   *
+   * Las tarjetas nunca se apilan ni pasan a una segunda fila. Cada una toma su
+   * parte del ancho según las columnas elegidas en el editor, pero nunca baja
+   * de un ancho mínimo legible. Cuando ese mínimo ya no cabe, la fila se
+   * desplaza en horizontal y aparecen los puntos.
+   *
+   * El sangrado con margen negativo hace que el recorte llegue al borde de la
+   * sección, para que se vea intencional y no cortado a medias.
+   */
+  .card-section__grid {
+    display: flex;
+    gap: var(--space-5);
+    align-items: start;
+
+    margin-inline: calc(-1 * var(--card-section-padding-x));
+    padding-inline: var(--card-section-padding-x);
+
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--card-section-padding-x);
+    -webkit-overflow-scrolling: touch;
+
+    /* La barra estorba: el gesto y los puntos ya comunican que hay más. */
+    scrollbar-width: none;
+  }
+
+  .card-section__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .card-section__grid > * {
+    flex: 0 0 max(
+      var(--card-section-card-min, 260px),
+      calc(
+        (100% - (var(--card-section-columns, 4) - 1) * var(--space-5))
+        / var(--card-section-columns, 4)
+      )
+    );
+    scroll-snap-align: start;
+  }
+
+  /* Enlace al pie: solo existe en móvil, cuando sale del encabezado. */
+  .card-section__footer {
+    display: none;
+    justify-content: center;
+  }
+
+  /* -----------------------------------------------------------------------
+     Carril e indicador de puntos.
+
+     Los puntos los muestra u oculta el componente según el desbordamiento
+     real, no un punto de quiebre: si las tarjetas caben, no se dibujan.
+     ----------------------------------------------------------------------- */
+  .card-slider {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    min-width: 0;
+  }
+
+  .card-slider__dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+  }
+
+  .card-slider__dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-full);
+    background-color: var(--neutrals-300);
+    cursor: pointer;
+    transition: background-color var(--ease-fast), width var(--ease-fast);
+  }
+
+  .card-slider__dot:hover {
+    background-color: var(--neutrals-500);
+  }
+
+  .card-slider__dot.is-active {
+    /* El activo se alarga además de cambiar de color: no depende solo del
+       contraste, que es difícil de percibir en un punto de 8 píxeles. */
+    width: 20px;
+    background-color: var(--arcis-color-global-main);
+  }
+
+  /*
+   * En móvil solo cambian el margen lateral y la posición del enlace: el
+   * desplazamiento horizontal ya es el comportamiento normal del carril.
+   */
+  @include bp.breakpoint-down('mobile') {
+    .card-section {
+      --card-section-padding-x: var(--space-5);
+    }
+
+    .card-section__header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+    }
+
+    /* El enlace pasa al final de la sección, donde queda más a mano. */
+    .card-section__header .card-section__link {
+      display: none;
+    }
+
+    .card-section__footer {
+      display: flex;
+    }
+
+    .card-section__grid {
+      gap: var(--space-4);
+    }
+  }
+}

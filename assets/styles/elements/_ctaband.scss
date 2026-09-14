@@ -1,0 +1,344 @@
+/* =========================================================================
+   CTA BAND — ARCIS Design System
+
+   Franja de llamado a la acción, para cierre de sección o entre bloques.
+
+   Variantes:
+     .ctaband--image       imagen de fondo, degradada desde la izquierda,
+                           con el texto sobre la zona oscura
+     .ctaband--full-image  imagen de fondo con el contenido centrado
+     .ctaband--solid       franja centrada de color corporativo
+     .ctaband--compact     banner delgado para insertar en una columna
+
+   La base (contenido, antetítulo, título, descripción, acciones) y la variante
+   compacta son porte literal del CTA Band de webunificada/ui-kit. Las variantes
+   con imagen y la sólida siguen el diseño indicado por el equipo, que difiere
+   del kit de este repositorio: la sólida va sin textura ni ícono decorativo, y
+   la de imagen usa fondo degradado en lugar del layout dividido con dato
+   flotante que documenta el kit.
+
+   Nombres de token: el kit usa --arcis-color-corporate-neutrals-* y
+   --arcis-color-univ-yellow-*; la librería renombró ambas escalas a
+   --neutrals-* y --univ-yellow-* al portarlas (mismos valores).
+
+   Todo bajo .arcis-scope por la razón explicada en base.scss.
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+
+  .ctaband {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  /*
+   * Contenedor interno.
+   *
+   * La franja sangra a todo el ancho porque su fondo es parte del diseño, pero
+   * el contenido se limita al ancho del contenedor del sistema para que quede
+   * alineado con el resto de la página. Se usa el token --container-max y no un
+   * número, así el día que el sistema cambie ese ancho esto lo sigue solo.
+   *
+   * El espaciado vive aquí y no en la franja: si estuviera en la franja, en
+   * pantallas anchas separaría el contenido del borde del contenedor en lugar
+   * de separarlo de su propio límite.
+   */
+  .ctaband__inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding: var(--space-8);
+    box-sizing: border-box;
+  }
+
+  .ctaband__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .ctaband__eyebrow {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    /* Misma convención que el elemento .eyebrow del sistema. */
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .ctaband__title {
+    font-size: var(--text-h2);
+    font-weight: var(--weight-bold);
+  }
+
+  .ctaband__desc {
+    font-size: var(--text-body);
+    max-width: 52ch;
+  }
+
+  .ctaband__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  /* Imagen de fondo, común a las variantes que la usan. */
+  .ctaband__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* -----------------------------------------------------------------------
+     Variante "image": imagen de fondo con el texto a la izquierda. El velo
+     es opaco sobre el texto y se difumina hacia la derecha, dejando ver la
+     foto cuanto más lejos del borde izquierdo.
+     ----------------------------------------------------------------------- */
+  .ctaband--image {
+    display: flex;
+    align-items: stretch;
+    min-height: 380px;
+    background-color: var(--neutrals-900);
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .ctaband--image .ctaband__inner {
+    display: flex;
+    align-items: center;
+  }
+
+  .ctaband--image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(90deg, var(--neutrals-900) 0%, rgba(33, 33, 33, 0) 100%);
+  }
+
+  .ctaband--image .ctaband__content {
+    flex: 0 1 460px;
+  }
+
+  .ctaband--image .ctaband__eyebrow {
+    color: var(--univ-yellow-100);
+  }
+
+  .ctaband--image .ctaband__desc {
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  /* -----------------------------------------------------------------------
+     Variante "full-image": imagen de fondo con el contenido centrado.
+     ----------------------------------------------------------------------- */
+  .ctaband--full-image {
+    display: flex;
+    align-items: stretch;
+    min-height: 380px;
+    text-align: center;
+    background-color: var(--neutrals-900);
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .ctaband--full-image .ctaband__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ctaband--full-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-color: rgba(33, 33, 33, 0.55);
+  }
+
+  .ctaband--full-image .ctaband__content {
+    align-items: center;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .ctaband--full-image .ctaband__eyebrow {
+    color: var(--univ-yellow-100);
+  }
+
+  .ctaband--full-image .ctaband__desc {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .ctaband--full-image .ctaband__actions {
+    justify-content: center;
+  }
+
+  /* -----------------------------------------------------------------------
+     Variante "solid": franja centrada de color corporativo, sin textura ni
+     ícono decorativo.
+     ----------------------------------------------------------------------- */
+  .ctaband--solid {
+    text-align: center;
+    background-color: var(--arcis-color-global-main);
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .ctaband--solid .ctaband__content {
+    align-items: center;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .ctaband--solid .ctaband__eyebrow {
+    color: var(--arcis-color-text-inverse);
+    opacity: 0.85;
+  }
+
+  .ctaband--solid .ctaband__desc {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .ctaband--solid .ctaband__actions {
+    justify-content: center;
+  }
+
+  /* -----------------------------------------------------------------------
+     Variante "compact": banner delgado para una columna de contenido.
+     Porte literal del kit.
+     ----------------------------------------------------------------------- */
+  /*
+   * Esta variante no sangra: es una caja bordeada que se inserta dentro de una
+   * columna de contenido. Toma el ancho del contenedor directamente, sin
+   * envoltorio interno, porque no tiene fondo que llevar hasta el borde.
+   */
+  .ctaband--compact {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding: var(--space-5) var(--space-6);
+    box-sizing: border-box;
+    background-color: var(--neutrals-50);
+    border: var(--border-width-sm) solid var(--border-color-light);
+    border-radius: var(--radius-md);
+  }
+
+  .ctaband__icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    background-color: var(--neutrals-0);
+    color: var(--arcis-color-global-main);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .ctaband__icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .ctaband__text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .ctaband__text-title {
+    font-size: var(--text-body);
+    font-weight: var(--weight-bold);
+    color: var(--arcis-color-text-primary);
+  }
+
+  .ctaband__text-desc {
+    font-size: var(--text-sm);
+    color: var(--arcis-color-text-secondary);
+  }
+
+  .ctaband__link {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: var(--weight-medium);
+    color: var(--arcis-color-global-main);
+    white-space: nowrap;
+  }
+
+  .ctaband__link svg {
+    width: 16px;
+    height: 16px;
+    transition: transform var(--ease-base);
+  }
+
+  .ctaband__link:hover svg {
+    transform: translateX(4px);
+  }
+
+  /* -----------------------------------------------------------------------
+     Versión móvil — 768px hacia abajo.
+     ----------------------------------------------------------------------- */
+  @include bp.breakpoint-down('mobile') {
+
+    .ctaband__inner {
+      padding: var(--space-7) var(--space-5);
+    }
+
+    .ctaband--image {
+      min-height: auto;
+    }
+
+    /*
+     * En escritorio el texto ocupa una columna de 460px junto a la foto. En
+     * móvil debe ocupar el ancho completo y, sobre todo, poder encogerse:
+     * con `flex: none` el bloque conservaba su ancho natural y la descripción
+     * (limitada a 52 caracteres, unos 420px) se salía del contenedor.
+     */
+    .ctaband--image .ctaband__content {
+      flex: 1 1 100%;
+      min-width: 0;
+    }
+
+    /* Sin ancho para separar texto y foto, el velo se degrada hacia abajo. */
+    .ctaband--image::after {
+      background: linear-gradient(180deg, var(--neutrals-900) 0%, rgba(33, 33, 33, 0.55) 100%);
+    }
+
+    /*
+     * En móvil la variante compacta se apila y se centra: el ícono arriba, el
+     * texto debajo y el enlace al final. Alineada a la izquierda, con el ícono
+     * suelto en una esquina, la composición quedaba desequilibrada.
+     */
+    .ctaband--compact {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-4);
+      text-align: center;
+    }
+
+    /* El texto es una columna flexible: centrar el texto no basta. */
+    .ctaband--compact .ctaband__text {
+      align-items: center;
+      flex: none;
+    }
+
+    .ctaband--compact .ctaband__link {
+      align-self: center;
+    }
+  }
+}

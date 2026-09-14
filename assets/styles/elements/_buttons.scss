@@ -122,6 +122,25 @@
   .btn.btn--white {
     background-color: var(--neutrals-0);
     color: var(--arcis-color-global-main);
+    /*
+     * Igual que la base, pero el color acompaña al barrido de la persiana
+     * (--ease-slow). Con la velocidad rápida el texto se volvería blanco antes
+     * de que el fondo lo cubra, dejando un parpadeo de blanco sobre blanco.
+     */
+    transition: background-color var(--ease-fast), color var(--ease-slow),
+                border-color var(--ease-fast), transform var(--ease-fast);
+  }
+
+  /*
+   * Al pasar el mouse, la persiana cubre el botón con el rojo oscuro. El texto
+   * debe pasar a blanco o queda rojo sobre rojo y se vuelve ilegible.
+   *
+   * El kit original no contempla este caso: define el relleno del hover pero no
+   * cambia el color del texto de esta variante, a diferencia de la secundaria,
+   * que sí lo hace. Es una corrección nuestra sobre el porte.
+   */
+  .btn.btn--white:hover {
+    color: var(--arcis-color-text-inverse);
   }
 
   /* Hover "persiana horizontal": lamas que se despliegan de izquierda a derecha

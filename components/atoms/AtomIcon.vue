@@ -63,6 +63,8 @@ import {
   CreditCard,
   FileDown,
   TrendingUp,
+  // Sumado por el CTA Band compacto (data-lucide en ui-kit.html, sección CTA BAND).
+  HelpCircle,
 } from '@lucide/vue';
 
 const ICONS: Record<string, any> = {
@@ -102,6 +104,7 @@ const ICONS: Record<string, any> = {
   'credit-card': CreditCard,
   'file-down': FileDown,
   'trending-up': TrendingUp,
+  'help-circle': HelpCircle,
 };
 
 const props = withDefaults(defineProps<{

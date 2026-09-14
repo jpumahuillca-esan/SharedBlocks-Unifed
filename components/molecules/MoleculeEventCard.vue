@@ -40,6 +40,13 @@ withDefaults(defineProps<{
   imageAlt?: string;
   /** Solo "media": etiqueta sobre el cuerpo, ej. "Conferencia informativa". */
   tag?: string;
+  /**
+   * Solo "media": varias etiquetas.
+   *
+   * Tiene prioridad sobre `tag`, que se conserva para el caso de una sola y
+   * para no romper a quien ya lo usaba.
+   */
+  badges?: string[];
 }>(), {
   variant: 'standard',
 });
@@ -49,15 +56,44 @@ withDefaults(defineProps<{
   <article :class="['event-card', variant === 'media' ? 'event-card--media' : null]">
     <template v-if="variant === 'media'">
       <div class="event-card__media">
-        <img :src="image" :alt="imageAlt || ''" loading="lazy" />
+        <!-- Sin imagen no se emite <img>: un src vacío da un icono roto. -->
+        <img v-if="image" :src="image" :alt="imageAlt || ''" loading="lazy" />
         <div class="event-card__date-badge">
-          <span class="event-card__date-badge-day">{{ day }}</span>
-          <span class="event-card__date-badge-month">{{ month }}</span>
+          <p class="event-card__date-badge-day">{{ day }}</p>
+          <p class="event-card__date-badge-month">{{ month }}</p>
         </div>
       </div>
       <div class="event-card__media-body">
-        <AtomBadge v-if="tag" variant="brand-solid">{{ tag }}</AtomBadge>
-        <AtomHeading v-if="title" :level="4" class="event-card__title">
+        <!--
+          Las etiquetas van en fila, no apiladas: el cuerpo de la tarjeta es una
+          columna, así que necesitan su propio contenedor horizontal.
+
+          La primera va en sólido y las siguientes en la versión suave, para que
+          se lea cuál es la principal sin que compitan entre sí.
+        -->
+        <div v-if="badges?.length" class="event-card__badges">
+          <AtomBadge
+            v-for="(badge, i) in badges"
+            :key="i"
+            as="p"
+            :variant="i === 0 ? 'brand-solid' : 'brand'"
+          >
+            {{ badge }}
+          </AtomBadge>
+        </div>
+        <AtomBadge v-else-if="tag" as="p" variant="brand-solid">{{ tag }}</AtomBadge>
+        <!--
+          Nivel y tamaño son cosas distintas y por eso se pasan por separado.
+
+          El nivel es jerarquía: la tarjeta vive dentro de una sección cuyo
+          título es un h2, así que le corresponde h3. Antes pedía nivel 7, que
+          no existe: generaba una etiqueta <h7> inválida y buscaba un token de
+          tamaño inexistente.
+
+          `size` es obligatorio porque AtomHeading fija el tamaño en línea y así
+          gana sobre la hoja de estilos.
+        -->
+        <AtomHeading v-if="title" :level="3" size="h6" class="event-card__title">
           <a :href="href || '#'">{{ title }}</a>
         </AtomHeading>
       </div>
@@ -65,22 +101,22 @@ withDefaults(defineProps<{
 
     <template v-else>
       <div class="event-card__date">
-        <span class="event-card__date-day">{{ day }}</span>
-        <span class="event-card__date-month">{{ month }}</span>
+        <p class="event-card__date-day">{{ day }}</p>
+        <p class="event-card__date-month">{{ month }}</p>
       </div>
       <div class="event-card__body">
-        <AtomHeading v-if="title" :level="4" class="event-card__title">
+        <AtomHeading v-if="title" :level="3" size="h6" class="event-card__title">
           <a :href="href || '#'">{{ title }}</a>
         </AtomHeading>
         <div v-if="time || location" class="event-card__meta">
-          <span v-if="time" class="event-card__meta-item">
+          <p v-if="time" class="event-card__meta-item">
             <AtomIcon name="clock" :size="15" />
             {{ time }}
-          </span>
-          <span v-if="location" class="event-card__meta-item">
+          </p>
+          <p v-if="location" class="event-card__meta-item">
             <AtomIcon name="map-pin" :size="15" />
             {{ location }}
-          </span>
+          </p>
         </div>
       </div>
       <AtomButton v-if="ctaLabel" variant="secondary" size="sm">{{ ctaLabel }}</AtomButton>

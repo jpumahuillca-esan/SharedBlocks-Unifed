@@ -1,5 +1,9 @@
 <template>
-  <div class="page-sections">
+  <!--
+    `arcis-scope` activa el sistema de diseño: todas sus reglas están anidadas
+    bajo esa clase, así que sin ella los bloques salen sin estilos.
+  -->
+  <div class="page-sections arcis-scope">
     <section
       v-for="section in sections"
       :key="section.id"

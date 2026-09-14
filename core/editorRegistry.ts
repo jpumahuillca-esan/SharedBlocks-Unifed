@@ -1,6 +1,14 @@
 import { defineAsyncComponent } from 'vue';
 
 export const EDITOR_REGISTRY: Record<string, any> = {
+    // Beta — bloques portados de los componentes de webunificada.
+    EventsFeatured: defineAsyncComponent(() => import('../components/block-beta/events/events-featured/Editor.vue')),
+    PostsFeatured: defineAsyncComponent(() => import('../components/block-beta/events/posts-featured/Editor.vue')),
+    CtaBandImage: defineAsyncComponent(() => import('../components/block-beta/cta/ctaband-image/Editor.vue')),
+    CtaBandFullImage: defineAsyncComponent(() => import('../components/block-beta/cta/ctaband-full-image/Editor.vue')),
+    CtaBandSolid: defineAsyncComponent(() => import('../components/block-beta/cta/ctaband-solid/Editor.vue')),
+    CtaBandCompact: defineAsyncComponent(() => import('../components/block-beta/cta/ctaband-compact/Editor.vue')),
+
     NuestroRepositorio: defineAsyncComponent(() => import('../components/blocks/contenido/nuestro-repositorio/Editor.vue')),
     FooterSimple: defineAsyncComponent(() => import('../components/blocks/footer/footer-simple/Editor.vue')),
     HeaderDynamic: defineAsyncComponent(() => import('../components/blocks/header/header-dynamic/Editor.vue')),

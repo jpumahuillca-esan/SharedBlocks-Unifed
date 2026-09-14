@@ -106,6 +106,8 @@
     position: relative;
     aspect-ratio: 16 / 9;
     overflow: hidden;
+    /* Sin imagen configurada el hueco se ve gris, no vacío ni roto. */
+    background-color: var(--neutrals-200);
   }
 
   .event-card__media img {
@@ -166,6 +168,16 @@
     align-items: flex-start;
     gap: var(--space-3);
     padding: var(--space-5);
+  }
+
+  /*
+   * Fila de etiquetas. El cuerpo de la tarjeta es una columna, así que sin este
+   * contenedor la segunda etiqueta caería debajo de la primera.
+   */
+  .event-card__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
   }
 
   .event-card--media .event-card__title {
