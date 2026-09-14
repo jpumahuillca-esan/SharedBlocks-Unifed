@@ -57,4 +57,4 @@ export const EDITOR_REGISTRY: Record<string, any> = {
     
 };
 
-export const resolveEditor = (type: string) => EDITOR_REGISTRY[type] || null;
+export const resolveEditor = (type: string) => EDITOR_REGISTRY[type] || null;   

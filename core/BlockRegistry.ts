@@ -1087,7 +1087,7 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         initialData: {
             title: 'Directorio',
             limit: 6
-        }
+        }   
     },
     
 

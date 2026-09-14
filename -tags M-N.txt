@@ -1,0 +1,23 @@
+-tags      M-N
+-category  M-N
+
+
+NOMBRES
+APELLIDOS
+TELEFONO
+EMAIL
+TIPO 
+
+
+
+EVENTOS
+
+MULTI CATEGORIAS
+
+tags
+
+
+ASESORES? seria por analizar
+
+
+
