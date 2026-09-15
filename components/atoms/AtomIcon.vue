@@ -63,7 +63,6 @@ import {
   CreditCard,
   FileDown,
   TrendingUp,
-  // Sumado por el CTA Band compacto (data-lucide en ui-kit.html, sección CTA BAND).
   HelpCircle,
 } from '@lucide/vue';
 

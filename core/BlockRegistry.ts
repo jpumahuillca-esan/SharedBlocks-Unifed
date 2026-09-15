@@ -13,6 +13,23 @@ export const BLOCK_REGISTRY: Record<string, any> = {
        `baseGroups`, así que quedan fuera del catálogo clásico: el panel
        izquierdo los lista aparte, en su propia pestaña.
        --------------------------------------------------------------------- */
+    HeroLeadForm: {
+        label: '📋 Formulario de Conversión (Leads)',
+        icon: 'las la-envelope-open-text',
+        group: 'Events',
+        beta: true,
+        isBoxed: true,
+        component: defineAsyncComponent(() => import('../components/block-beta/forms/hero-lead-form/Block.vue')),
+        initialData: {
+            themeColor: '#e31140',
+            button_text: 'Enviar Solicitud',
+            campaign_id: null,
+            show_phone: true,
+            show_consult: false,
+            show_courses: true,
+            courses_list: [],
+        },
+    },
 
     EventsFeatured: {
         label: 'Eventos destacados',
@@ -1246,9 +1263,9 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         initialData: {
             title: 'Directorio',
             limit: 6
-        }   
+        }
     },
-    
+
 
 
 

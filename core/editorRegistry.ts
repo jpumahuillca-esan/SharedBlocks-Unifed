@@ -61,7 +61,8 @@ export const EDITOR_REGISTRY: Record<string, any> = {
     DirectorioMiembrosAll: defineAsyncComponent(() => import('../components/blocks/institucional/directorio-miembros-all/Editor.vue')),
     DirectorioAutoridadesAll: defineAsyncComponent(() => import('../components/blocks/institucional/directorio-autoridades-all/Editor.vue')),
     DirectorioEspecialistas: defineAsyncComponent(() => import('../components/blocks/institucional/directorio-especialistas/Editor.vue')),
-    HeroWelcome: defineAsyncComponent(() => import('../components/blocks/hero/hero-welcome/Editor.vue'))
+    HeroWelcome: defineAsyncComponent(() => import('../components/blocks/hero/hero-welcome/Editor.vue')),
+    HeroLeadForm: defineAsyncComponent(() => import('../components/block-beta/forms/hero-lead-form/Editor.vue'))
     
 };
 
