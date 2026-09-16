@@ -7,12 +7,46 @@
     </p>
 
     <label class="form-label">Título de la sección</label>
+    <p class="cs-hint">Lleva siempre el guion rojo debajo.</p>
     <input
       :value="title"
       type="text"
       class="form-control form-control-sm mb-2"
       @input="$emit('update:title', ($event.target as HTMLInputElement).value)"
     />
+
+    <!-- Descripción — opcional -->
+    <div class="cs-optional">
+      <div class="cs-optional__head">
+        <label class="form-label m-0">Descripción</label>
+        <button
+          v-if="showDesc"
+          type="button"
+          class="cs-optional__drop"
+          title="Quitar descripción"
+          @click="removeDesc"
+        >
+          <i class="las la-times"></i>
+        </button>
+      </div>
+
+      <textarea
+        v-if="showDesc"
+        :value="desc"
+        class="form-control form-control-sm"
+        rows="2"
+        placeholder="Descubre todos los eventos de los que puedes ser parte."
+        @input="$emit('update:desc', ($event.target as HTMLTextAreaElement).value)"
+      ></textarea>
+      <button
+        v-else
+        type="button"
+        class="btn btn-sm btn-outline-secondary w-100"
+        @click="descOpen = true"
+      >
+        <i class="las la-plus me-1"></i> Agregar descripción
+      </button>
+    </div>
 
     <label class="form-label">Texto del enlace</label>
     <input
@@ -66,21 +100,42 @@
  * CTA, aquí los valores se emiten en lugar de mutarse en sitio porque son
  * campos sueltos y no objetos.
  */
+import { ref, computed } from 'vue';
 import type { CardCount } from './types';
 
-defineProps<{
+const props = defineProps<{
   title: string;
+  desc: string;
   linkLabel: string;
   linkUrl: string;
   cardCount: CardCount;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'update:title', value: string): void;
+  (e: 'update:desc', value: string): void;
   (e: 'update:linkLabel', value: string): void;
   (e: 'update:linkUrl', value: string): void;
   (e: 'update:cardCount', value: CardCount): void;
 }>();
+
+/*
+ * Descripción opcional.
+ *
+ * El campo se muestra si se pidió o si ya trae texto. Hace falta el estado
+ * aparte: al pulsar "Agregar" el valor está vacío, y si solo se mirara el dato
+ * el campo se cerraría solo antes de poder escribir. Es estado del panel, no se
+ * guarda.
+ */
+const descOpen = ref(false);
+
+const showDesc = computed(() => descOpen.value || Boolean(props.desc));
+
+/** Se limpia el dato además de plegar: si no, la sección seguiría dibujándolo. */
+const removeDesc = () => {
+  descOpen.value = false;
+  emit('update:desc', '');
+};
 </script>
 
 <style scoped>
@@ -89,6 +144,41 @@ defineEmits<{
   font-size: 11.5px;
   line-height: 1.45;
   color: #6b7688;
+}
+
+/* Campo opcional: encabezado con su botón de quitar, y debajo el campo o el
+   botón de agregar. Mismo patrón que el editor del hero. */
+.cs-optional {
+  margin-bottom: 12px;
+}
+
+.cs-optional__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.cs-optional__drop {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: #6b7688;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.cs-optional__drop:hover {
+  background: #dc3545;
+  color: #fff;
 }
 
 .count-options {

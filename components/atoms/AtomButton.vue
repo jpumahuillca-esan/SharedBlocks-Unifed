@@ -15,7 +15,11 @@
  */
 import { computed } from 'vue';
 
-type ButtonVariant = 'primary' | 'secondary' | 'terciary' | 'white' | 'link';
+/**
+ * "surface" es el control compacto que va sobre una superficie de color y toma
+ * su contraste de ella (blanco translúcido). Ver _buttons.scss.
+ */
+type ButtonVariant = 'primary' | 'secondary' | 'terciary' | 'white' | 'surface' | 'link';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
 const props = withDefaults(defineProps<{

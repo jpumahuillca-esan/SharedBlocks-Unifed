@@ -11,6 +11,8 @@ export type CardCount = 2 | 3 | 4;
 /** Encabezado común: título a la izquierda, enlace a la derecha. */
 export interface CardSectionHeader {
     title: string;
+    /** Opcional: línea de apoyo bajo el guion del título. Vacía, no se dibuja. */
+    desc: string;
     /** Vacío oculta el enlace. */
     linkLabel: string;
     linkUrl: string;
@@ -18,10 +20,19 @@ export interface CardSectionHeader {
     cardCount: CardCount;
 }
 
-/** Tarjeta de evento. Refleja las props de MoleculeEventCard. */
+/**
+ * Tarjeta de evento.
+ *
+ * La sección usa SIEMPRE el formato con imagen de MoleculeEventCard. El otro
+ * formato de la molécula (bloque de fecha a la izquierda, con hora, lugar y
+ * botón) queda fuera a propósito: no corresponde al diseño de esta sección, así
+ * que ni se ofrece en el editor ni se guarda. La molécula lo sigue soportando
+ * para otros usos.
+ *
+ * Mismo criterio que PostCardItem con el formato de noticia.
+ */
 export interface EventCardItem {
     id: string;
-    variant: 'standard' | 'media';
     /** Fecha en ISO (AAAA-MM-DD), la que elige el calendario del editor. */
     date: string;
     /** Derivados de `date`. Se conservan por si hay contenido antiguo. */
@@ -29,11 +40,6 @@ export interface EventCardItem {
     month: string;
     title: string;
     href: string;
-    /** Solo variante estándar. */
-    time: string;
-    location: string;
-    ctaLabel: string;
-    /** Solo variante con imagen. */
     image: string;
     imageAlt: string;
     /** Etiqueta única, heredada. Se conserva por compatibilidad. */

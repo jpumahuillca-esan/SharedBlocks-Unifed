@@ -41,14 +41,50 @@
     margin-inline: auto;
 
     padding-inline: var(--card-section-padding-x);
+
+    /*
+     * Ritmo vertical común a todos los bloques (ver section-rhythm.scss). Sin
+     * esto, dos secciones de tarjetas seguidas quedaban pegadas: la sección no
+     * tenía ningún espaciado arriba ni abajo.
+     */
+    padding-block: var(--section-pad-y);
     box-sizing: border-box;
   }
 
+  /*
+   * `flex-end` y no `center`: el bloque de la izquierda tiene varias líneas
+   * (título, guion y, a veces, descripción), y centrado el enlace quedaría a
+   * media altura entre ellas. Así se alinea con el pie del bloque.
+   */
   .card-section__header {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
     gap: var(--space-4);
+  }
+
+  /* Título, guion y descripción, apilados. */
+  .card-section__heading {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    min-width: 0;
+  }
+
+  /*
+   * Guion rojo bajo el título. Mismas medidas que el de la sección del
+   * ecosistema (.ecosystem__rule): es el mismo recurso de la maqueta, y así se
+   * ven como la misma pieza en toda la página.
+   */
+  .card-section__rule {
+    width: 40px;
+    height: 2px;
+    background-color: var(--arcis-color-global-main);
+  }
+
+  .card-section__desc {
+    color: var(--arcis-color-text-secondary);
   }
 
   .card-section__title {

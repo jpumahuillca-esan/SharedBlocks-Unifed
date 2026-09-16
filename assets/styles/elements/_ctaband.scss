@@ -227,6 +227,12 @@
     width: 100%;
     max-width: var(--container-max);
     margin-inline: auto;
+    /*
+     * Ritmo vertical común a todos los bloques (ver section-rhythm.scss). Va
+     * como margen y no como relleno: es una caja con borde, y el relleno la
+     * agrandaría en lugar de separarla de sus vecinos.
+     */
+    margin-block: var(--section-pad-y);
     padding: var(--space-5) var(--space-6);
     box-sizing: border-box;
     background-color: var(--neutrals-50);

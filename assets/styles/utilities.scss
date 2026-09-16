@@ -42,4 +42,31 @@ $responsive-breakpoints: 'sm', 'md', 'lg', 'xl';
       }
     }
   }
+
+  /*
+   * Oculto a la vista, presente para lectores de pantalla y buscadores.
+   *
+   * Existe porque .d-none (y el atributo HTML `hidden`) hacen display: none, y
+   * lo que no se renderiza sale también del árbol de accesibilidad: un lector de
+   * pantalla no lo anuncia y un buscador lo trata como contenido oculto. Esta
+   * clase, en cambio, deja el elemento renderizado pero recortado a 1px.
+   *
+   * Mismo nombre y mismas reglas que la utilidad de Bootstrap 5: el panel de
+   * administración ya la carga, y así ambas coinciden en lugar de pisarse. El
+   * sitio público no carga Bootstrap, por eso tiene que estar aquí también.
+   */
+  .visually-hidden {
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  .visually-hidden:not(caption) {
+    position: absolute !important;
+  }
 }

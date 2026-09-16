@@ -39,33 +39,34 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         isBoxed: true,
         component: defineAsyncComponent(() => import('../components/block-beta/events/events-featured/Block.vue')),
         initialData: {
+            desc: 'Descubre todos los eventos de los que puedes ser parte.',
             title: 'Eventos',
             linkLabel: 'Ver todos los eventos',
             linkUrl: '',
             cardCount: 4,
             cards: [
                 {
-                    id: 'ev-1', variant: 'media', date: '2026-03-12', day: '', month: '',
+                    id: 'ev-1', date: '2026-03-12', day: '', month: '',
                     title: 'Conferencia de liderazgo y gestión pública',
-                    href: '', time: '', location: '', ctaLabel: '',
+                    href: '',
                     image: '', imageAlt: '', tag: '', badges: ['Conferencia', 'Presencial'],
                 },
                 {
-                    id: 'ev-2', variant: 'media', date: '2026-03-18', day: '', month: '',
+                    id: 'ev-2', date: '2026-03-18', day: '', month: '',
                     title: 'Taller de transformación digital para directivos',
-                    href: '', time: '', location: '', ctaLabel: '',
+                    href: '',
                     image: '', imageAlt: '', tag: '', badges: ['Taller', 'Híbrido'],
                 },
                 {
-                    id: 'ev-3', variant: 'media', date: '2026-03-25', day: '', month: '',
+                    id: 'ev-3', date: '2026-03-25', day: '', month: '',
                     title: 'Encuentro de egresados y networking profesional',
-                    href: '', time: '', location: '', ctaLabel: '',
+                    href: '',
                     image: '', imageAlt: '', tag: '', badges: ['Encuentro', 'Virtual'],
                 },
                 {
-                    id: 'ev-4', variant: 'media', date: '2026-04-02', day: '', month: '',
+                    id: 'ev-4', date: '2026-04-02', day: '', month: '',
                     title: 'Seminario de innovación y emprendimiento',
-                    href: '', time: '', location: '', ctaLabel: '',
+                    href: '',
                     image: '', imageAlt: '', tag: '', badges: ['Conferencia', 'Presencial'],
                 },
             ],
@@ -80,6 +81,7 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         isBoxed: true,
         component: defineAsyncComponent(() => import('../components/block-beta/events/posts-featured/Block.vue')),
         initialData: {
+            desc: '',
             title: 'Conexión ESAN',
             linkLabel: 'Ver todas las publicaciones',
             linkUrl: '',
@@ -104,6 +106,150 @@ export const BLOCK_REGISTRY: Record<string, any> = {
                     id: 'po-4', image: '', imageAlt: '',
                     title: 'El rol de las empresas en la agenda ambiental',
                     date: '2026-06-18', badges: ['Actualidad'], ctaLabel: 'Leer artículo', href: '',
+                },
+            ],
+        },
+    },
+
+    SectionEcosystem: {
+        label: 'Sección ecosistema',
+        icon: 'las la-sitemap',
+        group: 'Ecosystem',
+        beta: true,
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/ecosystem/section-ecosystem/Block.vue')),
+        initialData: {
+            title: 'Descubre nuestro Ecosistema Académico',
+            desc: 'En ESAN innovamos con nuestra oferta académica para responder a la transformación social, económica, laboral y tecnológica.',
+            features: [
+                {
+                    id: 'eco-f1', color: 'mba',
+                    title: 'ESAN Graduate School of Business',
+                    desc: 'MBAs, Maestrías, Doctorados y programas especializados, Institutos, Business Law',
+                    image: '', imageAlt: '', href: '',
+                },
+                {
+                    id: 'eco-f2', color: 'government',
+                    title: 'ESAN School of Government',
+                    desc: 'Programas y servicios para la administración pública',
+                    image: '', imageAlt: '', href: '',
+                },
+            ],
+            bar: {
+                title: 'ESAN University',
+                desc: 'Carreras de pregrado, postgrado y para gente que trabaja (DPA)',
+                href: '',
+            },
+            faculties: [
+                {
+                    id: 'eco-1', color: 'blue', title: 'ESAN Management',
+                    desc: 'Carreras de ciencias administrativas', image: '', imageAlt: '', href: '',
+                },
+                {
+                    id: 'eco-2', color: 'wine', title: 'ESAN Economics',
+                    desc: 'Carreras de ciencias económicas', image: '', imageAlt: '', href: '',
+                },
+                {
+                    id: 'eco-3', color: 'green', title: 'ESAN Engineering',
+                    desc: 'Carreras de ingeniería', image: '', imageAlt: '', href: '',
+                },
+                {
+                    id: 'eco-4', color: 'yellow', title: 'ESAN Law',
+                    desc: 'Carreras de derecho', image: '', imageAlt: '', href: '',
+                },
+                {
+                    id: 'eco-5', color: 'cyan', title: 'ESAN Communications',
+                    desc: 'Carreras en comunicación', image: '', imageAlt: '', href: '',
+                },
+                {
+                    id: 'eco-6', color: 'orange', title: 'ESAN Psychology',
+                    desc: 'Carreras de ciencias sociales', image: '', imageAlt: '', href: '',
+                },
+            ],
+        },
+    },
+
+    HeroSlider: {
+        label: 'Portada (carrusel)',
+        icon: 'las la-images',
+        group: 'Heros',
+        beta: true,
+        // La foto sangra a todo el ancho: no va dentro de una caja.
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/hero/hero-slider/Block.vue')),
+        initialData: {
+            // <h1> oculto "ESAN" para buscadores. Se desactiva en las páginas
+            // que ya tengan su propio título principal.
+            showSeoHeading: true,
+            slides: [
+                {
+                    id: 'hero-1',
+                    eyebrow: 'Domina las áreas y sectores clave del mercado',
+                    title: 'Descubre +20 Maestrías Especializadas',
+                    desc: 'Programas Incompany, consultoría y consejería diseñados para enfrentar los desafíos estratégicos de tu empresa.',
+                    image: '',
+                    imageAlt: '',
+                    primary: { label: 'Habla con un asesor', url: '' },
+                    secondary: { label: '', url: '' },
+                },
+                {
+                    id: 'hero-2',
+                    eyebrow: 'Admisión 2026 - Examen virtual en plataforma',
+                    title: 'Postula a ESAN y sé dueño de tus sueños',
+                    desc: 'Cierre de inscripciones: 18 de junio. Cupos limitados',
+                    image: '',
+                    imageAlt: '',
+                    primary: { label: 'Habla con un asesor', url: '' },
+                    secondary: { label: '', url: '' },
+                },
+                {
+                    id: 'hero-3',
+                    eyebrow: 'ESAN University',
+                    title: 'Examen de Admisión Virtual - Sábado 29 de Agosto',
+                    desc: 'Cierre de inscripciones: 18 de junio. Cupos limitados',
+                    image: '',
+                    imageAlt: '',
+                    primary: { label: 'Postula ahora', url: '' },
+                    secondary: { label: 'Habla con un asesor', url: '' },
+                },
+            ],
+        },
+    },
+
+    StoriesFeatured: {
+        label: 'Historias destacadas (video)',
+        icon: 'las la-play-circle',
+        group: 'Testimonials',
+        beta: true,
+        // La franja de color sangra a todo el ancho: no va dentro de una caja.
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/testimonials/stories-featured/Block.vue')),
+        initialData: {
+            title: 'Historias que trascienden',
+            subtitle: 'Conoce las historias reales y el impacto de quienes eligieron a ESAN',
+            linkLabel: 'Conoce más historias',
+            linkUrl: '',
+            cardCount: 4,
+            cards: [
+                {
+                    id: 'st-1', name: 'Gabriela Berriel',
+                    role: 'Estudiante pregrado · Administración y Finanzas',
+                    image: '', imageAlt: '', videoUrl: '', href: '', ctaLabel: 'Ver historia',
+                },
+                {
+                    id: 'st-2', name: 'Alberto Echevarría',
+                    role: 'Egresado · Administración y Marketing',
+                    image: '', imageAlt: '', videoUrl: '', href: '', ctaLabel: 'Ver historia',
+                },
+                {
+                    id: 'st-3', name: 'Esther Diez Berriel',
+                    role: 'Alumna de postgrado · Maestría Gerencia en Gestión Pública',
+                    image: '', imageAlt: '', videoUrl: '', href: '', ctaLabel: 'Ver historia',
+                },
+                {
+                    id: 'st-4', name: 'Luis García Echevarría',
+                    role: 'Ejecutivo · PADE Internacional en Business Admin.',
+                    image: '', imageAlt: '', videoUrl: '', href: '', ctaLabel: 'Ver historia',
                 },
             ],
         },
@@ -1316,6 +1462,14 @@ export const blockGroups = baseGroups.map(group => {
 const betaBaseGroups = [
     { id: 'CtaBrands', label: 'CTA & Brands', color: 'outline-danger', icon: 'las la-bullhorn' },
     { id: 'Events', label: 'Events', color: 'outline-primary', icon: 'las la-calendar' },
+    // 'Testimonials' y no 'Testimonios': el id de baseGroups no debe repetirse
+    // aquí, o los bloques beta acabarían mezclados con el catálogo clásico.
+    { id: 'Testimonials', label: 'Testimonials', color: 'outline-warning', icon: 'las la-quote-right' },
+    // 'Heros' y no 'Hero': ese id ya es el de la categoría clásica de portadas.
+    // Repetirlo colaría este bloque también en el catálogo viejo, porque
+    // blockGroups filtra por id sin descartar los beta.
+    { id: 'Heros', label: 'Heros', color: 'outline-info', icon: 'las la-images' },
+    { id: 'Ecosystem', label: 'Ecosystem', color: 'outline-success', icon: 'las la-sitemap' },
 ];
 
 /** Claves de los bloques marcados como beta, sin agrupar. */

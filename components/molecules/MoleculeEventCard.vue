@@ -92,8 +92,12 @@ withDefaults(defineProps<{
 
           `size` es obligatorio porque AtomHeading fija el tamaño en línea y así
           gana sobre la hoja de estilos.
+
+          size="body" (16px) y no h6 (18px): en la maqueta el título de esta
+          variante va al tamaño del texto corrido, apenas por encima de la
+          descripción de la sección. Sigue siendo un <h3>.
         -->
-        <AtomHeading v-if="title" :level="3" size="h6" class="event-card__title">
+        <AtomHeading v-if="title" :level="3" size="body" class="event-card__title">
           <a :href="href || '#'">{{ title }}</a>
         </AtomHeading>
       </div>
