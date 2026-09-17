@@ -10,16 +10,11 @@
 
     <div class="ecosystem-card__body">
       <div class="ecosystem-card__text">
-        <!--
-          size="body" (16px): el título al tamaño del texto corrido. Antes estaba
-          en "h7", que no existe: el navegador descartaba var(--text-h7) y el
-          título heredaba 16px por accidente. Mismo resultado, ahora a propósito.
-        -->
-        <AtomHeading :level="3" size="body" weight="bold" class="ecosystem-card__title">
+        <AtomHeading :level="3" :size="sizes.title" weight="bold" class="ecosystem-card__title">
           {{ card.title }}
         </AtomHeading>
 
-        <AtomText v-if="card.desc" size="xs" class="ecosystem-card__desc">
+        <AtomText v-if="card.desc" :size="sizes.desc" class="ecosystem-card__desc">
           {{ card.desc }}
         </AtomText>
       </div>
@@ -42,14 +37,30 @@
  * El color nunca llega como valor: llega como nombre y la hoja lo traduce al
  * token que corresponde. Ver el comentario de EcosystemColor en types.ts.
  */
+import { computed } from 'vue';
 import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import EcosystemArrow from './EcosystemArrow.vue';
 import type { EcosystemCardItem } from './types';
 
-defineProps<{
+const props = defineProps<{
   card: EcosystemCardItem;
   /** 'feature' son las dos grandes; 'faculty', las del grupo de la derecha. */
   variant: 'feature' | 'faculty';
 }>();
+
+/*
+ * El tamaño de letra SÍ depende de la variante, y se decide aquí y no en la
+ * hoja: los átomos lo aplican como estilo en línea, que ninguna regla de la
+ * hoja puede pisar.
+ *
+ * Las escuelas grandes van un escalón por encima (18px / 14px): su panel es
+ * bastante más ancho, y a 16px / 12px el texto se veía perdido en él. Las de
+ * facultad se quedan al tamaño del texto corrido (16px / 12px).
+ */
+const sizes = computed(() =>
+  props.variant === 'feature'
+    ? { title: 'h6', desc: 'sm' } as const
+    : { title: 'body', desc: 'xs' } as const,
+);
 </script>

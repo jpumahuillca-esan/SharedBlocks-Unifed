@@ -213,7 +213,7 @@
    * En móvil solo cambian el margen lateral y la posición del enlace: el
    * desplazamiento horizontal ya es el comportamiento normal del carril.
    */
-  @include bp.breakpoint-down('mobile') {
+  @include bp.container-down('mobile') {
     .card-section {
       --card-section-padding-x: var(--space-5);
     }

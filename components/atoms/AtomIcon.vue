@@ -64,6 +64,13 @@ import {
   FileDown,
   TrendingUp,
   HelpCircle,
+  // Pilares de valor (block-beta/info/values-cards): internacionalización usa
+  // Globe y empleabilidad Briefcase, que ya estaban; estos cinco faltaban.
+  Cpu,
+  Leaf,
+  Handshake,
+  Lightbulb,
+  Building2,
 } from '@lucide/vue';
 
 const ICONS: Record<string, any> = {
@@ -104,6 +111,11 @@ const ICONS: Record<string, any> = {
   'file-down': FileDown,
   'trending-up': TrendingUp,
   'help-circle': HelpCircle,
+  'cpu': Cpu,
+  'leaf': Leaf,
+  'handshake': Handshake,
+  'lightbulb': Lightbulb,
+  'building-2': Building2,
 };
 
 const props = withDefaults(defineProps<{

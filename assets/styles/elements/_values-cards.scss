@@ -1,0 +1,328 @@
+/* =========================================================================
+   VALUES CARDS — ARCIS Design System
+
+   Pilares de la propuesta de valor: una fila de filtros y, debajo, la tarjeta
+   del pilar elegido — texto a la izquierda y video a la derecha. La usa el
+   bloque block-beta/info/values-cards.
+
+   ATENCIÓN: no es un porte del kit. El kit de este repositorio no documenta
+   esta sección; se reconstruyó a partir de la maqueta del equipo. Conviene
+   reconciliarla cuando el kit se actualice.
+
+   COLORES: ninguno es nuevo. Franja gris, tarjeta blanca, rojo de marca en el
+   filtro activo y en el filete, y los tokens de texto de siempre. El chip y el
+   video traen su propio aspecto de _chips.scss y _video-preview.scss; aquí solo
+   se los coloca y se les ajusta el tamaño al de la maqueta.
+
+   Tres composiciones, una por tamaño:
+     escritorio  filtros en una fila; tarjeta en dos columnas (texto | video)
+     tableta     los filtros ya no caben y el carril se arrastra; el video baja
+     teléfono    igual que tableta, con menos aire y tipografía más corta
+
+   Todo bajo .arcis-scope por la razón explicada en base.scss.
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+
+  .values-cards {
+    --values-cards-padding-x: var(--space-6);
+
+    /*
+     * Relleno vertical de la maqueta (anotado ahí como spacing/--space-8), algo
+     * más corto que el --section-pad-y común a los demás bloques. Para igualarlo
+     * al resto basta con cambiar este valor por var(--section-pad-y).
+     */
+    --values-cards-padding-y: var(--space-8);
+
+    /* Ancho de la columna de texto en la maqueta. */
+    --values-cards-body-width: 692px;
+
+    /* Aire entre los bloques de texto de la tarjeta, también de la maqueta. */
+    --values-cards-body-gap: 30px;
+
+    /* Ancho mínimo de la columna del video (ver .values-cards__card). */
+    --values-cards-media-min: 220px;
+
+    /*
+     * Fondo de la maqueta. Va el hex y no un token porque no hay ninguno que le
+     * corresponda: los grises de ARCIS son neutros (--neutrals-*) y este tira a
+     * azul. Tampoco se agrega a tokens.scss, que es espejo de webunificada (ver
+     * su cabecera): cuando la fuente incorpore este gris, se cambia por su token.
+     */
+    background-color: #E4E6ED;
+  }
+
+  .values-cards__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding: var(--values-cards-padding-y) var(--values-cards-padding-x);
+    box-sizing: border-box;
+  }
+
+  /* -----------------------------------------------------------------------
+     Filtros
+
+     Una sola fila que nunca se parte: cuando no caben, el carril se desplaza.
+     Los filtros salen y entran por el borde de la pantalla —de ahí el margen
+     negativo con el relleno equivalente—, para que en tableta y teléfono no
+     queden cortados contra un margen vacío.
+     ----------------------------------------------------------------------- */
+  .values-cards__filters {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--space-3);
+
+    margin-inline: calc(-1 * var(--values-cards-padding-x));
+    padding-inline: var(--values-cards-padding-x);
+
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+
+    /* La barra estorba bajo los filtros; el chip que asoma ya comunica que
+       hay más, y el cursor de mano lo confirma. */
+    scrollbar-width: none;
+  }
+
+  .values-cards__filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  /*
+   * Arrastre con el ratón (composables/useDragScroll.ts).
+   *
+   * El cursor de mano es la ÚNICA señal de que el carril se puede arrastrar:
+   * sin puntos ni flechas, quien usa un ratón no tiene otra forma de
+   * descubrirlo. Solo aparece con `is-draggable`, que el composable pone cuando
+   * de verdad hay filtros fuera de la vista — en escritorio, donde caben todos,
+   * no se ofrece agarrar algo que no se mueve.
+   */
+  .values-cards__filters.is-draggable {
+    cursor: grab;
+  }
+
+  .values-cards__filters.is-dragging {
+    cursor: grabbing;
+    /* Durante el gesto no debe quedar texto resaltado a su paso. */
+    user-select: none;
+  }
+
+  /*
+   * El chip del kit es una pastilla (--radius-full) y más pequeño que el filtro
+   * de esta maqueta, donde los filtros son rectángulos redondeados. Se le
+   * ajustan solo forma y tamaño; el color, el borde y el estado activo siguen
+   * saliendo de _chips.scss, que es donde deben cambiarse para toda la
+   * librería.
+   *
+   * El radio es el mismo de la tarjeta pequeña del sistema (--radius-sm, 8px),
+   * para que filtros y tarjeta se lean como piezas de la misma familia.
+   */
+  .values-cards__filter.chip {
+    flex: 0 0 auto;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+  }
+
+  /* -----------------------------------------------------------------------
+     Tarjeta
+
+     Dos columnas: el texto ocupa algo menos de dos tercios y el video el
+     resto, como en la maqueta. `align-items: stretch` (el valor por defecto)
+     es lo que hace que el video tome el alto del texto.
+     ----------------------------------------------------------------------- */
+  .values-cards__card {
+    display: grid;
+    /*
+     * La columna de texto mide lo que pide la maqueta (692px, relleno incluido)
+     * y el video se queda con el resto. `minmax(0, ...)` en vez de un ancho
+     * fijo: entre 992px y la medida del diseño la tarjeta se estrecha, y así la
+     * columna cede en lugar de desbordarse.
+     */
+    /*
+     * El mínimo de la columna del video es una red de seguridad: si el
+     * navegador no entiende container queries, el texto no puede quedarse con
+     * todo el ancho y dejar el video en cero. En escritorio no cambia nada: ahí
+     * al video le sobra ancho.
+     */
+    grid-template-columns:
+      minmax(0, var(--values-cards-body-width))
+      minmax(var(--values-cards-media-min), 1fr);
+
+    background-color: var(--neutrals-0);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+
+    /*
+     * El video llega hasta el borde de la tarjeta por arriba, por la derecha y
+     * por abajo, como en la maqueta: por eso la tarjeta no tiene relleno propio
+     * —lo pone el texto— y recorta lo que sobresalga, que es lo que redondea la
+     * esquina del video contra la suya.
+     */
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .values-cards__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--values-cards-body-gap);
+    min-width: 0;
+    /* El aire de la tarjeta, y a la vez la separación con el video. */
+    padding: var(--space-6);
+  }
+
+  /*
+   * Encabezado del texto: entre etiqueta, título y filete el aire es mucho más
+   * corto que los 30px de fuera, así que van agrupados con su propio hueco.
+   */
+  .values-cards__heading {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  .values-cards__title {
+    color: var(--arcis-color-text-primary);
+  }
+
+  /* Filete corto, rojo de marca, bajo el título. Mismas medidas que
+     .ecosystem__rule y .card-section__rule. */
+  .values-cards__rule {
+    width: 40px;
+    height: 2px;
+    /* Un escalón más que el hueco del grupo: en la maqueta respira algo más
+       que la distancia entre la etiqueta y el título. */
+    margin-top: var(--space-2);
+    background-color: var(--arcis-color-global-main);
+  }
+
+  .values-cards__desc {
+    color: var(--arcis-color-text-secondary);
+  }
+
+  /*
+   * La lista se lleva el alto que sobra y el enlace queda abajo del todo: así
+   * el pie de la tarjeta no baila al cambiar de pilar, aunque uno tenga tres
+   * viñetas y otro seis.
+   */
+  /*
+   * Sin márgenes propios: la separación con lo de arriba y lo de abajo es el
+   * `gap` del cuerpo. Con margen además del hueco, los 30px de la maqueta se
+   * convertirían en 30 + el margen.
+   */
+  .values-cards__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .values-cards__item {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    color: var(--arcis-color-text-secondary);
+  }
+
+  /*
+   * La viñeta se dibuja aquí y no con `list-style`: base.scss lo quita en toda
+   * la librería, y un punto propio se coloca con precisión al lado del texto.
+   */
+  .values-cards__item::before {
+    content: '';
+    flex-shrink: 0;
+    width: 5px;
+    height: 5px;
+    border-radius: var(--radius-full);
+    background-color: var(--arcis-color-text-primary);
+  }
+
+  /* -----------------------------------------------------------------------
+     Video
+
+     MoleculeVideoPreview trae 16/9 fijo. En escritorio el medio ocupa su
+     columna entera —es más alto que ancho—, así que aquí se le suelta la
+     proporción y se le da el alto de la fila. En tableta y teléfono vuelve a
+     su 16/9, que es como se ve en la maqueta al bajar bajo el texto.
+     ----------------------------------------------------------------------- */
+  .values-cards__media {
+    display: flex;
+    min-width: 0;
+  }
+
+  .values-cards__media .video-preview {
+    flex: 1;
+    aspect-ratio: auto;
+    min-height: 100%;
+
+    /*
+     * Sin radio propio: en esta maqueta el video va a canto vivo y quien
+     * redondea es la tarjeta. Como la tarjeta recorta lo que sobresale, las dos
+     * esquinas que tocan su borde salen curvas y las otras dos, rectas. Con el
+     * radio del kit (--radius-md) se veían las cuatro redondeadas, y quedaba un
+     * video flotando dentro de la tarjeta en vez de encajado en ella.
+     */
+    border-radius: 0;
+
+    /*
+     * Fondo oscuro bajo la foto. Mientras el pilar no tenga imagen —recién
+     * insertado el bloque, o al crear un pilar nuevo— es lo que hace que el
+     * hueco se lea como el marco del video y no como un vacío blanco.
+     */
+    background-color: var(--neutrals-800);
+  }
+
+  /* -----------------------------------------------------------------------
+     Tableta — por debajo de 992px (o de bloque angosto).
+
+     El video baja debajo del texto: en dos columnas la tarjeta se estrecha y
+     el texto se parte en demasiadas líneas. Sigue yendo a sangre —llega a los
+     bordes izquierdo, derecho e inferior de la tarjeta, como en la maqueta—,
+     así que la tarjeta no toma relleno propio (lo sigue poniendo el texto) y el
+     hueco entre ambos es 0: el aire sobre el video es el relleno inferior del
+     texto.
+     ----------------------------------------------------------------------- */
+  @include bp.container-down('lg') {
+
+    .values-cards__card {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
+
+      /* Ya no hay columna de texto: ocupa el ancho de la tarjeta. */
+      --values-cards-body-width: 100%;
+    }
+
+    .values-cards__media .video-preview {
+      aspect-ratio: 16 / 9;
+      min-height: 0;
+    }
+  }
+
+  /* -----------------------------------------------------------------------
+     Teléfono — 576px hacia abajo (o de bloque angosto).
+     ----------------------------------------------------------------------- */
+  @include bp.container-down('sm') {
+
+    .values-cards {
+      --values-cards-padding-x: var(--space-5);
+      --values-cards-padding-y: var(--space-7);
+      /* En teléfono los 30px de la maqueta son demasiado aire entre bloques. */
+      --values-cards-body-gap: var(--space-5);
+    }
+
+    .values-cards__body {
+      padding: var(--space-5);
+    }
+  }
+}

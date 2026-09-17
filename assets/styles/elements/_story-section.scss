@@ -273,7 +273,7 @@
      El carril no cambia: deslizarse en horizontal ya es su comportamiento
      normal. Solo se ajustan los márgenes y baja el enlace del encabezado.
      ----------------------------------------------------------------------- */
-  @include bp.breakpoint-down('mobile') {
+  @include bp.container-down('mobile') {
 
     .story-section {
       --story-section-padding-x: var(--space-5);

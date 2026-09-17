@@ -87,6 +87,51 @@
     font-family: 'SFMono-Regular', Consolas, monospace;
   }
 
+  /*
+   * Reproducción dentro de la pieza (añadido, no viene del kit — ver la
+   * cabecera de MoleculeVideoPreview.vue).
+   *
+   * Con video, el control de play es un <a> sin destino y hay que darle el
+   * cursor a mano: un ancla sin `href` no lo trae. El foco se atiende junto al
+   * hover para que quien navega con el teclado vea lo mismo que con el ratón.
+   */
+  a.video-preview__play {
+    cursor: pointer;
+  }
+
+  .video-preview__play:focus-visible .video-preview__play-btn {
+    transform: scale(1.08);
+  }
+
+  .video-preview__player {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background-color: #000;
+  }
+
+  .video-preview__player iframe,
+  .video-preview__player video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    /*
+     * 'contain' y no 'cover': el video de terceros trae su propia proporción y
+     * recortarlo para llenar la caja se comería parte de la imagen. Encajado
+     * entero deja franjas, que es lo correcto.
+     */
+    object-fit: contain;
+  }
+
+  /*
+   * El velo es un ::after de la pieza, no de la foto, así que no se va solo al
+   * cambiar de estado: se apaga aquí. Si quedara encima, oscurecería el video.
+   */
+  .video-preview.is-playing::after {
+    content: none;
+  }
+
   /* Variante "featured": overlay editorial con título + botón glass */
   .video-preview--featured::after {
     background: linear-gradient(180deg, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.85) 100%);

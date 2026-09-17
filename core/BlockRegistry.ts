@@ -255,6 +255,134 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         },
     },
 
+    InfoMapamundi: {
+        label: 'Mapamundi (presencia internacional)',
+        icon: 'las la-globe-americas',
+        group: 'Info',
+        beta: true,
+        // La franja gris sangra a todo el ancho: no va dentro de una caja.
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/info/mapamundi/Block.vue')),
+        initialData: {
+            eyebrow: 'ESAN Global Experience',
+            title: 'Lleva tu excelencia más lejos',
+            // Los logos de cada tarjeta son fijos (los pone el bloque): aquí solo va la lista.
+            left: {
+                items: [
+                    { id: 'mm-l1', icon: 'graduate-doc', text: 'Programas cortos y experiencias inmersivas' },
+                    { id: 'mm-l2', icon: 'airplane', text: '+130 Intercambios internacionales' },
+                    { id: 'mm-l3', icon: 'alumni', text: 'Doble titulación con universidades internacionales' },
+                    { id: 'mm-l4', icon: 'awards', text: 'Doble titulación con programas de grado internacionales' },
+                    { id: 'mm-l5', icon: 'chats', text: '+300 estudiantes han completado un programa de intercambio.' },
+                ],
+            },
+            right: {
+                items: [
+                    { id: 'mm-r1', icon: 'alumni', text: 'Doble titulación de MBA' },
+                    { id: 'mm-r2', icon: 'airplane', text: '+70 oportunidades de MBA internacional' },
+                    { id: 'mm-r3', icon: 'family-hold', text: 'Consorcio de escuelas de EMBA internacionales' },
+                    { id: 'mm-r4', icon: 'awards', text: 'Programas de máster especializados' },
+                    { id: 'mm-r5', icon: 'graduate-doc', text: 'Programas de educación ejecutiva' },
+                ],
+            },
+            button: { label: 'Descubre ESAN Internacional', url: '' },
+        },
+    },
+
+    InfoValuesCards: {
+        label: 'Tarjetas de valor (con filtros)',
+        icon: 'las la-layer-group',
+        group: 'Info',
+        beta: true,
+        // La franja gris sangra a todo el ancho: no va dentro de una caja.
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/info/values-cards/Block.vue')),
+        initialData: {
+            items: [
+                {
+                    id: 'vc-1', icon: 'globe', tabLabel: 'Internacionalización',
+                    eyebrow: 'Experiencia internacional',
+                    title: 'Amplía tu visión del mundo y accede a oportunidades en el extranjero',
+                    desc: 'Vive experiencias académicas internacionales y desarrolla una perspectiva global para tu carrera.',
+                    bullets: [
+                        'Programa de Doble Grado',
+                        'Programas de Intercambio',
+                        'Programas cortos en el extranjero',
+                        'Global Week',
+                        'Becas Internacionales',
+                    ],
+                    linkLabel: 'Explora nuestros programas', linkUrl: '',
+                    image: '', imageAlt: '', videoUrl: '', duration: '02:15',
+                },
+                {
+                    id: 'vc-2', icon: 'handshake', tabLabel: 'Conexión empresarial',
+                    eyebrow: 'Cerca de las empresas',
+                    title: 'Aprende de la mano de las empresas que lideran el mercado',
+                    desc: 'Proyectos, prácticas y mentorías con las organizaciones que definen la agenda del país.',
+                    bullets: [
+                        'Proyectos con empresas reales',
+                        'Mentorías con directivos',
+                        'Ferias y rondas de empleabilidad',
+                    ],
+                    linkLabel: 'Conoce nuestras alianzas', linkUrl: '',
+                    image: '', imageAlt: '', videoUrl: '', duration: '',
+                },
+                {
+                    id: 'vc-3', icon: 'cpu', tabLabel: 'Tecnología e Innovación',
+                    eyebrow: 'Innovación aplicada',
+                    title: 'Domina las herramientas que están transformando tu profesión',
+                    desc: 'Laboratorios, analítica de datos e inteligencia artificial aplicada a tu campo.',
+                    bullets: [
+                        'Laboratorios de innovación',
+                        'Analítica de datos e IA',
+                        'Retos de transformación digital',
+                    ],
+                    linkLabel: 'Descubre nuestros laboratorios', linkUrl: '',
+                    image: '', imageAlt: '', videoUrl: '', duration: '',
+                },
+                {
+                    id: 'vc-4', icon: 'briefcase', tabLabel: 'Empleabilidad',
+                    eyebrow: 'Tu carrera profesional',
+                    title: 'Da el salto al mercado laboral con acompañamiento desde el primer ciclo',
+                    desc: 'Orientación, prácticas y una red de egresados que abre puertas.',
+                    bullets: [
+                        'Bolsa de trabajo exclusiva',
+                        'Asesoría de carrera',
+                        'Red de egresados',
+                    ],
+                    linkLabel: 'Conoce el centro de carrera', linkUrl: '',
+                    image: '', imageAlt: '', videoUrl: '', duration: '',
+                },
+                {
+                    id: 'vc-5', icon: 'leaf', tabLabel: 'Sostenibilidad',
+                    eyebrow: 'Impacto positivo',
+                    title: 'Lidera proyectos que dejan huella en la sociedad y el ambiente',
+                    desc: 'Formación e investigación con criterios de sostenibilidad en cada disciplina.',
+                    bullets: [
+                        'Proyectos de impacto social',
+                        'Investigación en sostenibilidad',
+                        'Voluntariado universitario',
+                    ],
+                    linkLabel: 'Explora nuestras iniciativas', linkUrl: '',
+                    image: '', imageAlt: '', videoUrl: '', duration: '',
+                },
+                {
+                    id: 'vc-6', icon: 'award', tabLabel: 'Excelencia académica',
+                    eyebrow: 'Calidad reconocida',
+                    title: 'Estudia en una escuela acreditada y con reconocimiento internacional',
+                    desc: 'Docentes con trayectoria y programas evaluados por acreditadoras internacionales.',
+                    bullets: [
+                        'Acreditaciones internacionales',
+                        'Plana docente con experiencia',
+                        'Investigación de alto impacto',
+                    ],
+                    linkLabel: 'Conoce nuestras acreditaciones', linkUrl: '',
+                    image: '', imageAlt: '', videoUrl: '', duration: '',
+                },
+            ],
+        },
+    },
+
     CtaBandImage: {
         label: 'CTA con imagen',
         icon: 'las la-image',
@@ -1470,6 +1598,8 @@ const betaBaseGroups = [
     // blockGroups filtra por id sin descartar los beta.
     { id: 'Heros', label: 'Heros', color: 'outline-info', icon: 'las la-images' },
     { id: 'Ecosystem', label: 'Ecosystem', color: 'outline-success', icon: 'las la-sitemap' },
+    // 'Info' no coincide con ningún id de baseGroups: no se cuela en el catálogo clásico.
+    { id: 'Info', label: 'Info', color: 'outline-secondary', icon: 'las la-info-circle' },
 ];
 
 /** Claves de los bloques marcados como beta, sin agrupar. */

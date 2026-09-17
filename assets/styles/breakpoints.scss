@@ -57,3 +57,39 @@ $breakpoints: (
     @content;
   }
 }
+
+/*
+ * Igual que breakpoint-down, pero atiende además el ancho del BLOQUE, no solo
+ * el de la ventana.
+ *
+ * Por qué hace falta: una media query mide la ventana, y estos bloques también
+ * se dibujan en sitios angostos dentro de ventanas anchas. El caso claro es el
+ * lienzo del editor —un contenedor de ~700px dentro de una pantalla de 1440—,
+ * donde la pantalla dice "escritorio" y el bloque se pinta a dos columnas
+ * aunque no le quepan; el mismo problema aparece en una columna estrecha del
+ * constructor o del sitio público.
+ *
+ * Emite las dos consultas con el mismo contenido:
+ *   - @media     para el dispositivo real (es lo que manda en el sitio).
+ *   - @container para el ancho del bloque (lienzo y columnas estrechas).
+ *
+ * Que coincidan las dos no molesta: declaran lo mismo.
+ *
+ * El contenedor que se consulta es `.arcis-scope`, que ya envuelve todo lo que
+ * dibuja esta librería y se declara como tal en base.scss (ahí está explicado
+ * por qué ese y no otro). Como es ANCESTRO del bloque, estas reglas pueden dar
+ * estilo tanto a la raíz del bloque como a sus descendientes.
+ *
+ * Si algo se dibuja fuera de .arcis-scope, la @container no encuentra
+ * contenedor y simplemente no aplica: queda el comportamiento de siempre, el
+ * mismo que en un navegador que no soporte container queries.
+ */
+@mixin container-down($name) {
+  @media (max-width: bp($name)) {
+    @content;
+  }
+
+  @container (max-width: #{bp($name)}) {
+    @content;
+  }
+}

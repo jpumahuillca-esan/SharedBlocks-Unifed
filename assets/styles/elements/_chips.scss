@@ -27,11 +27,17 @@
     transition: background-color var(--ease-fast), border-color var(--ease-fast), color var(--ease-fast);
   }
 
-  button.chip {
+  /*
+   * El chip de filtro es un <a> sin destino (ver MoleculeChip.vue), así que hay
+   * que darle el cursor a mano: un ancla sin `href` no lo trae. Antes era
+   * `button.chip`, cuando la molécula lo dibujaba como <button>.
+   */
+  a.chip {
     cursor: pointer;
   }
 
-  button.chip:hover {
+  a.chip:hover,
+  a.chip:focus-visible {
     border-color: var(--arcis-color-global-main);
   }
 
@@ -43,6 +49,8 @@
 
   .chip__remove {
     display: inline-flex;
+    /* También es un <a> sin destino: mismo caso que a.chip. */
+    cursor: pointer;
     color: var(--arcis-color-text-disabled);
     transition: color var(--ease-fast);
   }

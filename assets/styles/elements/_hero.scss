@@ -222,7 +222,7 @@
      estrecha que el título se rompe en cuatro líneas. La captura de 764px del
      equipo lo muestra ocupando prácticamente todo el ancho.
      ----------------------------------------------------------------------- */
-  @include bp.breakpoint-down('lg') {
+  @include bp.container-down('lg') {
     .hero__content {
       max-width: 100%;
     }
@@ -240,7 +240,7 @@
      tableta del equipo, a 764px, todavía muestra el texto sobre la foto. Con
      el punto de quiebre en 768 ese ancho caía del lado equivocado.
      ----------------------------------------------------------------------- */
-  @include bp.breakpoint-down('sm') {
+  @include bp.container-down('sm') {
 
     .hero {
       --hero-padding-x: var(--space-5);
