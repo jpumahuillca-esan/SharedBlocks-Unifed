@@ -11,6 +11,16 @@
       <input type="hidden" name="study_program_id" :value="cfg.study_program_id" />
       <input type="hidden" name="cod_form_old" :value="cfg.cod_form_old" />
 
+      <!-- Trampa Anti-Bot Honeypot: Campo señuelo oculto para bots y scrapers -->
+      <input
+        type="text"
+        name="_hp_website"
+        v-model="formValues._hp_website"
+        style="display:none !important; visibility:hidden !important; position:absolute; left:-9999px;"
+        tabindex="-1"
+        autocomplete="off"
+      />
+
       <div class="row g-3">
         <!-- Render dinámico total del esquema configurado en la campaña -->
         <template v-for="(field, idx) in activeFields" :key="field.name || idx">
