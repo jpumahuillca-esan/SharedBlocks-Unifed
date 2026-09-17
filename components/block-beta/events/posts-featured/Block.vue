@@ -1,6 +1,7 @@
 <template>
   <section class="card-section">
     <CardSectionHeader
+      :desc="data.desc || ''"
       :title="data.title || ''"
       :link-label="data.linkLabel || ''"
       :link-url="data.linkUrl || ''"

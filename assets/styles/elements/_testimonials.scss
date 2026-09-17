@@ -78,6 +78,15 @@
     background-color: var(--neutrals-900);
     border: none;
     overflow: hidden;
+
+    /*
+     * Franja inferior reservada al texto del overlay.
+     *
+     * El botón de reproducir se centra en lo que queda POR ENCIMA de ella, no
+     * en la tarjeta entera. Es un porcentaje y no una medida fija porque la
+     * tarjeta tiene proporción fija (3:4), así que escala sola con el ancho.
+     */
+    --testimonial-card-play-safe: 25%;
   }
 
   .testimonial-card__media {
@@ -103,9 +112,21 @@
     background: linear-gradient(180deg, rgba(11, 12, 16, 0) 42%, rgba(11, 12, 16, 0.92) 100%);
   }
 
+  /*
+   * DESVÍO del kit, deliberado: allí el botón se centra con `inset: 0`, es
+   * decir en toda la tarjeta. Como el overlay ocupa el tercio inferior, el
+   * botón acababa casi pegado al nombre. Reservando la franja del texto, el
+   * play sube y el aire entre ambos se mantiene aunque el cargo crezca a tres
+   * líneas.
+   *
+   * Efecto secundario buscado: cuando el botón es pulsable
+   * (.testimonial-card__play--action), su área de clic deja de cubrir el texto,
+   * así que el enlace "Ver historia" queda despejado.
+   */
   .testimonial-card__play {
     position: absolute;
     inset: 0;
+    bottom: var(--testimonial-card-play-safe);
     z-index: 1;
     display: flex;
     align-items: center;
@@ -156,13 +177,36 @@
     background-color: var(--arcis-color-global-main);
   }
 
+  /*
+   * Tipografía del overlay.
+   *
+   * DESVÍO del kit, deliberado: allí el nombre usa --text-h6 y el cargo hereda
+   * --text-body-lg de la regla base. En tokens.scss ambos valen 18px, así que
+   * nombre y cargo salían del mismo tamaño y la tarjeta perdía la jerarquía que
+   * sí tiene el diseño. Se bajan un escalón cada uno, siempre con tokens.
+   *
+   * PENDIENTE: que --text-h6 y --text-body-lg midan lo mismo huele a
+   * desincronización con webunificada (la cabecera de tokens.scss ya avisa de
+   * otro caso parecido en los clamp()). Si allí resultan tener valores
+   * distintos, conviene volver a los tokens del kit y borrar este desvío.
+   */
   .testimonial-card__overlay .testimonial-card__author-name {
-    font-size: var(--text-h6);
+    font-size: var(--text-body);
     color: var(--arcis-color-text-inverse);
   }
 
   .testimonial-card__overlay .testimonial-card__author-role {
+    font-size: var(--text-sm);
     color: rgba(255, 255, 255, 0.85);
+  }
+
+  /*
+   * El tamaño se fija con la especificidad de .btn.btn--link porque ese es el
+   * selector del que hereda los 16px de la regla base de botones; sin los dos
+   * prefijos quedaría empatado y dependería del orden de los @use en index.scss.
+   */
+  .testimonial-card--video .testimonial-card__cta.btn.btn--link {
+    font-size: var(--text-sm);
   }
 
   .testimonial-card--video .testimonial-card__cta {
@@ -172,5 +216,60 @@
 
   .testimonial-card--video .testimonial-card__cta:hover {
     color: var(--arcis-color-global-main);
+  }
+
+  /* -----------------------------------------------------------------------
+     Reproducción dentro de la tarjeta.
+
+     AÑADIDO, no viene de webunificada: en el kit la variante "video" dibuja el
+     botón de play pero no reproduce nada, es una maqueta. Estas reglas son lo
+     que necesita MoleculeTestimonial para reproducir en el sitio de la foto
+     cuando se le pasa `videoUrl`.
+     ----------------------------------------------------------------------- */
+
+  /*
+   * Control de play cuando hay algo que reproducir. Es un <a> sin href (ver
+   * MoleculeTestimonial), así que hay que darle el cursor a mano: un ancla sin
+   * destino no lo trae. Posición y centrado los hereda de
+   * .testimonial-card__play.
+   */
+  .testimonial-card__play--action {
+    cursor: pointer;
+  }
+
+  .testimonial-card__play--action:focus-visible .testimonial-card__play-btn,
+  .testimonial-card__play--action:hover .testimonial-card__play-btn {
+    transform: scale(1.08);
+    background-color: rgba(255, 255, 255, 0.24);
+  }
+
+  .testimonial-card__player {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background-color: #000;
+  }
+
+  .testimonial-card__player iframe,
+  .testimonial-card__player video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    /*
+     * 'contain' y no 'cover': el video de terceros viene en 16:9 y la tarjeta
+     * es 3:4, así que recortarlo por los lados se comería la cara de quien
+     * habla. Encajado entero deja franjas arriba y abajo, que es lo correcto.
+     */
+    object-fit: contain;
+  }
+
+  /*
+   * El velo inferior es un ::after de la tarjeta, no del bloque de la foto, así
+   * que no se va solo al cambiar de estado: se apaga aquí. Si quedara encima,
+   * oscurecería el video por abajo.
+   */
+  .testimonial-card--video.is-playing::after {
+    content: none;
   }
 }

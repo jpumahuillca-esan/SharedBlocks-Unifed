@@ -65,8 +65,20 @@
     padding-left: var(--space-4);
   }
 
-  .event-card__title {
-    font-size: var(--text-h6);
+  /*
+   * `.event-card .event-card__title` y no `.event-card__title` a secas.
+   *
+   * El título es un AtomHeading, y su estilo con ámbito
+   * (`.atom-heading[data-v-…]`) fija la fuente de titulares con la MISMA
+   * especificidad que tenía esta regla. Empataban, ganaba el átomo por cargarse
+   * después, y la tarjeta salía en Bricolage aunque el kit la declara en la
+   * fuente de texto. Con un nivel más de clase, esta hoja manda.
+   *
+   * El tamaño ya no se declara aquí: AtomHeading lo fija en línea, así que una
+   * regla de hoja no tenía ningún efecto. Se decide con la prop `size` en
+   * MoleculeEventCard.
+   */
+  .event-card .event-card__title {
     font-family: var(--font-body);
     font-weight: var(--weight-semibold);
   }
@@ -180,8 +192,13 @@
     gap: var(--space-2);
   }
 
+  /*
+   * DESVÍO del kit, deliberado: el kit pone este título en negrita. En la
+   * maqueta del equipo va en peso medio —apenas más marcado que la descripción—
+   * y la negrita, sumada al tamaño, lo hacía verse demasiado grande.
+   */
   .event-card--media .event-card__title {
-    font-weight: var(--weight-bold);
+    font-weight: var(--weight-medium);
     line-height: 1.3;
   }
 }

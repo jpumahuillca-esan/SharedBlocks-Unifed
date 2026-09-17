@@ -1,0 +1,368 @@
+/* =========================================================================
+   HERO — ARCIS Design System
+
+   Carrusel de portada: foto a sangre, bloque de texto encima y controles con
+   contador. Lo usa el bloque block-beta/hero/hero-slider.
+
+   ATENCIÓN: no es un porte del kit. El kit de este repositorio no documenta
+   una portada; ésta se reconstruyó a partir de la maqueta y las viñetas del
+   equipo. Conviene reconciliarla cuando el kit se actualice.
+
+   Valores que fija la maqueta (viñeta "Container del Hero"):
+     - contenedor con ancho máximo 1280px  -> var(--container-max)
+     - columna de contenido al 50%         -> .hero__content
+     - espaciado vertical --space-4        -> gap de .hero__content
+
+   Todo bajo .arcis-scope por la razón explicada en base.scss.
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+
+  .hero {
+    /*
+     * Margen lateral. En variable porque los controles lo usan para alinearse
+     * con el contenido en lugar de pegarse al borde de la pantalla.
+     */
+    --hero-padding-x: var(--space-6);
+
+    /*
+     * Alto mínimo.
+     *
+     * ÚNICA medida que no viene de las viñetas. Hace falta porque el carrusel
+     * monta una diapositiva cada vez: sin un suelo común, pasar de una con
+     * descripción larga a una sin descripción encogería la portada de golpe y
+     * daría un salto a toda la página.
+     */
+    --hero-min-height: 560px;
+
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background-color: var(--neutrals-900);
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .hero__slide {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: var(--hero-min-height);
+  }
+
+  /* Foto de fondo. */
+  .hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /*
+   * Velo.
+   *
+   * Opaco sobre el texto y difuminado hacia la derecha, para que la foto se
+   * vea cuanto más lejos del bloque de texto. Mismo recurso que usa
+   * .ctaband--image, que resuelve el mismo problema.
+   */
+  .hero__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(11, 12, 16, 0.92) 0%,
+      rgba(11, 12, 16, 0.65) 45%,
+      rgba(11, 12, 16, 0) 100%
+    );
+  }
+
+  /*
+   * Contenedor interno. La foto sangra a todo el ancho porque es parte del
+   * diseño, pero el contenido se limita al ancho del sistema. Se usa el token
+   * --container-max y no el número que dice la viñeta, para que si el sistema
+   * cambia ese ancho la portada lo siga sola.
+   */
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding: var(--space-9) var(--hero-padding-x);
+    box-sizing: border-box;
+  }
+
+  .hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* Viñeta: espaciado vertical --space-4. */
+    gap: var(--space-4);
+    /* Viñeta: columna de contenido con ancho máximo al 50%. */
+    max-width: 50%;
+  }
+
+  .hero__eyebrow {
+    color: var(--arcis-color-text-inverse);
+  }
+
+  /*
+   * Filete bajo el antetítulo.
+   *
+   * Va como ::after y no como un elemento aparte porque es puro adorno: así no
+   * aparece en el texto que lee un lector de pantalla ni obliga al componente a
+   * emitir un <span> vacío.
+   *
+   * Medidas tomadas de .testimonial-card__accent, que es el mismo recurso ya
+   * portado en el sistema: mismo ancho, grosor y radio, para que los dos filetes
+   * de la página se vean como la misma pieza.
+   */
+  .hero__eyebrow::after {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 3px;
+    margin-top: var(--space-2);
+    border-radius: var(--radius-full);
+    background-color: var(--arcis-color-global-main);
+  }
+
+  .hero__title {
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .hero__desc {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  /* -----------------------------------------------------------------------
+     Controles: contador y flechas, abajo a la derecha.
+     ----------------------------------------------------------------------- */
+  /*
+   * Se alinean con el contenido y no con el borde de la pantalla: el mismo
+   * ancho de contenedor y el mismo margen lateral que .hero__inner.
+   */
+  .hero__controls {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: var(--space-6);
+
+    width: 100%;
+    max-width: var(--container-max);
+    padding-inline: var(--hero-padding-x);
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-3);
+  }
+
+  .hero__counter {
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .hero__arrows {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .hero__arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-xs);
+
+    background-color: rgba(11, 12, 16, 0.55);
+    border: var(--border-width-sm) solid rgba(255, 255, 255, 0.28);
+    color: var(--arcis-color-text-inverse);
+
+    /* Un ancla sin destino no trae cursor de mano. */
+    cursor: pointer;
+    transition: background-color var(--ease-fast), border-color var(--ease-fast);
+  }
+
+  .hero__arrow:hover,
+  .hero__arrow:focus-visible {
+    background-color: rgba(11, 12, 16, 0.8);
+    border-color: rgba(255, 255, 255, 0.55);
+  }
+
+  /*
+   * AtomIcon no tiene `chevron-left`: se gira el derecho. Ampliar el catálogo
+   * de íconos del sistema por un giro de 180 grados no compensa.
+   */
+  .hero__arrow--prev svg {
+    transform: rotate(180deg);
+  }
+
+  /* -----------------------------------------------------------------------
+     Tableta — por debajo de 992px.
+
+     La composición no cambia: el texto sigue sobre la foto. Lo único que cae
+     es el tope del 50%, porque a ese ancho media pantalla deja una columna tan
+     estrecha que el título se rompe en cuatro líneas. La captura de 764px del
+     equipo lo muestra ocupando prácticamente todo el ancho.
+     ----------------------------------------------------------------------- */
+  @include bp.breakpoint-down('lg') {
+    .hero__content {
+      max-width: 100%;
+    }
+  }
+
+  /* -----------------------------------------------------------------------
+     Teléfono — 576px hacia abajo.
+
+     Aquí sí cambia la composición entera: la foto deja de ser fondo y pasa
+     arriba, y el texto baja a un panel de color de marca. Sobre una foto
+     estrecha el texto no se lee, y el velo tendría que ser tan opaco que
+     taparía la imagen.
+
+     El corte va en 'sm' (576px) y NO en 'mobile' (768px): la captura de
+     tableta del equipo, a 764px, todavía muestra el texto sobre la foto. Con
+     el punto de quiebre en 768 ese ancho caía del lado equivocado.
+     ----------------------------------------------------------------------- */
+  @include bp.breakpoint-down('sm') {
+
+    .hero {
+      --hero-padding-x: var(--space-5);
+
+      /*
+       * Desnivel del borde superior del panel de color.
+       *
+       * El borde no es horizontal: cae hacia la izquierda. Este valor es la
+       * diferencia de altura entre un extremo y el otro, así que el ángulo sale
+       * solo según el ancho de la pantalla en lugar de quedar fijo en grados —
+       * a 375px son unos 3,7°, y en una pantalla más ancha se suaviza, que es
+       * como se comporta un corte de este tipo en una maqueta.
+       */
+      --hero-slant: 24px;
+    }
+
+    .hero__slide {
+      flex-direction: column;
+      align-items: stretch;
+      /* El alto lo decide el contenido: foto más panel. */
+      min-height: 0;
+    }
+
+    .hero__media {
+      position: relative;
+      aspect-ratio: 4 / 3;
+    }
+
+    /* Sin texto encima, el velo sobra. */
+    .hero__media::after {
+      content: none;
+    }
+
+    /*
+     * El panel de color no entra en horizontal: su borde superior cae hacia la
+     * derecha. El vértice alto queda a la izquierda, así que el color muerde la
+     * foto por ese lado y la deja asomar por el derecho.
+     *
+     * Se recorta con clip-path y se sube con un margen negativo del mismo
+     * valor, para que el vértice bajo quede justo en el pie de la foto y el
+     * alto se le meta por encima; sin ese margen quedaría una franja vacía
+     * entre ambos.
+     *
+     * El relleno superior recupera el mismo desnivel, así el texto conserva la
+     * separación con el borde que tendría si el corte fuera recto.
+     */
+    .hero__inner {
+      background-color: var(--arcis-color-global-main);
+      padding: var(--space-7) var(--hero-padding-x);
+
+      margin-top: calc(-1 * var(--hero-slant));
+      padding-top: calc(var(--space-7) + var(--hero-slant));
+      clip-path: polygon(0 0, 100% var(--hero-slant), 100% 100%, 0 100%);
+    }
+
+    /*
+     * Sobre el panel de marca, un filete rojo no se ve. Pasa a blanco, igual
+     * que el resto del texto de este panel.
+     */
+    .hero__eyebrow::after {
+      background-color: var(--arcis-color-text-inverse);
+    }
+
+    .hero__actions {
+      width: 100%;
+    }
+
+    .hero__actions .btn {
+      width: 100%;
+    }
+
+    /*
+     * Sobre el panel rojo, un botón rojo desaparece: el principal se viste como
+     * la variante "white" del sistema, que existe justo para esto — su propio
+     * comentario en _buttons.scss dice "CTA principal sobre fondos rojos/oscuros
+     * (ej. Hero)".
+     *
+     * Se copia su comportamiento en vez de cambiar la prop del átomo porque
+     * quién manda aquí es el ancho de la pantalla, y eso solo lo sabe el CSS.
+     */
+    .hero__actions .btn.btn--primary {
+      background-color: var(--neutrals-0);
+      color: var(--arcis-color-global-main);
+      /*
+       * El color acompaña al barrido de la persiana (--ease-slow). Con la
+       * velocidad rápida el texto se volvería blanco antes de que el fondo lo
+       * cubra, dejando un parpadeo de blanco sobre blanco.
+       */
+      transition: background-color var(--ease-fast), color var(--ease-slow),
+                  border-color var(--ease-fast), transform var(--ease-fast);
+    }
+
+    /*
+     * Imprescindible: la persiana de .btn--primary revela --corp-primary-dark.
+     * Sin esto el texto se queda rojo sobre rojo oscuro y desaparece. Es el
+     * mismo caso que _buttons.scss ya corrige para .btn--white.
+     */
+    .hero__actions .btn.btn--primary:hover {
+      color: var(--arcis-color-text-inverse);
+    }
+
+    /*
+     * Los controles suben sobre la foto, a la izquierda, y se tiñen de marca:
+     * abajo quedarían sobre el panel rojo, donde el fondo oscuro translúcido
+     * no pinta nada.
+     */
+    .hero__controls {
+      bottom: auto;
+      top: var(--space-5);
+      justify-content: flex-start;
+      flex-direction: row-reverse;
+    }
+
+    .hero__arrow {
+      background-color: var(--arcis-color-global-main);
+      border-color: transparent;
+    }
+
+    .hero__arrow:hover,
+    .hero__arrow:focus-visible {
+      background-color: var(--arcis-color-global-dark);
+      border-color: transparent;
+    }
+  }
+}

@@ -1,10 +1,12 @@
 <template>
   <div class="posts-editor">
     <CardSectionHeaderEditor
+      :desc="localData.desc"
       :title="localData.title"
       :link-label="localData.linkLabel"
       :link-url="localData.linkUrl"
       :card-count="localData.cardCount"
+      @update:desc="localData.desc = $event"
       @update:title="localData.title = $event"
       @update:link-label="localData.linkLabel = $event"
       @update:link-url="localData.linkUrl = $event"
@@ -139,6 +141,7 @@ const buildCard = (source: any): PostCardItem => ({
 });
 
 const build = (source: any) => ({
+  desc: source?.desc ?? '',
   title: source?.title ?? '',
   linkLabel: source?.linkLabel ?? '',
   linkUrl: source?.linkUrl ?? '',

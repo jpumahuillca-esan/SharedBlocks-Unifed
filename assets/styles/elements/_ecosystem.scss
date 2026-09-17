@@ -1,0 +1,526 @@
+/* =========================================================================
+   ECOSYSTEM — ARCIS Design System
+
+   Sección del ecosistema académico: encabezado centrado y, debajo, las dos
+   escuelas grandes a la izquierda y el grupo de facultades a la derecha.
+   La usa el bloque block-beta/ecosystem/section-ecosystem.
+
+   ATENCIÓN: no es un porte del kit. El kit de este repositorio no documenta
+   esta sección; se reconstruyó a partir de la maqueta del equipo. Conviene
+   reconciliarla cuando el kit se actualice.
+
+   COLORES: ninguno es nuevo. Los seis de facultad son la sección "University
+   faculties" de tokens.scss —que tiene exactamente seis entradas para las seis
+   escuelas de la maqueta— y los dos grandes salen de las escalas de posgrado y
+   gobierno. Cada modificador solo traduce un nombre a su token.
+
+   Tres composiciones, una por tamaño:
+     escritorio  dos columnas; facultades en rejilla de 3, panel de color
+     tableta     una columna; facultades en rejilla de 2, tarjeta horizontal
+     teléfono    una columna; todo apilado, tarjeta horizontal
+
+   Todo bajo .arcis-scope por la razón explicada en base.scss.
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+
+  .ecosystem {
+    --ecosystem-padding-x: var(--space-6);
+
+    /* Hueco entre los dos grupos grandes de la sección. */
+    --ecosystem-gap: var(--space-5);
+
+    /*
+     * Hueco DENTRO del contenedor de facultades: entre tarjeta y tarjeta, y
+     * entre las tarjetas y el borde. Es bastante más apretado que el de fuera,
+     * y por eso va en su propia variable: en la maqueta las seis tarjetas se
+     * leen como una rejilla compacta, no como piezas sueltas.
+     */
+    --ecosystem-group-gap: var(--space-3);
+
+    background-color: var(--neutrals-0);
+  }
+
+  .ecosystem__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-7);
+
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    /* Ritmo vertical común a todos los bloques (ver section-rhythm.scss). */
+    padding: var(--section-pad-y) var(--ecosystem-padding-x);
+    box-sizing: border-box;
+  }
+
+  /* -----------------------------------------------------------------------
+     Encabezado
+     ----------------------------------------------------------------------- */
+  .ecosystem__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  /* Filete corto, rojo de marca, centrado entre el título y la descripción. */
+  .ecosystem__rule {
+    width: 40px;
+    height: 2px;
+    background-color: var(--arcis-color-global-main);
+  }
+
+  .ecosystem__title {
+    color: var(--arcis-color-text-primary);
+  }
+
+  .ecosystem__desc {
+    max-width: 72ch;
+    color: var(--arcis-color-text-secondary);
+  }
+
+  /* -----------------------------------------------------------------------
+     Disposición general
+
+     Las dos escuelas grandes ocupan menos ancho que el grupo de facultades, y
+     por eso la proporción no es mitad y mitad. Se declara con fracciones y no
+     con porcentajes para que el hueco entre columnas no tenga que descontarse
+     a mano.
+     ----------------------------------------------------------------------- */
+  /*
+   * Sin `align-items`, que es lo mismo que decir "stretch": las dos columnas
+   * toman la altura de la más alta y el bloque cierra parejo por abajo, como en
+   * la maqueta. Con 'start' cada una se quedaría a su altura natural y el pie
+   * quedaría escalonado.
+   */
+  .ecosystem__layout {
+    display: grid;
+    /* Medido sobre la referencia: la columna de escuelas es un tercio y el
+       grupo de facultades dos tercios. */
+    grid-template-columns: 1fr 2fr;
+    gap: var(--ecosystem-gap);
+  }
+
+  .ecosystem__features {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ecosystem-gap);
+    min-width: 0;
+  }
+
+  /*
+   * El grupo de facultades es UNA pieza, no una franja suelta con tarjetas
+   * sueltas debajo: la franja es su encabezado y las tarjetas viven dentro.
+   *
+   * El cuerpo es gris claro y sin borde, como en el Figma: el rojo es solo la
+   * franja de arriba. El contenedor recorta su contenido para que la franja
+   * herede las esquinas redondeadas superiores sin tener radio propio.
+   */
+  .ecosystem__group {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+
+    background-color: var(--neutrals-200);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  /*
+   * Las dos escuelas se reparten a partes iguales el alto que les cede la
+   * columna, que es el del grupo de facultades por ser la más alta.
+   */
+  .ecosystem__features > * {
+    flex: 1;
+  }
+
+  /*
+   * Las tarjetas van DENTRO del contenedor, así que su separación del borde es
+   * relleno del grupo y no un hueco entre piezas hermanas. Hueco y relleno
+   * miden lo mismo.
+   *
+   * `flex: 1` y `grid-auto-rows: 1fr` son los que evitan el hueco vacío al pie
+   * del contenedor. El grupo se estira hasta la altura de la columna vecina; sin
+   * esto la rejilla se quedaba a su altura natural y sobraba gris debajo. Así
+   * las filas se reparten ese alto y cada tarjeta lo absorbe en su panel.
+   */
+  .ecosystem__faculties {
+    display: grid;
+    flex: 1;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
+    gap: var(--ecosystem-group-gap);
+    padding: var(--ecosystem-group-gap);
+  }
+
+  /* -----------------------------------------------------------------------
+     Franja del grupo de facultades
+
+     Única pieza de color fijo: encabeza el conjunto, no representa a una
+     escuela. Sin radio propio — es el encabezado del contenedor y son sus
+     esquinas las que mandan.
+     ----------------------------------------------------------------------- */
+  .ecosystem-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-5);
+
+    background-color: var(--arcis-color-univ-primary);
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .ecosystem-bar__text {
+    display: flex;
+    flex: 1;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+    min-width: 0;
+  }
+
+  .ecosystem-bar__title {
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .ecosystem-bar__desc {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  /* -----------------------------------------------------------------------
+     Tarjeta
+
+     Misma anatomía para las dos grandes y para las de facultad: foto arriba,
+     panel de color debajo con el texto y la flecha.
+     ----------------------------------------------------------------------- */
+  .ecosystem-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background-color: var(--ecosystem-color);
+    color: var(--arcis-color-text-inverse);
+  }
+
+  /*
+   * Traducción de nombre a token. Es lo único que hacen estos modificadores: no
+   * inventan ningún color, cada uno apunta a una variable que ya existe.
+   */
+  .ecosystem-card--mba { --ecosystem-color: var(--graduate-mba-100); }
+  .ecosystem-card--government { --ecosystem-color: var(--goverment-primary-main); }
+  .ecosystem-card--blue { --ecosystem-color: var(--univ-blue-100); }
+  .ecosystem-card--wine { --ecosystem-color: var(--univ-wine-100); }
+  .ecosystem-card--green { --ecosystem-color: var(--univ-green-100); }
+  .ecosystem-card--yellow { --ecosystem-color: var(--univ-yellow-100); }
+  .ecosystem-card--cyan { --ecosystem-color: var(--univ-cyan-100); }
+  .ecosystem-card--orange { --ecosystem-color: var(--univ-orange-100); }
+
+  /*
+   * La foto NUNCA decide la altura de la tarjeta: va en absoluto y rellena la
+   * caja que le den. La caja se dimensiona sola en cada caso — por proporción
+   * (facultad en escritorio, escuela en tableta) o por flex (escuela en
+   * escritorio, facultad tumbada).
+   *
+   * Con la imagen en flujo, su altura natural empujaba la tarjeta: las fotos de
+   * retrato son unas 2:3, y en la tarjeta tumbada de tableta eso estiraba cada
+   * facultad hasta ~190px cuando el texto solo necesitaba ~147.
+   */
+  .ecosystem-card__media {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--neutrals-800);
+  }
+
+  .ecosystem-card__media img {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--ease-slow);
+  }
+
+  .ecosystem-card:hover .ecosystem-card__media img {
+    transform: scale(1.04);
+  }
+
+  /*
+   * El texto arranca ARRIBA del panel y la flecha queda abajo a la derecha.
+   *
+   * Con el panel estirándose para llenar la fila, alinear todo abajo dejaba el
+   * título pegado a la flecha y un hueco de color encima; en el Figma el título
+   * va justo bajo la foto. Por eso el texto se alinea al inicio y la flecha se
+   * baja por su cuenta (align-self en .ecosystem-arrow).
+   */
+  .ecosystem-card__body {
+    display: flex;
+    flex: 1;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-4);
+  }
+
+  .ecosystem-card__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  .ecosystem-card__title {
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .ecosystem-card__desc {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  /*
+   * Texto oscuro sobre los tres colores claros.
+   *
+   * No es un capricho de estilo: con texto blanco, amarillo, turquesa y naranja
+   * no llegan al contraste mínimo legible (WCAG AA, 4,5:1). Quedan en 2,1, 2,2
+   * y 3,4; en negro suben a 10,2, 9,6 y 6,2. Los otros tres colores (azul, vino
+   * y verde) sí lo pasan con blanco y se quedan como están.
+   *
+   * La descripción va en el gris oscuro del sistema y no en negro puro, para
+   * conservar la misma jerarquía que tiene sobre los colores oscuros, donde va
+   * en blanco al 85%.
+   */
+  .ecosystem-card--yellow .ecosystem-card__title,
+  .ecosystem-card--cyan .ecosystem-card__title,
+  .ecosystem-card--orange .ecosystem-card__title {
+    color: var(--arcis-color-text-primary);
+  }
+
+  .ecosystem-card--yellow .ecosystem-card__desc,
+  .ecosystem-card--cyan .ecosystem-card__desc,
+  .ecosystem-card--orange .ecosystem-card__desc {
+    color: var(--arcis-color-text-secondary);
+  }
+
+  /* Las dos grandes llevan más foto y más aire que las de facultad. */
+  /*
+   * En escritorio la foto de las escuelas grandes NO tiene proporción propia:
+   * rellena el alto que sobra por encima de su panel.
+   *
+   * Es lo que permite que el grupo de facultades marque la altura de la fila.
+   * Con una proporción fija (se probó 16:9), la columna izquierda salía más
+   * alta que el grupo, el grupo se estiraba para igualarla y cada tarjeta de
+   * facultad inflaba su panel con un hueco de color entre el texto y la flecha.
+   */
+  .ecosystem-card--feature .ecosystem-card__media {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .ecosystem-card--feature .ecosystem-card__body {
+    padding: var(--space-5);
+  }
+
+  /*
+   * Foto apaisada y baja: el protagonismo es del panel de color. Medido sobre
+   * el Figma, la tarjeta de Management mide 148px de ancho y su foto 61px de
+   * alto, unos 2,4:1. Con 4:3 la foto se comía más de la mitad de la tarjeta.
+   */
+  .ecosystem-card--faculty .ecosystem-card__media {
+    aspect-ratio: 12 / 5;
+  }
+
+  /*
+   * El recuadro del texto es una pieza redondeada por sí misma, con el mismo
+   * radio que la tarjeta, y no un tramo recto pegado a la foto.
+   *
+   * Por sí solo el radio no bastaría: las esquinas de arriba quedarían sobre el
+   * color de fondo de la tarjeta y no se notarían. Por eso el recuadro sube
+   * sobre la foto justo lo que mide su radio, y la foto asoma por las esquinas.
+   *
+   * Necesita `position` y `z-index` para quedar ENCIMA de la foto: la imagen va
+   * en absoluto, y un elemento posicionado se pinta por delante de uno que no lo
+   * está aunque venga antes en el marcado.
+   */
+  .ecosystem-card--faculty .ecosystem-card__body {
+    position: relative;
+    z-index: 1;
+    margin-top: calc(-1 * var(--radius-sm));
+    border-radius: var(--radius-sm);
+    background-color: var(--ecosystem-color);
+  }
+
+  /* -----------------------------------------------------------------------
+     Flecha
+
+     Su aspecto lo pone el sistema: es un AtomButton de solo ícono, en la
+     variante btn--surface sobre los paneles de color y btn--white sobre la
+     franja roja. Aquí solo se impide que el flex la encoja cuando el título
+     de al lado ocupa dos líneas.
+     ----------------------------------------------------------------------- */
+  .ecosystem-arrow.btn {
+    flex-shrink: 0;
+    align-self: flex-end;
+  }
+
+  /* -----------------------------------------------------------------------
+     Tableta — por debajo de 992px.
+
+     Los dos grupos dejan de convivir en una fila: las escuelas grandes pasan
+     a dos columnas y el grupo de facultades baja entero debajo.
+
+     Las facultades cambian de composición: la foto se va al lado y el texto
+     pasa a fondo blanco. En dos columnas la tarjeta se vuelve ancha y baja, y
+     con la foto encima quedaría una franja de imagen desproporcionada.
+     ----------------------------------------------------------------------- */
+  @include bp.breakpoint-down('lg') {
+
+    .ecosystem__layout {
+      grid-template-columns: 1fr;
+      gap: var(--space-7);
+    }
+
+    .ecosystem__features {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    /*
+     * Aquí la foto de las escuelas SÍ necesita proporción propia. En escritorio
+     * rellenaba el alto que le cedía el grupo de facultades; en tableta ese grupo
+     * baja debajo y ya no hay columna vecina que marque altura, así que sin esto
+     * la foto se quedaría en cero.
+     */
+    .ecosystem-card--feature .ecosystem-card__media {
+      flex: none;
+      aspect-ratio: 16 / 9;
+    }
+
+    /*
+     * `auto` y no `1fr`: cada fila mide lo que su tarjeta más alta, no lo que
+     * la más alta de toda la rejilla.
+     *
+     * Con `1fr`, bastaba que un título largo ("ESAN Management") se partiera
+     * en dos líneas para que las seis tarjetas heredaran esa altura, y las de
+     * título corto quedaban con un hueco vacío entre la descripción y la
+     * flecha. En escritorio `1fr` sí hace falta —reparte el alto del grupo
+     * estirado—, pero aquí ya no hay nada que repartir.
+     */
+    .ecosystem__faculties {
+      grid-template-columns: repeat(2, 1fr);
+      grid-auto-rows: auto;
+    }
+
+    /* La tarjeta de facultad se tumba: foto a la izquierda, texto en blanco. */
+    .ecosystem-card--faculty {
+      flex-direction: row;
+      align-items: stretch;
+      background-color: var(--neutrals-0);
+      color: var(--arcis-color-text-primary);
+      border: var(--border-width-sm) solid var(--border-color-light);
+
+      /*
+       * Filete del color de la escuela en el borde inferior, como en el Figma.
+       * Tumbada sobre blanco, la tarjeta pierde su panel de color; este filete
+       * y la flecha son lo que la sigue identificando con su escuela.
+       */
+      border-bottom: var(--space-1) solid var(--ecosystem-color);
+    }
+
+    .ecosystem-card--faculty .ecosystem-card__media {
+      flex: 0 0 38%;
+      aspect-ratio: auto;
+    }
+
+    /*
+     * Tumbada, la tarjeta ya no tiene ancho que regalar: la flecha pasa DEBAJO
+     * del texto, a la esquina inferior derecha, en lugar de ir a su lado.
+     *
+     * Al lado le robaba unos 50px a una columna de texto que ya es estrecha, y
+     * descripciones como "Carreras de ciencias económicas" se partían en tres
+     * líneas, estirando la tarjeta muy por encima de la referencia.
+     */
+    .ecosystem-card--faculty .ecosystem-card__body {
+      flex-direction: column;
+      align-items: stretch;
+
+      /*
+       * Tumbada, el recuadro está a la derecha de la foto: se monta sobre ella
+       * por la izquierda en lugar de por arriba. Mismo recurso que en
+       * escritorio, girado.
+       */
+      margin-top: 0;
+      margin-left: calc(-1 * var(--radius-sm));
+      background-color: var(--neutrals-0);
+    }
+
+    .ecosystem-card--faculty .ecosystem-arrow.btn {
+      margin-top: auto;
+    }
+
+
+    .ecosystem-card--faculty .ecosystem-card__title {
+      color: var(--arcis-color-text-primary);
+    }
+
+    .ecosystem-card--faculty .ecosystem-card__desc {
+      color: var(--arcis-color-text-secondary);
+    }
+
+    /*
+     * Sobre blanco, el blanco translúcido de btn--surface desaparece: la flecha
+     * toma el color de la escuela, que es lo único que queda de él en esta
+     * composición.
+     *
+     * Con `.btn` en el selector para superar a .btn.btn--surface sin depender
+     * de que esta hoja se cargue después de _buttons.scss.
+     */
+    .ecosystem-card--faculty .ecosystem-arrow.btn {
+      background-color: var(--ecosystem-color);
+      color: var(--arcis-color-text-inverse);
+    }
+
+    .ecosystem-card--faculty .ecosystem-arrow.btn:hover,
+    .ecosystem-card--faculty .ecosystem-arrow.btn:focus-visible {
+      /* Sin una escala oscura por color, se apoya en la opacidad. */
+      background-color: var(--ecosystem-color);
+      opacity: 0.85;
+    }
+  }
+
+  /* -----------------------------------------------------------------------
+     Teléfono — 576px hacia abajo.
+
+     Todo en una columna. Las escuelas grandes también se apilan, y las
+     facultades conservan la composición tumbada de tableta.
+     ----------------------------------------------------------------------- */
+  @include bp.breakpoint-down('sm') {
+
+    .ecosystem {
+      --ecosystem-padding-x: var(--space-5);
+      --ecosystem-gap: var(--space-4);
+    }
+
+    /* El relleno vertical ya lo reduce --section-pad-y en móvil. */
+    .ecosystem__inner {
+      gap: var(--space-6);
+    }
+
+    .ecosystem__features,
+    .ecosystem__faculties {
+      grid-template-columns: 1fr;
+    }
+
+    /*
+     * La franja apila su texto: en una línea, el título y la descripción no
+     * caben sin partirse en sitios raros.
+     */
+    .ecosystem-bar__text {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}

@@ -1,0 +1,302 @@
+/* =========================================================================
+   STORY SECTION — ARCIS Design System
+
+   Sección de historias en video sobre la franja de color de marca: encabezado
+   a la izquierda, enlace de "ver todas" a la derecha, y debajo un carril de
+   tarjetas verticales.
+
+   AQUÍ NO HAY TARJETA. La tarjeta es .testimonial-card--video, que ya existe en
+   _testimonials.scss y se usa a través de MoleculeTestimonial. Este archivo
+   aporta solo lo que el sistema no tenía: la franja de fondo, el encabezado y
+   el carril que las ordena.
+
+   ATENCIÓN: la sección no es un porte del kit —el kit documenta la tarjeta
+   suelta, no el contenedor que la envuelve—; se reconstruyó a partir de las
+   capturas del equipo. Conviene reconciliarla cuando el kit se actualice.
+
+   Diferencia deliberada con .card-section (_card-section.scss): allí el carril
+   lleva puntos de paginación; aquí NO. El diseño pide que el contenido oculto
+   se alcance solo deslizando, sin indicador. Por eso esta sección no usa el
+   componente CardSlider ni necesita JavaScript: es desbordamiento y nada más.
+
+   Todo bajo .arcis-scope por la razón explicada en base.scss.
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+
+  .story-section {
+    /*
+     * Margen lateral de la sección. Se guarda en una variable porque el carril
+     * lo compensa con margen negativo para poder sangrar hasta el borde, y
+     * ambos valores tienen que coincidir.
+     */
+    --story-section-padding-x: var(--space-6);
+
+    /*
+     * Ancho mínimo de una tarjeta. Es la pieza clave del comportamiento que
+     * pidió el diseño: la tarjeta NO se encoge con la pantalla. Cuando el
+     * reparto por columnas cae por debajo de este valor, el ancho se congela
+     * aquí y lo que sobra se sale de la vista, alcanzable deslizando.
+     */
+    --story-card-min: 280px;
+
+    /*
+     * Dónde termina la franja de color, medido desde ABAJO.
+     *
+     * La franja no cubre la sección entera: corta dentro de la tarjeta y deja
+     * que la parte baja de las tarjetas sobresalga sobre el fondo de la página.
+     *
+     * Se ancla por abajo y no con una altura fija a propósito. El Figma da la
+     * franja como un rectángulo de 483px, pero esa cifra vale para SU
+     * encabezado: en cuanto el título envuelve a más líneas —móvil, o un texto
+     * más largo cargado desde el editor— una altura fija deja de caer sobre la
+     * tarjeta y el efecto se pierde, o peor, la franja termina por encima del
+     * carril. Anclada abajo, el corte cae siempre a la misma distancia del pie
+     * de la tarjeta, sea cual sea el alto del encabezado.
+     *
+     * Calibrado con el Figma: allí la sección mide ~632px de alto (64 de
+     * espaciado + ~91 de encabezado + 32 de hueco + 381 de tarjeta + 64 de
+     * espaciado) y la franja 483, así que el corte queda a ~149px del pie.
+     */
+    --story-section-band-inset-bottom: 150px;
+
+    /*
+     * Paradas del degradado (Figma: degradado radial #E3173E → #480300).
+     *
+     * La primera es --arcis-color-global-main, mismo valor. La segunda no tiene
+     * token: tokens.scss es un espejo de webunificada y no corresponde
+     * inventarle escalas desde aquí (ver su cabecera), así que queda como
+     * variable local, en un solo punto, para el día que el sistema publique una
+     * escala roja oscura.
+     */
+    --story-section-bg-from: var(--arcis-color-global-main);
+    --story-section-bg-to: #480300;
+
+    position: relative;
+    isolation: isolate;
+    color: var(--arcis-color-text-inverse);
+  }
+
+  /*
+   * Franja de color.
+   *
+   * Capa aparte y no el fondo de la sección: el carril queda montado sobre su
+   * borde inferior, con la parte baja de cada tarjeta fuera del color. Si el
+   * fondo fuera de la sección, cubriría también esa parte y el efecto se
+   * perdería.
+   *
+   * Va antes que el contenido en el marcado y sin z-index propio, así que queda
+   * por debajo de .story-section__inner, que sí lo tiene.
+   */
+  .story-section__band {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: var(--story-section-band-inset-bottom);
+
+    background: radial-gradient(
+      ellipse 110% 190% at 20% 10%,
+      var(--story-section-bg-from) 0%,
+      var(--story-section-bg-to) 100%
+    );
+
+    /* Figma: 32px en las dos esquinas inferiores. No hay token con ese valor
+       (--radius-lg es 24px y --radius-xl es 40px), así que va literal. */
+    border-end-start-radius: 32px;
+    border-end-end-radius: 32px;
+  }
+
+  /*
+   * Contenedor interno.
+   *
+   * Mismo criterio que en .ctaband: la franja sangra a todo el ancho porque su
+   * color es parte del diseño, pero el contenido se limita al ancho del sistema
+   * para quedar alineado con el resto de la página. Se usa el token
+   * --container-max y no un número.
+   *
+   * El z-index lo pone por encima de la franja: las tarjetas tienen que
+   * montarse sobre su borde inferior, no quedar tapadas por ella.
+   *
+   * El espaciado de abajo es el que separa las tarjetas —que ya sobresalen del
+   * color— de lo que venga después en la página.
+   */
+  .story-section__inner {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+
+    padding: var(--space-8) var(--story-section-padding-x);
+    box-sizing: border-box;
+  }
+
+  /* -----------------------------------------------------------------------
+     Encabezado
+     ----------------------------------------------------------------------- */
+  /*
+   * El enlace se alinea con la última línea del texto, no con su centro: en el
+   * diseño queda a la altura de la línea de apoyo, no flotando entre el título
+   * y ella.
+   */
+  .story-section__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-5);
+  }
+
+  .story-section__heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    min-width: 0;
+  }
+
+  /* Filete corto sobre el título. */
+  .story-section__rule {
+    width: 56px;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.55);
+  }
+
+  /*
+   * El título y la línea de apoyo los dibujan AtomHeading y AtomText, que ya
+   * fijan familia, tamaño y peso. Aquí solo se les da el color que pide el
+   * fondo oscuro, que es lo que los átomos no pueden saber por sí solos.
+   */
+  .story-section__title {
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .story-section__subtitle {
+    max-width: 52ch;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  /*
+   * El enlace es un AtomButton variant="link" negative. El color legible sobre
+   * fondo oscuro y el desplazamiento de la flecha al pasar por encima ya los
+   * pone el sistema (.btn--link.btn--negative en _buttons.scss); lo único que
+   * no puede saber es que aquí es un enlace de texto y no un botón, así que se
+   * le quita la altura mínima de 48px que arrastra de la regla base — con ella
+   * el texto quedaría flotando sobre la línea de apoyo en lugar de alineado.
+   */
+  .story-section__link.btn.btn--link {
+    min-height: 0;
+  }
+
+  /* -----------------------------------------------------------------------
+     Carril de tarjetas
+
+     SIEMPRE una sola fila. Las tarjetas nunca se apilan ni pasan a una segunda
+     fila: cada una toma su parte del ancho según las columnas elegidas en el
+     editor, pero nunca baja de --story-card-min. Cuando ese mínimo ya no cabe,
+     la fila se desplaza en horizontal.
+
+     Sin puntos y sin flechas, por diseño. El sangrado con margen negativo hace
+     que el recorte llegue al borde de la sección, para que la tarjeta que asoma
+     se vea intencional y no cortada a medias.
+     ----------------------------------------------------------------------- */
+  .story-section__rail {
+    display: flex;
+    gap: var(--space-5);
+    /* Estirar y no 'start': .testimonial-card--video fija su proporción 3:4, y
+       así todas arrancan y terminan a la misma altura. */
+    align-items: stretch;
+
+    margin-inline: calc(-1 * var(--story-section-padding-x));
+    padding-inline: var(--story-section-padding-x);
+
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--story-section-padding-x);
+    -webkit-overflow-scrolling: touch;
+
+    /* La barra estorba sobre el fondo de color; el gesto y la tarjeta que
+       asoma ya comunican que hay más. */
+    scrollbar-width: none;
+  }
+
+  .story-section__rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  /*
+   * Arrastre con el ratón (composables/useDragScroll.ts).
+   *
+   * El cursor de mano es la ÚNICA señal de que el carril se puede arrastrar: sin
+   * puntos ni flechas, quien usa un ratón no tiene otra forma de descubrirlo.
+   *
+   * Solo aparece con `is-draggable`, que el composable pone cuando de verdad hay
+   * tarjetas fuera de la vista. Ofrecer agarrar algo que no se mueve engaña.
+   */
+  .story-section__rail.is-draggable {
+    cursor: grab;
+  }
+
+  .story-section__rail.is-dragging {
+    cursor: grabbing;
+    /* Durante el gesto no debe quedar texto resaltado a su paso. */
+    user-select: none;
+  }
+
+  .story-section__rail > * {
+    flex: 0 0 max(
+      var(--story-card-min),
+      calc(
+        (100% - (var(--story-section-columns, 4) - 1) * var(--space-5))
+        / var(--story-section-columns, 4)
+      )
+    );
+    scroll-snap-align: start;
+  }
+
+  /*
+   * La tipografía de la tarjeta NO se toca aquí: vive en la propia pieza
+   * (_testimonials.scss, sección del overlay), para que cualquier bloque que
+   * reutilice MoleculeTestimonial herede los mismos tamaños en vez de tener que
+   * repetirlos. Esta hoja solo aporta el contenedor: franja, encabezado y carril.
+   */
+
+  /* -----------------------------------------------------------------------
+     Versión móvil — 768px hacia abajo.
+
+     El carril no cambia: deslizarse en horizontal ya es su comportamiento
+     normal. Solo se ajustan los márgenes y baja el enlace del encabezado.
+     ----------------------------------------------------------------------- */
+  @include bp.breakpoint-down('mobile') {
+
+    .story-section {
+      --story-section-padding-x: var(--space-5);
+    }
+
+    .story-section__inner {
+      gap: var(--space-5);
+      padding-block: var(--space-7);
+    }
+
+    /*
+     * El enlace pasa debajo de la línea de apoyo, alineado a la izquierda con
+     * el resto del texto. No baja al final de la sección como en .card-section:
+     * aquí el diseño lo mantiene dentro del encabezado.
+     */
+    .story-section__header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-4);
+    }
+
+    .story-section__rail {
+      gap: var(--space-4);
+    }
+  }
+}

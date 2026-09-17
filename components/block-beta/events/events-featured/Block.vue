@@ -1,23 +1,26 @@
 <template>
   <section class="card-section">
     <CardSectionHeader
+      :desc="data.desc || ''"
       :title="data.title || ''"
       :link-label="data.linkLabel || ''"
       :link-url="data.linkUrl || ''"
     />
 
     <CardSlider :count="visibleCards.length" :columns="cardCount">
+      <!--
+        Siempre el formato con imagen: es el diseño de esta sección. Se fija aquí
+        y no se lee del dato, así que un evento guardado antes con el formato de
+        bloque de fecha también sale con imagen.
+      -->
       <MoleculeEventCard
         v-for="card in visibleCards"
         :key="card.id"
-        :variant="card.variant"
+        variant="media"
         :day="card.day"
         :month="card.month"
         :title="card.title"
         :href="card.href"
-        :time="card.time"
-        :location="card.location"
-        :cta-label="card.ctaLabel"
         :image="card.image"
         :image-alt="card.imageAlt"
         :badges="card.badges"
@@ -67,15 +70,11 @@ const visibleCards = computed<EventCardItem[]>(() => {
 
     return {
     id: card?.id || `event-${i}`,
-    variant: card?.variant === 'media' ? 'media' : 'standard',
     date: card?.date ?? '',
     day: fromCalendar?.day ?? card?.day ?? '',
     month: fromCalendar?.month ?? card?.month ?? '',
     title: card?.title ?? '',
     href: card?.href ?? '',
-    time: card?.time ?? '',
-    location: card?.location ?? '',
-    ctaLabel: card?.ctaLabel ?? '',
     image: card?.image ?? '',
     imageAlt: card?.imageAlt ?? '',
     tag: card?.tag ?? '',

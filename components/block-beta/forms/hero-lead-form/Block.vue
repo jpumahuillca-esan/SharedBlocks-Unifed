@@ -136,6 +136,13 @@ const {
   border-radius: var(--radius-md, 16px);
   padding: var(--space-6, 32px);
   box-shadow: var(--shadow-md, 0 8px 32px rgba(0, 0, 0, 0.10));
+  /*
+   * Ritmo vertical común a todos los bloques (ver
+   * assets/styles/section-rhythm.scss). Margen y no relleno: es una tarjeta con
+   * borde y sombra, y el relleno la agrandaría en vez de separarla. Además la
+   * sombra necesita ese aire para no quedar cortada contra el bloque vecino.
+   */
+  margin-block: var(--section-pad-y, 80px);
 }
 
 .arcis-form-title {

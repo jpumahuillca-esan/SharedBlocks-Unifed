@@ -1,10 +1,12 @@
 <template>
   <div class="events-editor">
     <CardSectionHeaderEditor
+      :desc="localData.desc"
       :title="localData.title"
       :link-label="localData.linkLabel"
       :link-url="localData.linkUrl"
       :card-count="localData.cardCount"
+      @update:desc="localData.desc = $event"
       @update:title="localData.title = $event"
       @update:link-label="localData.linkLabel = $event"
       @update:link-url="localData.linkUrl = $event"
@@ -35,12 +37,10 @@
       @remove="removeCard(index)"
     >
       <div>
-        <label class="form-label">Formato de la tarjeta</label>
-        <select v-model="card.variant" class="form-select form-select-sm mb-2">
-          <option value="standard">Con bloque de fecha</option>
-          <option value="media">Con imagen</option>
-        </select>
-
+        <!--
+          Sin selector de formato: esta sección usa siempre la tarjeta con imagen,
+          así que no hay nada que elegir.
+        -->
         <label class="form-label">Título</label>
         <textarea v-model="card.title" class="form-control form-control-sm mb-2" rows="2"></textarea>
 
@@ -68,60 +68,35 @@
           placeholder="/ruta o https://"
         />
 
-        <!-- Campos propios del formato con bloque de fecha -->
-        <template v-if="card.variant === 'standard'">
-          <div class="row g-2 mb-2">
-            <div class="col-6">
-              <label class="form-label">Hora</label>
-              <input v-model="card.time" type="text" class="form-control form-control-sm" placeholder="18:00" />
-            </div>
-            <div class="col-6">
-              <label class="form-label">Lugar</label>
-              <input v-model="card.location" type="text" class="form-control form-control-sm" placeholder="Campus" />
-            </div>
-          </div>
+        <label class="form-label">Imagen</label>
+        <div class="ev-image-preview mb-2">
+          <img v-if="card.image" :src="card.image" alt="" />
+          <span v-else class="text-muted small">Sin imagen</span>
+        </div>
+        <div class="d-flex gap-2 mb-2">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary flex-grow-1"
+            @click="$emit('select-image', { item: card, field: 'image' })"
+          >
+            <i class="las la-image me-1"></i>
+            {{ card.image ? 'Cambiar imagen' : 'Subir imagen' }}
+          </button>
+          <button
+            v-if="card.image"
+            type="button"
+            class="btn btn-sm btn-outline-danger"
+            title="Quitar imagen"
+            @click="card.image = ''"
+          >
+            <i class="las la-trash"></i>
+          </button>
+        </div>
 
-          <label class="form-label">Texto del botón</label>
-          <input
-            v-model="card.ctaLabel"
-            type="text"
-            class="form-control form-control-sm"
-            placeholder="Vacío oculta el botón"
-          />
-        </template>
+        <label class="form-label">Texto alternativo</label>
+        <input v-model="card.imageAlt" type="text" class="form-control form-control-sm mb-2" />
 
-        <!-- Campos propios del formato con imagen -->
-        <template v-else>
-          <label class="form-label">Imagen</label>
-          <div class="ev-image-preview mb-2">
-            <img v-if="card.image" :src="card.image" alt="" />
-            <span v-else class="text-muted small">Sin imagen</span>
-          </div>
-          <div class="d-flex gap-2 mb-2">
-            <button
-              type="button"
-              class="btn btn-sm btn-outline-secondary flex-grow-1"
-              @click="$emit('select-image', { item: card, field: 'image' })"
-            >
-              <i class="las la-image me-1"></i>
-              {{ card.image ? 'Cambiar imagen' : 'Subir imagen' }}
-            </button>
-            <button
-              v-if="card.image"
-              type="button"
-              class="btn btn-sm btn-outline-danger"
-              title="Quitar imagen"
-              @click="card.image = ''"
-            >
-              <i class="las la-trash"></i>
-            </button>
-          </div>
-
-          <label class="form-label">Texto alternativo</label>
-          <input v-model="card.imageAlt" type="text" class="form-control form-control-sm mb-2" />
-
-          <BadgeListEditor :badges="card.badges" />
-        </template>
+        <BadgeListEditor :badges="card.badges" />
       </div>
     </CardAccordionItem>
 
@@ -154,15 +129,11 @@ const emit = defineEmits(['update:modelValue', 'select-image']);
 
 const buildCard = (source: any): EventCardItem => ({
   id: source?.id || newCardId(),
-  variant: source?.variant === 'media' ? 'media' : 'standard',
   date: source?.date ?? '',
   day: source?.day ?? '',
   month: source?.month ?? '',
   title: source?.title ?? '',
   href: source?.href ?? '',
-  time: source?.time ?? '',
-  location: source?.location ?? '',
-  ctaLabel: source?.ctaLabel ?? '',
   image: source?.image ?? '',
   imageAlt: source?.imageAlt ?? '',
   tag: source?.tag ?? '',
@@ -170,6 +141,7 @@ const buildCard = (source: any): EventCardItem => ({
 });
 
 const build = (source: any) => ({
+  desc: source?.desc ?? '',
   title: source?.title ?? '',
   linkLabel: source?.linkLabel ?? '',
   linkUrl: source?.linkUrl ?? '',
