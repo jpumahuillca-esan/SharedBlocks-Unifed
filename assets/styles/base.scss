@@ -41,6 +41,35 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  /*
+   * Contenedor de consulta de los bloques (ver bp.container-down en
+   * breakpoints.scss).
+   *
+   * Los puntos de quiebre se resolvían solo con @media, que mide la ventana, y
+   * eso dejaba fuera el caso más frecuente al editar: el lienzo del editor es
+   * un contenedor de unos 700px dentro de una pantalla de 1440, así que los
+   * bloques se pintaban a dos columnas aunque no les cupieran. Lo mismo pasaba
+   * en una columna estrecha del constructor.
+   *
+   * Se declara aquí, y no en cada bloque, porque esta clase es justo el
+   * envoltorio que interesa medir en los dos consumidores:
+   *   - front, editor: va en CADA bloque del lienzo (CanvasSection.vue), así
+   *     que el ancho consultado es el que ese bloque tiene de verdad.
+   *   - front, páginas públicas: envuelve la página (PageView.vue), así que el
+   *     ancho es el de la ventana, como antes.
+   * Además, al ser ANCESTRO del bloque, las reglas por tamaño pueden darle
+   * estilo también a la raíz del bloque; una @container nunca alcanza a su
+   * propio contenedor.
+   *
+   * CUIDADO: `container-type: inline-size` implica contención de layout, y eso
+   * convierte a este envoltorio en el bloque contenedor de sus descendientes
+   * `position: fixed`. Hoy no afecta a nada —ningún bloque usa elementos fijos;
+   * .scroll-top y .cookie-banner son piezas globales y en la guía viva se
+   * muestran con su modificador de vista previa—, pero si alguna vez hace falta
+   * algo realmente fijo, tiene que renderizarse FUERA de .arcis-scope.
+   */
+  container-type: inline-size;
+
   *,
   *::before,
   *::after {

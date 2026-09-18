@@ -1,0 +1,38 @@
+/* =========================================================================
+   PICTOGRAMS — ARCIS Design System
+
+   Pictogramas de marca: los dibujos rellenos que acompañan a un dato o a un
+   beneficio. Los dibuja AtomPictogram a partir del catálogo de
+   helpers/pictograms.ts.
+
+   ATENCIÓN: no es un porte del kit. webunificada guarda estos dibujos en
+   ui-kit/assets/img/icons/ pero no documenta cómo se usan; la pieza se armó
+   para el bloque block-beta/info/mapamundi y quedó genérica a propósito.
+
+   Los archivos no traen tamaño ni color: el SVG ocupa la caja que le dé esta
+   clase y pinta con currentColor. Por eso el rojo se decide aquí, una sola vez,
+   y un bloque que necesite otro color (por ejemplo blanco sobre una franja de
+   marca) solo tiene que cambiar `color` en su contenedor.
+
+   Todo bajo .arcis-scope por la razón explicada en base.scss.
+   ========================================================================= */
+
+.arcis-scope {
+
+  .pictogram {
+    display: inline-flex;
+    /* En una fila flex junto a un texto largo, el dibujo no debe encogerse. */
+    flex-shrink: 0;
+    width: var(--pictogram-size, 40px);
+    height: var(--pictogram-size, 40px);
+    color: var(--arcis-color-global-main);
+    /* Sin esto la línea de texto del <span> suma unos píxeles bajo el dibujo. */
+    line-height: 0;
+  }
+
+  .pictogram svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}

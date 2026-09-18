@@ -40,6 +40,31 @@
      */
     --ecosystem-group-gap: var(--space-3);
 
+    /*
+     * Proporción de la foto de las facultades en escritorio. Es lo que decide
+     * la altura de toda la fila: el grupo de facultades es la columna más alta
+     * y las escuelas grandes se estiran hasta igualarlo. Para un bloque más
+     * alto o más bajo se cambia esto y nada más (ver .ecosystem-card--faculty).
+     */
+    --ecosystem-faculty-ratio: 16 / 9;
+
+    /*
+     * Proporción de la foto de las escuelas grandes en tableta y teléfono. En
+     * escritorio no se usa: allí el alto lo marca el grupo de facultades.
+     */
+    --ecosystem-feature-ratio: 12 / 5;
+
+    /*
+     * Porcentaje de la tarjeta de las escuelas grandes que ocupa el panel de
+     * color; la foto se queda con el resto. 40 en escritorio y 50 desde tableta
+     * hacia abajo (se redefine en ese breakpoint). Es un mínimo: si el texto no
+     * cabe, el panel crece y cede la foto.
+     *
+     * Número sin `%` porque se usa como factor de `flex-grow` y dentro de un
+     * `calc()` de proporción, y ninguno de los dos admite porcentajes.
+     */
+    --ecosystem-panel-share: 40;
+
     background-color: var(--neutrals-0);
   }
 
@@ -112,20 +137,24 @@
   }
 
   /*
-   * El grupo de facultades es UNA pieza, no una franja suelta con tarjetas
-   * sueltas debajo: la franja es su encabezado y las tarjetas viven dentro.
+   * El grupo de facultades es UNA pieza: el ROJO es el contenedor y dentro van
+   * su franja de título y el panel plomo con las tarjetas.
    *
-   * El cuerpo es gris claro y sin borde, como en el Figma: el rojo es solo la
-   * franja de arriba. El contenedor recorta su contenido para que la franja
-   * herede las esquinas redondeadas superiores sin tener radio propio.
+   * Es rojo y no plomo a propósito: el panel de tarjetas lleva las esquinas
+   * superiores redondeadas, y detrás de esas esquinas tiene que verse el rojo
+   * del contenedor. Cuando el rojo era solo la franja y el plomo el fondo del
+   * contenedor, redondear el panel por arriba no se notaba —plomo sobre plomo—
+   * y declararlo como pieza suelta partía el bloque en dos.
    */
   .ecosystem__group {
     display: flex;
     flex-direction: column;
     min-width: 0;
 
-    background-color: var(--neutrals-200);
-    border-radius: var(--radius-md);
+    background-color: var(--arcis-color-univ-primary);
+    /* El mismo radio de las tarjetas de facultad (--radius-sm), para que todas
+       las esquinas del grupo se lean iguales. */
+    border-radius: var(--radius-sm);
     overflow: hidden;
   }
 
@@ -154,6 +183,14 @@
     grid-auto-rows: 1fr;
     gap: var(--ecosystem-group-gap);
     padding: var(--ecosystem-group-gap);
+
+    /*
+     * El panel plomo va DENTRO del contenedor rojo, con sus esquinas de arriba
+     * redondeadas: el rojo asoma detrás de ellas. Las de abajo van rectas
+     * porque ahí manda el recorte del contenedor, que ya las redondea.
+     */
+    background-color: var(--neutrals-200);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   }
 
   /* -----------------------------------------------------------------------
@@ -169,7 +206,11 @@
     gap: var(--space-4);
     padding: var(--space-5);
 
-    background-color: var(--arcis-color-univ-primary);
+    /*
+     * Sin fondo propio: el rojo lo pone el contenedor, del que esta franja es
+     * el encabezado. Tampoco necesita radio — las esquinas de arriba son las
+     * del contenedor y él las redondea al recortar.
+     */
     color: var(--arcis-color-text-inverse);
   }
 
@@ -256,14 +297,31 @@
    * título pegado a la flecha y un hueco de color encima; en el Figma el título
    * va justo bajo la foto. Por eso el texto se alinea al inicio y la flecha se
    * baja por su cuenta (align-self en .ecosystem-arrow).
+   *
+   * El panel es además una pieza redondeada por sí misma, con el mismo radio
+   * que la tarjeta, y no un tramo recto pegado a la foto. Vale para las dos
+   * variantes y en todos los tamaños.
+   *
+   * Por sí solo el radio no bastaría: las esquinas de arriba quedarían sobre el
+   * color de fondo de la tarjeta y no se notarían. Por eso el recuadro sube
+   * sobre la foto justo lo que mide su radio, y la foto asoma por las esquinas.
+   *
+   * Necesita `position` y `z-index` para quedar ENCIMA de la foto: la imagen va
+   * en absoluto, y un elemento posicionado se pinta por delante de uno que no lo
+   * está aunque venga antes en el marcado.
    */
   .ecosystem-card__body {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex: 1;
     align-items: flex-start;
     justify-content: space-between;
     gap: var(--space-3);
+    margin-top: calc(-1 * var(--radius-sm));
     padding: var(--space-4);
+    border-radius: var(--radius-sm);
+    background-color: var(--ecosystem-color);
   }
 
   .ecosystem-card__text {
@@ -308,7 +366,14 @@
   /* Las dos grandes llevan más foto y más aire que las de facultad. */
   /*
    * En escritorio la foto de las escuelas grandes NO tiene proporción propia:
-   * rellena el alto que sobra por encima de su panel.
+   * se reparte el alto de la tarjeta con el panel según --ecosystem-panel-share
+   * (60 / 40). El panel nunca baja de lo que mide su contenido; si el texto pide
+   * más, cede la foto.
+   *
+   * Los factores van en escala de 100 (60 y 40) y no de 1 (0,6 y 0,4): cuando
+   * los factores que quedan por repartir suman menos de 1, flex solo reparte esa
+   * fracción del espacio. Si el panel se topa con su mínimo, la foto se quedaría
+   * con el 60% de lo que sobra y la tarjeta tendría un hueco al pie.
    *
    * Es lo que permite que el grupo de facultades marque la altura de la fila.
    * Con una proporción fija (se probó 16:9), la columna izquierda salía más
@@ -316,41 +381,37 @@
    * facultad inflaba su panel con un hueco de color entre el texto y la flecha.
    */
   .ecosystem-card--feature .ecosystem-card__media {
-    flex: 1;
+    flex: calc(100 - var(--ecosystem-panel-share)) 1 0;
     min-height: 0;
   }
 
+  /*
+   * La flecha se queda con su propia columna a todo lo alto del panel: el texto
+   * NUNCA pasa por encima de ella, y la flecha baja a la esquina inferior
+   * derecha por su `align-self`. Es la fila de la regla común, sin tocar.
+   *
+   * Se probó la flecha DEBAJO del texto, con el texto a todo el ancho: los
+   * títulos y descripciones largos pasaban por encima de la flecha. Tampoco se
+   * resuelve con un `padding-right` en el texto: tendría que copiar a mano el
+   * ancho del botón, y se descuadraría el día que el botón cambie de tamaño.
+   * La columna de la fila mide siempre lo que mide la flecha.
+   */
   .ecosystem-card--feature .ecosystem-card__body {
+    flex: var(--ecosystem-panel-share) 1 0;
     padding: var(--space-5);
   }
 
   /*
-   * Foto apaisada y baja: el protagonismo es del panel de color. Medido sobre
-   * el Figma, la tarjeta de Management mide 148px de ancho y su foto 61px de
-   * alto, unos 2,4:1. Con 4:3 la foto se comía más de la mitad de la tarjeta.
+   * Foto apaisada: el protagonismo sigue siendo del panel de color. En el Figma
+   * la tarjeta de Management mide 148px de ancho y su foto 61px de alto, unos
+   * 2,4:1; se subió a 16:9 a propósito para dar más alto al bloque. Con 4:3 la
+   * foto ya se comía más de la mitad de la tarjeta.
+   *
+   * El alto extra va a la foto y no al panel: estirar el panel abriría un hueco
+   * de color entre el título y la flecha.
    */
   .ecosystem-card--faculty .ecosystem-card__media {
-    aspect-ratio: 12 / 5;
-  }
-
-  /*
-   * El recuadro del texto es una pieza redondeada por sí misma, con el mismo
-   * radio que la tarjeta, y no un tramo recto pegado a la foto.
-   *
-   * Por sí solo el radio no bastaría: las esquinas de arriba quedarían sobre el
-   * color de fondo de la tarjeta y no se notarían. Por eso el recuadro sube
-   * sobre la foto justo lo que mide su radio, y la foto asoma por las esquinas.
-   *
-   * Necesita `position` y `z-index` para quedar ENCIMA de la foto: la imagen va
-   * en absoluto, y un elemento posicionado se pinta por delante de uno que no lo
-   * está aunque venga antes en el marcado.
-   */
-  .ecosystem-card--faculty .ecosystem-card__body {
-    position: relative;
-    z-index: 1;
-    margin-top: calc(-1 * var(--radius-sm));
-    border-radius: var(--radius-sm);
-    background-color: var(--ecosystem-color);
+    aspect-ratio: var(--ecosystem-faculty-ratio);
   }
 
   /* -----------------------------------------------------------------------
@@ -376,7 +437,15 @@
      pasa a fondo blanco. En dos columnas la tarjeta se vuelve ancha y baja, y
      con la foto encima quedaría una franja de imagen desproporcionada.
      ----------------------------------------------------------------------- */
-  @include bp.breakpoint-down('lg') {
+  @include bp.container-down('lg') {
+
+    /*
+     * En tableta y teléfono el panel de las escuelas grandes sube a la mitad de
+     * la tarjeta; en escritorio se queda en el 40%.
+     */
+    .ecosystem {
+      --ecosystem-panel-share: 50;
+    }
 
     .ecosystem__layout {
       grid-template-columns: 1fr;
@@ -396,7 +465,30 @@
      */
     .ecosystem-card--feature .ecosystem-card__media {
       flex: none;
-      aspect-ratio: 16 / 9;
+      aspect-ratio: var(--ecosystem-feature-ratio);
+    }
+
+    /*
+     * El alto MÍNIMO del panel sale de la proporción de la foto: el panel mide
+     * 40 por cada 60 de foto, así que es más apaisado en esa misma relación
+     * (12:5 × 60/40 = 18:5). Con `aspect-ratio` y la altura en auto, la caja
+     * crece si el texto no cabe.
+     *
+     * El `calc()` funciona con la proporción escrita como "12 / 5": al sustituir
+     * la variable queda 12 / 5 * (100 - 40) / 40, que se evalúa de izquierda a
+     * derecha.
+     *
+     * `flex-grow` para que, cuando la tarjeta vecina es más alta, el sobrante
+     * vaya al panel y no a la foto: las dos fotos miden lo mismo y los paneles
+     * arrancan a la misma altura. Base `auto` y no `0` para que la proporción
+     * cuente al calcular la altura, que aquí no viene dada por nadie.
+     */
+    .ecosystem-card--feature .ecosystem-card__body {
+      flex: 1 0 auto;
+      aspect-ratio: calc(
+        var(--ecosystem-feature-ratio) * (100 - var(--ecosystem-panel-share)) /
+          var(--ecosystem-panel-share)
+      );
     }
 
     /*
@@ -497,7 +589,7 @@
      Todo en una columna. Las escuelas grandes también se apilan, y las
      facultades conservan la composición tumbada de tableta.
      ----------------------------------------------------------------------- */
-  @include bp.breakpoint-down('sm') {
+  @include bp.container-down('sm') {
 
     .ecosystem {
       --ecosystem-padding-x: var(--space-5);

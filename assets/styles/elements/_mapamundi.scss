@@ -1,0 +1,354 @@
+/* =========================================================================
+   MAPAMUNDI — ARCIS Design System
+
+   Sección de presencia internacional: encabezado centrado y, debajo, el mapa
+   del mundo con una tarjeta de escuela montada sobre cada borde y el botón bajo
+   el mapa. La usa el bloque block-beta/info/mapamundi.
+
+   ATENCIÓN: no es un porte del kit. El kit de este repositorio no documenta
+   esta sección; se reconstruyó a partir de la maqueta del equipo. Conviene
+   reconciliarla cuando el kit se actualice.
+
+   COLORES: ninguno es nuevo. Gris de la franja, blanco de las tarjetas, rojo de
+   marca en cabeceras y pictogramas, y los tokens de texto y borde de siempre.
+   El mapa trae sus propios colores dentro del archivo: es una ilustración fija.
+
+   Tres composiciones, una por tamaño:
+     escritorio  tarjeta · mapa · tarjeta, con las tarjetas sobre el mapa
+     tableta     mapa arriba a todo el ancho; las dos tarjetas en dos columnas
+     teléfono    mapa arriba; todo apilado
+
+   Todo bajo .arcis-scope por la razón explicada en base.scss.
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+
+  .mapamundi {
+    --mapamundi-padding-x: var(--space-6);
+
+    /* Ancho de cada tarjeta en escritorio, medido sobre la maqueta. */
+    --mapamundi-card-width: 255px;
+
+    /*
+     * Cuánto se mete cada tarjeta sobre el borde del mapa. En la maqueta el
+     * mapa es algo más ancho que el hueco entre tarjetas y ellas lo tapan un
+     * poco por los lados: eso es lo que las hace leerse como parte de una
+     * misma pieza y no como tres columnas sueltas.
+     *
+     * Poco, a propósito: en la maqueta el mapa ocupa ~60% del ancho y asoman
+     * Alaska y Nueva Zelanda junto a las tarjetas. Con 48px (se probó) las
+     * tarjetas se comían los dos extremos del dibujo.
+     */
+    --mapamundi-map-overlap: var(--space-4);
+
+    /* Alto de los logos en la cabecera roja: los dos archivos miden 40px de
+       alto, así que las dos cabeceras quedan parejas. */
+    --mapamundi-logo-height: 40px;
+
+    /*
+     * Franja gris a sangre. Por eso no lleva margen por fuera (ver
+     * section-rhythm.scss): el aire va dentro del color.
+     */
+    background-color: var(--neutrals-100);
+  }
+
+  .mapamundi__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    /* Ritmo vertical común a todos los bloques (ver section-rhythm.scss). */
+    padding: var(--section-pad-y) var(--mapamundi-padding-x);
+    box-sizing: border-box;
+  }
+
+  /* -----------------------------------------------------------------------
+     Encabezado
+     ----------------------------------------------------------------------- */
+  .mapamundi__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    text-align: center;
+  }
+
+  /*
+   * En la maqueta la etiqueta NO lleva el punto que AtomEyebrow pone delante en
+   * el resto de la librería, sino un filete corto centrado debajo. El punto se
+   * quita aquí, en la hoja del bloque, y no en el átomo: en los demás sitios
+   * donde se usa está bien.
+   *
+   * El selector lleva `.eyebrow` delante para ganarle a la regla del átomo por
+   * especificidad y no por orden de carga de las hojas.
+   */
+  .eyebrow.mapamundi__eyebrow::before {
+    content: none;
+  }
+
+
+  /*
+   * Filete corto, rojo de marca, centrado bajo la etiqueta. Mismas medidas que
+   * .ecosystem__rule y .card-section__rule: es el mismo recurso de la maqueta,
+   * y así se ve como la misma pieza en toda la página.
+   *
+   * Es un elemento aparte y no un subrayado del texto porque un subrayado mide
+   * siempre lo que mide la etiqueta; este mide igual diga lo que diga.
+   */
+  .mapamundi__rule {
+    width: 40px;
+    height: 2px;
+    background-color: var(--arcis-color-global-main);
+  }
+
+  .mapamundi__title {
+    color: var(--arcis-color-text-primary);
+  }
+
+  /* -----------------------------------------------------------------------
+     Escenario
+
+     Una sola rejilla de tres columnas y dos filas para todo:
+
+       tarjeta │  mapa   │ tarjeta     fila 1: el alto que sobra
+       tarjeta │  botón  │ tarjeta     fila 2: lo que mida el botón
+
+     El mapa ocupa las TRES columnas de la fila 1 y se centra en ellas; las
+     tarjetas ocupan su columna en las dos filas y se pintan encima. Así el
+     solape sale de la propia rejilla, sin posicionar nada en absoluto: si una
+     tarjeta crece por tener más ítems, el mapa y el botón se reacomodan solos.
+
+     El mapa también está en la fila 1, así que esa fila nunca mide menos que
+     él: con pocos ítems son las tarjetas las que se estiran, no el mapa el que
+     se sale.
+     ----------------------------------------------------------------------- */
+  .mapamundi__stage {
+    display: grid;
+    grid-template-columns:
+      var(--mapamundi-card-width)
+      minmax(0, 1fr)
+      var(--mapamundi-card-width);
+    grid-template-rows: 1fr auto;
+  }
+
+  .mapamundi__map {
+    grid-row: 1;
+    grid-column: 1 / -1;
+    align-self: center;
+    justify-self: center;
+
+    display: block;
+    /* El hueco entre tarjetas más lo que cada una se mete encima. */
+    width: calc(100% - 2 * var(--mapamundi-card-width) + 2 * var(--mapamundi-map-overlap));
+    height: auto;
+    /* Sin esto, el alto que reservan los atributos del <img> deformaría el
+       dibujo al cambiar el ancho. */
+    aspect-ratio: 771 / 335;
+  }
+
+  .mapamundi__action.btn {
+    grid-row: 2;
+    grid-column: 2;
+    justify-self: center;
+    align-self: end;
+    /* Aire con el mapa cuando las tarjetas son cortas y la fila 1 se ajusta a
+       él; cuando son altas, el alineado al pie ya separa de sobra. */
+    margin-top: var(--space-5);
+  }
+
+  /* -----------------------------------------------------------------------
+     Tarjeta
+     ----------------------------------------------------------------------- */
+  .mapamundi-card {
+    grid-row: 1 / -1;
+    /*
+     * Encima del mapa. Los hijos de una rejilla admiten z-index sin necesidad
+     * de `position`; se declara aunque el orden del marcado ya las pinte
+     * delante, para no depender de ese orden.
+     */
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+
+    background-color: var(--neutrals-0);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .mapamundi-card--start { grid-column: 1; }
+  .mapamundi-card--end { grid-column: 3; }
+
+  /*
+   * Cabecera roja con el logo centrado. Sin radio propio: es la tarjeta la que
+   * recorta sus esquinas.
+   */
+  .mapamundi-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4) var(--space-5);
+    box-sizing: border-box;
+
+    background-color: var(--arcis-color-global-main);
+    color: var(--arcis-color-text-inverse);
+    text-align: center;
+  }
+
+  .mapamundi-card__logo {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: var(--mapamundi-logo-height);
+  }
+
+  /*
+   * La lista rellena el alto de la tarjeta y cada ítem se lleva una parte
+   * igual. En escritorio la tarjeta es tan alta como la fila del mapa, y así
+   * los ítems se reparten ese alto en lugar de quedar apiñados arriba con un
+   * hueco blanco debajo.
+   */
+  .mapamundi-card__list {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin: 0;
+    padding: var(--space-2) var(--space-5);
+    list-style: none;
+  }
+
+  .mapamundi-card__item {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: var(--space-4);
+    padding-block: var(--space-4);
+  }
+
+  /* Filete entre ítems, no por encima del primero ni debajo del último. */
+  .mapamundi-card__item + .mapamundi-card__item {
+    border-top: var(--border-width-sm) solid var(--border-color-light);
+  }
+
+  .mapamundi-card__text {
+    min-width: 0;
+    color: var(--arcis-color-text-secondary);
+    line-height: 1.4;
+  }
+
+  /* -----------------------------------------------------------------------
+     Tableta — por debajo de 992px.
+
+     No queda ancho para tres columnas: con dos tarjetas de 255px a los lados,
+     el mapa se encogía por debajo de la mitad de su tamaño y los marcadores
+     dejaban de distinguirse. El mapa sube a su propia fila y las tarjetas
+     bajan debajo, repartidas en dos columnas.
+     ----------------------------------------------------------------------- */
+  @include bp.container-down('lg') {
+
+    .mapamundi__stage {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: auto;
+      gap: var(--space-5);
+    }
+
+    /* A todo el ancho, sin solape: ya no hay tarjetas a los lados. */
+    .mapamundi__map {
+      grid-row: 1;
+      grid-column: 1 / -1;
+      width: 100%;
+    }
+
+    .mapamundi-card {
+      grid-row: 2;
+    }
+
+    .mapamundi-card--start { grid-column: 1; }
+    .mapamundi-card--end { grid-column: 2; }
+
+    /*
+     * La lista deja de estirarse: ya no hay una fila de mapa cuyo alto
+     * repartir. Con `flex: 1` la tarjeta con menos ítems los separaba para
+     * igualar a la vecina.
+     */
+    .mapamundi-card__list,
+    .mapamundi-card__item {
+      flex: none;
+    }
+
+    .mapamundi__action.btn {
+      grid-row: 3;
+      grid-column: 1 / -1;
+      align-self: auto;
+      margin-top: 0;
+    }
+  }
+
+  /* -----------------------------------------------------------------------
+     Teléfono — 576px hacia abajo.
+
+     Una columna: el mapa, las dos tarjetas una debajo de la otra y el botón.
+     ----------------------------------------------------------------------- */
+  @include bp.container-down('sm') {
+
+    .mapamundi {
+      --mapamundi-padding-x: var(--space-5);
+    }
+
+    /*
+     * Tipografía de la etiqueta en teléfono: 18px, bold y 3.6px de espaciado,
+     * bastante más grande que la del sistema (12px semibold), que es la que se
+     * queda en tableta y escritorio. El color, las versales y la familia ya
+     * venían bien del átomo.
+     *
+     * El espaciado va en em porque 0.2em son exactamente esos 3.6px sobre un
+     * cuerpo de 18px, y así acompaña al texto cuando se encoge.
+     *
+     * Una sola línea, como pide la maqueta, y sin desbordar: `nowrap` impide el
+     * salto y el cuerpo cede con el ancho del bloque. A 390px (la maqueta) da
+     * los 18px exactos; en un teléfono más angosto baja lo justo para seguir
+     * entrando. La medida es `cqw` —ancho del bloque— y no `vw`, para que valga
+     * igual dentro del lienzo del editor.
+     */
+    .eyebrow.mapamundi__eyebrow {
+      font-size: clamp(13px, 4.6cqw, var(--text-body-lg));
+      font-weight: var(--weight-bold);
+      line-height: 1.4;
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+    }
+
+    .mapamundi__stage {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .mapamundi-card--start,
+    .mapamundi-card--end {
+      grid-column: 1;
+      grid-row: auto;
+    }
+
+    .mapamundi__action.btn {
+      grid-row: auto;
+    }
+  }
+
+  /*
+   * ≤520px: CTAs a ancho completo, como pide la tabla de breakpoints del kit
+   * (ver breakpoints.scss).
+   */
+  @include bp.container-down('cta') {
+
+    .mapamundi__action.btn {
+      justify-self: stretch;
+    }
+  }
+}

@@ -1,45 +1,9 @@
 /**
- * Nombres de ícono sugeridos en los editores de CTA.
+ * La lista se mudó a helpers/iconOptions.ts cuando un bloque de otra familia
+ * (block-beta/info/values-cards) también necesitó sugerir íconos: una lista que
+ * comparten varias familias no puede vivir dentro de la carpeta de una de ellas.
  *
- * La fuente de verdad es el mapa ICONS de components/atoms/AtomIcon.vue: acá
- * solo se listan los nombres para poblar las sugerencias del campo. El campo
- * acepta cualquier valor, así que un ícono agregado al átomo y no listado acá
- * igual funciona si se escribe a mano.
- *
- * Si AtomIcon no conoce el nombre, no dibuja nada (no rompe el render).
+ * Este archivo queda como reenvío para no tocar los editores de CTA que ya la
+ * importaban desde aquí. Lo nuevo conviene que importe directamente del helper.
  */
-export const ICON_SUGGESTIONS: string[] = [
-    // Los que usa el CTA Band original de webunificada.
-    'help-circle',
-    'arrow-right',
-    // Resto del set disponible en AtomIcon.
-    'graduation-cap',
-    'book-open',
-    'briefcase',
-    'award',
-    'users',
-    'globe',
-    'calendar',
-    'clock',
-    'map-pin',
-    'phone',
-    'mail',
-    'search',
-    'check',
-    'check-circle',
-    'star',
-    'download',
-    'external-link',
-    'play',
-    'info',
-    'alert-triangle',
-    'alert-circle',
-    'link',
-    'layout-grid',
-    'list',
-    'user',
-    'file-text',
-    'credit-card',
-    'file-down',
-    'trending-up',
-];
+export { ICON_SUGGESTIONS } from '../../../../helpers/iconOptions';

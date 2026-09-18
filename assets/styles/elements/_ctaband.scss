@@ -299,7 +299,7 @@
   /* -----------------------------------------------------------------------
      Versión móvil — 768px hacia abajo.
      ----------------------------------------------------------------------- */
-  @include bp.breakpoint-down('mobile') {
+  @include bp.container-down('mobile') {
 
     .ctaband__inner {
       padding: var(--space-7) var(--space-5);
