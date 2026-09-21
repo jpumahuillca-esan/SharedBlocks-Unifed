@@ -85,7 +85,7 @@
  *
  * Tres composiciones:
  *   escritorio  sobre el navbar, con los dos grupos y sus divisores
- *   tableta     (992px o menos) bajo el navbar, solo el grupo del portal
+ *   tableta     (por debajo de 1024px) bajo el navbar, solo el grupo del portal
  *   teléfono    igual que tableta
  *
  * Cambiar de sitio respecto al navbar no se puede hacer desde dentro del

@@ -32,7 +32,7 @@
      * lo compensa con margen negativo para poder sangrar hasta el borde, y
      * ambos valores tienen que coincidir.
      */
-    --story-section-padding-x: var(--space-6);
+    --story-section-padding-x: var(--ds-spacing-md);
 
     /*
      * Ancho mínimo de una tarjeta. Es la pieza clave del comportamiento que
@@ -65,18 +65,18 @@
     /*
      * Paradas del degradado (Figma: degradado radial #E3173E → #480300).
      *
-     * La primera es --arcis-color-global-main, mismo valor. La segunda no tiene
+     * La primera es --ds-color-action-primary, mismo valor. La segunda no tiene
      * token: tokens.scss es un espejo de webunificada y no corresponde
      * inventarle escalas desde aquí (ver su cabecera), así que queda como
      * variable local, en un solo punto, para el día que el sistema publique una
      * escala roja oscura.
      */
-    --story-section-bg-from: var(--arcis-color-global-main);
+    --story-section-bg-from: var(--ds-color-surface-primary);
     --story-section-bg-to: #480300;
 
     position: relative;
     isolation: isolate;
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   /*
@@ -104,7 +104,7 @@
     );
 
     /* Figma: 32px en las dos esquinas inferiores. No hay token con ese valor
-       (--radius-lg es 24px y --radius-xl es 40px), así que va literal. */
+       (--ds-radius-lg es 24px y --ds-radius-xl es 40px), así que va literal. */
     border-end-start-radius: 32px;
     border-end-end-radius: 32px;
   }
@@ -115,7 +115,7 @@
    * Mismo criterio que en .ctaband: la franja sangra a todo el ancho porque su
    * color es parte del diseño, pero el contenido se limita al ancho del sistema
    * para quedar alineado con el resto de la página. Se usa el token
-   * --container-max y no un número.
+   * --ds-container-max y no un número.
    *
    * El z-index lo pone por encima de la franja: las tarjetas tienen que
    * montarse sobre su borde inferior, no quedar tapadas por ella.
@@ -129,13 +129,13 @@
 
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
+    gap: var(--ds-spacing-md);
 
     width: 100%;
-    max-width: var(--container-max);
+    max-width: var(--ds-container-max);
     margin-inline: auto;
 
-    padding: var(--space-8) var(--story-section-padding-x);
+    padding: var(--ds-spacing-xl) var(--story-section-padding-x);
     box-sizing: border-box;
   }
 
@@ -151,13 +151,13 @@
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    gap: var(--space-5);
+    gap: var(--ds-space-6);
   }
 
   .story-section__heading {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: var(--ds-spacing-xs);
     min-width: 0;
   }
 
@@ -174,7 +174,7 @@
    * fondo oscuro, que es lo que los átomos no pueden saber por sí solos.
    */
   .story-section__title {
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   .story-section__subtitle {
@@ -208,7 +208,7 @@
      ----------------------------------------------------------------------- */
   .story-section__rail {
     display: flex;
-    gap: var(--space-5);
+    gap: var(--ds-space-6);
     /* Estirar y no 'start': .testimonial-card--video fija su proporción 3:4, y
        así todas arrancan y terminan a la misma altura. */
     align-items: stretch;
@@ -253,7 +253,7 @@
     flex: 0 0 max(
       var(--story-card-min),
       calc(
-        (100% - (var(--story-section-columns, 4) - 1) * var(--space-5))
+        (100% - (var(--story-section-columns, 4) - 1) * var(--ds-space-6))
         / var(--story-section-columns, 4)
       )
     );
@@ -268,20 +268,20 @@
    */
 
   /* -----------------------------------------------------------------------
-     Versión móvil — 768px hacia abajo.
+     Versión móvil — por debajo de 768px.
 
      El carril no cambia: deslizarse en horizontal ya es su comportamiento
      normal. Solo se ajustan los márgenes y baja el enlace del encabezado.
      ----------------------------------------------------------------------- */
-  @include bp.container-down('mobile') {
+  @include bp.container-down('md') {
 
     .story-section {
-      --story-section-padding-x: var(--space-5);
+      --story-section-padding-x: var(--ds-space-6);
     }
 
     .story-section__inner {
-      gap: var(--space-5);
-      padding-block: var(--space-7);
+      gap: var(--ds-space-6);
+      padding-block: var(--ds-spacing-lg);
     }
 
     /*
@@ -292,11 +292,11 @@
     .story-section__header {
       flex-direction: column;
       align-items: flex-start;
-      gap: var(--space-4);
+      gap: var(--ds-space-4);
     }
 
     .story-section__rail {
-      gap: var(--space-4);
+      gap: var(--ds-space-4);
     }
   }
 }

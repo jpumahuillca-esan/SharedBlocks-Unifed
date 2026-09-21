@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 
 
-import FormEditor from './hero-lead-form/Editor.vue/index.js';
+import FormEditor from './hero-lead-form/Editor.vue';
 
 const props = defineProps<{ modelValue: any }>();
 const emit = defineEmits(['update:modelValue', 'select-image']);

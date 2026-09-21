@@ -84,7 +84,7 @@ withDefaults(defineProps<{
           `size` es obligatorio: AtomHeading fija el tamaño como estilo en línea
           y un estilo en línea gana sobre la hoja de estilos. Sin él, el título
           se dibujaría al tamaño que le toque al nivel y la regla de
-          .post-card__title (--text-h6) nunca llegaría a aplicarse.
+          .post-card__title (--ds-text-h6) nunca llegaría a aplicarse.
         -->
         <AtomHeading v-if="title" :level="3" size="h6" class="post-card__title">{{ title }}</AtomHeading>
         <AtomDivider />

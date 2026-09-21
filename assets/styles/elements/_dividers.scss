@@ -16,29 +16,29 @@
 .arcis-scope {
   .divider {
     border: none;
-    border-top: var(--border-width-sm) solid var(--border-color-light);
+    border-top: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
     margin: 0;
   }
 
   .divider--label {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
-    color: var(--arcis-color-text-secondary);
-    font-size: var(--text-sm);
+    gap: var(--ds-space-4);
+    color: var(--ds-color-text-secondary);
+    font-size: var(--ds-text-body-compact);
   }
 
   .divider--label::before,
   .divider--label::after {
     content: '';
     flex: 1;
-    height: var(--border-width-sm);
-    background-color: var(--border-color-light);
+    height: var(--ds-border-width-sm);
+    background-color: var(--ds-color-border-subtle);
   }
 
   .divider--vertical {
-    width: var(--border-width-sm);
+    width: var(--ds-border-width-sm);
     align-self: stretch;
-    background-color: var(--border-color-light);
+    background-color: var(--ds-color-border-subtle);
   }
 }

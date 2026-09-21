@@ -59,7 +59,7 @@ import AtomIcon from '../atoms/AtomIcon.vue';
   gap: 24px;
 }
 .preview-tooltip-text {
-  border-bottom: 1px dashed var(--arcis-color-text-disabled);
+  border-bottom: 1px dashed var(--ds-color-text-disabled);
   cursor: help;
 }
 </style>

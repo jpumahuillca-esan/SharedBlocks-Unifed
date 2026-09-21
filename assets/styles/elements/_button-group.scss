@@ -30,22 +30,22 @@
 .arcis-scope {
   .btn-group.btn-group--arcis {
     display: inline-flex;
-    border: var(--border-width-sm) solid var(--border-color-light);
-    border-radius: var(--radius-sm);
+    border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    border-radius: var(--ds-radius-sm);
     overflow: hidden;
   }
 
   .btn-group__item {
-    padding: var(--space-2) var(--space-5);
-    font-size: var(--text-sm);
-    font-family: var(--font-body);
-    color: var(--arcis-color-text-secondary);
-    background-color: var(--neutrals-0);
-    border-right: var(--border-width-sm) solid var(--border-color-light);
+    padding: var(--ds-spacing-xxs) var(--ds-space-6);
+    font-size: var(--ds-text-body-compact);
+    font-family: var(--ds-font-family-base);
+    color: var(--ds-color-text-secondary);
+    background-color: var(--ds-color-background-default);
+    border-right: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
     display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
-    transition: background-color var(--ease-fast), color var(--ease-fast);
+    gap: var(--ds-spacing-xxs);
+    transition: background-color var(--ds-ease-fast), color var(--ds-ease-fast);
   }
 
   .btn-group__item:last-child {
@@ -58,11 +58,11 @@
   }
 
   .btn-group__item:hover {
-    background-color: var(--neutrals-50);
+    background-color: var(--ds-color-background-light);
   }
 
   .btn-group__item.is-active {
-    background-color: var(--arcis-color-global-main);
-    color: var(--arcis-color-text-inverse);
+    background-color: var(--ds-color-action-primary);
+    color: var(--ds-color-text-inverse);
   }
 }

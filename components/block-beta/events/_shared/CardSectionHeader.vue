@@ -15,7 +15,7 @@
       <span v-if="title" class="card-section__rule" aria-hidden="true"></span>
 
       <!-- Opcional. -->
-      <AtomText v-if="desc" size="sm" class="card-section__desc">{{ desc }}</AtomText>
+      <AtomText v-if="desc" size="body-compact" class="card-section__desc">{{ desc }}</AtomText>
     </div>
 
     <a v-if="linkLabel" class="card-section__link" :href="linkUrl || '#'">

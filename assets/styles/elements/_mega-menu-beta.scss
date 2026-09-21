@@ -1,0 +1,563 @@
+/* =========================================================================
+   MEGA MENU BETA — ARCIS Design System
+
+   Cabecera principal con mega menú. La usa la pieza de branding
+   branding/headers/mega_menu_beta (Block.vue, MegaPanel.vue, MobileDrawer.vue).
+
+   ATENCIÓN: no es un porte del kit. En la guía viva de webunificada la
+   sección "Navegación" figura como pendiente de construcción; esto se hizo a
+   partir de la maqueta del equipo, con los tokens y las piezas del sistema
+   (el mismo filete rojo, los mismos grises de separación que el pie). Conviene
+   reconciliarlo cuando el kit publique su navbar.
+
+   Tres piezas:
+     .mmb         barra: logo, entradas de primer nivel y búsqueda (escritorio);
+                  logo, lupa y hamburguesa (tableta y móvil)
+     .mmb-panel   panel a todo el ancho bajo la barra, solo en escritorio
+     .mmb-drawer  menú lateral por niveles, solo en tableta y móvil
+
+   Todo bajo .arcis-scope por la razón explicada en base.scss. La cabecera y el
+   menú lateral traen la clase en su propia raíz: las reglas de esas raíces van
+   con `&.`, las demás como descendientes.
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+
+  /* Mismo nivel que HeaderMega: por encima de la página, por debajo del topbar
+     de escritorio (1031), cuyos desplegables se abren sobre la barra. */
+  &.mmb-host {
+    position: relative;
+    z-index: 1030;
+  }
+
+  /* =======================================================================
+     Barra
+     ======================================================================= */
+  .mmb {
+    /* Alto de la barra. También es el lado del botón de búsqueda, que es cuadrado. */
+    --mmb-bar-height: 80px;
+
+    /* Mismo margen que el topbar, para que el logo quede alineado con él. */
+    --mmb-padding-x: var(--ds-space-6);
+
+    position: relative;
+    background-color: var(--ds-color-background-default);
+  }
+
+  /*
+   * Sin relleno a la derecha: el botón de búsqueda llega hasta el borde de la
+   * pantalla, como en la maqueta.
+   */
+  .mmb__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-space-6);
+    height: var(--mmb-bar-height);
+    padding-left: var(--mmb-padding-x);
+  }
+
+  .mmb__logo {
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+
+  /* El alto lo fija el editor (--mmb-logo-height, en línea); el ancho, su proporción. */
+  .mmb__logo-image {
+    display: block;
+    width: auto;
+    height: var(--mmb-logo-height, 36px);
+  }
+
+  .mmb__nav {
+    min-width: 0;
+    margin-left: auto;
+  }
+
+  .mmb__menu {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-space-6);
+  }
+
+  /*
+   * Cada entrada ocupa el alto de la barra: así el ratón pasa de la entrada al
+   * panel sin cruzar un hueco que lo cerraría.
+   */
+  .mmb__menu-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-spacing-xxs);
+    height: var(--mmb-bar-height);
+    font-size: var(--ds-text-body-compact);
+    font-weight: var(--ds-weight-semibold);
+    color: var(--ds-color-text-primary);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color var(--ds-ease-fast);
+  }
+
+  .mmb__menu-link:hover,
+  .mmb__menu-link.is-active {
+    color: var(--ds-color-text-brand);
+  }
+
+  /* Flecha roja y de trazo grueso, la misma del topbar. */
+  .mmb__menu-link svg {
+    flex-shrink: 0;
+    color: var(--ds-color-text-brand);
+    stroke-width: 3;
+    transition: transform var(--ds-ease-fast);
+  }
+
+  .mmb__menu-link.is-active svg {
+    transform: rotate(180deg);
+  }
+
+  .mmb__actions {
+    display: flex;
+    align-self: stretch;
+    flex-shrink: 0;
+  }
+
+  /* Botón rojo cuadrado, del alto de la barra, pegado al borde. */
+  .mmb__search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--mmb-bar-height);
+    background-color: var(--ds-color-action-primary);
+    color: var(--ds-color-text-inverse);
+    transition: background-color var(--ds-ease-fast), color var(--ds-ease-fast);
+  }
+
+  .mmb__search:hover {
+    background-color: var(--ds-color-action-primary-hover);
+  }
+
+  /* La hamburguesa solo existe en tableta y móvil. */
+  .mmb__burger {
+    display: none;
+  }
+
+  /* =======================================================================
+     Panel de escritorio
+     ======================================================================= */
+  .mmb-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--ds-color-background-default);
+    border-top: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    box-shadow: var(--ds-shadow-md);
+  }
+
+  /*
+   * Si el menú es más alto que la pantalla, el panel se desplaza por dentro en
+   * lugar de quedar cortado por abajo.
+   */
+  .mmb-panel__inner {
+    max-height: 75vh;
+    overflow-y: auto;
+    padding: var(--ds-space-6) var(--ds-spacing-lg) var(--ds-spacing-lg);
+  }
+
+  /* Título del panel con el filete rojo a todo el ancho, como en la maqueta. */
+  .mmb-panel__head {
+    margin-bottom: var(--ds-space-6);
+    padding-bottom: var(--ds-spacing-xs);
+    border-bottom: var(--ds-border-width-sm) solid var(--ds-color-esan-corp);
+  }
+
+  .mmb-panel__title {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-spacing-xxs);
+    font-size: var(--ds-text-h6);
+    font-weight: var(--ds-weight-semibold);
+    color: var(--ds-color-text-primary);
+    transition: color var(--ds-ease-fast);
+  }
+
+  .mmb-panel__title svg {
+    color: var(--ds-color-text-brand);
+    transition: transform var(--ds-ease-base);
+  }
+
+  a.mmb-panel__title:hover svg {
+    transform: translateX(4px);
+  }
+
+  /* Pestañas en un cuarto del ancho; el contenido, en el resto. */
+  .mmb-panel__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+    gap: var(--ds-spacing-lg);
+    align-items: start;
+  }
+
+  .mmb-panel__tabs {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mmb-panel__tab {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ds-spacing-xs);
+    padding: var(--ds-spacing-xs) var(--ds-space-4);
+    border-bottom: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    border-radius: var(--ds-radius-xs);
+    font-size: var(--ds-text-body-compact);
+    color: var(--ds-color-text-primary);
+    cursor: pointer;
+    transition: background-color var(--ds-ease-fast), color var(--ds-ease-fast);
+  }
+
+  .mmb-panel__tab svg {
+    flex-shrink: 0;
+    color: var(--ds-color-neutral-400);
+  }
+
+  .mmb-panel__tab:hover {
+    color: var(--ds-color-text-brand);
+  }
+
+  /* La pestaña activa, en rojo con el texto en blanco. */
+  .mmb-panel__tab.is-active {
+    background-color: var(--ds-color-action-primary);
+    border-bottom-color: transparent;
+    color: var(--ds-color-text-inverse);
+  }
+
+  .mmb-panel__tab.is-active svg {
+    color: var(--ds-color-text-inverse);
+  }
+
+  /* En columnas: tres grupos por fila. */
+  .mmb-panel__columns {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--ds-spacing-md) var(--ds-spacing-lg);
+    align-items: start;
+  }
+
+  /* En lista con banner: la lista ocupa una columna y el banner las otras dos. */
+  .mmb-panel__split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: var(--ds-spacing-lg);
+    align-items: start;
+  }
+
+  .mmb-panel__group-title {
+    display: inline-block;
+    margin-bottom: var(--ds-spacing-xxs);
+    font-size: var(--ds-text-body-compact);
+    font-weight: var(--ds-weight-bold);
+    color: var(--ds-color-text-primary);
+  }
+
+  a.mmb-panel__group-title:hover {
+    color: var(--ds-color-text-brand);
+  }
+
+  .mmb-panel__links {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mmb-panel__link {
+    display: block;
+    padding: var(--ds-spacing-xxs) 0;
+    border-bottom: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    font-size: var(--ds-text-body-compact);
+    color: var(--ds-color-text-secondary);
+    transition: color var(--ds-ease-fast);
+  }
+
+  .mmb-panel__link:hover {
+    color: var(--ds-color-text-brand);
+  }
+
+  /* Proporción de la maqueta: más alto que un 16/9. */
+  .mmb-panel__banner {
+    position: relative;
+    display: block;
+    aspect-ratio: 10 / 7;
+    overflow: hidden;
+    border-radius: var(--ds-radius-sm);
+    background-color: var(--ds-color-background-blend);
+  }
+
+  .mmb-panel__banner-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--ds-ease-slow);
+  }
+
+  a.mmb-panel__banner:hover .mmb-panel__banner-image {
+    transform: scale(1.03);
+  }
+
+  /* Título sobre la foto, con el mismo degradado que el banner del kit. */
+  .mmb-panel__banner-title {
+    position: absolute;
+    inset: auto 0 0;
+    padding: var(--ds-spacing-md) var(--ds-space-6) var(--ds-space-4);
+    background: linear-gradient(180deg, var(--ds-color-dark-0) 0%, var(--ds-color-dark-80) 100%);
+    font-size: var(--ds-text-h6);
+    font-weight: var(--ds-weight-semibold);
+    color: var(--ds-color-text-inverse);
+  }
+
+  /* Sin imagen: el recuadro gris de la maqueta con su rótulo al centro. */
+  .mmb-panel__banner.is-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mmb-panel__banner-placeholder {
+    font-size: var(--ds-text-h6);
+    color: var(--ds-color-text-inverse);
+  }
+
+  .mmb-panel-enter-active,
+  .mmb-panel-leave-active {
+    transition: opacity var(--ds-ease-fast), transform var(--ds-ease-fast);
+  }
+
+  .mmb-panel-enter-from,
+  .mmb-panel-leave-to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  /* =======================================================================
+     Menú lateral (tableta y móvil)
+
+     Raíz propia, fija a la ventana (ver MobileDrawer.vue). Sin fondo: el de
+     .arcis-scope es blanco y taparía la página en vez de oscurecerla.
+     ======================================================================= */
+  &.mmb-drawer {
+    /* Botón de cerrar sobre la superficie oscura de arcis-2, la misma del pie. */
+    --mmb-drawer-close-bg: var(--ds-color-surface-dark);
+
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background-color: transparent;
+  }
+
+  .mmb-drawer__overlay {
+    position: absolute;
+    inset: 0;
+    background-color: var(--ds-color-dark-60);
+  }
+
+  /* Deja a la vista una franja de la página a la izquierda, como en la maqueta. */
+  .mmb-drawer__panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    width: min(calc(100% - var(--ds-space-12)), 420px);
+    background-color: var(--ds-color-background-default);
+    box-shadow: var(--ds-shadow-lg);
+  }
+
+  /* Misma altura y mismos cuadrados que la barra en móvil. */
+  .mmb-drawer__bar {
+    display: flex;
+    flex-shrink: 0;
+    justify-content: flex-end;
+    height: 56px;
+  }
+
+  .mmb-drawer__search,
+  .mmb-drawer__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+  }
+
+  .mmb-drawer__search {
+    color: var(--ds-color-text-primary);
+  }
+
+  .mmb-drawer__close {
+    background-color: var(--mmb-drawer-close-bg);
+    color: var(--ds-color-text-inverse);
+    cursor: pointer;
+  }
+
+  /* Solo se desplaza la lista; `contain` evita que al llegar al final arrastre la página. */
+  .mmb-drawer__body {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--ds-spacing-xxs) var(--ds-space-6) var(--ds-spacing-lg);
+  }
+
+  .mmb-drawer__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Los enlaces del topbar, separados del menú principal. */
+  .mmb-drawer__list--secondary {
+    margin-top: var(--ds-spacing-md);
+  }
+
+  .mmb-drawer__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ds-spacing-xs);
+    padding: var(--ds-space-4) 0;
+    border-bottom: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    font-size: var(--ds-text-body-compact);
+    color: var(--ds-color-text-primary);
+    cursor: pointer;
+  }
+
+  .mmb-drawer__item svg {
+    flex-shrink: 0;
+    color: var(--ds-color-text-brand);
+  }
+
+  .mmb-drawer__back {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-space-1);
+    padding: var(--ds-spacing-xs) 0;
+    border-bottom: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    font-size: var(--ds-text-body-compact);
+    color: var(--ds-color-text-secondary);
+    cursor: pointer;
+  }
+
+  .mmb-drawer__title {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-spacing-xxs);
+    padding: var(--ds-space-4) 0;
+    border-bottom: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    font-size: var(--ds-text-body);
+    font-weight: var(--ds-weight-semibold);
+    color: var(--ds-color-text-primary);
+  }
+
+  .mmb-drawer__title svg {
+    flex-shrink: 0;
+    color: var(--ds-color-text-brand);
+  }
+
+  .mmb-drawer__group {
+    padding-top: var(--ds-space-6);
+  }
+
+  .mmb-drawer__group-title {
+    display: block;
+    padding-bottom: var(--ds-spacing-xxs);
+    font-size: var(--ds-text-body-compact);
+    font-weight: var(--ds-weight-bold);
+    color: var(--ds-color-text-primary);
+  }
+
+  .mmb-drawer__links {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mmb-drawer__link {
+    display: block;
+    padding: var(--ds-spacing-xs) 0;
+    border-bottom: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    font-size: var(--ds-text-body-compact);
+    color: var(--ds-color-text-secondary);
+  }
+
+  /*
+   * Entrada y salida: la capa se funde y el panel entra por la derecha. La
+   * duración va en la raíz porque Vue mide la transición del elemento raíz para
+   * saber cuándo retirarlo; con una más corta, el panel se cortaba a medio salir.
+   */
+  &.mmb-drawer-enter-active,
+  &.mmb-drawer-leave-active {
+    transition: opacity var(--ds-ease-slow);
+  }
+
+  &.mmb-drawer-enter-active .mmb-drawer__panel,
+  &.mmb-drawer-leave-active .mmb-drawer__panel {
+    transition: transform var(--ds-ease-slow);
+  }
+
+  &.mmb-drawer-enter-from,
+  &.mmb-drawer-leave-to {
+    opacity: 0;
+  }
+
+  &.mmb-drawer-enter-from .mmb-drawer__panel,
+  &.mmb-drawer-leave-to .mmb-drawer__panel {
+    transform: translateX(100%);
+  }
+
+  /* =======================================================================
+     Tableta y móvil — por debajo de 1024px (o cabecera angosta).
+
+     El mismo punto en el que el topbar pasa bajo la barra. La barra se hace más
+     baja, el menú de primer nivel se va al menú lateral, la búsqueda queda como
+     una lupa sin fondo y aparece la hamburguesa roja.
+     ======================================================================= */
+  @include bp.container-down('lg') {
+
+    .mmb {
+      --mmb-bar-height: 56px;
+      --mmb-padding-x: var(--ds-space-4);
+    }
+
+    /* En la maqueta el logo móvil mide unos tres cuartos del de escritorio. */
+    .mmb__logo-image {
+      height: calc(var(--mmb-logo-height, 36px) * 0.78);
+    }
+
+    .mmb__nav,
+    .mmb-panel {
+      display: none;
+    }
+
+    .mmb__actions {
+      margin-left: auto;
+    }
+
+    .mmb__search {
+      background-color: transparent;
+      color: var(--ds-color-text-primary);
+    }
+
+    .mmb__search:hover {
+      background-color: transparent;
+      color: var(--ds-color-text-brand);
+    }
+
+    .mmb__burger {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--mmb-bar-height);
+      background-color: var(--ds-color-action-primary);
+      color: var(--ds-color-text-inverse);
+      cursor: pointer;
+    }
+  }
+}

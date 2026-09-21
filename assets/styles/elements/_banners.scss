@@ -36,38 +36,38 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-6) var(--space-7);
-    border-radius: var(--radius-sm);
+    padding: var(--ds-spacing-md) var(--ds-spacing-lg);
+    border-radius: var(--ds-radius-sm);
   }
 
   .banner__content {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--ds-spacing-xxs);
     max-width: 560px;
   }
 
   .banner--image .banner__content .eyebrow {
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   .banner__title {
-    font-size: var(--text-h5);
+    font-size: var(--ds-text-h5);
   }
 
   .banner__text {
-    font-size: var(--text-body);
+    font-size: var(--ds-text-body);
   }
 
   .banner__actions {
     display: flex;
-    gap: var(--space-3);
+    gap: var(--ds-spacing-xs);
     flex-shrink: 0;
   }
 
   .banner--brand {
-    background-color: var(--arcis-color-global-main);
-    color: var(--arcis-color-text-inverse);
+    background-color: var(--ds-color-surface-primary);
+    color: var(--ds-color-text-inverse);
   }
 
   .banner--brand .banner__text {
@@ -75,22 +75,22 @@
   }
 
   .banner--dark {
-    background-color: var(--neutrals-900);
-    color: var(--arcis-color-text-inverse);
+    background-color: var(--ds-color-surface-dark);
+    color: var(--ds-color-text-inverse);
   }
 
   .banner--dark .banner__text {
-    color: var(--neutrals-300);
+    color: var(--ds-color-neutral-200);
   }
 
   .banner--outline {
-    background-color: var(--neutrals-50);
-    border: var(--border-width-sm) solid var(--border-color-light);
-    color: var(--arcis-color-text-primary);
+    background-color: var(--ds-color-background-light);
+    border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    color: var(--ds-color-text-primary);
   }
 
   .banner--outline .banner__text {
-    color: var(--arcis-color-text-secondary);
+    color: var(--ds-color-text-secondary);
   }
 
   .banner__icon {
@@ -99,16 +99,16 @@
     justify-content: center;
     width: 48px;
     height: 48px;
-    border-radius: var(--radius-full);
-    background-color: var(--neutrals-0);
-    border: var(--border-width-sm) solid var(--border-color-light);
+    border-radius: var(--ds-radius-full);
+    background-color: var(--ds-color-background-default);
+    border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
     flex-shrink: 0;
   }
 
   .banner__icon svg {
     width: 22px;
     height: 22px;
-    color: var(--arcis-color-global-main);
+    color: var(--ds-color-text-brand);
   }
 
   /* Variante "image": banner con foto a sangre — tile promocional de programa o campus */
@@ -118,7 +118,7 @@
     aspect-ratio: 16 / 10;
     padding: 0;
     overflow: hidden;
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   .banner__media {
@@ -130,7 +130,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform var(--ease-slow);
+    transition: transform var(--ds-ease-slow);
   }
 
   .banner--image:hover .banner__media img {
@@ -148,12 +148,12 @@
     position: absolute;
     width: 100%;
     bottom: 0;
-    padding: var(--space-4);
+    padding: var(--ds-space-4);
     z-index: 1;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    gap: var(--space-4);
+    gap: var(--ds-space-4);
     background: linear-gradient(180deg, rgba(9, 8, 31, 0) 25%, rgba(9, 8, 31, 0.9) 75%);
   }
 
@@ -162,7 +162,7 @@
   }
 
   .banner--image .banner__title {
-    font-weight: var(--weight-medium);
+    font-weight: var(--ds-weight-medium);
   }
 
   .banner--image .banner__text {
@@ -171,9 +171,9 @@
 
   .banner__title-accent {
     display: block;
-    font-size: var(--text-body);
-    font-weight: var(--weight-medium);
-    color: var(--univ-yellow-100);
+    font-size: var(--ds-text-body);
+    font-weight: var(--ds-weight-medium);
+    color: var(--ds-color-yellow-500);
   }
 
   .banner__arrow {
@@ -182,10 +182,10 @@
     justify-content: center;
     width: 48px;
     height: 48px;
-    border-radius: var(--radius-sm);
-    background-color: var(--arcis-color-global-main);
-    box-shadow: var(--shadow-md);
-    transition: transform var(--ease-fast);
+    border-radius: var(--ds-radius-sm);
+    background-color: var(--ds-color-action-primary);
+    box-shadow: var(--ds-shadow-md);
+    transition: transform var(--ds-ease-fast);
     flex-shrink: 0;
   }
 
@@ -196,7 +196,7 @@
   .banner__arrow svg {
     width: 20px;
     height: 20px;
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   /* Sub-variante "split": foto arriba + bloque de color sólido abajo, sin degradado */
@@ -221,10 +221,10 @@
     position: static;
     align-items: end;
     flex: 1;
-    padding: var(--space-5);
+    padding: var(--ds-space-6);
     background: transparent;
-    background-color: var(--arcis-color-global-main) !important;
-    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    background-color: var(--ds-color-surface-primary) !important;
+    border-radius: var(--ds-radius-sm) var(--ds-radius-sm) 0 0;
     margin-top: -20px;
   }
 
@@ -233,11 +233,11 @@
   }
 
   .banner--image-split .banner__arrow {
-    background-color: var(--neutrals-0);
+    background-color: var(--ds-color-background-default);
     box-shadow: none;
   }
 
   .banner--image-split .banner__arrow svg {
-    color: var(--arcis-color-global-main);
+    color: var(--ds-color-text-brand);
   }
 }

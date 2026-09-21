@@ -57,13 +57,13 @@
             <span v-if="active.title" class="values-cards__rule" aria-hidden="true"></span>
           </div>
 
-          <AtomText v-if="active.desc" size="sm" class="values-cards__desc">
+          <AtomText v-if="active.desc" size="body-compact" class="values-cards__desc">
             {{ active.desc }}
           </AtomText>
 
           <ul v-if="active.bullets.length" class="values-cards__list">
             <li v-for="(bullet, i) in active.bullets" :key="i" class="values-cards__item">
-              <AtomText size="sm">{{ bullet }}</AtomText>
+              <AtomText size="body-compact">{{ bullet }}</AtomText>
             </li>
           </ul>
 

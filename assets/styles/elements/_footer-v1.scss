@@ -22,8 +22,8 @@
 
    Tres composiciones:
      escritorio  contactos en fila, filete rojo, columnas siempre abiertas
-     tableta     (768px o menos) columnas en acordeón, redes sobre él
-     teléfono    (576px o menos) además, contactos apilados
+     tableta     (por debajo de 1024px) columnas en acordeón, redes sobre él
+     teléfono    (por debajo de 768px) además, contactos apilados
 
    Todo bajo .arcis-scope por la razón explicada en base.scss. El propio
    componente trae la clase en su raíz (ver Block.vue).
@@ -34,41 +34,35 @@
 .arcis-scope {
 
   .footer-v1 {
-    /*
-     * Fondo de la maqueta. Va el hex y no un token porque no hay ninguno que le
-     * corresponda: el kit usa --neutrals-900 (#212121), un gris neutro, y este
-     * tira a azul. Tampoco se agrega a tokens.scss, que es espejo de
-     * webunificada (ver su cabecera): cuando la fuente lo incorpore, se cambia
-     * por su token. Mismo criterio que el fondo de values-cards.
-     */
-    --footer-v1-bg: #161922;
+    /* Fondo oscuro de la maqueta: la superficie oscura de arcis-2. */
+    --footer-v1-bg: var(--ds-color-surface-dark);
 
-    /* Líneas finas sobre el fondo oscuro, las del kit. */
-    --footer-v1-line: rgba(255, 255, 255, 0.12);
+    /* Líneas finas sobre el fondo oscuro. */
+    --footer-v1-line: var(--ds-color-border-inverse-subtle);
 
-    --footer-v1-padding-x: var(--space-7);
+    --footer-v1-padding-x: var(--ds-spacing-lg);
 
     background-color: var(--footer-v1-bg);
-    border-top: 3px solid var(--arcis-color-global-main);
-    color: var(--neutrals-400);
-    font-size: var(--text-sm);
+    border-top: 3px solid var(--ds-color-esan-corp);
+    color: var(--ds-color-neutral-300);
+    font-size: var(--ds-text-body-compact);
   }
 
   /*
-   * Contenido a 1280px como máximo (--container-max), centrado. El relleno va
+   * Contenido a 1280px como máximo (--ds-container-max), centrado. El relleno va
    * por fuera de ese ancho: en la maqueta de 1920 el contenido mide justo 1280
    * y en la de 1366 queda a unos 48px del borde.
    */
   .footer-v1__inner {
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
+    gap: var(--ds-spacing-md);
 
-    max-width: calc(var(--container-max) + 2 * var(--footer-v1-padding-x));
+    max-width: calc(var(--ds-container-max) + 2 * var(--footer-v1-padding-x));
     margin-inline: auto;
 
     /* Abajo más aire que arriba, como en la maqueta. */
-    padding: var(--space-7) var(--footer-v1-padding-x) var(--space-8);
+    padding: var(--ds-spacing-lg) var(--footer-v1-padding-x) var(--ds-spacing-xl);
   }
 
   /* -----------------------------------------------------------------------
@@ -80,27 +74,27 @@
      ----------------------------------------------------------------------- */
   .footer-v1__contacts {
     display: flex;
-    gap: var(--space-6);
-    padding-bottom: var(--space-6);
-    border-bottom: var(--border-width-sm) solid var(--arcis-color-global-main);
+    gap: var(--ds-spacing-md);
+    padding-bottom: var(--ds-spacing-md);
+    border-bottom: var(--ds-border-width-sm) solid var(--ds-color-esan-corp);
   }
 
   .footer-v1__contact {
     display: flex;
     flex: 1 1 0;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: var(--ds-space-1);
     min-width: 0;
   }
 
   .footer-v1__contact-title {
-    font-weight: var(--weight-semibold);
-    color: var(--arcis-color-text-inverse);
+    font-weight: var(--ds-weight-semibold);
+    color: var(--ds-color-text-inverse);
   }
 
   .footer-v1__contact-value {
-    color: var(--neutrals-300);
-    line-height: 1.5;
+    color: var(--ds-color-neutral-200);
+    line-height: var(--ds-line-height-150);
     /* Respeta los saltos de línea que se escriben en el editor. */
     white-space: pre-line;
     /* Un correo en una columna estrecha se parte antes que desbordarse. */
@@ -108,11 +102,11 @@
   }
 
   .footer-v1__contact-value a {
-    transition: color var(--ease-fast);
+    transition: color var(--ds-ease-fast);
   }
 
   .footer-v1__contact-value a:hover {
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   /* -----------------------------------------------------------------------
@@ -135,8 +129,8 @@
     display: grid;
     grid-template-columns: repeat(var(--footer-v1-columns, 5), minmax(0, 1fr));
     grid-template-rows: auto 1fr;
-    column-gap: var(--space-6);
-    row-gap: var(--space-2);
+    column-gap: var(--ds-spacing-md);
+    row-gap: var(--ds-spacing-xxs);
     align-items: start;
   }
 
@@ -154,11 +148,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-2);
-    margin-bottom: var(--space-2);
-    font-size: var(--text-body);
-    font-weight: var(--weight-semibold);
-    color: var(--arcis-color-text-inverse);
+    gap: var(--ds-spacing-xxs);
+    margin-bottom: var(--ds-spacing-xxs);
+    font-size: var(--ds-text-body);
+    font-weight: var(--ds-weight-semibold);
+    color: var(--ds-color-text-inverse);
   }
 
   /* La flecha del acordeón solo existe en tableta y móvil. */
@@ -183,15 +177,15 @@
   .footer-v1__link {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-3) 0;
-    border-bottom: var(--border-width-sm) solid var(--neutrals-800);
+    gap: var(--ds-spacing-xxs);
+    padding: var(--ds-spacing-xs) 0;
+    border-bottom: var(--ds-border-width-sm) solid var(--ds-color-neutral-800);
     color: inherit;
-    transition: color var(--ease-fast);
+    transition: color var(--ds-ease-fast);
   }
 
   .footer-v1__link:hover {
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   .footer-v1__link svg {
@@ -210,8 +204,8 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--space-5);
-    margin-top: var(--space-5);
+    gap: var(--ds-space-6);
+    margin-top: var(--ds-space-6);
   }
 
   /* En la maqueta los glifos son algo mayores que los 20px del ícono plano. */
@@ -251,30 +245,32 @@
      Copyright
      ----------------------------------------------------------------------- */
   .footer-v1__bottom {
-    padding-top: var(--space-5);
-    border-top: var(--border-width-sm) solid var(--footer-v1-line);
+    padding-top: var(--ds-space-6);
+    border-top: var(--ds-border-width-sm) solid var(--footer-v1-line);
     text-align: center;
   }
 
   .footer-v1__copyright {
-    color: var(--neutrals-300);
+    color: var(--ds-color-neutral-200);
   }
 
   /* -----------------------------------------------------------------------
-     Tableta — 768px o menos (o pie angosto).
+     Tableta — por debajo de 1024px (o pie angosto).
 
-     El mismo punto de quiebre del kit para el acordeón. Las columnas se apilan
-     y cada título pasa a abrir y cerrar su lista; las redes suben sobre el
-     acordeón y el libro queda centrado sobre el copyright.
+     'lg', la tableta de arcis-2: la maqueta de tableta (768px) ya va en
+     acordeón, y con 'md' ese ancho quedaba fuera (arcis-2 corta por debajo
+     de 768, sin incluirlo). Las columnas se apilan y cada título pasa a
+     abrir y cerrar su lista; las redes suben sobre el acordeón y el libro
+     queda centrado sobre el copyright.
      ----------------------------------------------------------------------- */
-  @include bp.container-down('mobile') {
+  @include bp.container-down('lg') {
 
     .footer-v1 {
-      --footer-v1-padding-x: var(--space-5);
+      --footer-v1-padding-x: var(--ds-space-6);
     }
 
     .footer-v1__contacts {
-      gap: var(--space-5);
+      gap: var(--ds-space-6);
       padding-bottom: 0;
       border-bottom: none;
     }
@@ -295,7 +291,7 @@
     .footer-v1__social {
       order: -1;
       margin-top: 0;
-      padding-bottom: var(--space-3);
+      padding-bottom: var(--ds-spacing-xs);
     }
 
     /*
@@ -307,8 +303,8 @@
      */
     .footer-v1__column-title {
       margin-bottom: 0;
-      padding: calc(var(--space-4) + var(--space-1)) 0;
-      border-top: var(--border-width-sm) solid var(--footer-v1-line);
+      padding: calc(var(--ds-space-4) + var(--ds-space-1)) 0;
+      border-top: var(--ds-border-width-sm) solid var(--footer-v1-line);
       cursor: pointer;
     }
 
@@ -317,8 +313,8 @@
       flex-shrink: 0;
       width: 16px;
       height: 16px;
-      color: var(--arcis-color-global-main);
-      transition: transform var(--ease-base);
+      color: var(--ds-color-text-brand);
+      transition: transform var(--ds-ease-base);
     }
 
     .footer-v1__column.is-open .footer-v1__column-title svg {
@@ -327,7 +323,7 @@
 
     .footer-v1__panel {
       grid-template-rows: 0fr;
-      transition: grid-template-rows var(--ease-base);
+      transition: grid-template-rows var(--ds-ease-base);
     }
 
     .footer-v1__column.is-open .footer-v1__panel {
@@ -343,7 +339,7 @@
     .footer-v1__panel-inner {
       overflow: hidden;
       visibility: hidden;
-      transition: visibility var(--ease-base);
+      transition: visibility var(--ds-ease-base);
     }
 
     .footer-v1__column.is-open .footer-v1__panel-inner {
@@ -352,7 +348,7 @@
 
     .footer-v1__link {
       border-bottom: none;
-      border-top: var(--border-width-sm) solid rgba(255, 255, 255, 0.06);
+      border-top: var(--ds-border-width-sm) solid rgba(255, 255, 255, 0.06);
     }
 
     .footer-v1__link:first-child {
@@ -360,21 +356,21 @@
     }
 
     .footer-v1__claims {
-      padding-top: var(--space-4);
+      padding-top: var(--ds-space-4);
     }
   }
 
   /* -----------------------------------------------------------------------
-     Teléfono — 576px o menos (o pie angosto).
+     Teléfono — por debajo de 768px (o pie angosto).
 
-     'sm' y no 'mobile': en la maqueta de tableta (768px) los contactos siguen
-     en fila de cuatro. Solo en el teléfono se apilan.
+     'md': en la maqueta de tableta (768px) los contactos siguen en fila de
+     cuatro; por debajo, en el teléfono, se apilan.
      ----------------------------------------------------------------------- */
-  @include bp.container-down('sm') {
+  @include bp.container-down('md') {
 
     .footer-v1__contacts {
       flex-direction: column;
-      gap: var(--space-4);
+      gap: var(--ds-space-4);
     }
   }
 }

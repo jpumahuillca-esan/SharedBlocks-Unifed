@@ -1,5 +1,5 @@
 <template>
-    <header 
+    <div 
         class="classic-header w-100" 
         :class="{ 
             'fixed-top': config.sticky, 
@@ -156,7 +156,7 @@
                 </ul>
             </div>
         </div>
-    </header>
+    </div>
 </template>
 
 <script setup lang="ts">

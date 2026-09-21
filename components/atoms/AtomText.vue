@@ -3,29 +3,32 @@
  * AtomText — átomo de párrafo/texto de cuerpo (ARCIS Design System).
  *
  * Único lugar donde se decide cómo se ve un <p> (o un texto en línea)
- * en toda la librería. Consume los tokens portados de webunificada
- * (assets/styles/tokens.scss): --text-body-lg/body/sm/xs, --weight-*
- * y --arcis-color-text-*.
+ * en toda la librería. Consume los tokens semánticos de arcis-2
+ * (assets/styles/tokens.scss): --ds-text-*, --ds-weight-* y
+ * --ds-color-text-*. Cada prop se traduce a su token por nombre.
+ *
+ * body-compact (14px) no es de Figma: es la extensión local que conserva
+ * el tamaño que arcis-2 no tiene (ver assets/styles/ds/_extensions.scss).
  *
  * `as` permite renderizar como <p> (por defecto), <span>, etc. cuando
  * el texto va dentro de otro elemento de bloque y un <p> no es válido.
  */
 import { computed } from 'vue';
 
-type TextSize = 'body-lg' | 'body' | 'sm' | 'xs';
+type TextSize = 'body-lg' | 'body' | 'body-compact' | 'body-sm' | 'label';
 type FontWeight = 'light' | 'regular' | 'medium' | 'semibold' | 'bold';
 type TextAlign = 'left' | 'center' | 'right';
-type TextColor = 'primary' | 'secondary' | 'disabled' | 'inverse';
+type TextColor = 'primary' | 'secondary' | 'disabled' | 'inverse' | 'brand';
 
 const props = withDefaults(defineProps<{
   /** Etiqueta a renderizar. Por defecto <p>. */
   as?: string;
-  /** Tamaño visual (token --text-*). */
+  /** Tamaño visual (token --ds-text-*). */
   size?: TextSize;
-  /** Peso de fuente (token --weight-*). Por defecto el del reset (regular). */
+  /** Peso de fuente (token --ds-weight-*). Por defecto el del reset (regular). */
   weight?: FontWeight;
   align?: TextAlign;
-  /** Color semántico (token --arcis-color-text-*). */
+  /** Color semántico (token --ds-color-text-*). */
   color?: TextColor;
 }>(), {
   as: 'p',
@@ -33,10 +36,10 @@ const props = withDefaults(defineProps<{
 });
 
 const styleObject = computed(() => ({
-  fontSize: `var(--text-${props.size})`,
-  fontWeight: props.weight ? `var(--weight-${props.weight})` : undefined,
+  fontSize: `var(--ds-text-${props.size})`,
+  fontWeight: props.weight ? `var(--ds-weight-${props.weight})` : undefined,
   textAlign: props.align,
-  color: props.color ? `var(--arcis-color-text-${props.color})` : undefined,
+  color: props.color ? `var(--ds-color-text-${props.color})` : undefined,
 }));
 </script>
 
@@ -48,7 +51,7 @@ const styleObject = computed(() => ({
 
 <style scoped lang="scss">
 .atom-text {
-  font-family: var(--font-body);
+  font-family: var(--ds-font-family-base);
   margin: 0;
 }
 </style>

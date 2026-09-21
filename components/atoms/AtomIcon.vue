@@ -71,6 +71,8 @@ import {
   Handshake,
   Lightbulb,
   Building2,
+  // "Volver" del menú móvil de la cabecera (branding/headers/mega_menu_beta).
+  ChevronLeft,
 } from '@lucide/vue';
 
 const ICONS: Record<string, any> = {
@@ -90,6 +92,7 @@ const ICONS: Record<string, any> = {
   'x': X,
   'chevron-down': ChevronDown,
   'chevron-right': ChevronRight,
+  'chevron-left': ChevronLeft,
   'arrow-right': ArrowRight,
   'arrow-up-right': ArrowUpRight,
   'check': Check,

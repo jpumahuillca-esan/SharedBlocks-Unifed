@@ -88,10 +88,6 @@
             <label class="small text-muted fw-bold mb-1">URL Principal</label>
             <input type="text" class="form-control form-control-sm" v-model="l1.url" placeholder="/universidad" />
           </div>
-          <div class="col-12">
-            <label class="small text-muted fw-bold mb-1">URL Principal</label>
-            <input type="text" class="form-control form-control-sm" v-model="l1.url" placeholder="/universidad" />
-          </div>
         </div>
 
         <!-- PESTAÑAS DE NIVEL 2 -->
@@ -203,48 +199,55 @@ const emit = defineEmits<{
   (e: 'select-image', payload: any): void;
 }>();
 
-const localData = reactive({
-  logoUrl: props.modelValue?.logoUrl || '',
-  urlRedict: props.modelValue?.urlRedict || '',
-  logoHeight: Number(props.modelValue?.logoHeight) || 65,
-  sticky: props.modelValue?.sticky ?? true,
-  ...props.modelValue,
-  menu_tree: props.modelValue?.menu_tree ? JSON.parse(JSON.stringify(props.modelValue.menu_tree)) : []
+/* Copia local completa, construida desde lo que llega (el árbol, clonado). */
+const build = (source: Record<string, any> | undefined) => ({
+  logoUrl: source?.logoUrl || '',
+  urlRedict: source?.urlRedict || '',
+  logoHeight: Number(source?.logoHeight) || 65,
+  sticky: source?.sticky ?? true,
+  ...(source ? JSON.parse(JSON.stringify(source)) : {}),
+  menu_tree: source?.menu_tree ? JSON.parse(JSON.stringify(source.menu_tree)) : []
 });
+
+const localData = reactive<Record<string, any>>(build(props.modelValue));
 
 watch(localData, (newVal) => {
   emit('update:modelValue', JSON.parse(JSON.stringify(newVal)));
 }, { deep: true });
 
-// Sincroniza cambios entrantes desde el componente padre (como la selección multimedia)
+/*
+ * Sincroniza TODO lo que llega del padre, no solo algunos campos: al cargar lo
+ * guardado (el editor ya estaba montado con los valores de fábrica), al pulsar
+ * "Refrescar" o al elegir una imagen. Antes solo copiaba logo, alto, sticky y
+ * menú, y el primer cambio en el panel sobrescribía el resto de lo guardado. La
+ * comparación evita el bucle con la emisión de arriba.
+ */
 watch(
   () => props.modelValue,
   (newVal) => {
     if (!newVal) return;
+    if (JSON.stringify(newVal) === JSON.stringify(localData)) return;
 
-    if (newVal.logoUrl !== undefined && newVal.logoUrl !== localData.logoUrl) {
-      localData.logoUrl = newVal.logoUrl;
+    const next = build(newVal);
+    for (const key of Object.keys(localData)) {
+      if (!(key in next)) delete localData[key];
     }
-    if (newVal.urlRedict !== undefined && newVal.urlRedict !== localData.urlRedict) {
-      localData.urlRedict = newVal.urlRedict;
-    }
-    if (newVal.logoHeight !== undefined && Number(newVal.logoHeight) !== localData.logoHeight) {
-      localData.logoHeight = Number(newVal.logoHeight);
-    }
-    if (newVal.sticky !== undefined && newVal.sticky !== localData.sticky) {
-      localData.sticky = newVal.sticky;
-    }
-    if (newVal.menu_tree && JSON.stringify(localData.menu_tree) !== JSON.stringify(newVal.menu_tree)) {
-      localData.menu_tree = JSON.parse(JSON.stringify(newVal.menu_tree));
-    }
+    Object.assign(localData, next);
   },
   { deep: true }
 );
 
+/*
+ * Identificador para los grupos y enlaces nuevos. No usa crypto.randomUUID():
+ * solo existe en contextos seguros (https o localhost), y abriendo el admin por
+ * la IP de la red "+ Columna" y "+ Enlace" fallaban.
+ */
+const newId = () => `hm-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+
 const addGroupColumn = (tab: any) => {
   if (!tab.children) tab.children = [];
   tab.children.push({
-    id: crypto.randomUUID(),
+    id: newId(),
     title: 'Nueva Facultad / Área',
     url: '',
     children: []
@@ -254,7 +257,7 @@ const addGroupColumn = (tab: any) => {
 const addLink = (parent: any) => {
   if (!parent.children) parent.children = [];
   parent.children.push({
-    id: crypto.randomUUID(),
+    id: newId(),
     title: 'Nuevo Enlace',
     url: '#'
   });

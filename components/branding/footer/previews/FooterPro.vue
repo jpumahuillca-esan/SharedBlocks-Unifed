@@ -58,7 +58,7 @@ const safeConfig = computed(() => ({
 </script>
 
 <template>
-  <footer 
+  <div 
     class="main-footer" 
     :style="{
       '--f-bg': safeConfig.bgColor,
@@ -108,7 +108,7 @@ const safeConfig = computed(() => ({
         © Copyright {{ new Date().getFullYear() }} - {{ safeConfig.copyrightText }}
       </AtomText>
     </div>
-  </footer>
+  </div>
 </template>
 
 <style scoped>

@@ -32,21 +32,21 @@
 .arcis-scope {
   .scroll-top {
     position: fixed;
-    right: var(--space-6);
-    bottom: var(--space-6);
+    right: var(--ds-space-8);
+    bottom: var(--ds-space-8);
     display: flex;
     align-items: center;
     justify-content: center;
     width: 48px;
     height: 48px;
-    border-radius: var(--radius-full);
-    background-color: var(--arcis-color-global-main);
-    color: var(--arcis-color-text-inverse);
-    box-shadow: var(--shadow-md);
+    border-radius: var(--ds-radius-full);
+    background-color: var(--ds-color-action-primary);
+    color: var(--ds-color-text-inverse);
+    box-shadow: var(--ds-shadow-md);
     opacity: 0;
     visibility: hidden;
     transform: translateY(8px);
-    transition: opacity var(--ease-base), transform var(--ease-base), background-color var(--ease-fast);
+    transition: opacity var(--ds-ease-base), transform var(--ds-ease-base), background-color var(--ds-ease-fast);
     z-index: 90;
   }
 
@@ -56,7 +56,7 @@
   }
 
   .scroll-top:hover {
-    background-color: var(--arcis-color-global-dark);
+    background-color: var(--ds-color-action-primary-hover);
   }
 
   .scroll-top.is-visible {
@@ -71,8 +71,8 @@
 
   @include bp.breakpoint-down('cta') {
     .scroll-top {
-      right: var(--space-4);
-      bottom: var(--space-4);
+      right: var(--ds-space-4);
+      bottom: var(--ds-space-4);
     }
   }
 }

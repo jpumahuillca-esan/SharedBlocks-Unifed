@@ -30,14 +30,14 @@ export type EcosystemColor =
 
 /** Opciones tal como se ofrecen en el editor, con el token que usa cada una. */
 export const ECOSYSTEM_COLORS: Array<{ value: EcosystemColor; label: string; token: string }> = [
-    { value: 'mba', label: 'Posgrado (azul noche)', token: '--graduate-mba-100' },
-    { value: 'government', label: 'Gobierno (granate)', token: '--goverment-primary-main' },
-    { value: 'blue', label: 'Administración (azul)', token: '--univ-blue-100' },
-    { value: 'wine', label: 'Economía (vino)', token: '--univ-wine-100' },
-    { value: 'green', label: 'Ingeniería (verde)', token: '--univ-green-100' },
-    { value: 'yellow', label: 'Derecho (amarillo)', token: '--univ-yellow-100' },
-    { value: 'cyan', label: 'Comunicación (turquesa)', token: '--univ-cyan-100' },
-    { value: 'orange', label: 'Psicología (naranja)', token: '--univ-orange-100' },
+    { value: 'mba', label: 'Posgrado (azul noche)', token: '--ds-color-gsb-mba-primary' },
+    { value: 'government', label: 'Gobierno (granate)', token: '--ds-color-government' },
+    { value: 'blue', label: 'Administración (azul)', token: '--ds-color-univ-management' },
+    { value: 'wine', label: 'Economía (vino)', token: '--ds-color-univ-economics' },
+    { value: 'green', label: 'Ingeniería (verde)', token: '--ds-color-univ-engineering' },
+    { value: 'yellow', label: 'Derecho (amarillo)', token: '--ds-color-univ-law' },
+    { value: 'cyan', label: 'Comunicación (turquesa)', token: '--ds-color-univ-communications' },
+    { value: 'orange', label: 'Psicología (naranja)', token: '--ds-color-univ-psychology' },
 ];
 
 const COLOR_VALUES = new Set(ECOSYSTEM_COLORS.map((option) => option.value));

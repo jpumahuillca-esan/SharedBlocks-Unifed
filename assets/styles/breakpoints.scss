@@ -1,47 +1,39 @@
 /* ============================================================
-   ARCIS Design System — ESAN University
-   Breakpoints (variables Sass + mixins).
+   ESAN · Breakpoints (variables Sass + mixins)
 
-   Fuente de verdad: webunificada/ui-kit/ui-kit.html, sección
-   Foundations > Breakpoints. Los 4 primeros son exactamente los
-   que la propia tabla etiqueta como "Bootstrap grid"; los otros
-   dos son los que la misma tabla marca como propios del proyecto
-   (sin nombre asignado ahí — se los di aquí para poder referirlos
-   por mixin).
+   Fuente de verdad: arcis-2 (ds/ds-tokens.css, --ds-breakpoint-*).
+   Allí están como variables CSS "de referencia", porque var() no se
+   puede usar en la condición de un @media; aquí van como variables
+   Sass, que sí, porque se resuelven al compilar. Si Figma cambia un
+   valor, se cambia en los dos sitios.
 
-   Por qué esto es Sass y no variables CSS (--breakpoint-*):
-   una variable CSS (var(--x)) no se puede usar dentro de la
-   condición de un @media — el navegador exige un valor literal
-   ahí. webunificada es CSS puro, por eso ni siquiera lo intenta
-   (usa 768px/520px escritos a mano en cada @media). Nosotros sí
-   usamos Sass, y las variables Sass ($x) se resuelven en tiempo
-   de compilación, así que SÍ pueden usarse dentro de un @media.
-   Esto no es "portar" nada de webunificada, es una pieza nueva
-   que nuestra librería puede tener y la fuente original no puede.
+   Los "-down" usan el valor menos 0,02px: "debajo de md" es por
+   debajo de 768px, sin incluirlo. Es el mismo corte que usa
+   ds-tokens.css para su versión móvil (767.98px), así que tipografía
+   y espaciado cambian a la vez que los bloques. Los "-up" empiezan
+   justo en el valor: ningún ancho cae en los dos.
    ============================================================ */
 
+@use 'sass:map';
+
 $breakpoints: (
-  'sm': 576px,
+  'xs': 0,
+  'sm': 480px,
   'md': 768px,
-  'lg': 992px,
-  'xl': 1200px,
-  // Breakpoints propios del proyecto (no son parte de la escala
-  // Bootstrap sm/md/lg/xl, son puntos de quiebre específicos que
-  // la tabla de webunificada documenta aparte):
-  // ≤768px: Hero y grids a 1 columna, menú off-canvas.
-  // ≤520px: CTAs a ancho completo.
-  // "mobile" coincide en valor con "md" pero se nombra distinto
-  // porque su intención es otra (punto de quiebre de contenido,
-  // no de la grilla).
-  'mobile': 768px,
+  'lg': 1024px,
+  'xl': 1280px,
+  '2xl': 1440px,
+  '3xl': 1920px,
+  // Propio de la librería, sin equivalente en arcis-2 (se conserva el
+  // anterior): los CTA pasan a ancho completo.
   'cta': 520px,
 );
 
 @function bp($name) {
-  @if not map-has-key($breakpoints, $name) {
-    @error 'Breakpoint "#{$name}" no existe. Breakpoints disponibles: #{map-keys($breakpoints)}.';
+  @if not map.has-key($breakpoints, $name) {
+    @error 'Breakpoint "#{$name}" no existe. Breakpoints disponibles: #{map.keys($breakpoints)}.';
   }
-  @return map-get($breakpoints, $name);
+  @return map.get($breakpoints, $name);
 }
 
 /* min-width: el estilo aplica desde ese breakpoint hacia arriba (mobile-first) */
@@ -51,9 +43,9 @@ $breakpoints: (
   }
 }
 
-/* max-width: el estilo aplica hasta ese breakpoint hacia abajo */
+/* max-width: el estilo aplica por debajo de ese breakpoint */
 @mixin breakpoint-down($name) {
-  @media (max-width: bp($name)) {
+  @media (max-width: bp($name) - 0.02px) {
     @content;
   }
 }
@@ -85,11 +77,11 @@ $breakpoints: (
  * mismo que en un navegador que no soporte container queries.
  */
 @mixin container-down($name) {
-  @media (max-width: bp($name)) {
+  @media (max-width: bp($name) - 0.02px) {
     @content;
   }
 
-  @container (max-width: #{bp($name)}) {
+  @container (max-width: #{bp($name) - 0.02px}) {
     @content;
   }
 }

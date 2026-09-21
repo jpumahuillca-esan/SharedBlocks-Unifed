@@ -1,6 +1,6 @@
 <template>
   <div class="hero__controls">
-    <AtomText as="p" size="sm" class="hero__counter">
+    <AtomText as="p" size="body-compact" class="hero__counter">
       {{ current + 1 }} de {{ total }}
     </AtomText>
 

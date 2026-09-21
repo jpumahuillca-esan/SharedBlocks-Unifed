@@ -39,7 +39,7 @@
         :title-level="3"
         title-size="h5"
         :text="card.desc"
-        text-size="sm"
+        text-size="body-compact"
         :href="card.href"
       />
     </CardSlider>

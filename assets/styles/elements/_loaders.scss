@@ -45,9 +45,9 @@
   .spinner {
     width: 28px;
     height: 28px;
-    border: 3px solid var(--neutrals-200);
-    border-top-color: var(--arcis-color-global-main);
-    border-radius: var(--radius-full);
+    border: 3px solid var(--ds-color-border-subtle);
+    border-top-color: var(--ds-color-esan-corp);
+    border-radius: var(--ds-radius-full);
     animation: spin 800ms linear infinite;
   }
 
@@ -65,20 +65,20 @@
 
   .spinner--inverse {
     border-color: rgba(255, 255, 255, 0.35);
-    border-top-color: var(--neutrals-0);
+    border-top-color: var(--ds-color-white);
   }
 
   .dots-loader {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--ds-spacing-xxs);
   }
 
   .dots-loader span {
     width: 8px;
     height: 8px;
-    border-radius: var(--radius-full);
-    background-color: var(--arcis-color-global-main);
+    border-radius: var(--ds-radius-full);
+    background-color: var(--ds-color-action-primary);
     animation: dot-pulse 1200ms ease-in-out infinite;
   }
 

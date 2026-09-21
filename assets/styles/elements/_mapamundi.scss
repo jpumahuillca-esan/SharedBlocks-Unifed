@@ -26,7 +26,7 @@
 .arcis-scope {
 
   .mapamundi {
-    --mapamundi-padding-x: var(--space-6);
+    --mapamundi-padding-x: var(--ds-spacing-md);
 
     /* Ancho de cada tarjeta en escritorio, medido sobre la maqueta. */
     --mapamundi-card-width: 255px;
@@ -41,7 +41,7 @@
      * Alaska y Nueva Zelanda junto a las tarjetas. Con 48px (se probó) las
      * tarjetas se comían los dos extremos del dibujo.
      */
-    --mapamundi-map-overlap: var(--space-4);
+    --mapamundi-map-overlap: var(--ds-space-4);
 
     /* Alto de los logos en la cabecera roja: los dos archivos miden 40px de
        alto, así que las dos cabeceras quedan parejas. */
@@ -51,19 +51,19 @@
      * Franja gris a sangre. Por eso no lleva margen por fuera (ver
      * section-rhythm.scss): el aire va dentro del color.
      */
-    background-color: var(--neutrals-100);
+    background-color: var(--ds-color-background-light);
   }
 
   .mapamundi__inner {
     display: flex;
     flex-direction: column;
-    gap: var(--space-5);
+    gap: var(--ds-space-6);
 
     width: 100%;
-    max-width: var(--container-max);
+    max-width: var(--ds-container-max);
     margin-inline: auto;
     /* Ritmo vertical común a todos los bloques (ver section-rhythm.scss). */
-    padding: var(--section-pad-y) var(--mapamundi-padding-x);
+    padding: var(--ds-spacing-xxl) var(--mapamundi-padding-x);
     box-sizing: border-box;
   }
 
@@ -74,7 +74,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--ds-spacing-xxs);
     text-align: center;
   }
 
@@ -103,11 +103,11 @@
   .mapamundi__rule {
     width: 40px;
     height: 2px;
-    background-color: var(--arcis-color-global-main);
+    background-color: var(--ds-color-esan-corp);
   }
 
   .mapamundi__title {
-    color: var(--arcis-color-text-primary);
+    color: var(--ds-color-text-primary);
   }
 
   /* -----------------------------------------------------------------------
@@ -158,7 +158,7 @@
     align-self: end;
     /* Aire con el mapa cuando las tarjetas son cortas y la fila 1 se ajusta a
        él; cuando son altas, el alineado al pie ya separa de sobra. */
-    margin-top: var(--space-5);
+    margin-top: var(--ds-space-6);
   }
 
   /* -----------------------------------------------------------------------
@@ -178,9 +178,9 @@
     min-width: 0;
     overflow: hidden;
 
-    background-color: var(--neutrals-0);
-    border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-sm);
+    background-color: var(--ds-color-background-default);
+    border-radius: var(--ds-radius-sm);
+    box-shadow: var(--ds-shadow-sm);
   }
 
   .mapamundi-card--start { grid-column: 1; }
@@ -194,11 +194,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-4) var(--space-5);
+    padding: var(--ds-space-4) var(--ds-space-6);
     box-sizing: border-box;
 
-    background-color: var(--arcis-color-global-main);
-    color: var(--arcis-color-text-inverse);
+    background-color: var(--ds-color-surface-primary);
+    color: var(--ds-color-text-inverse);
     text-align: center;
   }
 
@@ -221,7 +221,7 @@
     flex: 1;
     flex-direction: column;
     margin: 0;
-    padding: var(--space-2) var(--space-5);
+    padding: var(--ds-spacing-xxs) var(--ds-space-6);
     list-style: none;
   }
 
@@ -229,23 +229,23 @@
     display: flex;
     flex: 1;
     align-items: center;
-    gap: var(--space-4);
-    padding-block: var(--space-4);
+    gap: var(--ds-space-4);
+    padding-block: var(--ds-space-4);
   }
 
   /* Filete entre ítems, no por encima del primero ni debajo del último. */
   .mapamundi-card__item + .mapamundi-card__item {
-    border-top: var(--border-width-sm) solid var(--border-color-light);
+    border-top: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
   }
 
   .mapamundi-card__text {
     min-width: 0;
-    color: var(--arcis-color-text-secondary);
+    color: var(--ds-color-text-secondary);
     line-height: 1.4;
   }
 
   /* -----------------------------------------------------------------------
-     Tableta — por debajo de 992px.
+     Tableta — por debajo de 1024px.
 
      No queda ancho para tres columnas: con dos tarjetas de 255px a los lados,
      el mapa se encogía por debajo de la mitad de su tamaño y los marcadores
@@ -257,7 +257,7 @@
     .mapamundi__stage {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       grid-template-rows: auto;
-      gap: var(--space-5);
+      gap: var(--ds-space-6);
     }
 
     /* A todo el ancho, sin solape: ya no hay tarjetas a los lados. */
@@ -293,14 +293,14 @@
   }
 
   /* -----------------------------------------------------------------------
-     Teléfono — 576px hacia abajo.
+     Teléfono — por debajo de 480px.
 
      Una columna: el mapa, las dos tarjetas una debajo de la otra y el botón.
      ----------------------------------------------------------------------- */
   @include bp.container-down('sm') {
 
     .mapamundi {
-      --mapamundi-padding-x: var(--space-5);
+      --mapamundi-padding-x: var(--ds-space-6);
     }
 
     /*
@@ -319,8 +319,8 @@
      * igual dentro del lienzo del editor.
      */
     .eyebrow.mapamundi__eyebrow {
-      font-size: clamp(13px, 4.6cqw, var(--text-body-lg));
-      font-weight: var(--weight-bold);
+      font-size: clamp(13px, 4.6cqw, var(--ds-text-body-lg));
+      font-weight: var(--ds-weight-bold);
       line-height: 1.4;
       letter-spacing: 0.2em;
       white-space: nowrap;

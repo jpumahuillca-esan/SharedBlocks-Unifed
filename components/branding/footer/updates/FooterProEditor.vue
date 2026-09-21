@@ -5,23 +5,42 @@ const props = defineProps<{ modelValue: any }>();
 const emit = defineEmits(['update:modelValue', 'select-image']);
 
 // --- ENCAPSULAMIENTO REACTIVO DE LOS NUEVOS TOKENS DEL FOOTER PRO ---
-const localData = ref({
-    logoUrl: props.modelValue?.logoUrl || '',
-    logoHeight: props.modelValue?.logoHeight || 60,
-    description: props.modelValue?.description || '',
-    bgColor: props.modelValue?.bgColor || '#1e40af',
-    textColor: props.modelValue?.textColor || '#e0f2fe',
-    accentColor: props.modelValue?.accentColor || '#ffffff',
-    bulletColor: props.modelValue?.bulletColor || '#93c5fd',
-    bottomBgColor: props.modelValue?.bottomBgColor || '#173287',
-    bottomTextColor: props.modelValue?.bottomTextColor || '#93c5fd',
-    footerColumns: props.modelValue?.footerColumns?.length ? [...props.modelValue.footerColumns] : [],
-    copyrightText: props.modelValue?.copyrightText || 'Riesgird - ACC | Todos los derechos reservados.'
+/*
+ * Copia local construida desde lo que llega. Las columnas van clonadas: con una
+ * copia superficial, editar un enlace mutaba directamente el objeto del padre.
+ */
+const build = (source: any) => ({
+    logoUrl: source?.logoUrl || '',
+    logoHeight: source?.logoHeight || 60,
+    description: source?.description || '',
+    bgColor: source?.bgColor || '#1e40af',
+    textColor: source?.textColor || '#e0f2fe',
+    accentColor: source?.accentColor || '#ffffff',
+    bulletColor: source?.bulletColor || '#93c5fd',
+    bottomBgColor: source?.bottomBgColor || '#173287',
+    bottomTextColor: source?.bottomTextColor || '#93c5fd',
+    footerColumns: source?.footerColumns?.length ? JSON.parse(JSON.stringify(source.footerColumns)) : [],
+    copyrightText: source?.copyrightText || 'Riesgird - ACC | Todos los derechos reservados.'
 });
+
+const localData = ref(build(props.modelValue));
+
+/*
+ * Resincroniza cuando cambia lo que llega de fuera: al cargar lo guardado (el
+ * editor ya estaba montado con los valores de fábrica) o al pulsar "Refrescar".
+ * Sin esto, el panel mostraba los valores de fábrica y el primer cambio
+ * sobrescribía la configuración guardada con ellos. La comparación evita el
+ * bucle con la emisión de abajo.
+ */
+watch(() => props.modelValue, (newVal) => {
+    if (!newVal) return;
+    if (JSON.stringify(newVal) === JSON.stringify(localData.value)) return;
+    localData.value = build(newVal);
+}, { deep: true });
 
 // Sincronización profunda contra el almacén del orquestador del Page Builder
 watch(localData, (newVal) => {
-    emit('update:modelValue', { ...newVal });
+    emit('update:modelValue', JSON.parse(JSON.stringify(newVal)));
 }, { deep: true });
 
 // Métodos de control estructural para la rejilla de navegación

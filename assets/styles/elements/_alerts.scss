@@ -24,9 +24,9 @@
   .alert.alert--error {
     display: flex;
     align-items: flex-start;
-    gap: var(--space-3);
-    padding: var(--space-4) var(--space-5);
-    border-radius: var(--radius-sm);
+    gap: var(--ds-spacing-xs);
+    padding: var(--ds-space-4) var(--ds-space-6);
+    border-radius: var(--ds-radius-sm);
     border-left: 4px solid transparent;
   }
 
@@ -43,56 +43,56 @@
   .alert__body {
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: var(--ds-space-1);
   }
 
   .alert__title {
-    font-weight: var(--weight-semibold);
-    font-size: var(--text-body);
+    font-weight: var(--ds-weight-semibold);
+    font-size: var(--ds-text-body);
   }
 
   .alert__text {
-    font-size: var(--text-sm);
-    color: var(--arcis-color-text-secondary);
+    font-size: var(--ds-text-body-compact);
+    color: var(--ds-color-text-secondary);
   }
 
   .alert.alert--info {
-    background-color: var(--info-light);
-    border-left-color: var(--info-dark);
+    background-color: var(--ds-color-feedback-info-light);
+    border-left-color: var(--ds-color-feedback-info-dark);
   }
 
   .alert--info svg,
   .alert--info .alert__title {
-    color: var(--info-dark);
+    color: var(--ds-color-feedback-info-dark);
   }
 
   .alert.alert--success {
-    background-color: var(--success-light);
-    border-left-color: var(--success-dark);
+    background-color: var(--ds-color-feedback-success-light);
+    border-left-color: var(--ds-color-feedback-success-dark);
   }
 
   .alert--success svg,
   .alert--success .alert__title {
-    color: var(--success-dark);
+    color: var(--ds-color-feedback-success-dark);
   }
 
   .alert.alert--warning {
-    background-color: var(--warning-light);
-    border-left-color: var(--warning-dark);
+    background-color: var(--ds-color-feedback-warning-light);
+    border-left-color: var(--ds-color-feedback-warning-dark);
   }
 
   .alert--warning svg,
   .alert--warning .alert__title {
-    color: var(--warning-dark);
+    color: var(--ds-color-feedback-warning-dark);
   }
 
   .alert.alert--error {
-    background-color: var(--error-light);
-    border-left-color: var(--error-dark);
+    background-color: var(--ds-color-feedback-error-light);
+    border-left-color: var(--ds-color-feedback-error-dark);
   }
 
   .alert--error svg,
   .alert--error .alert__title {
-    color: var(--error-dark);
+    color: var(--ds-color-feedback-error-dark);
   }
 }

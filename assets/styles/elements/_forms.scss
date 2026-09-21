@@ -37,39 +37,39 @@
   .form-group {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--ds-spacing-xxs);
     max-width: 360px;
   }
 
   .form-label.form-label--arcis {
-    font-size: var(--text-sm);
-    font-weight: var(--weight-medium);
-    color: var(--arcis-color-text-primary);
+    font-size: var(--ds-text-body-compact);
+    font-weight: var(--ds-weight-medium);
+    color: var(--ds-color-text-primary);
   }
 
   .form-input,
   .form-textarea {
     width: 100%;
-    padding: var(--space-3) var(--space-4);
-    font-family: var(--font-body);
-    font-size: var(--text-body);
-    color: var(--arcis-color-text-primary);
-    background-color: var(--neutrals-0);
-    border: var(--border-width-sm) solid var(--border-color-light);
-    border-radius: var(--radius-sm);
-    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+    padding: var(--ds-spacing-xs) var(--ds-space-4);
+    font-family: var(--ds-font-family-base);
+    font-size: var(--ds-text-body);
+    color: var(--ds-color-text-primary);
+    background-color: var(--ds-color-background-default);
+    border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    border-radius: var(--ds-radius-sm);
+    transition: border-color var(--ds-ease-fast), box-shadow var(--ds-ease-fast);
   }
 
   .form-select.form-select--arcis {
     width: 100%;
-    padding: var(--space-3) var(--space-4);
-    font-family: var(--font-body);
-    font-size: var(--text-body);
-    color: var(--arcis-color-text-primary);
-    background-color: var(--neutrals-0);
-    border: var(--border-width-sm) solid var(--border-color-light);
-    border-radius: var(--radius-sm);
-    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+    padding: var(--ds-spacing-xs) var(--ds-space-4);
+    font-family: var(--ds-font-family-base);
+    font-size: var(--ds-text-body);
+    color: var(--ds-color-text-primary);
+    background-color: var(--ds-color-background-default);
+    border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    border-radius: var(--ds-radius-sm);
+    transition: border-color var(--ds-ease-fast), box-shadow var(--ds-ease-fast);
   }
 
   .form-textarea {
@@ -81,36 +81,36 @@
   .form-textarea:focus-visible,
   .form-select.form-select--arcis:focus-visible {
     outline: none;
-    border-color: var(--arcis-color-global-main);
+    border-color: var(--ds-color-border-focus);
     box-shadow: 0 0 0 3px rgba(227, 23, 62, 0.15);
   }
 
   .form-help {
-    font-size: var(--text-xs);
-    color: var(--arcis-color-text-secondary);
+    font-size: var(--ds-text-body-sm);
+    color: var(--ds-color-text-secondary);
   }
 
   .form-group.has-error .form-input,
   .form-group.has-error .form-textarea,
   .form-group.has-error .form-select.form-select--arcis {
-    border-color: var(--error-dark);
+    border-color: var(--ds-color-feedback-error-dark);
   }
 
   .form-group.has-error .form-help {
-    color: var(--error-dark);
+    color: var(--ds-color-feedback-error-dark);
   }
 
   .form-check.form-check--arcis {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
-    font-size: var(--text-body);
-    color: var(--arcis-color-text-primary);
+    gap: var(--ds-spacing-xxs);
+    font-size: var(--ds-text-body);
+    color: var(--ds-color-text-primary);
   }
 
   .form-check.form-check--arcis input {
     width: 18px;
     height: 18px;
-    accent-color: var(--arcis-color-global-main);
+    accent-color: var(--ds-color-action-primary);
   }
 }

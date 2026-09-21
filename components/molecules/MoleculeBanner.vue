@@ -42,7 +42,7 @@ import AtomIcon from '../atoms/AtomIcon.vue';
 type BannerVariant = 'brand' | 'dark' | 'outline' | 'image' | 'image-split';
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 type HeadingSize = 'h3' | 'h4' | 'h5' | 'h6' | 'body-lg' | 'body';
-type TextSize = 'body-lg' | 'body' | 'sm' | 'xs';
+type TextSize = 'body-lg' | 'body' | 'body-compact' | 'body-sm';
 
 const props = withDefaults(defineProps<{
   variant?: BannerVariant;
@@ -52,10 +52,10 @@ const props = withDefaults(defineProps<{
   title?: string;
   /** Etiqueta del titular (h1..h6). No cambia su tamaño: eso es `titleSize`. */
   titleLevel?: HeadingLevel;
-  /** Tamaño visual del titular (token --text-*). */
+  /** Tamaño visual del titular (token --ds-text-*). */
   titleSize?: HeadingSize;
   text?: string;
-  /** Tamaño del texto de apoyo (token --text-*). */
+  /** Tamaño del texto de apoyo (token --ds-text-*). */
   textSize?: TextSize;
   /** Solo variante "outline": ícono en círculo al costado del contenido. */
   icon?: string;
@@ -107,7 +107,7 @@ const eyebrowVariant = computed(() => (props.variant === 'outline' ? 'brand' : '
            igual que en webunificada: agrupa ambos para que ".banner"
            (justify-content: space-between) los separe como un solo
            bloque de las acciones, no como ítems sueltos. -->
-      <div style="display: flex; align-items: center; gap: var(--space-5)">
+      <div style="display: flex; align-items: center; gap: var(--ds-space-6)">
         <div v-if="icon || $slots.icon" class="banner__icon">
           <slot name="icon">
             <AtomIcon v-if="icon" :name="icon" :size="22" />

@@ -25,19 +25,19 @@
      * tarjetas lo compensa con margen negativo para poder sangrar hasta el
      * borde, y ambos valores tienen que coincidir.
      */
-    --card-section-padding-x: var(--space-6);
+    --card-section-padding-x: var(--ds-spacing-md);
 
     display: flex;
     flex-direction: column;
-    gap: var(--space-5);
+    gap: var(--ds-space-6);
 
     /*
-     * Ancho del contenedor: el que el sistema documenta en --container-max
+     * Ancho del contenedor: el que el sistema documenta en --ds-container-max
      * (1280px). Se usa el token y no el número, para que si el sistema cambia
      * ese ancho estas secciones lo sigan sin tocar nada.
      */
     width: 100%;
-    max-width: var(--container-max);
+    max-width: var(--ds-container-max);
     margin-inline: auto;
 
     padding-inline: var(--card-section-padding-x);
@@ -47,7 +47,7 @@
      * esto, dos secciones de tarjetas seguidas quedaban pegadas: la sección no
      * tenía ningún espaciado arriba ni abajo.
      */
-    padding-block: var(--section-pad-y);
+    padding-block: var(--ds-spacing-xxl);
     box-sizing: border-box;
   }
 
@@ -60,7 +60,7 @@
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    gap: var(--space-4);
+    gap: var(--ds-space-4);
   }
 
   /* Título, guion y descripción, apilados. */
@@ -68,7 +68,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-3);
+    gap: var(--ds-spacing-xs);
     min-width: 0;
   }
 
@@ -80,34 +80,34 @@
   .card-section__rule {
     width: 40px;
     height: 2px;
-    background-color: var(--arcis-color-global-main);
+    background-color: var(--ds-color-esan-corp);
   }
 
   .card-section__desc {
-    color: var(--arcis-color-text-secondary);
+    color: var(--ds-color-text-secondary);
   }
 
   .card-section__title {
-    font-size: var(--text-h3);
-    font-weight: var(--weight-bold);
-    color: var(--arcis-color-text-primary);
+    font-size: var(--ds-text-h3);
+    font-weight: var(--ds-weight-bold);
+    color: var(--ds-color-text-primary);
   }
 
   .card-section__link {
     display: inline-flex;
     flex-shrink: 0;
     align-items: center;
-    gap: var(--space-2);
-    font-size: var(--text-sm);
-    font-weight: var(--weight-medium);
-    color: var(--arcis-color-global-main);
+    gap: var(--ds-spacing-xxs);
+    font-size: var(--ds-text-body-compact);
+    font-weight: var(--ds-weight-medium);
+    color: var(--ds-color-text-brand);
     white-space: nowrap;
   }
 
   .card-section__link svg {
     width: 16px;
     height: 16px;
-    transition: transform var(--ease-base);
+    transition: transform var(--ds-ease-base);
   }
 
   .card-section__link:hover svg {
@@ -131,7 +131,7 @@
    */
   .card-section__grid {
     display: flex;
-    gap: var(--space-5);
+    gap: var(--ds-space-6);
     align-items: start;
 
     margin-inline: calc(-1 * var(--card-section-padding-x));
@@ -154,7 +154,7 @@
     flex: 0 0 max(
       var(--card-section-card-min, 260px),
       calc(
-        (100% - (var(--card-section-columns, 4) - 1) * var(--space-5))
+        (100% - (var(--card-section-columns, 4) - 1) * var(--ds-space-6))
         / var(--card-section-columns, 4)
       )
     );
@@ -176,7 +176,7 @@
   .card-slider {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--ds-space-4);
     min-width: 0;
   }
 
@@ -184,7 +184,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-2);
+    gap: var(--ds-spacing-xxs);
   }
 
   .card-slider__dot {
@@ -192,36 +192,36 @@
     height: 8px;
     padding: 0;
     border: none;
-    border-radius: var(--radius-full);
-    background-color: var(--neutrals-300);
+    border-radius: var(--ds-radius-full);
+    background-color: var(--ds-color-background-soft);
     cursor: pointer;
-    transition: background-color var(--ease-fast), width var(--ease-fast);
+    transition: background-color var(--ds-ease-fast), width var(--ds-ease-fast);
   }
 
   .card-slider__dot:hover {
-    background-color: var(--neutrals-500);
+    background-color: var(--ds-color-neutral-400);
   }
 
   .card-slider__dot.is-active {
     /* El activo se alarga además de cambiar de color: no depende solo del
        contraste, que es difícil de percibir en un punto de 8 píxeles. */
     width: 20px;
-    background-color: var(--arcis-color-global-main);
+    background-color: var(--ds-color-action-primary);
   }
 
   /*
    * En móvil solo cambian el margen lateral y la posición del enlace: el
    * desplazamiento horizontal ya es el comportamiento normal del carril.
    */
-  @include bp.container-down('mobile') {
+  @include bp.container-down('md') {
     .card-section {
-      --card-section-padding-x: var(--space-5);
+      --card-section-padding-x: var(--ds-space-6);
     }
 
     .card-section__header {
       flex-direction: column;
       align-items: flex-start;
-      gap: var(--space-2);
+      gap: var(--ds-spacing-xxs);
     }
 
     /* El enlace pasa al final de la sección, donde queda más a mano. */
@@ -234,7 +234,7 @@
     }
 
     .card-section__grid {
-      gap: var(--space-4);
+      gap: var(--ds-space-4);
     }
   }
 }
