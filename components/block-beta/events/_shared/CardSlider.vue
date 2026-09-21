@@ -11,16 +11,24 @@
 
     <!-- Los puntos solo existen si de verdad hay contenido fuera de la vista -->
     <div v-if="overflows && count > 1" class="card-slider__dots">
-      <button
+      <!--
+        Anclas y no <button>, por la decisión de proyecto que documenta
+        AtomButton. Un ancla sin destino no es interactiva por sí sola, así que
+        se compensa a mano lo que un <button> daría de fábrica: rol, foco y
+        teclado. Mismo patrón que las flechas del hero (HeroControls).
+      -->
+      <a
         v-for="i in count"
         :key="i"
-        type="button"
         class="card-slider__dot"
         :class="{ 'is-active': active === i - 1 }"
+        role="button"
+        tabindex="0"
         :aria-label="`Ir a la tarjeta ${i}`"
         :aria-current="active === i - 1 ? 'true' : undefined"
         @click="goTo(i - 1)"
-      ></button>
+        @keydown="activate($event, i - 1)"
+      ></a>
     </div>
   </div>
 </template>
@@ -103,6 +111,15 @@ const goTo = (index: number) => {
    * eje vertical, no arrastra la página hacia arriba o abajo.
    */
   child.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+};
+
+/** Un <button> se activa con Enter y Espacio; un <a> sin href, con ninguna. */
+const activate = (event: KeyboardEvent, index: number) => {
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+
+  // Espacio, sin esto, desplaza la página.
+  event.preventDefault();
+  goTo(index);
 };
 
 let observer: ResizeObserver | null = null;

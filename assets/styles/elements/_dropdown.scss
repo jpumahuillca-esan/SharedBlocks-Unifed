@@ -44,6 +44,19 @@
     transition: transform var(--ease-fast);
   }
 
+  /*
+   * Disparador `plain` de MoleculeDropdown (el del topbar): un <a> sin
+   * destino en vez del botón del kit. Solo se le da lo que un ancla sin href
+   * no trae —el cursor— y la alineación del texto con la flecha. Color y
+   * tipografía los pone quien lo usa.
+   */
+  .dropdown.dropdown--arcis > a.dropdown__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    cursor: pointer;
+  }
+
   .dropdown.dropdown--arcis.is-open .dropdown__trigger svg {
     transform: rotate(180deg);
   }

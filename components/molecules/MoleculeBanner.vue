@@ -26,6 +26,12 @@
  * "brand"/"dark" usan AtomEyebrow variant="inverse", e "image" ya trae
  * su propia regla CSS descendente (.banner--image .banner__content
  * .eyebrow) que lo fuerza a blanco sin importar la variante del átomo.
+ *
+ * `titleLevel`, `titleSize` y `textSize` existen para cuando el banner va
+ * dentro de una sección con su propio título: AtomHeading y AtomText fijan
+ * el tamaño en línea, así que la hoja no puede cambiarlo, y el nivel del
+ * titular depende de dónde se inserte. Por defecto dejan el banner como
+ * era (h4 con aspecto de h4, texto de cuerpo).
  */
 import { computed } from 'vue';
 import AtomHeading from '../atoms/AtomHeading.vue';
@@ -34,6 +40,9 @@ import AtomEyebrow from '../atoms/AtomEyebrow.vue';
 import AtomIcon from '../atoms/AtomIcon.vue';
 
 type BannerVariant = 'brand' | 'dark' | 'outline' | 'image' | 'image-split';
+type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
+type HeadingSize = 'h3' | 'h4' | 'h5' | 'h6' | 'body-lg' | 'body';
+type TextSize = 'body-lg' | 'body' | 'sm' | 'xs';
 
 const props = withDefaults(defineProps<{
   variant?: BannerVariant;
@@ -41,7 +50,13 @@ const props = withDefaults(defineProps<{
   /** Solo variantes "image"/"image-split": etiqueta de acento sobre el título (ej. "ESAN"). */
   titleAccent?: string;
   title?: string;
+  /** Etiqueta del titular (h1..h6). No cambia su tamaño: eso es `titleSize`. */
+  titleLevel?: HeadingLevel;
+  /** Tamaño visual del titular (token --text-*). */
+  titleSize?: HeadingSize;
   text?: string;
+  /** Tamaño del texto de apoyo (token --text-*). */
+  textSize?: TextSize;
   /** Solo variante "outline": ícono en círculo al costado del contenido. */
   icon?: string;
   /** Solo variantes "image"/"image-split". */
@@ -50,6 +65,9 @@ const props = withDefaults(defineProps<{
   href?: string;
 }>(), {
   variant: 'brand',
+  titleLevel: 4,
+  titleSize: 'h4',
+  textSize: 'body',
 });
 
 const isImageVariant = computed(() => props.variant === 'image' || props.variant === 'image-split');
@@ -66,15 +84,17 @@ const eyebrowVariant = computed(() => (props.variant === 'outline' ? 'brand' : '
 <template>
   <component :is="isImageVariant ? (href ? 'a' : 'div') : 'div'" :href="isImageVariant ? (href || '#') : undefined" :class="classes">
     <template v-if="isImageVariant">
+      <!-- Sin imagen no se dibuja el <img>: un src vacío deja el icono de
+           imagen rota. Queda el fondo que le dé quien use el banner. -->
       <div class="banner__media">
-        <img :src="image" :alt="imageAlt || ''" loading="lazy" />
+        <img v-if="image" :src="image" :alt="imageAlt || ''" loading="lazy" />
       </div>
       <div class="banner__body">
         <div class="banner__content">
           <span v-if="titleAccent" class="banner__title-accent">{{ titleAccent }}</span>
           <AtomEyebrow v-if="eyebrow">{{ eyebrow }}</AtomEyebrow>
-          <AtomHeading v-if="title" :level="4" class="banner__title">{{ title }}</AtomHeading>
-          <AtomText v-if="text" class="banner__text">{{ text }}</AtomText>
+          <AtomHeading v-if="title" :level="titleLevel" :size="titleSize" class="banner__title">{{ title }}</AtomHeading>
+          <AtomText v-if="text" :size="textSize" class="banner__text">{{ text }}</AtomText>
         </div>
         <span class="banner__arrow" aria-hidden="true">
           <AtomIcon name="chevron-right" :size="20" />
@@ -95,8 +115,8 @@ const eyebrowVariant = computed(() => (props.variant === 'outline' ? 'brand' : '
         </div>
         <div class="banner__content">
           <AtomEyebrow v-if="eyebrow" :variant="eyebrowVariant">{{ eyebrow }}</AtomEyebrow>
-          <AtomHeading v-if="title" :level="4" class="banner__title">{{ title }}</AtomHeading>
-          <AtomText v-if="text" class="banner__text">{{ text }}</AtomText>
+          <AtomHeading v-if="title" :level="titleLevel" :size="titleSize" class="banner__title">{{ title }}</AtomHeading>
+          <AtomText v-if="text" :size="textSize" class="banner__text">{{ text }}</AtomText>
         </div>
       </div>
       <div v-if="$slots.actions" class="banner__actions">

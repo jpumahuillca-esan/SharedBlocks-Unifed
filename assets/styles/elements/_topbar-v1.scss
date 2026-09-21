@@ -1,0 +1,191 @@
+/* =========================================================================
+   TOPBAR V1 — ARCIS Design System
+
+   Franja utilitaria sobre el navbar: acceso al portal con sus desplegables a
+   la izquierda y enlaces institucionales a la derecha. La usa la pieza de
+   branding branding/topbar/topbar_version_1.
+
+   Base: el topbar del kit (webunificada/ui-kit/assets/css/main.css,
+   "--- Topbar ---", ~líneas 3172-3230): ancho completo, dos grupos separados
+   al máximo, divisores finos entre enlaces y el enlace del portal en rojo.
+   Lo que cambia por la maqueta:
+     - fondo gris azulado (ver --topbar-v1-bg) y enlaces en negro, no en gris;
+     - la franja es más baja: 8px arriba y abajo en vez de 12;
+     - 12px a cada lado de los divisores en vez de 16, y el grupo del portal
+       lleva divisor también tras su último elemento;
+     - las flechas de los desplegables, rojas y de trazo grueso;
+     - en tableta y móvil pasa bajo el navbar y queda solo el grupo del
+       portal, sin divisores.
+
+   Todo bajo .arcis-scope por la razón explicada en base.scss. El propio
+   componente trae la clase en su raíz (ver Block.vue): las reglas de la raíz
+   van con `&.topbar-v1-host`, y las del resto como descendientes.
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+
+  /*
+   * La raíz se pone por encima del navbar (HeaderMega usa z-index 1030): si
+   * no, los menús desplegables del topbar se abrirían por debajo de él.
+   */
+  &.topbar-v1-host {
+    position: relative;
+    z-index: 1031;
+  }
+
+  /*
+   * Bajo el navbar es al revés: el que tiene que quedar por encima es el
+   * navbar, cuyo menú móvil se despliega sobre lo que tiene debajo. Los menús
+   * del topbar siguen abriéndose sobre el contenido de la página.
+   */
+  &.topbar-v1-host.is-below {
+    z-index: 1029;
+  }
+
+  /* La copia de debajo del navbar no existe en escritorio. */
+  &.topbar-v1-host.is-below .topbar-v1 {
+    display: none;
+  }
+
+  .topbar-v1 {
+    /*
+     * Fondo de la maqueta. Va el hex y no un token porque no hay ninguno que le
+     * corresponda: el kit usa --neutrals-50 (#FAFAFA), casi blanco y neutro, y
+     * este tira a azul. Tampoco se agrega a tokens.scss, que es espejo de
+     * webunificada (ver su cabecera). Mismo criterio que el fondo del pie.
+     */
+    --topbar-v1-bg: #F1F5F9;
+
+    /* Aire a cada lado de un divisor. */
+    --topbar-v1-divider-space: var(--space-3);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+
+    padding: var(--space-2) var(--space-5);
+    background-color: var(--topbar-v1-bg);
+    border-bottom: var(--border-width-sm) solid var(--border-color-light);
+
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--arcis-color-text-primary);
+  }
+
+  .topbar-v1__group {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+  }
+
+  /*
+   * Divisores. En el grupo del portal cada elemento lleva el suyo detrás,
+   * también el último (así está en la maqueta: cierra el grupo). En el otro,
+   * solo van entre elementos.
+   */
+  .topbar-v1__group--start > * {
+    margin-right: var(--topbar-v1-divider-space);
+    padding-right: var(--topbar-v1-divider-space);
+    border-right: var(--border-width-sm) solid var(--border-color-light);
+  }
+
+  .topbar-v1__group--end > * + * {
+    margin-left: var(--topbar-v1-divider-space);
+    padding-left: var(--topbar-v1-divider-space);
+    border-left: var(--border-width-sm) solid var(--border-color-light);
+  }
+
+  /*
+   * Enlaces y disparadores de desplegable, con el mismo aspecto. El disparador
+   * es el `plain` de MoleculeDropdown: _dropdown.scss solo le pone el cursor y
+   * la alineación; el resto sale de aquí.
+   */
+  .topbar-v1__link,
+  .topbar-v1 .dropdown__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: inherit;
+    white-space: nowrap;
+    transition: color var(--ease-fast);
+  }
+
+  .topbar-v1__link:hover,
+  .topbar-v1 .dropdown__trigger:hover {
+    color: var(--arcis-color-global-main);
+  }
+
+  /*
+   * Flecha de la maqueta: roja y de 2px, más gruesa que el trazo por defecto
+   * de Lucide. Es el mismo chevron-down, así que basta con el grosor: el CSS
+   * gana al atributo stroke-width que pone el ícono.
+   */
+  .topbar-v1 .dropdown__trigger svg {
+    width: 16px;
+    height: 16px;
+    color: var(--arcis-color-global-main);
+    stroke-width: 3;
+  }
+
+  .topbar-v1__link--brand {
+    font-weight: var(--weight-semibold);
+    color: var(--arcis-color-global-main);
+  }
+
+  .topbar-v1__link--brand:hover {
+    color: var(--arcis-color-global-dark);
+  }
+
+  .topbar-v1__brand-icon {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+  }
+
+  /* El menú arranca bajo la franja, no pegado al texto del disparador. */
+  .topbar-v1 .dropdown__menu {
+    top: calc(100% + var(--space-2) + var(--space-1));
+  }
+
+  /* -----------------------------------------------------------------------
+     Tableta y móvil — 992px o menos (o topbar angosto).
+
+     El mismo punto en el que el navbar pasa a menú móvil (HeaderMega oculta su
+     menú por debajo de `lg`). La copia de encima desaparece y aparece la de
+     debajo; los enlaces institucionales se ocultan y el grupo del portal
+     pierde los divisores.
+     ----------------------------------------------------------------------- */
+  @include bp.container-down('lg') {
+
+    &.topbar-v1-host.is-above .topbar-v1 {
+      display: none;
+    }
+
+    &.topbar-v1-host.is-below .topbar-v1 {
+      display: flex;
+    }
+
+    .topbar-v1 {
+      justify-content: flex-start;
+      padding-inline: var(--space-4);
+    }
+
+    .topbar-v1__group--end {
+      display: none;
+    }
+
+    .topbar-v1__group--start {
+      gap: var(--space-4);
+    }
+
+    .topbar-v1__group--start > * {
+      margin-right: 0;
+      padding-right: 0;
+      border-right: none;
+    }
+  }
+}

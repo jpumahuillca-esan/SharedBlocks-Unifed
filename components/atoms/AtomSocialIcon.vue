@@ -10,8 +10,9 @@
  * systems." Por eso este átomo no usa AtomIcon/Lucide, trae sus propios
  * 5 glifos de marca.
  *
- * Envuelve las clases .social-icon/.social-icon--inverse portadas en
- * assets/styles/elements/_social-icons.scss. No redeclara estilos propios.
+ * Envuelve las clases .social-icon/.social-icon--inverse/.social-icon--flat
+ * portadas en assets/styles/elements/_social-icons.scss. No redeclara estilos
+ * propios.
  */
 import { computed } from 'vue';
 
@@ -44,14 +45,24 @@ const props = withDefaults(defineProps<{
   network: SocialNetwork;
   /** Variante para uso sobre fondos oscuros (footer). */
   inverse?: boolean;
+  /**
+   * Solo el glifo, sin círculo ni borde: la variante que el kit usa en el
+   * footer, donde los íconos van en una fila densa sobre fondo oscuro.
+   */
+  flat?: boolean;
   href?: string;
 }>(), {
   inverse: false,
+  flat: false,
   href: '#',
 });
 
 const icon = computed(() => ICONS[props.network]);
-const classes = computed(() => ['social-icon', props.inverse ? 'social-icon--inverse' : null]);
+const classes = computed(() => [
+  'social-icon',
+  props.inverse ? 'social-icon--inverse' : null,
+  props.flat ? 'social-icon--flat' : null,
+]);
 </script>
 
 <template>

@@ -1,0 +1,125 @@
+/* =========================================================================
+   AWARDS — ARCIS Design System
+
+   Sección de reconocimientos: encabezado con título, filete y descripción, el
+   enlace de "ver más" y una fila de hasta cuatro logos de rankings y
+   acreditaciones. La usa el bloque block-beta/awards/awards-featured.
+
+   ATENCIÓN: no es un porte del kit. Se reconstruyó a partir de la maqueta del
+   equipo. Conviene reconciliarla cuando el kit se actualice.
+
+   Casi todo lo pone .card-section (_card-section.scss): el ancho, el ritmo
+   vertical, el encabezado, el carril con puntos y el enlace que en teléfono
+   baja al pie. Esta hoja solo ajusta lo que cambia al llevar logos en vez de
+   tarjetas: el alto de cada casilla, el recuadro gris de la que aún no tiene
+   logo, cuántas se ven en teléfono y el aire, que en la maqueta es mayor que el
+   de las secciones de tarjetas.
+
+   Los selectores van con la clase de .card-section delante (.card-section.awards)
+   para ganarle por especificidad y no por el orden de carga de las hojas.
+
+   Todo bajo .arcis-scope por la razón explicada en base.scss.
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+
+  .card-section.awards {
+    /*
+     * Alto de la casilla de cada logo, medido sobre la maqueta. Los logos los
+     * sube el usuario y cada uno trae sus proporciones: con un alto común, la
+     * fila se lee pareja aunque unos sean más anchos que otros.
+     */
+    --awards-logo-height: 80px;
+
+    /* En la maqueta hay más aire entre la descripción y los logos que en las
+       secciones de tarjetas (24px). */
+    gap: var(--space-7);
+  }
+
+  /*
+   * Cada casilla es una columna del carril (la regla `.card-section__grid > *`
+   * le da su ancho). Aquí solo se centra el logo dentro de ella: en la maqueta
+   * cada uno queda al medio de su cuarto de fila, no pegado a la izquierda.
+   */
+  .awards__item {
+    /*
+     * Ancho mínimo antes de que el carril empiece a desplazarse. El de las
+     * tarjetas (260px) es demasiado para un logo: con él, en una columna
+     * estrecha del constructor ya no entrarían los cuatro.
+     */
+    --card-section-card-min: 120px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--awards-logo-height);
+  }
+
+  /*
+   * El logo nunca se estira ni se recorta: crece hasta tocar el alto o el
+   * ancho de la casilla, lo que llegue primero, y conserva sus proporciones.
+   */
+  .awards__logo {
+    display: block;
+    width: auto;
+    height: auto;
+    min-width: 0;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  /*
+   * Recuadro gris en lugar del logo que todavía no se subió. Mismo gris que el
+   * hueco sin foto de event-card y post-card, para que se lea como la misma
+   * señal de "aquí va una imagen" en toda la librería.
+   *
+   * Mide lo que un logo de la maqueta (unos 5:2, al alto de la casilla) y no la
+   * columna entera: así la fila vacía ya se parece a la fila con logos.
+   */
+  .awards__placeholder {
+    display: block;
+    height: 100%;
+    max-width: 100%;
+    aspect-ratio: 5 / 2;
+    border-radius: var(--radius-sm);
+    background-color: var(--neutrals-200);
+  }
+
+  /*
+   * Teléfono: el mismo punto de quiebre que .card-section, para que los logos
+   * pasen a dos por vista a la vez que el enlace baja al pie.
+   */
+  @include bp.container-down('mobile') {
+
+    .card-section.awards {
+      --awards-logo-height: 48px;
+      gap: var(--space-6);
+    }
+
+    /* Separación entre la fila de logos y los puntos. */
+    .awards .card-slider {
+      gap: var(--space-6);
+    }
+
+    /*
+     * Dos logos a la vez, como en la maqueta; el resto queda al alcance del
+     * carril y de los puntos.
+     *
+     * Se declara en la casilla y no en el carril porque el carril recibe las
+     * columnas en línea desde CardSlider, y un estilo en línea gana a la hoja.
+     * La casilla es donde la regla del ancho lee la variable, así que su valor
+     * propio es el que manda.
+     */
+    .awards__item {
+      --card-section-columns: 2;
+    }
+
+    /* Un solo logo ocupa la fila entera y queda centrado, no en media fila. */
+    .awards__item:only-child {
+      --card-section-columns: 1;
+    }
+  }
+}

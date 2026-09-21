@@ -1,0 +1,152 @@
+/* =========================================================================
+   IMAGE GRID — ARCIS Design System
+
+   Rejilla de tarjetas con imagen: encabezado con etiqueta, título y filete, y
+   debajo las tarjetas, cada una una foto con título, línea de apoyo y flecha.
+   La usa el bloque block-beta/cards/image-grid.
+
+   ATENCIÓN: no es un porte del kit. La tarjeta sí lo es (el banner "image" de
+   _banners.scss, que en el kit se muestra justo con "Vida universitaria"), pero
+   la sección que las reúne se reconstruyó a partir de la maqueta del equipo.
+   Conviene reconciliarla cuando el kit se actualice.
+
+   Casi todo lo pone .card-section (_card-section.scss): el ancho, el ritmo
+   vertical, el encabezado, el carril con puntos y el enlace que en teléfono
+   baja al pie. Esta hoja cambia lo que la separa de las demás secciones de
+   tarjetas:
+     escritorio  rejilla de tres por fila, que SÍ pasa a varias filas
+     tableta     dos por fila, con la tarjeta algo más apaisada
+     teléfono    vuelve el carril de una fila, de a una tarjeta con la
+                 siguiente asomando, y los puntos debajo
+
+   Los selectores van con la clase de .card-section delante para ganarle por
+   especificidad y no por el orden de carga de las hojas.
+
+   Todo bajo .arcis-scope por la razón explicada en base.scss.
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+
+  .card-section.image-grid {
+    /*
+     * Cuánto se ve de la tarjeta siguiente en el carrusel del teléfono. Es la
+     * señal de que hay más a la derecha, además de los puntos.
+     */
+    --image-grid-peek: var(--space-4);
+
+    /* En la maqueta hay más aire entre el filete y las tarjetas (32px) que en
+       las secciones de `events` (24px). */
+    gap: var(--space-6);
+  }
+
+  /*
+   * Escritorio y tableta: rejilla.
+   *
+   * El carril de .card-section es siempre una fila que se desplaza; aquí todas
+   * las tarjetas se ven a la vez, repartidas en filas. Por eso se anula todo lo
+   * del carril: el desplazamiento, el imán y el sangrado hasta el borde. Sin
+   * desbordamiento, CardSlider no dibuja los puntos.
+   *
+   * Las columnas salen de --card-section-columns, que CardSlider escribe en
+   * línea con el valor de Block.vue (tres).
+   */
+  .image-grid .card-section__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--card-section-columns, 3), minmax(0, 1fr));
+    gap: var(--space-5);
+
+    margin-inline: 0;
+    padding-inline: 0;
+
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  /*
+   * Fondo bajo la foto. Mientras la tarjeta no tenga imagen —recién insertado
+   * el bloque, o al agregar una tarjeta— es lo que hace que se lea como una
+   * tarjeta y no como un hueco blanco con un degradado encima. Mismo gris que
+   * el marco del video de values-cards.
+   */
+  .image-grid__card.banner--image {
+    background-color: var(--neutrals-800);
+  }
+
+  /*
+   * Flecha con la esquina superior izquierda recta y las otras tres
+   * redondeadas, como en la maqueta. El banner del kit la redondea entera; se
+   * cambia solo aquí para no apartar _banners.scss de su fuente. Si el kit la
+   * adopta para todos los banners, esta regla pasa allí.
+   */
+  .image-grid__card .banner__arrow {
+    border-radius: 0 var(--radius-sm) var(--radius-sm) var(--radius-sm);
+  }
+
+  /* -----------------------------------------------------------------------
+     Tableta — por debajo de 992px (o de bloque angosto).
+
+     Dos por fila. La tarjeta pasa a 16/9: en la maqueta de tableta es más
+     apaisada que en escritorio, y con el 16/10 del banner tres filas de dos
+     quedaban demasiado altas.
+     ----------------------------------------------------------------------- */
+  @include bp.container-down('lg') {
+
+    .image-grid .card-section__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .image-grid__card.banner--image {
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  /* -----------------------------------------------------------------------
+     Teléfono — 576px hacia abajo (o de bloque angosto).
+
+     'sm' y no 'mobile' (768px): la maqueta de tableta, a esa medida, sigue en
+     dos por fila. El carrusel es solo para el teléfono.
+
+     Vuelve el carril de .card-section tal cual —una fila que se desliza, con
+     imán y sangrado hasta el borde de la pantalla—, así que se reponen las
+     mismas propiedades que la rejilla anuló arriba.
+     ----------------------------------------------------------------------- */
+  @include bp.container-down('sm') {
+
+    .card-section.image-grid {
+      gap: var(--space-5);
+    }
+
+    .image-grid .card-section__grid {
+      display: flex;
+      gap: var(--space-4);
+
+      margin-inline: calc(-1 * var(--card-section-padding-x));
+      padding-inline: var(--card-section-padding-x);
+
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+    }
+
+    /*
+     * Una tarjeta por vista, casi a todo el ancho, con la siguiente asomando.
+     *
+     * El carril llega hasta el borde derecho de la pantalla (su relleno se
+     * suma al 100%), y de ahí se descuentan el hueco entre tarjetas y lo que
+     * debe asomar la siguiente. La regla general del carril
+     * (`.card-section__grid > *`) no sirve aquí: con su mínimo de 260px, en un
+     * teléfono se veía más de media tarjeta siguiente.
+     */
+    .image-grid .card-section__grid > .image-grid__card {
+      flex: 0 0 calc(100% + var(--card-section-padding-x) - var(--space-4) - var(--image-grid-peek));
+      /* De nuevo la proporción del banner, como en la maqueta de teléfono. */
+      aspect-ratio: 16 / 10;
+    }
+
+    /* Separación entre la tarjeta y los puntos, como en la maqueta. */
+    .image-grid .card-slider {
+      gap: var(--space-6);
+    }
+  }
+}

@@ -6,6 +6,19 @@
       cualquiera de los dos para ocultarlo.
     </p>
 
+    <!-- Solo si la sección lo pide, igual que las columnas más abajo. -->
+    <template v-if="eyebrow !== undefined">
+      <label class="form-label">Etiqueta superior</label>
+      <p class="cs-hint">Texto corto sobre el título. Se muestra en mayúsculas.</p>
+      <input
+        :value="eyebrow"
+        type="text"
+        class="form-control form-control-sm mb-2"
+        placeholder="Comunidad y vida ESAN"
+        @input="$emit('update:eyebrow', ($event.target as HTMLInputElement).value)"
+      />
+    </template>
+
     <label class="form-label">Título de la sección</label>
     <p class="cs-hint">Lleva siempre el guion rojo debajo.</p>
     <input
@@ -66,29 +79,35 @@
       @input="$emit('update:linkUrl', ($event.target as HTMLInputElement).value)"
     />
 
-    <hr />
+    <!--
+      Solo si la sección lo pide: `awards` reusa este encabezado pero no elige
+      columnas, porque su fila tiene como mucho cuatro logos y los muestra todos.
+    -->
+    <template v-if="cardCount !== undefined">
+      <hr />
 
-    <h6 class="fw-bold small text-uppercase mb-1">Tarjetas visibles a la vez</h6>
-    <p class="cs-hint">
-      Cuántas se ven sin desplazar. Puedes agregar todas las que quieras: las
-      que no entren quedan al alcance deslizando el carrusel.
-    </p>
+      <h6 class="fw-bold small text-uppercase mb-1">Tarjetas visibles a la vez</h6>
+      <p class="cs-hint">
+        Cuántas se ven sin desplazar. Puedes agregar todas las que quieras: las
+        que no entren quedan al alcance deslizando el carrusel.
+      </p>
 
-    <div class="count-options">
-      <button
-        v-for="option in [2, 3, 4]"
-        :key="option"
-        type="button"
-        class="count-option"
-        :class="{ 'is-selected': cardCount === option }"
-        @click="$emit('update:cardCount', option as CardCount)"
-      >
-        <span class="count-preview">
-          <span v-for="i in option" :key="i" class="count-chip"></span>
-        </span>
-        <span class="count-label">{{ option }}</span>
-      </button>
-    </div>
+      <div class="count-options">
+        <button
+          v-for="option in [2, 3, 4]"
+          :key="option"
+          type="button"
+          class="count-option"
+          :class="{ 'is-selected': cardCount === option }"
+          @click="$emit('update:cardCount', option as CardCount)"
+        >
+          <span class="count-preview">
+            <span v-for="i in option" :key="i" class="count-chip"></span>
+          </span>
+          <span class="count-label">{{ option }}</span>
+        </button>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -96,7 +115,8 @@
 /**
  * Fragmento de editor para el encabezado y el número de columnas.
  *
- * Lo comparten las dos secciones. A diferencia del editor de acciones de los
+ * Lo comparten las dos secciones de `events` y la de `awards`, que solo usa el
+ * encabezado (no pasa `cardCount`). A diferencia del editor de acciones de los
  * CTA, aquí los valores se emiten en lugar de mutarse en sitio porque son
  * campos sueltos y no objetos.
  */
@@ -104,14 +124,18 @@ import { ref, computed } from 'vue';
 import type { CardCount } from './types';
 
 const props = defineProps<{
+  /** Opcional: sin él, el panel no ofrece la etiqueta superior. */
+  eyebrow?: string;
   title: string;
   desc: string;
   linkLabel: string;
   linkUrl: string;
-  cardCount: CardCount;
+  /** Opcional: sin él, el panel no ofrece elegir columnas. */
+  cardCount?: CardCount;
 }>();
 
 const emit = defineEmits<{
+  (e: 'update:eyebrow', value: string): void;
   (e: 'update:title', value: string): void;
   (e: 'update:desc', value: string): void;
   (e: 'update:linkLabel', value: string): void;

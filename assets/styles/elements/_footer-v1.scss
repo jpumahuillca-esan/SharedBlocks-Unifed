@@ -1,0 +1,380 @@
+/* =========================================================================
+   FOOTER V1 — ARCIS Design System
+
+   Pie de página institucional: datos de contacto, columnas de enlaces, redes
+   sociales, libro de reclamaciones y copyright. Lo usa el pie de branding
+   branding/footer/footer_version_1.
+
+   Base: el footer del kit (webunificada/ui-kit/assets/css/main.css,
+   "--- Footer ---", ~líneas 3232-3360 y su bloque de ≤768px ~4441-4515). De
+   ahí salen el filete rojo de arriba, el rojo bajo los contactos, las
+   medidas de columnas y enlaces, el acordeón con `grid-template-rows` y la
+   línea del copyright. Lo que cambia respecto al kit, por la maqueta:
+     - el fondo, azul casi negro en vez del gris del kit (ver --footer-v1-bg);
+     - los títulos de columna a 16px, y los datos de contacto en móvil sin
+       invertir el énfasis (el título sigue en blanco, el dato en gris);
+     - las redes bajo la primera columna en escritorio, y arriba del acordeón
+       en tableta y móvil;
+     - el libro de reclamaciones es una imagen: bajo la última columna en
+       escritorio, y centrada sobre el copyright en tableta y móvil;
+     - en tableta los contactos siguen en fila; solo en teléfono se apilan;
+     - sin botón de volver arriba.
+
+   Tres composiciones:
+     escritorio  contactos en fila, filete rojo, columnas siempre abiertas
+     tableta     (768px o menos) columnas en acordeón, redes sobre él
+     teléfono    (576px o menos) además, contactos apilados
+
+   Todo bajo .arcis-scope por la razón explicada en base.scss. El propio
+   componente trae la clase en su raíz (ver Block.vue).
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+
+  .footer-v1 {
+    /*
+     * Fondo de la maqueta. Va el hex y no un token porque no hay ninguno que le
+     * corresponda: el kit usa --neutrals-900 (#212121), un gris neutro, y este
+     * tira a azul. Tampoco se agrega a tokens.scss, que es espejo de
+     * webunificada (ver su cabecera): cuando la fuente lo incorpore, se cambia
+     * por su token. Mismo criterio que el fondo de values-cards.
+     */
+    --footer-v1-bg: #161922;
+
+    /* Líneas finas sobre el fondo oscuro, las del kit. */
+    --footer-v1-line: rgba(255, 255, 255, 0.12);
+
+    --footer-v1-padding-x: var(--space-7);
+
+    background-color: var(--footer-v1-bg);
+    border-top: 3px solid var(--arcis-color-global-main);
+    color: var(--neutrals-400);
+    font-size: var(--text-sm);
+  }
+
+  /*
+   * Contenido a 1280px como máximo (--container-max), centrado. El relleno va
+   * por fuera de ese ancho: en la maqueta de 1920 el contenido mide justo 1280
+   * y en la de 1366 queda a unos 48px del borde.
+   */
+  .footer-v1__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+
+    max-width: calc(var(--container-max) + 2 * var(--footer-v1-padding-x));
+    margin-inline: auto;
+
+    /* Abajo más aire que arriba, como en la maqueta. */
+    padding: var(--space-7) var(--footer-v1-padding-x) var(--space-8);
+  }
+
+  /* -----------------------------------------------------------------------
+     Contactos
+
+     Tantas columnas iguales como datos haya, en una sola fila hasta el
+     teléfono. `flex: 1 1 0` y no el `flex: 1 1 200px` del kit: con esa base,
+     en tableta los cuatro ya no cabían y el último bajaba a otra fila.
+     ----------------------------------------------------------------------- */
+  .footer-v1__contacts {
+    display: flex;
+    gap: var(--space-6);
+    padding-bottom: var(--space-6);
+    border-bottom: var(--border-width-sm) solid var(--arcis-color-global-main);
+  }
+
+  .footer-v1__contact {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+
+  .footer-v1__contact-title {
+    font-weight: var(--weight-semibold);
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .footer-v1__contact-value {
+    color: var(--neutrals-300);
+    line-height: 1.5;
+    /* Respeta los saltos de línea que se escriben en el editor. */
+    white-space: pre-line;
+    /* Un correo en una columna estrecha se parte antes que desbordarse. */
+    overflow-wrap: anywhere;
+  }
+
+  .footer-v1__contact-value a {
+    transition: color var(--ease-fast);
+  }
+
+  .footer-v1__contact-value a:hover {
+    color: var(--arcis-color-text-inverse);
+  }
+
+  /* -----------------------------------------------------------------------
+     Columnas, redes y libro de reclamaciones
+
+     Una sola rejilla para las tres cosas. En la maqueta las redes empiezan
+     justo bajo la primera columna y el libro justo bajo la última, aunque la
+     del medio siga más abajo. Por eso:
+       - la primera y la última columna ocupan solo la fila 1;
+       - las del medio ocupan las dos filas;
+       - las redes van en la fila 2 bajo la primera, y el libro bajo la última.
+     La fila 1 mide lo que la columna más larga de los extremos; la fila 2 es
+     `1fr` para quedarse con lo que sobre de las del medio sin empujar hacia
+     abajo las redes ni el libro, que se quedan pegados arriba de su fila.
+
+     Las columnas salen de --footer-v1-columns, que el componente escribe en
+     línea con cuántas haya.
+     ----------------------------------------------------------------------- */
+  .footer-v1__main {
+    display: grid;
+    grid-template-columns: repeat(var(--footer-v1-columns, 5), minmax(0, 1fr));
+    grid-template-rows: auto 1fr;
+    column-gap: var(--space-6);
+    row-gap: var(--space-2);
+    align-items: start;
+  }
+
+  .footer-v1__column {
+    grid-row: 1 / span 2;
+    min-width: 0;
+  }
+
+  .footer-v1__column.is-first,
+  .footer-v1__column.is-last {
+    grid-row: 1;
+  }
+
+  .footer-v1__column-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+    font-size: var(--text-body);
+    font-weight: var(--weight-semibold);
+    color: var(--arcis-color-text-inverse);
+  }
+
+  /* La flecha del acordeón solo existe en tableta y móvil. */
+  .footer-v1__column-title svg {
+    display: none;
+  }
+
+  .footer-v1__panel {
+    display: grid;
+    grid-template-rows: 1fr;
+  }
+
+  .footer-v1__panel-inner {
+    min-height: 0;
+  }
+
+  .footer-v1__links {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footer-v1__link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) 0;
+    border-bottom: var(--border-width-sm) solid var(--neutrals-800);
+    color: inherit;
+    transition: color var(--ease-fast);
+  }
+
+  .footer-v1__link:hover {
+    color: var(--arcis-color-text-inverse);
+  }
+
+  .footer-v1__link svg {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+  }
+
+  /*
+   * Redes: bajo la primera columna. El margen suma al hueco de la rejilla los
+   * 32px que las separan en la maqueta; el libro, en cambio, va casi pegado.
+   */
+  .footer-v1__social {
+    grid-column: 1;
+    grid-row: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-5);
+    margin-top: var(--space-5);
+  }
+
+  /* En la maqueta los glifos son algo mayores que los 20px del ícono plano. */
+  .footer-v1__social .social-icon--flat svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .footer-v1__claims {
+    grid-column: -2 / -1;
+    grid-row: 2;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Con una sola columna, redes y libro caerían en la misma celda. */
+  .footer-v1__main.is-single .footer-v1__claims {
+    grid-row: 3;
+  }
+
+  .footer-v1__claims-link {
+    display: block;
+  }
+
+  /*
+   * Ancho de la maqueta. La imagen la sube el usuario: se fija el ancho y el
+   * alto sale de su proporción, para que no se deforme.
+   */
+  .footer-v1__claims-image {
+    display: block;
+    width: 100px;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* -----------------------------------------------------------------------
+     Copyright
+     ----------------------------------------------------------------------- */
+  .footer-v1__bottom {
+    padding-top: var(--space-5);
+    border-top: var(--border-width-sm) solid var(--footer-v1-line);
+    text-align: center;
+  }
+
+  .footer-v1__copyright {
+    color: var(--neutrals-300);
+  }
+
+  /* -----------------------------------------------------------------------
+     Tableta — 768px o menos (o pie angosto).
+
+     El mismo punto de quiebre del kit para el acordeón. Las columnas se apilan
+     y cada título pasa a abrir y cerrar su lista; las redes suben sobre el
+     acordeón y el libro queda centrado sobre el copyright.
+     ----------------------------------------------------------------------- */
+  @include bp.container-down('mobile') {
+
+    .footer-v1 {
+      --footer-v1-padding-x: var(--space-5);
+    }
+
+    .footer-v1__contacts {
+      gap: var(--space-5);
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    /*
+     * `stretch` y sin hueco: la rejilla de escritorio deja cada pieza pegada
+     * arriba y con 8px entre filas. En la pila eso encogía cada título al ancho
+     * de su texto, dejaba el libro a la izquierda en vez de centrado y sumaba
+     * 8px entre títulos del acordeón.
+     */
+    .footer-v1__main {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .footer-v1__social {
+      order: -1;
+      margin-top: 0;
+      padding-bottom: var(--space-3);
+    }
+
+    /*
+     * Cada título lleva la línea de arriba; el último no lleva línea debajo,
+     * como en la maqueta, donde tras "Contacto y comunidad" ya viene el libro.
+     *
+     * 20px de relleno (dos tokens sumados): con 16 cada fila quedaba más baja
+     * que en la maqueta, y con 24, más alta.
+     */
+    .footer-v1__column-title {
+      margin-bottom: 0;
+      padding: calc(var(--space-4) + var(--space-1)) 0;
+      border-top: var(--border-width-sm) solid var(--footer-v1-line);
+      cursor: pointer;
+    }
+
+    .footer-v1__column-title svg {
+      display: block;
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      color: var(--arcis-color-global-main);
+      transition: transform var(--ease-base);
+    }
+
+    .footer-v1__column.is-open .footer-v1__column-title svg {
+      transform: rotate(180deg);
+    }
+
+    .footer-v1__panel {
+      grid-template-rows: 0fr;
+      transition: grid-template-rows var(--ease-base);
+    }
+
+    .footer-v1__column.is-open .footer-v1__panel {
+      grid-template-rows: 1fr;
+    }
+
+    /*
+     * Cerrada, la lista además se oculta: con solo el recorte, sus enlaces
+     * seguían recibiendo el foco del teclado sin verse. La visibilidad cambia
+     * al final de la transición al cerrar y al principio al abrir, así que el
+     * pliegue se sigue viendo animado.
+     */
+    .footer-v1__panel-inner {
+      overflow: hidden;
+      visibility: hidden;
+      transition: visibility var(--ease-base);
+    }
+
+    .footer-v1__column.is-open .footer-v1__panel-inner {
+      visibility: visible;
+    }
+
+    .footer-v1__link {
+      border-bottom: none;
+      border-top: var(--border-width-sm) solid rgba(255, 255, 255, 0.06);
+    }
+
+    .footer-v1__link:first-child {
+      border-top: none;
+    }
+
+    .footer-v1__claims {
+      padding-top: var(--space-4);
+    }
+  }
+
+  /* -----------------------------------------------------------------------
+     Teléfono — 576px o menos (o pie angosto).
+
+     'sm' y no 'mobile': en la maqueta de tableta (768px) los contactos siguen
+     en fila de cuatro. Solo en el teléfono se apilan.
+     ----------------------------------------------------------------------- */
+  @include bp.container-down('sm') {
+
+    .footer-v1__contacts {
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+  }
+}

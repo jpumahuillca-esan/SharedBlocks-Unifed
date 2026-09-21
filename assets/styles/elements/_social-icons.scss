@@ -9,10 +9,11 @@
    con nada de front), así que no necesita el modificador obligatorio que
    sí les puse a .btn/.badge/.card.
 
-   Nota: existe una tercera variante en el CSS real, .social-icon--flat
-   (~línea 3347, sin círculo ni borde), pero no aparece en la sección
-   documentada "Iconos Sociales" de la guía viva — solo se portaron las
-   dos que sí están ahí (.social-icon y .social-icon--inverse).
+   Tercera variante, .social-icon--flat (~línea 3347, sin círculo ni
+   borde): no aparece en la sección documentada "Iconos Sociales" de la
+   guía viva, sino junto al Footer, que es donde el kit la usa. Se portó
+   después, cuando la necesitó el footer de branding
+   (branding/footer/footer_version_1).
    ============================================================ */
 
 .arcis-scope {
@@ -54,5 +55,23 @@
     background-color: var(--arcis-color-text-inverse);
     border-color: var(--arcis-color-text-inverse);
     color: var(--arcis-color-global-main);
+  }
+
+  /* Ícono social plano (sin badge circular) para el contexto denso del footer */
+  .social-icon--flat {
+    width: auto;
+    height: auto;
+    border: none;
+    color: var(--neutrals-400);
+  }
+
+  .social-icon--flat svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .social-icon--flat:hover {
+    background-color: transparent;
+    color: var(--arcis-color-text-inverse);
   }
 }

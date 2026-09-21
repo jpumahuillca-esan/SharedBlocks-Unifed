@@ -383,6 +383,55 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         },
     },
 
+    AwardsFeatured: {
+        label: 'Reconocimientos (logos)',
+        icon: 'las la-award',
+        group: 'Awards',
+        beta: true,
+        // Sección blanca con su propio ancho máximo, igual que las de `events`.
+        isBoxed: true,
+        component: defineAsyncComponent(() => import('../components/block-beta/awards/awards-featured/Block.vue')),
+        initialData: {
+            title: 'Reconocimiento que genera confianza',
+            desc: 'El prestigio se construye con resultados, reconocimiento internacional y el impacto de nuestros egresados.',
+            linkLabel: 'Ver más reconocimientos',
+            linkUrl: '',
+            // Las cuatro casillas de la maqueta (el tope), vacías para que se suba cada logo.
+            awards: [
+                { id: 'aw-1', image: '', imageAlt: '' },
+                { id: 'aw-2', image: '', imageAlt: '' },
+                { id: 'aw-3', image: '', imageAlt: '' },
+                { id: 'aw-4', image: '', imageAlt: '' },
+            ],
+        },
+    },
+
+    CardsImageGrid: {
+        label: 'Tarjetas con imagen (grilla)',
+        icon: 'las la-th-large',
+        group: 'Cards',
+        beta: true,
+        // Sección blanca con su propio ancho máximo, igual que las de `events`.
+        isBoxed: true,
+        component: defineAsyncComponent(() => import('../components/block-beta/cards/image-grid/Block.vue')),
+        initialData: {
+            eyebrow: 'Comunidad y vida ESAN',
+            title: 'Más que una institución académica',
+            desc: '',
+            linkLabel: '',
+            linkUrl: '',
+            // Las seis tarjetas de la maqueta, sin foto para que se suba cada una.
+            cards: [
+                { id: 'ig-1', image: '', imageAlt: '', title: 'Vida universitaria', desc: 'Descripción de la categoría del banner', href: '' },
+                { id: 'ig-2', image: '', imageAlt: '', title: 'Deportes', desc: 'Descripción de la categoría del banner', href: '' },
+                { id: 'ig-3', image: '', imageAlt: '', title: 'Cultura', desc: 'Descripción de la categoría del banner', href: '' },
+                { id: 'ig-4', image: '', imageAlt: '', title: 'Networking', desc: 'Descripción de la categoría del banner', href: '' },
+                { id: 'ig-5', image: '', imageAlt: '', title: 'Eventos', desc: 'Descripción de la categoría del banner', href: '' },
+                { id: 'ig-6', image: '', imageAlt: '', title: 'Alumni', desc: 'Descripción de la categoría del banner', href: '' },
+            ],
+        },
+    },
+
     CtaBandImage: {
         label: 'CTA con imagen',
         icon: 'las la-image',
@@ -1600,6 +1649,10 @@ const betaBaseGroups = [
     { id: 'Ecosystem', label: 'Ecosystem', color: 'outline-success', icon: 'las la-sitemap' },
     // 'Info' no coincide con ningún id de baseGroups: no se cuela en el catálogo clásico.
     { id: 'Info', label: 'Info', color: 'outline-secondary', icon: 'las la-info-circle' },
+    // 'Awards' no coincide con ningún id de baseGroups: no se cuela en el catálogo clásico.
+    { id: 'Awards', label: 'Awards', color: 'outline-dark', icon: 'las la-award' },
+    // 'Cards' no coincide con ningún id de baseGroups: no se cuela en el catálogo clásico.
+    { id: 'Cards', label: 'Cards', color: 'outline-success', icon: 'las la-th-large' },
 ];
 
 /** Claves de los bloques marcados como beta, sin agrupar. */
