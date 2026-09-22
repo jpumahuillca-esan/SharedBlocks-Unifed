@@ -31,7 +31,7 @@
         </script>
 
         <template>
-            <header class="header-classic bg-white shadow-sm" :style="headerStyle">
+            <div class="header-classic bg-white shadow-sm" :style="headerStyle">
                 <div v-if="safeConfig.showTopBar" 
                     class="top-bar py-1 px-4 d-flex justify-content-between align-items-center"
                     :style="{ backgroundColor: colors.primary, color: '#fff' }">
@@ -80,7 +80,7 @@
                         </b-button>
                     </div>
                 </nav>
-            </header>
+            </div>
         </template>
 
         <style scoped>

@@ -1,15 +1,15 @@
 /* ============================================================
-   ARCIS Design System — ESAN University
-   Ritmo vertical entre bloques.
+   ESAN · Ritmo vertical entre bloques
 
    Separación común a todos los bloques de block-beta, para que al
    apilarlos en el constructor de páginas no queden pegados unos a
    otros.
 
-   El valor NO se define aquí: es --section-pad-y, que ya existía en
-   tokens.scss (80px) pero no lo usaba ningún bloque. Este archivo
-   solo le da su versión móvil, para no tocar tokens.scss, que es
-   espejo de webunificada.
+   El valor es --ds-spacing-xxl, el espaciado semántico de arcis-2:
+   80px en escritorio y 48px por debajo de 768px (por ventana y por
+   contenedor, ver tokens.scss). Antes había que darle aquí su versión
+   móvil; ahora la trae el propio token, así que este archivo ya no
+   declara reglas: queda como referencia de cómo lo aplica cada bloque.
 
    Cada bloque aplica el token según lo que es:
 
@@ -30,26 +30,7 @@
                              el aire lo pone la sección blanca de al
                              lado.
 
-   Para cambiar el espaciado de TODOS los bloques a la vez basta con
-   tocar --section-pad-y (escritorio) o el valor de abajo (móvil).
-
    Aparte existe el ajuste "paddingYPx" de cada sección del
    constructor (core/sectionStyles.ts), que arranca en 0 y se suma a
    esto: sirve para casos puntuales, no como espaciado base.
    ============================================================ */
-
-@use './breakpoints' as bp;
-
-.arcis-scope {
-  /*
-   * En pantallas estrechas 80px por sección es demasiado: entre dos secciones
-   * blancas seguidas suman 160px, casi media pantalla de móvil vacía.
-   *
-   * Se redefine en .arcis-scope y no en :root porque tokens.scss declara el
-   * valor en :root; como .arcis-scope es un ancestro más cercano de cada bloque,
-   * esta versión manda sin depender del orden de carga.
-   */
-  @include bp.breakpoint-down('mobile') {
-    --section-pad-y: var(--space-7);
-  }
-}

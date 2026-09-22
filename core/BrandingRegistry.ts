@@ -70,6 +70,28 @@ export const BRANDING_REGISTRY: Record<string, any> = {
     },
 
 
+    /*
+     * Cabecera con mega menú con la arquitectura de block-beta (estilos en
+     * assets/styles/elements/_mega-menu-beta.scss). Usa los mismos datos que
+     * HeaderMega —el árbol del Menú Institucional en `menu_tree`—, así que se
+     * puede cambiar de una a otra sin perder la personalización del menú. La
+     * clave empieza por "Header": el panel de branding lista las cabeceras por
+     * ese prefijo.
+     */
+    HeaderMegaMenuBeta: {
+        label: '🧭 Mega Menú Beta (ESAN)',
+        icon: 'las la-bars',
+        component: defineAsyncComponent(() => import('../components/branding/headers/mega_menu_beta/Block.vue')),
+        editor: defineAsyncComponent(() => import('../components/branding/headers/mega_menu_beta/Editor.vue')),
+        initialData: {
+            // Vacío: se usa el logo oficial de ESAN que trae la librería.
+            logoUrl: '',
+            logoHeight: 36,
+            urlRedict: '/',
+            searchUrl: '',
+        }
+    },
+
     FooterPro: {
         label: '🏁 Footer Institucional Pro (Azul RiesGIRD)',
         icon: 'las la-shoe-prints',

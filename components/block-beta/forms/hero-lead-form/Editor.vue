@@ -1,13 +1,13 @@
 <template>
   <div class="arcis-form-editor card border-0 shadow-sm mb-3">
     <div class="card-body p-3">
-      <h6 class="fw-bold mb-3 d-flex align-items-center gap-2" style="color: var(--arcis-color-global-main);">
+      <h6 class="fw-bold mb-3 d-flex align-items-center gap-2" style="color: var(--ds-color-text-brand);">
         <i class="las la-sliders-h fs-18"></i> Configuración del Bloque de Captación
       </h6>
 
       <!-- Selector de Campaña Dinámica -->
-      <div class="p-3 rounded mb-3 border" style="background-color: var(--neutrals-50); border-color: var(--neutrals-300);">
-        <label class="small fw-bold d-block mb-1" style="color: var(--arcis-color-text-primary);">
+      <div class="p-3 rounded mb-3 border" style="background-color: var(--ds-color-background-light); border-color: var(--ds-color-border-subtle);">
+        <label class="small fw-bold d-block mb-1" style="color: var(--ds-color-text-primary);">
           Vincular Campaña de Marketing
         </label>
         
@@ -34,9 +34,9 @@
       </div>
 
       <!-- Selector de Programa de Estudio / Carrera -->
-      <div class="p-3 rounded mb-3 border" style="background-color: var(--neutrals-50); border-color: var(--neutrals-300);">
+      <div class="p-3 rounded mb-3 border" style="background-color: var(--ds-color-background-light); border-color: var(--ds-color-border-subtle);">
         <div class="d-flex justify-content-between align-items-center mb-1">
-          <label class="small fw-bold mb-0" style="color: var(--arcis-color-text-primary);">
+          <label class="small fw-bold mb-0" style="color: var(--ds-color-text-primary);">
             Vincular Programa de Estudio / Carrera
           </label>
           <span v-if="selectedProgram" class="badge bg-primary text-white small" style="font-size: 0.7rem;">
@@ -66,9 +66,9 @@
       </div>
 
       <!-- Inspección de Campos Inyectados -->
-      <div class="p-2 rounded mb-3 border" style="background-color: var(--neutrals-100);">
+      <div class="p-2 rounded mb-3 border" style="background-color: var(--ds-color-background-light);">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <span class="small fw-bold" style="color: var(--arcis-color-text-secondary);">
+          <span class="small fw-bold" style="color: var(--ds-color-text-secondary);">
             Campos del Formulario Activo ({{ localForm.fields.length }})
           </span>
           <span v-if="selectedCampaign" class="badge bg-danger text-white">Campaña: {{ selectedCampaign.name }}</span>

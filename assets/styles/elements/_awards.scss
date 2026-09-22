@@ -35,7 +35,7 @@
 
     /* En la maqueta hay más aire entre la descripción y los logos que en las
        secciones de tarjetas (24px). */
-    gap: var(--space-7);
+    gap: var(--ds-spacing-lg);
   }
 
   /*
@@ -84,24 +84,24 @@
     height: 100%;
     max-width: 100%;
     aspect-ratio: 5 / 2;
-    border-radius: var(--radius-sm);
-    background-color: var(--neutrals-200);
+    border-radius: var(--ds-radius-sm);
+    background-color: var(--ds-color-background-light);
   }
 
   /*
    * Teléfono: el mismo punto de quiebre que .card-section, para que los logos
    * pasen a dos por vista a la vez que el enlace baja al pie.
    */
-  @include bp.container-down('mobile') {
+  @include bp.container-down('md') {
 
     .card-section.awards {
       --awards-logo-height: 48px;
-      gap: var(--space-6);
+      gap: var(--ds-spacing-md);
     }
 
     /* Separación entre la fila de logos y los puntos. */
     .awards .card-slider {
-      gap: var(--space-6);
+      gap: var(--ds-spacing-md);
     }
 
     /*

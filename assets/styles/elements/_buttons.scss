@@ -24,7 +24,7 @@
    "btn btn-primary" de Bootstrap.
 
    Nota: la guía viva ui-kit.html describe los botones como "forma
-   pill (--radius-full)", pero el CSS real usa --radius-xs (4px).
+   pill (--ds-radius-full)", pero el CSS real usa --ds-radius-xs (4px).
    Se portó el CSS real (fuente de verdad), no la descripción textual
    desactualizada — pendiente de corregir en origen (webunificada).
    ============================================================ */
@@ -39,18 +39,18 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-2);
-    border-radius: var(--radius-xs);
-    font-family: var(--font-display);
-    font-weight: var(--weight-medium);
-    font-size: var(--text-body);
-    line-height: 1;
-    min-height: var(--space-7);
+    gap: var(--ds-spacing-xxs);
+    border-radius: var(--ds-radius-xs);
+    font-family: var(--ds-font-family-display);
+    font-weight: var(--ds-weight-medium);
+    font-size: var(--ds-text-body);
+    line-height: var(--ds-line-height-100);
+    min-height: var(--ds-space-12); /* dimensión: primitivo, no se encoge en móvil */
     white-space: nowrap;
     cursor: pointer;
-    border: var(--border-width-md) solid transparent;
-    padding: var(--space-3) var(--space-6);
-    transition: background-color var(--ease-fast), color var(--ease-fast), border-color var(--ease-fast), transform var(--ease-fast);
+    border: var(--ds-border-width-md) solid transparent;
+    padding: var(--ds-spacing-xs) var(--ds-spacing-md);
+    transition: background-color var(--ds-ease-fast), color var(--ds-ease-fast), border-color var(--ds-ease-fast), transform var(--ds-ease-fast);
   }
 
   .btn.btn--primary svg,
@@ -61,7 +61,7 @@
   .btn.btn--link svg {
     width: 16px;
     height: 16px;
-    transition: transform var(--ease-fast);
+    transition: transform var(--ds-ease-fast);
   }
 
   .btn.btn--primary:active,
@@ -91,14 +91,14 @@
      seguiría ganando aunque venga después en el archivo, y los 3 tamaños
      se verían idénticos (bug real que pasó antes de este ajuste). */
   .btn.btn--sm {
-    padding: var(--space-2) var(--space-5);
-    font-size: var(--text-sm);
-    min-height: var(--space-5);
+    padding: var(--ds-spacing-xxs) var(--ds-space-6);
+    font-size: var(--ds-text-body-compact);
+    min-height: var(--ds-space-6);
   }
 
   .btn.btn--lg {
-    padding: var(--space-4) var(--space-7);
-    font-size: var(--text-body-lg);
+    padding: var(--ds-space-4) var(--ds-spacing-lg);
+    font-size: var(--ds-text-body-lg);
   }
 
   /*
@@ -118,7 +118,7 @@
    */
   .btn.btn--surface {
     background-color: rgba(255, 255, 255, 0.22);
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   .btn.btn--surface:hover,
@@ -133,42 +133,43 @@
    * salía igual de ancho en los tres tamaños.
    */
   .btn.btn--icon.btn--sm {
-    padding: var(--space-2);
+    padding: var(--ds-spacing-xxs);
     min-height: 0;
   }
 
   .btn.btn--primary {
-    background-color: var(--arcis-color-global-main);
-    color: var(--arcis-color-text-inverse);
+    background-color: var(--ds-color-action-primary);
+    color: var(--ds-color-text-inverse);
   }
 
   .btn.btn--secondary {
     background-color: transparent;
-    border-color: var(--arcis-color-global-main);
-    color: var(--arcis-color-global-main);
-    transition: color var(--ease-slow), border-color var(--ease-fast), transform var(--ease-fast);
+    border-color: var(--ds-color-action-primary);
+    color: var(--ds-color-text-brand);
+    transition: color var(--ds-ease-slow), border-color var(--ds-ease-fast), transform var(--ds-ease-fast);
   }
 
   .btn.btn--secondary:hover {
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
+  /* arcis-2 define el botón terciario: azul casi negro, más claro al pasar. */
   .btn.btn--terciary {
-    background-color: var(--arcis-color-text-primary);
-    color: var(--arcis-color-text-inverse);
+    background-color: var(--ds-color-action-tertiary);
+    color: var(--ds-color-text-inverse);
   }
 
   /* Variante "white": CTA principal sobre fondos rojos/oscuros (ej. Hero) */
   .btn.btn--white {
-    background-color: var(--neutrals-0);
-    color: var(--arcis-color-global-main);
+    background-color: var(--ds-color-background-default);
+    color: var(--ds-color-text-brand);
     /*
      * Igual que la base, pero el color acompaña al barrido de la persiana
-     * (--ease-slow). Con la velocidad rápida el texto se volvería blanco antes
+     * (--ds-ease-slow). Con la velocidad rápida el texto se volvería blanco antes
      * de que el fondo lo cubra, dejando un parpadeo de blanco sobre blanco.
      */
-    transition: background-color var(--ease-fast), color var(--ease-slow),
-                border-color var(--ease-fast), transform var(--ease-fast);
+    transition: background-color var(--ds-ease-fast), color var(--ds-ease-slow),
+                border-color var(--ds-ease-fast), transform var(--ds-ease-fast);
   }
 
   /*
@@ -180,7 +181,7 @@
    * que sí lo hace. Es una corrección nuestra sobre el porte.
    */
   .btn.btn--white:hover {
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   /* Hover "persiana horizontal": lamas que se despliegan de izquierda a derecha
@@ -204,23 +205,23 @@
     z-index: -1;
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform var(--ease-slow);
+    transition: transform var(--ds-ease-slow);
   }
 
   .btn--primary::before {
-    background: var(--corp-primary-dark);
+    background: var(--ds-color-action-primary-hover);
   }
 
   .btn--secondary::before {
-    background: var(--corp-primary-dark);
+    background: var(--ds-color-action-primary-hover);
   }
 
   .btn--terciary::before {
-    background: var(--corp-secondary-dark);
+    background: var(--ds-color-action-tertiary-hover);
   }
 
   .btn--white::before {
-    background: var(--corp-primary-dark);
+    background: var(--ds-color-action-primary-hover);
   }
 
   .btn--primary:hover::before,
@@ -239,34 +240,34 @@
     }
 
     .btn--secondary {
-      transition: color var(--ease-fast), border-color var(--ease-fast), transform var(--ease-fast);
+      transition: color var(--ds-ease-fast), border-color var(--ds-ease-fast), transform var(--ds-ease-fast);
     }
   }
 
   /* Variante "inverse": btn--secondary y btn--link legibles sobre fondos oscuros */
   .btn--secondary.btn--negative {
-    border-color: var(--arcis-color-text-inverse);
-    color: var(--arcis-color-text-inverse);
+    border-color: var(--ds-color-action-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   .btn--secondary.btn--negative::before {
-    background: var(--neutrals-0);
+    background: var(--ds-color-background-default);
   }
 
   .btn--secondary.btn--negative:hover {
-    color: var(--arcis-color-global-main);
+    color: var(--ds-color-text-brand);
   }
 
   .btn.btn--link {
     border-radius: 0;
     padding: 0;
     background: none;
-    color: var(--arcis-color-global-main);
-    font-weight: var(--weight-semibold);
+    color: var(--ds-color-text-brand);
+    font-weight: var(--ds-weight-semibold);
   }
 
   .btn.btn--link:hover {
-    color: var(--arcis-color-global-main);
+    color: var(--ds-color-text-brand);
   }
 
   .btn.btn--link:hover svg {
@@ -274,11 +275,11 @@
   }
 
   .btn.btn--link.btn--negative {
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   .btn.btn--link.btn--negative:hover {
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   /* .btn.btn--icon (no ".btn--icon" a secas): igual razón que .btn--sm/.btn--lg
@@ -286,7 +287,7 @@
      base y el botón queda ancho en vez de cuadrado, apretando/recortando
      visualmente cualquier ícono adentro. */
   .btn.btn--icon {
-    padding: var(--space-3);
+    padding: var(--ds-spacing-xs);
     aspect-ratio: 1;
   }
 }

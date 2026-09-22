@@ -3,8 +3,8 @@
  * AtomHeading — átomo de titular (ARCIS Design System).
  *
  * Único lugar donde se decide cómo se ve un h1-h6 en toda la librería.
- * Consume los tokens portados de webunificada (assets/styles/tokens.scss):
- * --text-display/giant/h1..h6 y --weight-*. Cambiar el diseño de un
+ * Consume los tokens semánticos de arcis-2 (assets/styles/tokens.scss):
+ * --ds-text-* y --ds-weight-*. Cambiar el diseño de un
  * titular se hace aquí una sola vez y se propaga a todo lo que use
  * este átomo, en vez de tocar cada bloque por separado.
  *
@@ -25,29 +25,33 @@ import { computed } from 'vue';
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 /*
- * Los tamaños de texto (body-lg, body, sm, xs) están aquí a propósito: hay
- * titulares que semánticamente son un h3 pero se ven al tamaño del texto
- * corrido, como el título de una tarjeta. Sin ellos, el tamaño más pequeño
- * posible era h6 (18px), y la única salida era pedir un "h7" que no existe: el
- * navegador descarta var(--text-h7) y el título hereda el tamaño del padre por
- * accidente. Cada nombre se traduce a su token --text-*, que sí existe.
+ * Los nombres son los de la escala tipográfica de arcis-2 (--ds-text-*), y cada
+ * uno se traduce a su token. Los de texto corrido (body-lg, body, body-compact,
+ * body-sm, label) están aquí a propósito: hay titulares que semánticamente son
+ * un h3 pero se ven al tamaño del texto, como el título de una tarjeta. Sin
+ * ellos, el más pequeño posible era h6, y la única salida era un "h7" que no
+ * existe: el navegador descarta el token y el título hereda el tamaño del padre
+ * por accidente.
+ *
+ * body-compact (14px) no es de Figma: es la extensión local que conserva el
+ * tamaño que arcis-2 no tiene (ver assets/styles/ds/_extensions.scss).
  */
 type HeadingSize =
   | 'display' | 'giant'
   | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
-  | 'body-lg' | 'body' | 'sm' | 'xs';
+  | 'body-lg' | 'body' | 'body-compact' | 'body-sm' | 'label';
 type FontWeight = 'light' | 'regular' | 'medium' | 'semibold' | 'bold';
 type TextAlign = 'left' | 'center' | 'right';
 
 const props = withDefaults(defineProps<{
   /** Etiqueta semántica a renderizar: 1 => <h1> ... 6 => <h6>. */
   level?: HeadingLevel;
-  /** Tamaño visual (token --text-*). Por defecto, el mismo que `level`. */
+  /** Tamaño visual (token --ds-text-*). Por defecto, el mismo que `level`. */
   size?: HeadingSize;
-  /** Peso de fuente (token --weight-*). Por defecto el del reset (semibold). */
+  /** Peso de fuente (token --ds-weight-*). Por defecto el del reset (semibold). */
   weight?: FontWeight;
   align?: TextAlign;
-  /** Color CSS explícito (admite var(--arcis-color-...) o cualquier valor). */
+  /** Color CSS explícito (admite var(--ds-color-...) o cualquier valor). */
   color?: string;
   /**
    * Etiqueta a renderizar en lugar del titular, ej. 'p'.
@@ -64,8 +68,8 @@ const props = withDefaults(defineProps<{
 const tag = computed(() => props.as ?? `h${props.level}`);
 
 const styleObject = computed(() => ({
-  fontSize: `var(--text-${props.size ?? `h${props.level}`})`,
-  fontWeight: props.weight ? `var(--weight-${props.weight})` : undefined,
+  fontSize: `var(--ds-text-${props.size ?? `h${props.level}`})`,
+  fontWeight: props.weight ? `var(--ds-weight-${props.weight})` : undefined,
   textAlign: props.align,
   color: props.color,
 }));
@@ -79,7 +83,7 @@ const styleObject = computed(() => ({
 
 <style scoped lang="scss">
 .atom-heading {
-  font-family: var(--font-display);
+  font-family: var(--ds-font-family-display);
   line-height: 1.15;
   margin: 0;
 }

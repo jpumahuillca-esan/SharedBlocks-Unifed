@@ -28,16 +28,16 @@
    ============================================================ */
 
 .arcis-scope {
-  font-family: var(--font-body);
-  font-size: var(--text-body);
-  font-weight: var(--weight-regular);
-  color: var(--arcis-color-text-primary);
+  font-family: var(--ds-font-family-base);
+  font-size: var(--ds-text-body);
+  font-weight: var(--ds-weight-regular);
+  color: var(--ds-color-text-primary);
   /* Sin esto, el contenido se pinta sobre lo que sea que tenga de fondo el
      contenedor donde se renderiza (ej. el gris del canvas del editor en
      front), en vez de un fondo propio — un bloque/elemento real siempre
      debe verse sobre blanco, como en una página real. */
-  background-color: var(--neutrals-0);
-  line-height: 1.5;
+  background-color: var(--ds-color-background-default);
+  line-height: var(--ds-line-height-150);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
@@ -104,21 +104,21 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-display);
-    font-weight: var(--weight-semibold);
+    font-family: var(--ds-font-family-display);
+    font-weight: var(--ds-weight-semibold);
     line-height: 1.15;
   }
 
-  h1 { font-size: var(--text-h1); }
-  h2 { font-size: var(--text-h2); }
-  h3 { font-size: var(--text-h3); }
-  h4 { font-size: var(--text-h4); }
-  h5 { font-size: var(--text-h5); }
-  h6 { font-size: var(--text-h6); }
+  h1 { font-size: var(--ds-text-h1); }
+  h2 { font-size: var(--ds-text-h2); }
+  h3 { font-size: var(--ds-text-h3); }
+  h4 { font-size: var(--ds-text-h4); }
+  h5 { font-size: var(--ds-text-h5); }
+  h6 { font-size: var(--ds-text-h6); }
 
   /* Foco visible siempre — accesibilidad de teclado */
   :focus-visible {
-    outline: 2px solid var(--arcis-color-global-main);
+    outline: var(--ds-border-width-md) solid var(--ds-color-border-focus);
     outline-offset: 2px;
   }
 
@@ -149,12 +149,12 @@
   }
 
   body {
-    font-family: var(--font-body);
-    font-size: var(--text-body);
-    font-weight: var(--weight-regular);
-    color: var(--arcis-color-text-primary);
-    background-color: var(--neutrals-0);
-    line-height: 1.5;
+    font-family: var(--ds-font-family-base);
+    font-size: var(--ds-text-body);
+    font-weight: var(--ds-weight-regular);
+    color: var(--ds-color-text-primary);
+    background-color: var(--ds-color-background-default);
+    line-height: var(--ds-line-height-150);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

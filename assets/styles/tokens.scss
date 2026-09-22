@@ -1,206 +1,31 @@
-/* ============================================================
-   ARCIS Design System — ESAN University
-   Tokens de diseño (colores, tipografía, espaciado, radius,
-   sombras, bordes, transiciones).
+/* ==========================================================================
+   ESAN · Tokens de diseño — punto de entrada
 
-   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
-   (proyecto "webunificada", líneas 12-197 del :root).
+   Fuente de verdad: arcis-2, el export de variables de Figma
+   (docs/tokens/*.tokens.json), copiado TAL CUAL en ds/ds-tokens.css. Ese
+   archivo no se edita a mano: cuando Figma exporte de nuevo, se reemplaza.
 
-   Estándar interno de desarrollo: estas variables no se muestran
-   tal cual al usuario final, son el contrato que consumen los
-   átomos (ui/atoms) y, a través de ellos, los bloques que sí son
-   visibles en el sitio. No editar valores aquí sin sincronizar
-   primero con webunificada — es la fuente canónica.
+   Dos capas, y cuál usar:
+     SEMÁNTICOS  --ds-color-text-*, --ds-color-background-*, --ds-color-action-*,
+                 --ds-text-*, --ds-spacing-*, --ds-radius-*...  → LO QUE USA LA WEB.
+     PRIMITIVOS  --ds-color-neutral-500, --ds-space-6, --ds-font-size-24...
+                 → solo para completar donde no hay semántico (p. ej. un gris
+                 para texto sobre fondo oscuro, o un espaciado de 24px, que la
+                 escala semántica no tiene).
 
-   Nota: los valores clamp() de --text-display/--text-giant/--text-h1..h4
-   se copiaron tal cual están en main.css (fuente real). La guía viva
-   ui-kit.html documenta otros valores de clamp() para esas mismas
-   variables (desincronizada) — pendiente de corregir en origen.
-   ============================================================ */
+   Tipografía y espaciado semánticos son responsive: valores de escritorio por
+   defecto y de móvil por debajo de 768px, por ventana (ds-tokens.css) y
+   también por contenedor (ds/_responsive-container.scss).
 
-:root {
+   Orden de carga:
+     1. ds/_extensions        lo que arcis-2 aún no define (sombras, transiciones,
+                              contenedor). Va primero: si Figma lo añade, gana.
+     2. ds/ds-tokens.css      el export de Figma.
+     3. ds/_responsive-container
+     4. ds/_legacy            nombres antiguos como alias, para lo no migrado.
+   ========================================================================== */
 
-  /* --- Global --- */
-  --arcis-color-global-main: #E3173E;
-  --arcis-color-global-dark: #AE0800;
-
-  /* --- Text --- */
-  --arcis-color-text-primary: #000000;
-  --arcis-color-text-secondary: #333333;
-  --arcis-color-text-disabled: #999999;
-  --arcis-color-text-inverse: #FFFFFF;
-
-  /* --- Neutrals (corporativos) --- */
-  --neutrals-0: #FFFFFF;
-  --neutrals-50: #FAFAFA;
-  --neutrals-100: #F5F5F5;
-  --neutrals-200: #EEEEEE;
-  --neutrals-300: #E0E0E0;
-  --neutrals-400: #BDBDBD;
-  --neutrals-500: #9E9E9E;
-  --neutrals-600: #757575;
-  --neutrals-700: #616161;
-  --neutrals-800: #424242;
-  --neutrals-900: #212121;
-
-  /* --- Corporate primary / secondary --- */
-  --corp-primary-main: #E3173E;
-  --corp-primary-dark: #AE0800;
-  --corp-secondary-main: #696A6D;
-  --corp-secondary-dark: #4E5054;
-  --arcis-color-corporate-secondary-black: #000000;
-
-  /* --- University primary / secondary --- */
-  --arcis-color-univ-primary: #E3173E;
-  --arcis-color-univ-sky-100: #B2DDEA;
-  --arcis-color-univ-sky-500: #99BDD3;
-  --arcis-color-univ-beige-100: #EFEEDC;
-  --arcis-color-univ-beige-500: #D7D6BD;
-
-  /* --- University faculties --- */
-  --univ-blue-100: #2E509B;
-  --univ-blue-500: #203970;
-  --univ-wine-100: #C31C4A;
-  --univ-wine-500: #8C2545;
-  --univ-cyan-100: #40C1BB;
-  --univ-cyan-500: #4F8C85;
-  --univ-green-100: #00882F;
-  --univ-green-500: #3D6D44;
-  --univ-yellow-100: #EBA900;
-  --univ-yellow-500: #C68C24;
-  --univ-orange-100: #DC6B2F;
-  --univ-orange-500: #BF602B;
-
-  /* --- University maestrías --- */
-  --arcis-color-univ-maestrias-main: #E3173E;
-  --arcis-color-univ-maestrias-dark: #AE0800;
-  --arcis-color-univ-maestrias-grey-100: #D6DCDD;
-  --arcis-color-univ-maestrias-grey-500: #A3A7A8;
-  --arcis-color-univ-maestrias-grayish-100: #7F9BA4;
-  --arcis-color-univ-maestrias-grayish-500: #739D93;
-
-  /* --- DPA --- */
-  --arcis-color-dpa-primary-main: #E3173E;
-  --arcis-color-dpa-secondary-main: #9C9C9C;
-  /* dpa-blue, dpa-orange, dpa-green, dpa-yellow: sin valor hex confirmado en docs/ui-design.md de webunificada — pendiente */
-
-  /* --- Graduate primary / secondary --- */
-  --arcis-color-graduate-primary-main: #E3173E;
-  --graduate-ee-100: #DBE5EF;
-  --graduate-ee-500: #A7BFD3;
-  --graduate-me-100: #6795AD;
-  --graduate-me-500: #3D8195;
-  --graduate-mba-100: #273F59;
-  --graduate-mba-500: #1A2B3C;
-  --graduate-mba-gold: #D39C12;
-
-  /* --- Graduate shadows --- */
-  --arcis-color-graduate-shadow-1: #A7BFD3;
-  --arcis-color-graduate-shadow-2: #3D8195;
-  --arcis-color-graduate-shadow-3: #1A2B3C;
-
-  /* --- Graduate ecosystems --- */
-  --eco-1: #2F7DC1;
-  --eco-2: #D49C11;
-  --eco-3: #00204D;
-  --eco-4: #26C6DA;
-  --eco-5: #006F7A;
-  --eco-6: #C79C6E;
-  --eco-7: #526099;
-  --eco-8: #8493A4;
-  --eco-9: #4CB179;
-  --eco-10: #8C9B2E;
-  --eco-11: #677A2C;
-  --eco-12: #455E2C;
-  --eco-13: #2B482F;
-  --eco-14: #213A33;
-  --eco-15: #B24C4C;
-  --eco-16: #8E3D3D;
-  --eco-17: #802447;
-
-  /* --- Government primary / secondary / shadows --- */
-  --goverment-primary-main: #A71531;
-  --goverment-primary-dark: #720F27;
-  --goverment-secondary-main: #B3B3B3;
-  --goverment-secondary-dark: #7F7F7F;
-  --goverment-shadows-main: #1F3A4D;
-  --goverment-shadows-dark: #0A1319;
-
-  /* --- Semantics --- */
-  --info-light: #EEF6FB;
-  --info-main: #B7DAEC;
-  --info-dark: #0074AF;
-  --success-light: #e7f5ea;
-  --success-main: #DCE5C1;
-  --success-dark: #007F40;
-  --warning-light: #FFF3CD;
-  --warning-main: #FFEEBA;
-  --warning-dark: #856404;
-  --error-light: #F8D7DA;
-  --error-main: #F5C6CB;
-  --error-dark: #721C24;
-
-  /* --- Tipografía --- */
-  --font-display: 'Bricolage Grotesque', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-accent: 'Bricolage Grotesque', sans-serif;
-
-  --text-display: clamp(64px, 9vw, 80px);
-  --text-giant: clamp(44px, 7vw, 64px);
-  --text-h1: clamp(36px, 5vw, 48px);
-  --text-h2: clamp(28px, 4vw, 36px);
-  --text-h3: clamp(22px, 3vw, 28px);
-  --text-h4: clamp(20px, 2.5vw, 24px);
-  --text-h5: 22px;
-  --text-h6: 18px;
-  --text-body-lg: 18px;
-  --text-body: 16px;
-  --text-sm: 14px;
-  --text-xs: 12px;
-
-  --weight-light: 200;
-  --weight-regular: 300;
-  --weight-medium: 500;
-  --weight-semibold: 600;
-  --weight-bold: 700;
-
-  /* --- Espaciado (escala de 10 pasos) --- */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 32px;
-  --space-7: 48px;
-  --space-8: 64px;
-  --space-9: 80px;
-  --space-10: 120px;
-
-  /* --- Border radius --- */
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --radius-xl: 40px;
-  --radius-full: 100px;
-
-  /* --- Sombras --- */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.10);
-  --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.14);
-
-  /* --- Bordes --- */
-  --border-width-sm: 1px;
-  --border-width-md: 2px;
-  --border-color-light: var(--neutrals-300);
-  --border-color-dark: var(--neutrals-500);
-
-  /* --- Transiciones --- */
-  --ease-fast: 150ms ease;
-  --ease-base: 250ms ease;
-  --ease-slow: 420ms cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* --- Layout --- */
-  --section-pad-y: var(--space-9);
-  --container-max: 1280px;
-}
+@use './ds/extensions';
+@use './ds/ds-tokens';
+@use './ds/responsive-container';
+@use './ds/legacy';

@@ -50,30 +50,25 @@
   }
 
   .topbar-v1 {
-    /*
-     * Fondo de la maqueta. Va el hex y no un token porque no hay ninguno que le
-     * corresponda: el kit usa --neutrals-50 (#FAFAFA), casi blanco y neutro, y
-     * este tira a azul. Tampoco se agrega a tokens.scss, que es espejo de
-     * webunificada (ver su cabecera). Mismo criterio que el fondo del pie.
-     */
-    --topbar-v1-bg: #F1F5F9;
+    /* Fondo de la maqueta: el fondo claro de arcis-2. */
+    --topbar-v1-bg: var(--ds-color-background-light);
 
     /* Aire a cada lado de un divisor. */
-    --topbar-v1-divider-space: var(--space-3);
+    --topbar-v1-divider-space: var(--ds-spacing-xs);
 
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-5);
+    gap: var(--ds-space-6);
 
-    padding: var(--space-2) var(--space-5);
+    padding: var(--ds-spacing-xxs) var(--ds-space-6);
     background-color: var(--topbar-v1-bg);
-    border-bottom: var(--border-width-sm) solid var(--border-color-light);
+    border-bottom: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
 
-    font-family: var(--font-body);
-    font-size: var(--text-sm);
-    line-height: 1.5;
-    color: var(--arcis-color-text-primary);
+    font-family: var(--ds-font-family-base);
+    font-size: var(--ds-text-body-compact);
+    line-height: var(--ds-line-height-150);
+    color: var(--ds-color-text-primary);
   }
 
   .topbar-v1__group {
@@ -90,13 +85,13 @@
   .topbar-v1__group--start > * {
     margin-right: var(--topbar-v1-divider-space);
     padding-right: var(--topbar-v1-divider-space);
-    border-right: var(--border-width-sm) solid var(--border-color-light);
+    border-right: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
   }
 
   .topbar-v1__group--end > * + * {
     margin-left: var(--topbar-v1-divider-space);
     padding-left: var(--topbar-v1-divider-space);
-    border-left: var(--border-width-sm) solid var(--border-color-light);
+    border-left: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
   }
 
   /*
@@ -108,15 +103,15 @@
   .topbar-v1 .dropdown__trigger {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-1);
+    gap: var(--ds-space-1);
     color: inherit;
     white-space: nowrap;
-    transition: color var(--ease-fast);
+    transition: color var(--ds-ease-fast);
   }
 
   .topbar-v1__link:hover,
   .topbar-v1 .dropdown__trigger:hover {
-    color: var(--arcis-color-global-main);
+    color: var(--ds-color-text-brand);
   }
 
   /*
@@ -127,17 +122,17 @@
   .topbar-v1 .dropdown__trigger svg {
     width: 16px;
     height: 16px;
-    color: var(--arcis-color-global-main);
+    color: var(--ds-color-text-brand);
     stroke-width: 3;
   }
 
   .topbar-v1__link--brand {
-    font-weight: var(--weight-semibold);
-    color: var(--arcis-color-global-main);
+    font-weight: var(--ds-weight-semibold);
+    color: var(--ds-color-text-brand);
   }
 
   .topbar-v1__link--brand:hover {
-    color: var(--arcis-color-global-dark);
+    color: var(--ds-color-action-primary-hover);
   }
 
   .topbar-v1__brand-icon {
@@ -148,11 +143,11 @@
 
   /* El menú arranca bajo la franja, no pegado al texto del disparador. */
   .topbar-v1 .dropdown__menu {
-    top: calc(100% + var(--space-2) + var(--space-1));
+    top: calc(100% + var(--ds-spacing-xxs) + var(--ds-space-1));
   }
 
   /* -----------------------------------------------------------------------
-     Tableta y móvil — 992px o menos (o topbar angosto).
+     Tableta y móvil — por debajo de 1024px (o topbar angosto).
 
      El mismo punto en el que el navbar pasa a menú móvil (HeaderMega oculta su
      menú por debajo de `lg`). La copia de encima desaparece y aparece la de
@@ -171,7 +166,7 @@
 
     .topbar-v1 {
       justify-content: flex-start;
-      padding-inline: var(--space-4);
+      padding-inline: var(--ds-space-4);
     }
 
     .topbar-v1__group--end {
@@ -179,7 +174,7 @@
     }
 
     .topbar-v1__group--start {
-      gap: var(--space-4);
+      gap: var(--ds-space-4);
     }
 
     .topbar-v1__group--start > * {

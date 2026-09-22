@@ -25,8 +25,8 @@
   .list-group.list-group--arcis {
     display: flex;
     flex-direction: column;
-    border: var(--border-width-sm) solid var(--border-color-light);
-    border-radius: var(--radius-sm);
+    border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    border-radius: var(--ds-radius-sm);
     overflow: hidden;
   }
 
@@ -34,13 +34,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-3);
-    padding: var(--space-4) var(--space-5);
-    font-size: var(--text-body);
-    color: var(--arcis-color-text-primary);
-    border-bottom: var(--border-width-sm) solid var(--border-color-light);
-    background-color: var(--neutrals-0);
-    transition: background-color var(--ease-fast), color var(--ease-fast);
+    gap: var(--ds-spacing-xs);
+    padding: var(--ds-space-4) var(--ds-space-6);
+    font-size: var(--ds-text-body);
+    color: var(--ds-color-text-primary);
+    border-bottom: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    background-color: var(--ds-color-background-default);
+    transition: background-color var(--ds-ease-fast), color var(--ds-ease-fast);
   }
 
   .list-group__item:last-child {
@@ -50,33 +50,33 @@
   .list-group__item-label {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
+    gap: var(--ds-spacing-xs);
   }
 
   .list-group__item-label svg {
     width: 18px;
     height: 18px;
-    color: var(--arcis-color-text-secondary);
+    color: var(--ds-color-text-secondary);
   }
 
   a.list-group__item:hover {
-    background-color: var(--neutrals-50);
+    background-color: var(--ds-color-background-light);
   }
 
   .list-group__item.is-active {
-    background-color: rgba(227, 23, 62, 0.08);
-    color: var(--arcis-color-global-main);
-    font-weight: var(--weight-medium);
+    background-color: var(--ds-color-surface-primary-soft);
+    color: var(--ds-color-text-brand);
+    font-weight: var(--ds-weight-medium);
   }
 
   .list-group__item.is-active .list-group__item-label svg {
-    color: var(--arcis-color-global-main);
+    color: var(--ds-color-text-brand);
   }
 
   .list-group__item > svg {
     width: 16px;
     height: 16px;
-    color: var(--neutrals-400);
+    color: var(--ds-color-neutral-300);
     flex-shrink: 0;
   }
 }

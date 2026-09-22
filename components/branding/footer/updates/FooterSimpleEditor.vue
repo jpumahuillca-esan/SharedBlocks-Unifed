@@ -4,17 +4,34 @@ import { ref, watch } from 'vue';
 const props = defineProps<{ modelValue: any }>();
 const emit = defineEmits(['update:modelValue']);
 
-const localData = ref({
-    bgColor: props.modelValue?.bgColor || '#1e1e1e',
-    textColor: props.modelValue?.textColor || '#7e7e7e',
-    linkColor: props.modelValue?.linkColor || '#9ba8b5',
-    iconColor: props.modelValue?.iconColor || '#ffffff',
-    links: props.modelValue?.links?.length ? [...props.modelValue.links] : [],
-    copyrightText: props.modelValue?.copyrightText || '',
-    socialLinks: props.modelValue?.socialLinks?.length ? [...props.modelValue.socialLinks] : []
+/*
+ * Copia local construida desde lo que llega, con las listas clonadas: con una
+ * copia superficial, editar un enlace mutaba directamente el objeto del padre.
+ */
+const build = (source: any) => ({
+    bgColor: source?.bgColor || '#1e1e1e',
+    textColor: source?.textColor || '#7e7e7e',
+    linkColor: source?.linkColor || '#9ba8b5',
+    iconColor: source?.iconColor || '#ffffff',
+    links: source?.links?.length ? JSON.parse(JSON.stringify(source.links)) : [],
+    copyrightText: source?.copyrightText || '',
+    socialLinks: source?.socialLinks?.length ? JSON.parse(JSON.stringify(source.socialLinks)) : []
 });
 
-watch(localData, (newVal) => emit('update:modelValue', { ...newVal }), { deep: true });
+const localData = ref(build(props.modelValue));
+
+/*
+ * Resincroniza cuando cambia lo que llega de fuera (lo guardado al cargar, o
+ * "Refrescar"). Sin esto, el primer cambio en el panel sobrescribía lo guardado
+ * con los valores de fábrica. La comparación evita el bucle con la emisión.
+ */
+watch(() => props.modelValue, (newVal) => {
+    if (!newVal) return;
+    if (JSON.stringify(newVal) === JSON.stringify(localData.value)) return;
+    localData.value = build(newVal);
+}, { deep: true });
+
+watch(localData, (newVal) => emit('update:modelValue', JSON.parse(JSON.stringify(newVal))), { deep: true });
 
 
 const addLink = () => localData.value.links.push({ text: 'Nuevo Enlace', url: '#' });

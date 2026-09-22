@@ -5,7 +5,7 @@
     :class="{ 'is-sticky': safeConfig.sticky && scrolled }"
     @mouseleave="activeHoveredMenuId = null"
   >
-    <header class="navbar-main">
+    <div class="navbar-main">
       <div class="navbar-container-wrapper">
         <!-- Logo -->
         <component :is="linkTag" v-bind="getLinkProps(safeConfig.urlRedict)" class="logo-box">
@@ -40,7 +40,7 @@
           </ul>
         </nav>
       </div>
-    </header>
+    </div>
 
     <!-- MEGA MENÚ DESPLEGABLE CONGELADO -->
     <Transition name="fade-slide">

@@ -25,7 +25,7 @@
     flex-shrink: 0;
     width: var(--pictogram-size, 40px);
     height: var(--pictogram-size, 40px);
-    color: var(--arcis-color-global-main);
+    color: var(--ds-color-text-brand);
     /* Sin esto la línea de texto del <span> suma unos píxeles bajo el dibujo. */
     line-height: 0;
   }

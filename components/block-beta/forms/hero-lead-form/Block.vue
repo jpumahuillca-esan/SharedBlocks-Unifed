@@ -129,49 +129,49 @@ const {
 
 <style scoped>
 .arcis-lead-wrapper {
-  font-family: var(--font-body, 'Inter', sans-serif);
-  color: var(--arcis-color-text-secondary, #333333);
-  background: var(--neutrals-0, #FFFFFF);
-  border: var(--border-width-sm, 1px) solid var(--neutrals-300, #E0E0E0);
-  border-radius: var(--radius-md, 16px);
-  padding: var(--space-6, 32px);
-  box-shadow: var(--shadow-md, 0 8px 32px rgba(0, 0, 0, 0.10));
+  font-family: var(--ds-font-family-base);
+  color: var(--ds-color-text-secondary);
+  background: var(--ds-color-background-default);
+  border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+  border-radius: var(--ds-radius-md);
+  padding: var(--ds-spacing-md);
+  box-shadow: var(--ds-shadow-md);
   /*
    * Ritmo vertical común a todos los bloques (ver
    * assets/styles/section-rhythm.scss). Margen y no relleno: es una tarjeta con
    * borde y sombra, y el relleno la agrandaría en vez de separarla. Además la
    * sombra necesita ese aire para no quedar cortada contra el bloque vecino.
    */
-  margin-block: var(--section-pad-y, 80px);
+  margin-block: var(--ds-spacing-xxl);
 }
 
 .arcis-form-title {
-  font-family: var(--font-display, 'Bricolage Grotesque', sans-serif);
-  font-size: var(--text-h3, 24px);
-  font-weight: var(--weight-bold, 700);
-  color: var(--arcis-color-text-primary, #000000);
-  margin: 0 0 var(--space-2, 8px) 0;
+  font-family: var(--ds-font-family-display);
+  font-size: var(--ds-text-h3);
+  font-weight: var(--ds-weight-bold);
+  color: var(--ds-color-text-primary);
+  margin: 0 0 var(--ds-spacing-xxs) 0;
   line-height: 1.2;
 }
 
 .arcis-form-subtitle {
-  font-size: var(--text-sm, 14px);
-  color: var(--neutrals-600, #757575);
+  font-size: var(--ds-text-body-compact);
+  color: var(--ds-color-text-secondary);
   margin: 0;
 }
 
 .arcis-label {
   display: block;
-  font-size: var(--text-xs, 12px);
-  font-weight: var(--weight-semibold, 600);
-  color: var(--arcis-color-text-secondary, #333333);
-  margin-bottom: var(--space-1, 4px);
+  font-size: var(--ds-text-body-sm);
+  font-weight: var(--ds-weight-semibold);
+  color: var(--ds-color-text-secondary);
+  margin-bottom: var(--ds-space-1);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .arcis-required {
-  color: var(--arcis-color-global-main, #E3173E);
+  color: var(--ds-color-text-brand);
 }
 
 .arcis-input,
@@ -179,70 +179,70 @@ const {
 .arcis-textarea {
   width: 100%;
   padding: 10px 14px;
-  font-size: var(--text-sm, 14px);
-  font-family: var(--font-body, 'Inter', sans-serif);
-  color: var(--arcis-color-text-primary, #000000);
-  background-color: var(--neutrals-50, #FAFAFA);
-  border: var(--border-width-sm, 1px) solid var(--neutrals-300, #E0E0E0);
-  border-radius: var(--radius-sm, 8px);
-  transition: border-color var(--ease-base, 250ms ease), background-color var(--ease-base, 250ms ease);
+  font-size: var(--ds-text-body-compact);
+  font-family: var(--ds-font-family-base);
+  color: var(--ds-color-text-primary);
+  background-color: var(--ds-color-background-light);
+  border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+  border-radius: var(--ds-radius-sm);
+  transition: border-color var(--ds-ease-base), background-color var(--ds-ease-base);
 }
 
 .arcis-input:focus,
 .arcis-select:focus,
 .arcis-textarea:focus {
   outline: none;
-  background-color: var(--neutrals-0, #FFFFFF);
-  border-color: var(--arcis-color-global-main, #E3173E);
+  background-color: var(--ds-color-background-default);
+  border-color: var(--ds-color-border-focus);
   box-shadow: 0 0 0 3px rgba(227, 23, 62, 0.15);
 }
 
 .arcis-checkbox-group {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-2, 8px);
+  gap: var(--ds-spacing-xxs);
 }
 
 .arcis-checkbox {
   margin-top: 3px;
-  accent-color: var(--arcis-color-global-main, #E3173E);
+  accent-color: var(--ds-color-action-primary);
   width: 16px;
   height: 16px;
 }
 
 .arcis-checkbox-label {
-  font-size: var(--text-xs, 12px);
+  font-size: var(--ds-text-body-sm);
   line-height: 1.4;
-  color: var(--neutrals-700, #616161);
+  color: var(--ds-color-text-secondary);
 }
 
 .arcis-link {
-  color: var(--arcis-color-global-main, #E3173E);
+  color: var(--ds-color-text-brand);
   text-decoration: underline;
 }
 
 .arcis-btn-submit {
   width: 100%;
-  background-color: var(--arcis-color-global-main, #E3173E);
-  color: var(--arcis-color-text-inverse, #FFFFFF);
+  background-color: var(--ds-color-action-primary);
+  color: var(--ds-color-text-inverse);
   border: none;
-  border-radius: var(--radius-sm, 8px);
+  border-radius: var(--ds-radius-sm);
   padding: 12px 24px;
-  font-size: var(--text-sm, 14px);
-  font-weight: var(--weight-bold, 700);
+  font-size: var(--ds-text-body-compact);
+  font-weight: var(--ds-weight-bold);
   letter-spacing: 0.5px;
   cursor: pointer;
-  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.06));
-  transition: background-color var(--ease-fast, 150ms ease), transform var(--ease-fast, 150ms ease);
+  box-shadow: var(--ds-shadow-sm);
+  transition: background-color var(--ds-ease-fast), transform var(--ds-ease-fast);
 }
 
 .arcis-btn-submit:hover:not(:disabled) {
-  background-color: var(--arcis-color-global-dark, #AE0800);
+  background-color: var(--ds-color-action-primary-hover);
   transform: translateY(-1px);
 }
 
 .arcis-btn-submit:disabled {
-  background-color: var(--neutrals-400, #BDBDBD);
+  background-color: var(--ds-color-background-blend);
   cursor: not-allowed;
 }
 </style>

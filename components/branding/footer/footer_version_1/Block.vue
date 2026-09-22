@@ -14,12 +14,12 @@
       <div class="footer-v1__inner">
         <div v-if="contacts.length" class="footer-v1__contacts">
           <div v-for="contact in contacts" :key="contact.id" class="footer-v1__contact">
-            <AtomText v-if="contact.title" size="sm" class="footer-v1__contact-title">
+            <AtomText v-if="contact.title" size="body-compact" class="footer-v1__contact-title">
               {{ contact.title }}
             </AtomText>
 
             <!-- Los saltos de línea del editor se respetan desde la hoja (pre-line). -->
-            <AtomText v-if="contact.text" size="sm" class="footer-v1__contact-value">
+            <AtomText v-if="contact.text" size="body-compact" class="footer-v1__contact-value">
               <component
                 :is="linkTag"
                 v-if="contact.url"
@@ -117,7 +117,7 @@
         </div>
 
         <div v-if="copyright" class="footer-v1__bottom">
-          <AtomText size="sm" class="footer-v1__copyright">{{ copyright }}</AtomText>
+          <AtomText size="body-compact" class="footer-v1__copyright">{{ copyright }}</AtomText>
         </div>
       </div>
     </div>
@@ -134,9 +134,10 @@
  *
  * Tres composiciones:
  *   escritorio  contactos en fila, filete rojo y columnas de enlaces abiertas
- *   tableta     contactos en fila; las columnas pasan a acordeón y las redes
+ *   tableta     (por debajo de 1024px) contactos en fila; las columnas pasan a
+ *               acordeón y las redes
  *               suben sobre ellas
- *   teléfono    igual que tableta, con los contactos apilados
+ *   teléfono    (por debajo de 768px) igual que tableta, con los contactos apilados
  *
  * Parte del footer del kit (webunificada, `.footer`), con lo que cambia en la
  * maqueta: el fondo, las redes bajo la primera columna, el libro de
@@ -155,11 +156,11 @@ type SocialNetwork = 'facebook' | 'x' | 'youtube' | 'instagram' | 'linkedin';
 const NETWORKS: SocialNetwork[] = ['facebook', 'x', 'youtube', 'instagram', 'linkedin'];
 
 /**
- * Ancho del pie a partir del cual las columnas son acordeón. Es el mismo punto
- * de quiebre que usa la hoja ('mobile' en breakpoints.scss): si cambia uno,
- * tiene que cambiar el otro.
+ * Ancho del pie por debajo del cual las columnas son acordeón. Es el mismo punto
+ * de quiebre que usa la hoja ('lg' en breakpoints.scss, la tableta de arcis-2):
+ * si cambia uno, tiene que cambiar el otro.
  */
-const ACCORDION_MAX = 768;
+const ACCORDION_BELOW = 1024;
 
 interface FooterContact { id: string; title: string; text: string; url: string }
 interface FooterLink { id: string; label: string; url: string }
@@ -279,7 +280,7 @@ const root = ref<HTMLElement | null>(null);
 const accordion = ref(false);
 
 const measure = () => {
-  if (root.value) accordion.value = root.value.clientWidth <= ACCORDION_MAX;
+  if (root.value) accordion.value = root.value.clientWidth < ACCORDION_BELOW;
 };
 
 let observer: ResizeObserver | null = null;

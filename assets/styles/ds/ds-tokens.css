@@ -1,0 +1,590 @@
+/* ==========================================================================
+   ESAN · Design Tokens (arcis-2)
+   Generado desde docs/tokens/*.tokens.json (export de variables de Figma).
+
+   Capas:
+   1. FOUNDATIONS  Primitivos crudos (color, tipografía, espaciado, tamaños).
+                   No usar directamente en componentes.
+   2. SEMÁNTICOS   Tokens con propósito (fondo, texto, acción, feedback,
+                   marca...). Referencian a foundations con var().
+   3. RESPONSIVE   Tipografía y espaciado: valores Desktop por defecto,
+                   override Mobile por debajo del breakpoint md (768px).
+   ========================================================================== */
+
+:root {
+
+  /* ------------------------------------------------------------
+     1. FOUNDATIONS
+     ------------------------------------------------------------ */
+
+  /* Color / base */
+  --ds-color-white: #FFFFFF;
+  --ds-color-black: #000000;
+
+  /* Color / neutrals */
+  --ds-color-neutral-100: #F1F5F9;
+  --ds-color-neutral-200: #CCD3DC;
+  --ds-color-neutral-300: #A8B1BF;
+  --ds-color-neutral-400: #8591A2;
+  --ds-color-neutral-500: #647287;
+  --ds-color-neutral-600: #4F5A6C;
+  --ds-color-neutral-700: #3B4352;
+  --ds-color-neutral-800: #282D39;
+  --ds-color-neutral-900: #161922;
+
+  /* Color / red */
+  --ds-color-red-050: #FFF3F3;
+  --ds-color-red-100: #FFE8E7;
+  --ds-color-red-200: #FFC9C7;
+  --ds-color-red-300: #FCA1A1;
+  --ds-color-red-400: #F36F73;
+  --ds-color-red-500: #E3173E;
+  --ds-color-red-600: #B71030;
+  --ds-color-red-700: #8C0A23;
+  --ds-color-red-800: #640516;
+  --ds-color-red-900: #3F020A;
+  --ds-color-red-950: #230103;
+
+  /* Color / polar */
+  --ds-color-polar-500: #B2DDEA;
+  --ds-color-polar-600: #99BDD3;
+
+  /* Color / blue */
+  --ds-color-blue-050: #F1F4F9;
+  --ds-color-blue-100: #E4E9F4;
+  --ds-color-blue-200: #C0CDE5;
+  --ds-color-blue-300: #95AAD1;
+  --ds-color-blue-400: #6480B9;
+  --ds-color-blue-500: #2E509B;
+  --ds-color-blue-600: #203970;
+  --ds-color-blue-700: #162A55;
+  --ds-color-blue-800: #0D1B3B;
+  --ds-color-blue-900: #050E23;
+  --ds-color-blue-950: #020511;
+
+  /* Color / aqua */
+  --ds-color-aqua-050: #F5FBFB;
+  --ds-color-aqua-100: #EBF8F7;
+  --ds-color-aqua-200: #D1EEEC;
+  --ds-color-aqua-300: #AEE2DE;
+  --ds-color-aqua-400: #82D3CE;
+  --ds-color-aqua-500: #40C1BB;
+  --ds-color-aqua-600: #4F8C85;
+  --ds-color-aqua-700: #247773;
+  --ds-color-aqua-800: #175451;
+  --ds-color-aqua-900: #0B3432;
+  --ds-color-aqua-950: #041C1B;
+
+  /* Color / yellow */
+  --ds-color-yellow-050: #FEFAF4;
+  --ds-color-yellow-100: #FDF5E8;
+  --ds-color-yellow-200: #FAE8C9;
+  --ds-color-yellow-300: #F7D7A2;
+  --ds-color-yellow-400: #F2C26E;
+  --ds-color-yellow-500: #EBA900;
+  --ds-color-yellow-600: #BD8700;
+  --ds-color-yellow-700: #916700;
+  --ds-color-yellow-800: #684900;
+  --ds-color-yellow-900: #412C00;
+  --ds-color-yellow-950: #251700;
+
+  /* Color / orange */
+  --ds-color-orange-050: #FEF6F3;
+  --ds-color-orange-100: #FDEEE7;
+  --ds-color-orange-200: #F9D7C7;
+  --ds-color-orange-300: #F3BA9F;
+  --ds-color-orange-400: #EA966F;
+  --ds-color-orange-500: #DC6B2F;
+  --ds-color-orange-600: #B15524;
+  --ds-color-orange-700: #883F19;
+  --ds-color-orange-800: #612B0F;
+  --ds-color-orange-900: #3C1806;
+  --ds-color-orange-950: #220B02;
+
+  /* Color / info */
+  --ds-color-info-050: #F2F7FB;
+  --ds-color-info-100: #E4EEF6;
+  --ds-color-info-200: #C1D8EA;
+  --ds-color-info-300: #95BCDA;
+  --ds-color-info-400: #5F9BC7;
+  --ds-color-info-500: #0074AF;
+  --ds-color-info-600: #005C8C;
+  --ds-color-info-700: #00456B;
+  --ds-color-info-800: #00304C;
+  --ds-color-info-900: #001B2E;
+  --ds-color-info-950: #000C18;
+
+  /* Color / error */
+  --ds-color-error-050: #FFF5F4;
+  --ds-color-error-100: #FFEBEA;
+  --ds-color-error-200: #FFD0CE;
+  --ds-color-error-300: #FDAEAC;
+  --ds-color-error-400: #F68383;
+  --ds-color-error-500: #E94A55;
+  --ds-color-error-600: #BC3A43;
+  --ds-color-error-700: #902A31;
+  --ds-color-error-800: #671C21;
+  --ds-color-error-900: #410E11;
+  --ds-color-error-950: #240507;
+
+  /* Color / warning */
+  --ds-color-warning-050: #FFF8F3;
+  --ds-color-warning-100: #FFF1E8;
+  --ds-color-warning-200: #FFDFC9;
+  --ds-color-warning-300: #FFC8A2;
+  --ds-color-warning-400: #FEAB71;
+  --ds-color-warning-500: #F98824;
+  --ds-color-warning-600: #C96C1B;
+  --ds-color-warning-700: #9A5212;
+  --ds-color-warning-800: #6F390A;
+  --ds-color-warning-900: #462204;
+  --ds-color-warning-950: #281101;
+
+  /* Color / success */
+  --ds-color-success-050: #F2F7F3;
+  --ds-color-success-100: #E4EFE7;
+  --ds-color-success-200: #C1DBC7;
+  --ds-color-success-300: #96C1A0;
+  --ds-color-success-400: #60A273;
+  --ds-color-success-500: #007F40;
+  --ds-color-success-600: #006532;
+  --ds-color-success-700: #004C24;
+  --ds-color-success-800: #003517;
+  --ds-color-success-900: #001F0B;
+  --ds-color-success-950: #000F04;
+
+  /* Color / granate */
+  --ds-color-granate-050: #FCF2F2;
+  --ds-color-granate-100: #F8E5E4;
+  --ds-color-granate-200: #EDC2C2;
+  --ds-color-granate-300: #DD9798;
+  --ds-color-granate-400: #C66367;
+  --ds-color-granate-500: #A71531;
+  --ds-color-granate-600: #8C122C;
+  --ds-color-granate-700: #720F27;
+  --ds-color-granate-800: #510819;
+  --ds-color-granate-900: #32030C;
+  --ds-color-granate-950: #1B0104;
+
+  /* Color / ice */
+  --ds-color-ice-500: #DBE5EF;
+  --ds-color-ice-700: #A7BFD3;
+
+  /* Color / steel */
+  --ds-color-steel-500: #6795AD;
+  --ds-color-steel-700: #3D8195;
+
+  /* Color / gold */
+  --ds-color-gold-050: #FDF9F3;
+  --ds-color-gold-100: #FAF3E7;
+  --ds-color-gold-200: #F3E4C8;
+  --ds-color-gold-300: #EBD09F;
+  --ds-color-gold-400: #E0B86C;
+  --ds-color-gold-500: #D39C12;
+  --ds-color-gold-600: #AA7D0C;
+  --ds-color-gold-700: #825F07;
+  --ds-color-gold-800: #5D4303;
+  --ds-color-gold-900: #3A2801;
+  --ds-color-gold-950: #201500;
+
+  /* Color / wine */
+  --ds-color-wine-050: #FEF3F3;
+  --ds-color-wine-100: #FCE6E8;
+  --ds-color-wine-200: #F6C6C9;
+  --ds-color-wine-300: #EC9DA4;
+  --ds-color-wine-400: #DB6A7A;
+  --ds-color-wine-500: #C31C4A;
+  --ds-color-wine-600: #8C2545;
+  --ds-color-wine-700: #6B1A33;
+  --ds-color-wine-800: #4B1022;
+  --ds-color-wine-900: #2E0612;
+  --ds-color-wine-950: #180207;
+
+  /* Color / beige */
+  --ds-color-beige-050: #FEFEFD;
+  --ds-color-beige-100: #FDFDFB;
+  --ds-color-beige-200: #FAFAF5;
+  --ds-color-beige-300: #F7F7EE;
+  --ds-color-beige-400: #F3F3E6;
+  --ds-color-beige-500: #EFEEDC;
+  --ds-color-beige-600: #D7D6BD;
+  --ds-color-beige-700: #A6A591;
+  --ds-color-beige-800: #777668;
+  --ds-color-beige-900: #4B4B41;
+  --ds-color-beige-950: #2B2B25;
+
+  /* Color / green */
+  --ds-color-green-050: #F2F8F3;
+  --ds-color-green-100: #E6F1E7;
+  --ds-color-green-200: #C4DFC6;
+  --ds-color-green-300: #99C89F;
+  --ds-color-green-400: #65AC71;
+  --ds-color-green-500: #0E8C39;
+  --ds-color-green-600: #09702C;
+  --ds-color-green-700: #05551F;
+  --ds-color-green-800: #023B14;
+  --ds-color-green-900: #012309;
+  --ds-color-green-950: #001103;
+
+  /* Color / grayish */
+  --ds-color-grayish-500: #7F9BA4;
+  --ds-color-grayish-700: #739D93;
+
+  /* Color / blue-dark */
+  --ds-color-blue-dark-500: #273F59;
+  --ds-color-blue-dark-700: #1A2B3C;
+
+  /* Color / golden */
+  --ds-color-golden-500: #D39C12;
+
+  /* Color / dark-navy */
+  --ds-color-dark-navy-500: #1F3A4D;
+  --ds-color-dark-navy-900: #0A1319;
+
+  /* Color / olive */
+  --ds-color-olive-500: #677A2C;
+  --ds-color-olive-600: #455E2C;
+  --ds-color-olive-700: #2B482F;
+  --ds-color-olive-800: #213A33;
+
+  /* Color / royal-blue */
+  --ds-color-royal-blue-500: #00204D;
+
+  /* Color / sky */
+  --ds-color-sky-500: #2F7DC1;
+
+  /* Color / ocre */
+  --ds-color-ocre-500: #D49C11;
+
+  /* Color / sand */
+  --ds-color-sand-500: #8493A4;
+
+  /* Color / violet */
+  --ds-color-violet-500: #526099;
+
+  /* Color / terracota */
+  --ds-color-terracota-500: #B24C4C;
+  --ds-color-terracota-600: #8E3D3D;
+
+  /* Color / emerald */
+  --ds-color-emerald-500: #4CB179;
+
+  /* Color / cyan */
+  --ds-color-cyan-500: #26C6DA;
+
+  /* Color / cyan-dark */
+  --ds-color-cyan-dark: #006F7A;
+
+  /* Color / green-lemon */
+  --ds-color-green-lemon: #8C9B2E;
+
+  /* Color / borgona */
+  --ds-color-borgona: #802447;
+
+  /* Color / brown */
+  --ds-color-brown-500: #C79C6E;
+
+  /* Alpha / White */
+  --ds-color-white-0: rgb(255 255 255 / 0);
+  --ds-color-white-20: rgb(255 255 255 / 0.2);
+  --ds-color-white-40: rgb(255 255 255 / 0.4);
+  --ds-color-white-60: rgb(255 255 255 / 0.6);
+  --ds-color-white-80: rgb(255 255 255 / 0.8);
+
+  /* Alpha / Black */
+  --ds-color-dark-0: rgb(10 19 25 / 0);
+  --ds-color-dark-20: rgb(10 19 25 / 0.2);
+  --ds-color-dark-40: rgb(10 19 25 / 0.4);
+  --ds-color-dark-60: rgb(10 19 25 / 0.6);
+  --ds-color-dark-80: rgb(10 19 25 / 0.8);
+
+  /* Typography / Family */
+  --ds-font-family-base: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ds-font-family-display: "Bricolage Grotesque", "Inter", system-ui, sans-serif;
+
+  /* Typography / Font size */
+  --ds-font-size-12: 12px;
+  --ds-font-size-16: 16px;
+  --ds-font-size-18: 18px;
+  --ds-font-size-20: 20px;
+  --ds-font-size-22: 22px;
+  --ds-font-size-24: 24px;
+  --ds-font-size-26: 26px;
+  --ds-font-size-28: 28px;
+  --ds-font-size-32: 32px;
+  --ds-font-size-40: 40px;
+  --ds-font-size-48: 48px;
+  --ds-font-size-64: 64px;
+  --ds-font-size-80: 80px;
+  --ds-font-size-96: 96px;
+
+  /* Typography / Weight */
+  --ds-font-weight-300: 300;
+  --ds-font-weight-400: 400;
+  --ds-font-weight-500: 500;
+  --ds-font-weight-600: 600;
+  --ds-font-weight-700: 700;
+
+  /* Typography / Line height (unitless) */
+  --ds-line-height-100: 1;
+  --ds-line-height-125: 1.25;
+  --ds-line-height-150: 1.5;
+
+  /* Typography / Letter spacing (Figma % -> em) */
+  --ds-letter-spacing-0: 0em;
+  --ds-letter-spacing-005: -0.0005em;
+  --ds-letter-spacing-075: -0.0075em;
+
+  /* Spacing */
+  --ds-space-0: 0;
+  --ds-space-1: 4px;
+  --ds-space-2: 8px;
+  --ds-space-3: 12px;
+  --ds-space-4: 16px;
+  --ds-space-5: 20px;
+  --ds-space-6: 24px;
+  --ds-space-8: 32px;
+  --ds-space-10: 40px;
+  --ds-space-12: 48px;
+  --ds-space-16: 64px;
+  --ds-space-20: 80px;
+  --ds-space-24: 96px;
+  --ds-space-32: 128px;
+  --ds-space-40: 160px;
+
+  /* Sizes */
+  --ds-size-0: 0;
+  --ds-size-1: 1px;
+  --ds-size-2: 2px;
+  --ds-size-4: 4px;
+  --ds-size-8: 8px;
+  --ds-size-12: 12px;
+  --ds-size-16: 16px;
+  --ds-size-20: 20px;
+  --ds-size-24: 24px;
+  --ds-size-32: 32px;
+  --ds-size-40: 40px;
+  --ds-size-48: 48px;
+  --ds-size-64: 64px;
+  --ds-size-80: 80px;
+  --ds-size-96: 96px;
+  --ds-size-128: 128px;
+  --ds-size-160: 160px;
+
+  /* ------------------------------------------------------------
+     2. SEMÁNTICOS
+     ------------------------------------------------------------ */
+
+  /* Color / Background */
+  --ds-color-background-default: var(--ds-color-white);
+  --ds-color-background-light: var(--ds-color-neutral-100);
+  --ds-color-background-soft: var(--ds-color-neutral-200);
+  --ds-color-background-blend: var(--ds-color-neutral-300);
+  --ds-color-background-dark: var(--ds-color-blue-dark-700);
+  --ds-color-background-inverse: var(--ds-color-neutral-900);
+
+  /* Color / Surface */
+  --ds-color-surface-primary: var(--ds-color-red-500);
+  --ds-color-surface-primary-soft: var(--ds-color-red-100);
+  --ds-color-surface-secondary: var(--ds-color-granate-500);
+  --ds-color-surface-secondary-soft: var(--ds-color-granate-100);
+  --ds-color-surface-dark: var(--ds-color-neutral-900);
+  --ds-color-surface-dark-soft: var(--ds-color-neutral-200);
+  --ds-color-surface-white: var(--ds-color-neutral-100);
+
+  /* Color / Content */
+  --ds-color-text-primary: var(--ds-color-black);
+  --ds-color-text-secondary: var(--ds-color-neutral-600);
+  --ds-color-text-disabled: var(--ds-color-neutral-300);
+  --ds-color-text-inverse: var(--ds-color-white);
+  --ds-color-text-brand: var(--ds-color-red-500);
+
+  /* Color / Border */
+  --ds-color-border-inverse: var(--ds-color-neutral-100);
+  --ds-color-border-default: var(--ds-color-neutral-400);
+  --ds-color-border-subtle: var(--ds-color-neutral-200);
+  --ds-color-border-strong: var(--ds-color-neutral-500);
+  --ds-color-border-inverse-subtle: var(--ds-color-white-20);
+  --ds-color-border-grid: var(--ds-color-ice-700);
+  --ds-color-border-focus: var(--ds-color-feedback-info);
+  --ds-color-border-focus-inverse: var(--ds-color-polar-500);
+  --ds-color-border-error: var(--ds-color-feedback-error-dark);
+  --ds-color-border-success: var(--ds-color-feedback-success);
+
+  /* Color / Actions */
+  --ds-color-action-primary: var(--ds-color-red-500);
+  --ds-color-action-primary-hover: var(--ds-color-red-600);
+  --ds-color-action-primary-focus: var(--ds-color-red-600);
+  --ds-color-action-secondary: var(--ds-color-neutral-600);
+  --ds-color-action-secondary-hover: var(--ds-color-neutral-500);
+  --ds-color-action-secondary-focus: var(--ds-color-neutral-500);
+  --ds-color-action-tertiary: var(--ds-color-blue-dark-700);
+  --ds-color-action-tertiary-hover: var(--ds-color-blue-dark-500);
+  --ds-color-action-tertiary-focus: var(--ds-color-blue-dark-500);
+  --ds-color-action-inverse: var(--ds-color-white);
+  --ds-color-action-accent: var(--ds-color-gold-500);
+  --ds-color-action-accent-hover: var(--ds-color-gold-400);
+  --ds-color-action-disabled: var(--ds-color-neutral-300);
+
+  /* Color / Branding / Corporate */
+  --ds-color-esan-corp: var(--ds-color-red-500);
+  --ds-color-esan-corp-second: var(--ds-color-polar-500);
+  --ds-color-esan-corp-second-on: var(--ds-color-neutral-900);
+  --ds-color-esan-corp-third: var(--ds-color-neutral-300);
+
+  /* Color / Branding / University */
+  --ds-color-university: var(--ds-color-red-500);
+  --ds-color-university-on: var(--ds-color-white);
+  --ds-color-univ-maestrias: var(--ds-color-grayish-500);
+  --ds-color-univ-maestrias-on: var(--ds-color-neutral-900);
+  --ds-color-univ-management: var(--ds-color-blue-500);
+  --ds-color-univ-management-on: var(--ds-color-white);
+  --ds-color-univ-economics: var(--ds-color-wine-500);
+  --ds-color-univ-economics-on: var(--ds-color-white);
+  --ds-color-univ-communications: var(--ds-color-aqua-500);
+  --ds-color-univ-communications-on: var(--ds-color-neutral-900);
+  --ds-color-univ-engineering: var(--ds-color-green-500);
+  --ds-color-univ-engineering-on: var(--ds-color-white);
+  --ds-color-univ-law: var(--ds-color-yellow-500);
+  --ds-color-univ-law-on: var(--ds-color-neutral-900);
+  --ds-color-univ-psychology: var(--ds-color-orange-500);
+  --ds-color-univ-psychology-on: var(--ds-color-neutral-900);
+
+  /* Color / Branding / GSB */
+  --ds-color-gsb-ee: var(--ds-color-ice-500);
+  --ds-color-gsb-me: var(--ds-color-steel-500);
+  --ds-color-gsb-mba-primary: var(--ds-color-blue-dark-500);
+  --ds-color-gsb-mba-secondary: var(--ds-color-gold-500);
+  --ds-color-gsb-ecosistema-01: var(--ds-color-sky-500);
+  --ds-color-gsb-ecosistema-02: var(--ds-color-ocre-500);
+  --ds-color-gsb-ecosistema-03: var(--ds-color-royal-blue-500);
+  --ds-color-gsb-ecosistema-04: var(--ds-color-cyan-500);
+  --ds-color-gsb-ecosistema-05: var(--ds-color-cyan-dark);
+  --ds-color-gsb-ecosistema-06: var(--ds-color-brown-500);
+  --ds-color-gsb-ecosistema-07: var(--ds-color-violet-500);
+  --ds-color-gsb-ecosistema-08: var(--ds-color-sand-500);
+  --ds-color-gsb-ecosistema-09: var(--ds-color-emerald-500);
+  --ds-color-gsb-ecosistema-10: var(--ds-color-green-lemon);
+  --ds-color-gsb-ecosistema-11: var(--ds-color-olive-500);
+  --ds-color-gsb-ecosistema-12: var(--ds-color-olive-600);
+  --ds-color-gsb-ecosistema-13: var(--ds-color-olive-700);
+  --ds-color-gsb-ecosistema-14: var(--ds-color-olive-800);
+  --ds-color-gsb-ecosistema-15: var(--ds-color-terracota-500);
+  --ds-color-gsb-ecosistema-16: var(--ds-color-terracota-600);
+  --ds-color-gsb-ecosistema-17: var(--ds-color-borgona);
+
+  /* Color / Branding / Government */
+  --ds-color-government: var(--ds-color-granate-500);
+  --ds-color-government-on: var(--ds-color-white);
+  --ds-color-government-second: var(--ds-color-neutral-300);
+  --ds-color-government-third: var(--ds-color-dark-navy-500);
+  --ds-color-government-third-on: var(--ds-color-white);
+
+  /* Color / Feedback */
+  --ds-color-feedback-neutral-light: var(--ds-color-neutral-200);
+  --ds-color-feedback-neutral: var(--ds-color-neutral-500);
+  --ds-color-feedback-neutral-on: var(--ds-color-white);
+  --ds-color-feedback-neutral-dark: var(--ds-color-neutral-700);
+  --ds-color-feedback-info-light: var(--ds-color-info-100);
+  --ds-color-feedback-info: var(--ds-color-info-500);
+  --ds-color-feedback-info-on: var(--ds-color-white);
+  --ds-color-feedback-info-dark: var(--ds-color-info-700);
+  --ds-color-feedback-success-light: var(--ds-color-success-100);
+  --ds-color-feedback-success: var(--ds-color-success-500);
+  --ds-color-feedback-success-on: var(--ds-color-white);
+  --ds-color-feedback-success-dark: var(--ds-color-success-700);
+  --ds-color-feedback-warning-light: var(--ds-color-warning-100);
+  --ds-color-feedback-warning: var(--ds-color-warning-500);
+  --ds-color-feedback-warning-on: var(--ds-color-neutral-900);
+  --ds-color-feedback-warning-dark: var(--ds-color-warning-700);
+  --ds-color-feedback-error-light: var(--ds-color-error-100);
+  --ds-color-feedback-error: var(--ds-color-error-500);
+  --ds-color-feedback-error-on: var(--ds-color-neutral-900);
+  --ds-color-feedback-error-dark: var(--ds-color-error-700);
+
+  /* Borders */
+  --ds-border-width-sm: var(--ds-size-1);
+  --ds-border-width-md: var(--ds-size-2);
+
+  /* Radius */
+  --ds-radius-xs: var(--ds-size-4);
+  --ds-radius-sm: var(--ds-size-8);
+  --ds-radius-md: var(--ds-size-16);
+  --ds-radius-lg: var(--ds-size-16);
+  --ds-radius-xl: var(--ds-size-40);
+  --ds-radius-full: var(--ds-size-128);
+
+  /* Breakpoints (referencia; CSS no permite var() en @media) */
+  --ds-breakpoint-xs: 0;
+  --ds-breakpoint-sm: 480px;
+  --ds-breakpoint-md: 768px;
+  --ds-breakpoint-lg: 1024px;
+  --ds-breakpoint-xl: 1280px;
+  --ds-breakpoint-2xl: 1440px;
+  --ds-breakpoint-3xl: 1920px;
+
+  /* ------------------------------------------------------------
+     3. RESPONSIVE · Desktop (por defecto)
+     ------------------------------------------------------------ */
+
+  /* Spacing */
+  --ds-spacing-xxs: var(--ds-space-2);
+  --ds-spacing-xs: var(--ds-space-3);
+  --ds-spacing-sm: var(--ds-space-5);
+  --ds-spacing-md: var(--ds-space-8);
+  --ds-spacing-lg: var(--ds-space-12);
+  --ds-spacing-xl: var(--ds-space-16);
+  --ds-spacing-xxl: var(--ds-space-20);
+  --ds-spacing-xxxl: var(--ds-space-32);
+
+  /* Typography */
+  --ds-text-display: var(--ds-font-size-96);
+  --ds-text-giant: var(--ds-font-size-80);
+  --ds-text-h1: var(--ds-font-size-48);
+  --ds-text-h2: var(--ds-font-size-40);
+  --ds-text-h3: var(--ds-font-size-32);
+  --ds-text-h4: var(--ds-font-size-28);
+  --ds-text-h5: var(--ds-font-size-24);
+  --ds-text-h6: var(--ds-font-size-20);
+  --ds-text-body-lg: var(--ds-font-size-18);
+  --ds-text-body: var(--ds-font-size-16);
+  --ds-text-body-sm: var(--ds-font-size-12);
+  --ds-text-label: var(--ds-font-size-16);
+  --ds-weight-light: var(--ds-font-weight-300);
+  --ds-weight-regular: var(--ds-font-weight-400);
+  --ds-weight-medium: var(--ds-font-weight-500);
+  --ds-weight-semibold: var(--ds-font-weight-600);
+  --ds-weight-bold: var(--ds-font-weight-700);
+}
+
+/* Mobile: < 768px (--ds-breakpoint-md) */
+@media (max-width: 767.98px) {
+  :root {
+    --ds-spacing-xxs: var(--ds-space-2);
+    --ds-spacing-xs: var(--ds-space-3);
+    --ds-spacing-sm: var(--ds-space-4);
+    --ds-spacing-md: var(--ds-space-5);
+    --ds-spacing-lg: var(--ds-space-6);
+    --ds-spacing-xl: var(--ds-space-8);
+    --ds-spacing-xxl: var(--ds-space-12);
+    --ds-spacing-xxxl: var(--ds-space-16);
+
+    --ds-text-display: var(--ds-font-size-48);
+    --ds-text-giant: var(--ds-font-size-40);
+    --ds-text-h1: var(--ds-font-size-28);
+    --ds-text-h2: var(--ds-font-size-26);
+    --ds-text-h3: var(--ds-font-size-24);
+    --ds-text-h4: var(--ds-font-size-22);
+    --ds-text-h5: var(--ds-font-size-20);
+    --ds-text-h6: var(--ds-font-size-18);
+    --ds-text-body-lg: var(--ds-font-size-18);
+    --ds-text-body: var(--ds-font-size-16);
+    --ds-text-body-sm: var(--ds-font-size-12);
+    --ds-text-label: var(--ds-font-size-16);
+    --ds-weight-light: var(--ds-font-weight-300);
+    --ds-weight-regular: var(--ds-font-weight-400);
+    --ds-weight-medium: var(--ds-font-weight-500);
+    --ds-weight-semibold: var(--ds-font-weight-600);
+    --ds-weight-bold: var(--ds-font-weight-700);
+  }
+}

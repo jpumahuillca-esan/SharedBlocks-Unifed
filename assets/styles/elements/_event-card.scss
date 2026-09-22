@@ -17,52 +17,52 @@
 .arcis-scope {
   .event-card {
     display: flex;
-    padding: var(--space-5);
-    background-color: var(--neutrals-0);
-    border: var(--border-width-sm) solid var(--border-color-light);
-    border-radius: var(--radius-sm);
-    transition: box-shadow var(--ease-base);
+    padding: var(--ds-space-6);
+    background-color: var(--ds-color-background-default);
+    border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    border-radius: var(--ds-radius-sm);
+    transition: box-shadow var(--ds-ease-base);
   }
 
   .event-card:hover {
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--ds-shadow-sm);
   }
 
   .event-card__date {
     flex-shrink: 0;
     width: 64px;
     text-align: center;
-    padding: var(--space-3) var(--space-2);
-    border-radius: var(--radius-sm);
-    background-color: var(--neutrals-50);
-    border: var(--border-width-sm) solid var(--border-color-light);
+    padding: var(--ds-spacing-xs) var(--ds-spacing-xxs);
+    border-radius: var(--ds-radius-sm);
+    background-color: var(--ds-color-background-light);
+    border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
   }
 
   .event-card__date-day {
     display: block;
-    font-family: var(--font-accent);
-    font-size: var(--text-h3);
-    font-weight: var(--weight-bold);
-    line-height: 1;
-    color: var(--arcis-color-global-main);
+    font-family: var(--ds-font-family-display);
+    font-size: var(--ds-text-h3);
+    font-weight: var(--ds-weight-bold);
+    line-height: var(--ds-line-height-100);
+    color: var(--ds-color-text-brand);
   }
 
   .event-card__date-month {
     display: block;
-    margin-top: var(--space-1);
-    font-size: var(--text-xs);
-    font-weight: var(--weight-semibold);
+    margin-top: var(--ds-space-1);
+    font-size: var(--ds-text-body-sm);
+    font-weight: var(--ds-weight-semibold);
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--arcis-color-text-secondary);
+    color: var(--ds-color-text-secondary);
   }
 
   .event-card__body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
-    padding-left: var(--space-4);
+    gap: var(--ds-spacing-xxs);
+    padding-left: var(--ds-space-4);
   }
 
   /*
@@ -79,28 +79,28 @@
    * MoleculeEventCard.
    */
   .event-card .event-card__title {
-    font-family: var(--font-body);
-    font-weight: var(--weight-semibold);
+    font-family: var(--ds-font-family-base);
+    font-weight: var(--ds-weight-semibold);
   }
 
   .event-card__meta {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-4);
-    font-size: var(--text-sm);
-    color: var(--arcis-color-text-secondary);
+    gap: var(--ds-space-4);
+    font-size: var(--ds-text-body-compact);
+    color: var(--ds-color-text-secondary);
   }
 
   .event-card__meta-item {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--ds-spacing-xxs);
   }
 
   .event-card__meta-item svg {
     width: 15px;
     height: 15px;
-    color: var(--arcis-color-text-disabled);
+    color: var(--ds-color-text-disabled);
   }
 
   /* Variante "media": imagen superior + badge de fecha en la esquina */
@@ -111,7 +111,7 @@
   }
 
   .event-card--media:hover {
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--ds-shadow-md);
   }
 
   .event-card__media {
@@ -119,14 +119,14 @@
     aspect-ratio: 16 / 9;
     overflow: hidden;
     /* Sin imagen configurada el hueco se ve gris, no vacío ni roto. */
-    background-color: var(--neutrals-200);
+    background-color: var(--ds-color-background-light);
   }
 
   .event-card__media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform var(--ease-slow);
+    transition: transform var(--ds-ease-slow);
   }
 
   .event-card:hover .event-card__media img {
@@ -141,10 +141,10 @@
     flex-direction: column;
     align-items: center;
     width: 58px;
-    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    border-radius: 0 0 var(--ds-radius-sm) var(--ds-radius-sm);
     overflow: hidden;
-    background-color: var(--neutrals-0);
-    box-shadow: var(--shadow-md);
+    background-color: var(--ds-color-background-default);
+    box-shadow: var(--ds-shadow-md);
   }
 
   .event-card__date-badge::before {
@@ -152,34 +152,34 @@
     display: block;
     width: 100%;
     height: 4px;
-    background-color: var(--arcis-color-global-main);
+    background-color: var(--ds-color-surface-primary);
     flex-shrink: 0;
   }
 
   .event-card__date-badge-day {
-    padding-top: var(--space-2);
-    font-family: var(--font-accent);
-    font-size: var(--text-h4);
-    font-weight: var(--weight-bold);
-    line-height: 1;
-    color: var(--arcis-color-text-primary);
+    padding-top: var(--ds-spacing-xxs);
+    font-family: var(--ds-font-family-display);
+    font-size: var(--ds-text-h4);
+    font-weight: var(--ds-weight-bold);
+    line-height: var(--ds-line-height-100);
+    color: var(--ds-color-text-primary);
   }
 
   .event-card__date-badge-month {
-    padding-bottom: var(--space-2);
-    font-size: var(--text-xs);
-    font-weight: var(--weight-medium);
+    padding-bottom: var(--ds-spacing-xxs);
+    font-size: var(--ds-text-body-sm);
+    font-weight: var(--ds-weight-medium);
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: var(--arcis-color-text-secondary);
+    color: var(--ds-color-text-secondary);
   }
 
   .event-card__media-body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-3);
-    padding: var(--space-5);
+    gap: var(--ds-spacing-xs);
+    padding: var(--ds-space-6);
   }
 
   /*
@@ -189,7 +189,7 @@
   .event-card__badges {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-2);
+    gap: var(--ds-spacing-xxs);
   }
 
   /*
@@ -198,7 +198,7 @@
    * y la negrita, sumada al tamaño, lo hacía verse demasiado grande.
    */
   .event-card--media .event-card__title {
-    font-weight: var(--weight-medium);
+    font-weight: var(--ds-weight-medium);
     line-height: 1.3;
   }
 }

@@ -9,9 +9,9 @@
    equipo. Conviene reconciliarla cuando el kit se actualice.
 
    Valores que fija la maqueta (viñeta "Container del Hero"):
-     - contenedor con ancho máximo 1280px  -> var(--container-max)
+     - contenedor con ancho máximo 1280px  -> var(--ds-container-max)
      - columna de contenido al 50%         -> .hero__content
-     - espaciado vertical --space-4        -> gap de .hero__content
+     - espaciado vertical --ds-space-4        -> gap de .hero__content
 
    Todo bajo .arcis-scope por la razón explicada en base.scss.
    ========================================================================= */
@@ -25,7 +25,7 @@
      * Margen lateral. En variable porque los controles lo usan para alinearse
      * con el contenido en lugar de pegarse al borde de la pantalla.
      */
-    --hero-padding-x: var(--space-6);
+    --hero-padding-x: var(--ds-spacing-md);
 
     /*
      * Alto mínimo.
@@ -40,8 +40,8 @@
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    background-color: var(--neutrals-900);
-    color: var(--arcis-color-text-inverse);
+    background-color: var(--ds-color-surface-dark);
+    color: var(--ds-color-text-inverse);
   }
 
   .hero__slide {
@@ -87,16 +87,16 @@
   /*
    * Contenedor interno. La foto sangra a todo el ancho porque es parte del
    * diseño, pero el contenido se limita al ancho del sistema. Se usa el token
-   * --container-max y no el número que dice la viñeta, para que si el sistema
+   * --ds-container-max y no el número que dice la viñeta, para que si el sistema
    * cambia ese ancho la portada lo siga sola.
    */
   .hero__inner {
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: var(--container-max);
+    max-width: var(--ds-container-max);
     margin-inline: auto;
-    padding: var(--space-9) var(--hero-padding-x);
+    padding: var(--ds-spacing-xxl) var(--hero-padding-x);
     box-sizing: border-box;
   }
 
@@ -104,14 +104,14 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    /* Viñeta: espaciado vertical --space-4. */
-    gap: var(--space-4);
+    /* Viñeta: espaciado vertical --ds-space-4. */
+    gap: var(--ds-space-4);
     /* Viñeta: columna de contenido con ancho máximo al 50%. */
     max-width: 50%;
   }
 
   .hero__eyebrow {
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   /*
@@ -130,13 +130,13 @@
     display: block;
     width: 32px;
     height: 3px;
-    margin-top: var(--space-2);
-    border-radius: var(--radius-full);
-    background-color: var(--arcis-color-global-main);
+    margin-top: var(--ds-spacing-xxs);
+    border-radius: var(--ds-radius-full);
+    background-color: var(--ds-color-surface-primary);
   }
 
   .hero__title {
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   .hero__desc {
@@ -146,7 +146,7 @@
   .hero__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-3);
+    gap: var(--ds-spacing-xs);
   }
 
   /* -----------------------------------------------------------------------
@@ -161,26 +161,26 @@
     z-index: 2;
     left: 50%;
     transform: translateX(-50%);
-    bottom: var(--space-6);
+    bottom: var(--ds-space-8);
 
     width: 100%;
-    max-width: var(--container-max);
+    max-width: var(--ds-container-max);
     padding-inline: var(--hero-padding-x);
     box-sizing: border-box;
 
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: var(--space-3);
+    gap: var(--ds-spacing-xs);
   }
 
   .hero__counter {
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   .hero__arrows {
     display: flex;
-    gap: var(--space-2);
+    gap: var(--ds-spacing-xxs);
   }
 
   .hero__arrow {
@@ -189,15 +189,15 @@
     justify-content: center;
     width: 36px;
     height: 36px;
-    border-radius: var(--radius-xs);
+    border-radius: var(--ds-radius-xs);
 
     background-color: rgba(11, 12, 16, 0.55);
-    border: var(--border-width-sm) solid rgba(255, 255, 255, 0.28);
-    color: var(--arcis-color-text-inverse);
+    border: var(--ds-border-width-sm) solid rgba(255, 255, 255, 0.28);
+    color: var(--ds-color-text-inverse);
 
     /* Un ancla sin destino no trae cursor de mano. */
     cursor: pointer;
-    transition: background-color var(--ease-fast), border-color var(--ease-fast);
+    transition: background-color var(--ds-ease-fast), border-color var(--ds-ease-fast);
   }
 
   .hero__arrow:hover,
@@ -215,7 +215,7 @@
   }
 
   /* -----------------------------------------------------------------------
-     Tableta — por debajo de 992px.
+     Tableta — por debajo de 1024px.
 
      La composición no cambia: el texto sigue sobre la foto. Lo único que cae
      es el tope del 50%, porque a ese ancho media pantalla deja una columna tan
@@ -229,21 +229,21 @@
   }
 
   /* -----------------------------------------------------------------------
-     Teléfono — 576px hacia abajo.
+     Teléfono — por debajo de 480px.
 
      Aquí sí cambia la composición entera: la foto deja de ser fondo y pasa
      arriba, y el texto baja a un panel de color de marca. Sobre una foto
      estrecha el texto no se lee, y el velo tendría que ser tan opaco que
      taparía la imagen.
 
-     El corte va en 'sm' (576px) y NO en 'mobile' (768px): la captura de
+     El corte va en 'sm' (480px) y NO en 'md' (768px): la captura de
      tableta del equipo, a 764px, todavía muestra el texto sobre la foto. Con
      el punto de quiebre en 768 ese ancho caía del lado equivocado.
      ----------------------------------------------------------------------- */
   @include bp.container-down('sm') {
 
     .hero {
-      --hero-padding-x: var(--space-5);
+      --hero-padding-x: var(--ds-space-6);
 
       /*
        * Desnivel del borde superior del panel de color.
@@ -288,11 +288,11 @@
      * separación con el borde que tendría si el corte fuera recto.
      */
     .hero__inner {
-      background-color: var(--arcis-color-global-main);
-      padding: var(--space-7) var(--hero-padding-x);
+      background-color: var(--ds-color-surface-primary);
+      padding: var(--ds-spacing-lg) var(--hero-padding-x);
 
       margin-top: calc(-1 * var(--hero-slant));
-      padding-top: calc(var(--space-7) + var(--hero-slant));
+      padding-top: calc(var(--ds-spacing-lg) + var(--hero-slant));
       clip-path: polygon(0 0, 100% var(--hero-slant), 100% 100%, 0 100%);
     }
 
@@ -301,7 +301,7 @@
      * que el resto del texto de este panel.
      */
     .hero__eyebrow::after {
-      background-color: var(--arcis-color-text-inverse);
+      background-color: var(--ds-color-background-default);
     }
 
     .hero__actions {
@@ -322,15 +322,15 @@
      * quién manda aquí es el ancho de la pantalla, y eso solo lo sabe el CSS.
      */
     .hero__actions .btn.btn--primary {
-      background-color: var(--neutrals-0);
-      color: var(--arcis-color-global-main);
+      background-color: var(--ds-color-background-default);
+      color: var(--ds-color-text-brand);
       /*
-       * El color acompaña al barrido de la persiana (--ease-slow). Con la
+       * El color acompaña al barrido de la persiana (--ds-ease-slow). Con la
        * velocidad rápida el texto se volvería blanco antes de que el fondo lo
        * cubra, dejando un parpadeo de blanco sobre blanco.
        */
-      transition: background-color var(--ease-fast), color var(--ease-slow),
-                  border-color var(--ease-fast), transform var(--ease-fast);
+      transition: background-color var(--ds-ease-fast), color var(--ds-ease-slow),
+                  border-color var(--ds-ease-fast), transform var(--ds-ease-fast);
     }
 
     /*
@@ -339,7 +339,7 @@
      * mismo caso que _buttons.scss ya corrige para .btn--white.
      */
     .hero__actions .btn.btn--primary:hover {
-      color: var(--arcis-color-text-inverse);
+      color: var(--ds-color-text-inverse);
     }
 
     /*
@@ -349,19 +349,19 @@
      */
     .hero__controls {
       bottom: auto;
-      top: var(--space-5);
+      top: var(--ds-space-6);
       justify-content: flex-start;
       flex-direction: row-reverse;
     }
 
     .hero__arrow {
-      background-color: var(--arcis-color-global-main);
+      background-color: var(--ds-color-action-primary);
       border-color: transparent;
     }
 
     .hero__arrow:hover,
     .hero__arrow:focus-visible {
-      background-color: var(--arcis-color-global-dark);
+      background-color: var(--ds-color-action-primary-hover);
       border-color: transparent;
     }
   }

@@ -16,15 +16,15 @@
   .chip {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-1) var(--space-3);
-    border-radius: var(--radius-full);
-    border: var(--border-width-sm) solid var(--border-color-light);
-    background-color: var(--neutrals-0);
-    color: var(--arcis-color-text-primary);
-    font-size: var(--text-xs);
-    font-family: var(--font-body);
-    transition: background-color var(--ease-fast), border-color var(--ease-fast), color var(--ease-fast);
+    gap: var(--ds-spacing-xxs);
+    padding: var(--ds-space-1) var(--ds-spacing-xs);
+    border-radius: var(--ds-radius-full);
+    border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    background-color: var(--ds-color-background-default);
+    color: var(--ds-color-text-primary);
+    font-size: var(--ds-text-body-sm);
+    font-family: var(--ds-font-family-base);
+    transition: background-color var(--ds-ease-fast), border-color var(--ds-ease-fast), color var(--ds-ease-fast);
   }
 
   /*
@@ -38,21 +38,21 @@
 
   a.chip:hover,
   a.chip:focus-visible {
-    border-color: var(--arcis-color-global-main);
+    border-color: var(--ds-color-border-focus);
   }
 
   .chip.is-active {
-    background-color: var(--arcis-color-global-main);
-    border-color: var(--arcis-color-global-main);
-    color: var(--arcis-color-text-inverse);
+    background-color: var(--ds-color-action-primary);
+    border-color: var(--ds-color-action-primary);
+    color: var(--ds-color-text-inverse);
   }
 
   .chip__remove {
     display: inline-flex;
     /* También es un <a> sin destino: mismo caso que a.chip. */
     cursor: pointer;
-    color: var(--arcis-color-text-disabled);
-    transition: color var(--ease-fast);
+    color: var(--ds-color-text-disabled);
+    transition: color var(--ds-ease-fast);
   }
 
   .chip__remove svg {
@@ -61,6 +61,6 @@
   }
 
   .chip__remove:hover {
-    color: var(--error-dark);
+    color: var(--ds-color-feedback-error-dark);
   }
 }

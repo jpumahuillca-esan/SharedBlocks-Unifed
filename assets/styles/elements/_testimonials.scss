@@ -25,17 +25,17 @@
   .testimonial-card {
     display: flex;
     flex-direction: column;
-    gap: var(--space-5);
-    padding: var(--space-7);
-    background-color: var(--neutrals-0);
-    border: var(--border-width-sm) solid var(--border-color-light);
-    border-radius: var(--radius-sm);
+    gap: var(--ds-space-6);
+    padding: var(--ds-spacing-lg);
+    background-color: var(--ds-color-background-default);
+    border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    border-radius: var(--ds-radius-sm);
   }
 
   .testimonial-card__rating {
     display: flex;
-    gap: var(--space-1);
-    color: var(--univ-yellow-100);
+    gap: var(--ds-space-1);
+    color: var(--ds-color-yellow-500);
   }
 
   .testimonial-card__rating svg {
@@ -45,28 +45,28 @@
   }
 
   .testimonial-card__quote {
-    font-family: var(--font-display);
-    font-size: var(--text-body);
-    font-weight: var(--weight-medium);
+    font-family: var(--ds-font-family-display);
+    font-size: var(--ds-text-body);
+    font-weight: var(--ds-weight-medium);
     line-height: 1.35;
-    color: var(--arcis-color-text-primary);
+    color: var(--ds-color-text-primary);
   }
 
   .testimonial-card__author {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
+    gap: var(--ds-spacing-xs);
     margin-top: auto;
   }
 
   .testimonial-card__author-name {
-    font-weight: var(--weight-semibold);
-    font-size: var(--text-body);
+    font-weight: var(--ds-weight-semibold);
+    font-size: var(--ds-text-body);
   }
 
   .testimonial-card__author-role {
-    font-size: var(--text-body-lg);
-    color: var(--arcis-color-text-secondary);
+    font-size: var(--ds-text-body-lg);
+    color: var(--ds-color-text-secondary);
   }
 
   /* Variante "video": testimonio en formato video, foto a sangre + overlay */
@@ -75,7 +75,7 @@
     display: block;
     aspect-ratio: 3 / 4;
     padding: 0;
-    background-color: var(--neutrals-900);
+    background-color: var(--ds-color-surface-dark);
     border: none;
     overflow: hidden;
 
@@ -98,7 +98,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform var(--ease-slow);
+    transition: transform var(--ds-ease-slow);
   }
 
   .testimonial-card--video:hover .testimonial-card__media img {
@@ -139,12 +139,12 @@
     justify-content: center;
     width: 56px;
     height: 56px;
-    border-radius: var(--radius-full);
+    border-radius: var(--ds-radius-full);
     background-color: rgba(255, 255, 255, 0.14);
     border: 1.5px solid rgba(255, 255, 255, 0.55);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
-    transition: transform var(--ease-fast);
+    transition: transform var(--ds-ease-fast);
   }
 
   .testimonial-card--video:hover .testimonial-card__play-btn {
@@ -154,49 +154,49 @@
   .testimonial-card__play-btn svg {
     width: 20px;
     height: 20px;
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
     margin-left: 2px;
   }
 
   .testimonial-card__overlay {
     position: absolute;
-    left: var(--space-5);
-    right: var(--space-5);
-    bottom: var(--space-5);
+    left: var(--ds-space-6);
+    right: var(--ds-space-6);
+    bottom: var(--ds-space-6);
     z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-2);
+    gap: var(--ds-spacing-xxs);
   }
 
   .testimonial-card__accent {
     width: 32px;
     height: 3px;
-    border-radius: var(--radius-full);
-    background-color: var(--arcis-color-global-main);
+    border-radius: var(--ds-radius-full);
+    background-color: var(--ds-color-esan-corp);
   }
 
   /*
    * Tipografía del overlay.
    *
-   * DESVÍO del kit, deliberado: allí el nombre usa --text-h6 y el cargo hereda
-   * --text-body-lg de la regla base. En tokens.scss ambos valen 18px, así que
+   * DESVÍO del kit, deliberado: allí el nombre usa --ds-text-h6 y el cargo hereda
+   * --ds-text-body-lg de la regla base. En tokens.scss ambos valen 18px, así que
    * nombre y cargo salían del mismo tamaño y la tarjeta perdía la jerarquía que
    * sí tiene el diseño. Se bajan un escalón cada uno, siempre con tokens.
    *
-   * PENDIENTE: que --text-h6 y --text-body-lg midan lo mismo huele a
+   * PENDIENTE: que --ds-text-h6 y --ds-text-body-lg midan lo mismo huele a
    * desincronización con webunificada (la cabecera de tokens.scss ya avisa de
    * otro caso parecido en los clamp()). Si allí resultan tener valores
    * distintos, conviene volver a los tokens del kit y borrar este desvío.
    */
   .testimonial-card__overlay .testimonial-card__author-name {
-    font-size: var(--text-body);
-    color: var(--arcis-color-text-inverse);
+    font-size: var(--ds-text-body);
+    color: var(--ds-color-text-inverse);
   }
 
   .testimonial-card__overlay .testimonial-card__author-role {
-    font-size: var(--text-sm);
+    font-size: var(--ds-text-body-compact);
     color: rgba(255, 255, 255, 0.85);
   }
 
@@ -206,16 +206,16 @@
    * prefijos quedaría empatado y dependería del orden de los @use en index.scss.
    */
   .testimonial-card--video .testimonial-card__cta.btn.btn--link {
-    font-size: var(--text-sm);
+    font-size: var(--ds-text-body-compact);
   }
 
   .testimonial-card--video .testimonial-card__cta {
-    margin-top: var(--space-1);
-    color: var(--arcis-color-text-inverse);
+    margin-top: var(--ds-space-1);
+    color: var(--ds-color-text-inverse);
   }
 
   .testimonial-card--video .testimonial-card__cta:hover {
-    color: var(--arcis-color-global-main);
+    color: var(--ds-color-text-brand);
   }
 
   /* -----------------------------------------------------------------------
@@ -247,7 +247,7 @@
     position: absolute;
     inset: 0;
     z-index: 2;
-    background-color: #000;
+    background-color: var(--ds-color-black);
   }
 
   .testimonial-card__player iframe,

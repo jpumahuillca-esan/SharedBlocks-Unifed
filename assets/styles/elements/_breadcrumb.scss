@@ -26,34 +26,34 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--space-2);
-    font-size: var(--text-sm);
-    color: var(--arcis-color-text-secondary);
+    gap: var(--ds-spacing-xxs);
+    font-size: var(--ds-text-body-compact);
+    color: var(--ds-color-text-secondary);
   }
 
   .breadcrumb__item {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--ds-spacing-xxs);
   }
 
   .breadcrumb__item svg {
     width: 14px;
     height: 14px;
-    color: var(--neutrals-400);
+    color: var(--ds-color-neutral-300);
   }
 
   .breadcrumb__link {
-    color: var(--arcis-color-text-secondary);
-    transition: color var(--ease-fast);
+    color: var(--ds-color-text-secondary);
+    transition: color var(--ds-ease-fast);
   }
 
   .breadcrumb__link:hover {
-    color: var(--arcis-color-global-main);
+    color: var(--ds-color-text-brand);
   }
 
   .breadcrumb__current {
-    color: var(--arcis-color-text-primary);
-    font-weight: var(--weight-medium);
+    color: var(--ds-color-text-primary);
+    font-weight: var(--ds-weight-medium);
   }
 }

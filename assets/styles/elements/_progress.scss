@@ -36,29 +36,29 @@
   .progress-group {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--ds-spacing-xxs);
   }
 
   .progress-group__meta {
     display: flex;
     justify-content: space-between;
-    font-size: var(--text-sm);
-    color: var(--arcis-color-text-secondary);
+    font-size: var(--ds-text-body-compact);
+    color: var(--ds-color-text-secondary);
   }
 
   .progress.progress--arcis {
     width: 100%;
     height: 8px;
-    border-radius: var(--radius-full);
-    background-color: var(--neutrals-200);
+    border-radius: var(--ds-radius-full);
+    background-color: var(--ds-color-background-light);
     overflow: hidden;
   }
 
   .progress__bar {
     height: 100%;
-    border-radius: var(--radius-full);
-    background-color: var(--arcis-color-global-main);
-    transition: width var(--ease-slow);
+    border-radius: var(--ds-radius-full);
+    background-color: var(--ds-color-esan-corp);
+    transition: width var(--ds-ease-slow);
   }
 
   .progress.progress--sm {
@@ -66,10 +66,10 @@
   }
 
   .progress--success .progress__bar {
-    background-color: var(--success-dark);
+    background-color: var(--ds-color-feedback-success-dark);
   }
 
   .progress--warning .progress__bar {
-    background-color: var(--warning-dark);
+    background-color: var(--ds-color-feedback-warning-dark);
   }
 }

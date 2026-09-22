@@ -114,7 +114,7 @@ const formConfig = computed(() => {
 /* --- TIPOGRAFÍA FORMULARIO (Tuya intacta) --- */
 .title-transform {
   font-size: 1.5rem;
-  line-height: 1.25;
+  line-height: var(--ds-line-height-125);
   font-weight: 800;
 }
 

@@ -81,7 +81,7 @@
           <ul v-if="card.items.length" class="mapamundi-card__list">
             <li v-for="item in card.items" :key="item.id" class="mapamundi-card__item">
               <AtomPictogram :name="item.icon" :size="32" />
-              <AtomText size="sm" class="mapamundi-card__text">
+              <AtomText size="body-compact" class="mapamundi-card__text">
                 {{ item.text }}
               </AtomText>
             </li>

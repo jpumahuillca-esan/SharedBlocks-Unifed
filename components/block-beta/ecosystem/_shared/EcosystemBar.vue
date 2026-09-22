@@ -5,7 +5,7 @@
         {{ title }}
       </AtomHeading>
 
-      <AtomText v-if="desc" size="sm" class="ecosystem-bar__desc">
+      <AtomText v-if="desc" size="body-compact" class="ecosystem-bar__desc">
         {{ desc }}
       </AtomText>
     </div>

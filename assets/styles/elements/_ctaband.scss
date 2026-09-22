@@ -17,9 +17,7 @@
    la de imagen usa fondo degradado en lugar del layout dividido con dato
    flotante que documenta el kit.
 
-   Nombres de token: el kit usa --arcis-color-corporate-neutrals-* y
-   --arcis-color-univ-yellow-*; la librería renombró ambas escalas a
-   --neutrals-* y --univ-yellow-* al portarlas (mismos valores).
+   Tokens: los de arcis-2 (ver assets/styles/tokens.scss).
 
    Todo bajo .arcis-scope por la razón explicada en base.scss.
    ========================================================================= */
@@ -39,7 +37,7 @@
    *
    * La franja sangra a todo el ancho porque su fondo es parte del diseño, pero
    * el contenido se limita al ancho del contenedor del sistema para que quede
-   * alineado con el resto de la página. Se usa el token --container-max y no un
+   * alineado con el resto de la página. Se usa el token --ds-container-max y no un
    * número, así el día que el sistema cambie ese ancho esto lo sigue solo.
    *
    * El espaciado vive aquí y no en la franja: si estuviera en la franja, en
@@ -50,9 +48,9 @@
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: var(--container-max);
+    max-width: var(--ds-container-max);
     margin-inline: auto;
-    padding: var(--space-8);
+    padding: var(--ds-spacing-xl);
     box-sizing: border-box;
   }
 
@@ -61,32 +59,32 @@
     z-index: 1;
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: var(--ds-spacing-xs);
   }
 
   .ctaband__eyebrow {
-    font-size: var(--text-sm);
-    font-weight: var(--weight-medium);
+    font-size: var(--ds-text-body-compact);
+    font-weight: var(--ds-weight-medium);
     /* Misma convención que el elemento .eyebrow del sistema. */
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
 
   .ctaband__title {
-    font-size: var(--text-h2);
-    font-weight: var(--weight-bold);
+    font-size: var(--ds-text-h2);
+    font-weight: var(--ds-weight-bold);
   }
 
   .ctaband__desc {
-    font-size: var(--text-body);
+    font-size: var(--ds-text-body);
     max-width: 52ch;
   }
 
   .ctaband__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-3);
-    margin-top: var(--space-2);
+    gap: var(--ds-spacing-xs);
+    margin-top: var(--ds-spacing-xxs);
   }
 
   /* Imagen de fondo, común a las variantes que la usan. */
@@ -109,8 +107,8 @@
     display: flex;
     align-items: stretch;
     min-height: 380px;
-    background-color: var(--neutrals-900);
-    color: var(--arcis-color-text-inverse);
+    background-color: var(--ds-color-surface-dark);
+    color: var(--ds-color-text-inverse);
   }
 
   .ctaband--image .ctaband__inner {
@@ -123,7 +121,7 @@
     position: absolute;
     inset: 0;
     z-index: 0;
-    background: linear-gradient(90deg, var(--neutrals-900) 0%, rgba(33, 33, 33, 0) 100%);
+    background: linear-gradient(90deg, var(--ds-color-surface-dark) 0%, rgba(33, 33, 33, 0) 100%);
   }
 
   .ctaband--image .ctaband__content {
@@ -131,7 +129,7 @@
   }
 
   .ctaband--image .ctaband__eyebrow {
-    color: var(--univ-yellow-100);
+    color: var(--ds-color-yellow-500);
   }
 
   .ctaband--image .ctaband__desc {
@@ -146,8 +144,8 @@
     align-items: stretch;
     min-height: 380px;
     text-align: center;
-    background-color: var(--neutrals-900);
-    color: var(--arcis-color-text-inverse);
+    background-color: var(--ds-color-surface-dark);
+    color: var(--ds-color-text-inverse);
   }
 
   .ctaband--full-image .ctaband__inner {
@@ -171,7 +169,7 @@
   }
 
   .ctaband--full-image .ctaband__eyebrow {
-    color: var(--univ-yellow-100);
+    color: var(--ds-color-yellow-500);
   }
 
   .ctaband--full-image .ctaband__desc {
@@ -188,8 +186,8 @@
      ----------------------------------------------------------------------- */
   .ctaband--solid {
     text-align: center;
-    background-color: var(--arcis-color-global-main);
-    color: var(--arcis-color-text-inverse);
+    background-color: var(--ds-color-surface-primary);
+    color: var(--ds-color-text-inverse);
   }
 
   .ctaband--solid .ctaband__content {
@@ -199,7 +197,7 @@
   }
 
   .ctaband--solid .ctaband__eyebrow {
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
     opacity: 0.85;
   }
 
@@ -223,21 +221,21 @@
   .ctaband--compact {
     display: flex;
     align-items: center;
-    gap: var(--space-5);
+    gap: var(--ds-space-6);
     width: 100%;
-    max-width: var(--container-max);
+    max-width: var(--ds-container-max);
     margin-inline: auto;
     /*
      * Ritmo vertical común a todos los bloques (ver section-rhythm.scss). Va
      * como margen y no como relleno: es una caja con borde, y el relleno la
      * agrandaría en lugar de separarla de sus vecinos.
      */
-    margin-block: var(--section-pad-y);
-    padding: var(--space-5) var(--space-6);
+    margin-block: var(--ds-spacing-xxl);
+    padding: var(--ds-space-6) var(--ds-spacing-md);
     box-sizing: border-box;
-    background-color: var(--neutrals-50);
-    border: var(--border-width-sm) solid var(--border-color-light);
-    border-radius: var(--radius-md);
+    background-color: var(--ds-color-background-light);
+    border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    border-radius: var(--ds-radius-md);
   }
 
   .ctaband__icon {
@@ -247,10 +245,10 @@
     justify-content: center;
     width: 48px;
     height: 48px;
-    border-radius: var(--radius-full);
-    background-color: var(--neutrals-0);
-    color: var(--arcis-color-global-main);
-    box-shadow: var(--shadow-sm);
+    border-radius: var(--ds-radius-full);
+    background-color: var(--ds-color-background-default);
+    color: var(--ds-color-text-brand);
+    box-shadow: var(--ds-shadow-sm);
   }
 
   .ctaband__icon svg {
@@ -262,34 +260,34 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: var(--ds-space-1);
   }
 
   .ctaband__text-title {
-    font-size: var(--text-body);
-    font-weight: var(--weight-bold);
-    color: var(--arcis-color-text-primary);
+    font-size: var(--ds-text-body);
+    font-weight: var(--ds-weight-bold);
+    color: var(--ds-color-text-primary);
   }
 
   .ctaband__text-desc {
-    font-size: var(--text-sm);
-    color: var(--arcis-color-text-secondary);
+    font-size: var(--ds-text-body-compact);
+    color: var(--ds-color-text-secondary);
   }
 
   .ctaband__link {
     display: inline-flex;
     flex-shrink: 0;
     align-items: center;
-    gap: var(--space-2);
-    font-weight: var(--weight-medium);
-    color: var(--arcis-color-global-main);
+    gap: var(--ds-spacing-xxs);
+    font-weight: var(--ds-weight-medium);
+    color: var(--ds-color-text-brand);
     white-space: nowrap;
   }
 
   .ctaband__link svg {
     width: 16px;
     height: 16px;
-    transition: transform var(--ease-base);
+    transition: transform var(--ds-ease-base);
   }
 
   .ctaband__link:hover svg {
@@ -297,12 +295,12 @@
   }
 
   /* -----------------------------------------------------------------------
-     Versión móvil — 768px hacia abajo.
+     Versión móvil — por debajo de 768px.
      ----------------------------------------------------------------------- */
-  @include bp.container-down('mobile') {
+  @include bp.container-down('md') {
 
     .ctaband__inner {
-      padding: var(--space-7) var(--space-5);
+      padding: var(--ds-spacing-lg) var(--ds-space-6);
     }
 
     .ctaband--image {
@@ -322,7 +320,7 @@
 
     /* Sin ancho para separar texto y foto, el velo se degrada hacia abajo. */
     .ctaband--image::after {
-      background: linear-gradient(180deg, var(--neutrals-900) 0%, rgba(33, 33, 33, 0.55) 100%);
+      background: linear-gradient(180deg, var(--ds-color-surface-dark) 0%, rgba(33, 33, 33, 0.55) 100%);
     }
 
     /*
@@ -333,7 +331,7 @@
     .ctaband--compact {
       flex-direction: column;
       align-items: center;
-      gap: var(--space-4);
+      gap: var(--ds-space-4);
       text-align: center;
     }
 

@@ -26,15 +26,15 @@
     bottom: calc(100% + 10px);
     left: 50%;
     transform: translateX(-50%) translateY(4px);
-    padding: var(--space-2) var(--space-3);
-    border-radius: var(--radius-xs);
-    background-color: var(--neutrals-900);
-    color: var(--arcis-color-text-inverse);
-    font-size: var(--text-xs);
+    padding: var(--ds-spacing-xxs) var(--ds-spacing-xs);
+    border-radius: var(--ds-radius-xs);
+    background-color: var(--ds-color-surface-dark);
+    color: var(--ds-color-text-inverse);
+    font-size: var(--ds-text-body-sm);
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--ease-fast), transform var(--ease-fast);
+    transition: opacity var(--ds-ease-fast), transform var(--ds-ease-fast);
     z-index: 20;
   }
 
@@ -45,10 +45,10 @@
     left: 50%;
     transform: translateX(-50%);
     border: 5px solid transparent;
-    border-top-color: var(--neutrals-900);
+    border-top-color: var(--ds-color-neutral-900);
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--ease-fast);
+    transition: opacity var(--ds-ease-fast);
   }
 
   .tooltip-trigger:hover::after,
@@ -72,7 +72,7 @@
     bottom: auto;
     top: calc(100% + 4px);
     border-top-color: transparent;
-    border-bottom-color: var(--neutrals-900);
+    border-bottom-color: var(--ds-color-neutral-900);
   }
 
   .tooltip-trigger--bottom:hover::after,

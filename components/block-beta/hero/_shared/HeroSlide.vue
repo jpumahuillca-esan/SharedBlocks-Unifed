@@ -7,7 +7,7 @@
 
     <div class="hero__inner">
       <div class="hero__content">
-        <AtomText v-if="eyebrow" size="sm" class="hero__eyebrow">
+        <AtomText v-if="eyebrow" size="body-compact" class="hero__eyebrow">
           {{ eyebrow }}
         </AtomText>
 
@@ -30,7 +30,7 @@
         </AtomHeading>
 
         <!-- Opcional, según la maqueta. -->
-        <AtomText v-if="desc" size="sm" class="hero__desc">
+        <AtomText v-if="desc" size="body-compact" class="hero__desc">
           {{ desc }}
         </AtomText>
 

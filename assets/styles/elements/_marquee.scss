@@ -43,52 +43,52 @@
   .marquee__track {
     display: flex;
     width: max-content;
-    gap: var(--space-9);
+    gap: var(--ds-spacing-xxl);
     animation: marquee-scroll 24s linear infinite;
   }
 
   .marquee__item {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--ds-spacing-xxs);
     white-space: nowrap;
-    font-family: var(--font-accent);
-    font-size: var(--text-h5);
-    font-weight: var(--weight-semibold);
-    color: var(--neutrals-400);
+    font-family: var(--ds-font-family-display);
+    font-size: var(--ds-text-h5);
+    font-weight: var(--ds-weight-semibold);
+    color: var(--ds-color-neutral-300);
   }
 
   .marquee__item svg {
     width: 18px;
     height: 18px;
-    color: var(--neutrals-300);
+    color: var(--ds-color-neutral-200);
   }
 
   .marquee--dark {
-    background-color: var(--neutrals-900);
-    border-radius: var(--radius-md);
-    padding: var(--space-6) 0;
+    background-color: var(--ds-color-surface-dark);
+    border-radius: var(--ds-radius-md);
+    padding: var(--ds-spacing-md) 0;
   }
 
   .marquee--dark .marquee__item {
-    color: var(--arcis-color-global-main);
+    color: var(--ds-color-text-brand);
   }
 
   .marquee--dark .marquee__item svg {
-    color: var(--arcis-color-global-main);
+    color: var(--ds-color-text-brand);
   }
 
   .marquee--brand {
-    background-color: var(--arcis-color-global-main);
-    border-radius: var(--radius-md);
-    padding: var(--space-6) 0;
+    background-color: var(--ds-color-surface-primary);
+    border-radius: var(--ds-radius-md);
+    padding: var(--ds-spacing-md) 0;
   }
 
   .marquee--brand .marquee__item {
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   .marquee--brand .marquee__item svg {
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 }

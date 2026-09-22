@@ -34,11 +34,11 @@
      * Cuánto se ve de la tarjeta siguiente en el carrusel del teléfono. Es la
      * señal de que hay más a la derecha, además de los puntos.
      */
-    --image-grid-peek: var(--space-4);
+    --image-grid-peek: var(--ds-space-4);
 
     /* En la maqueta hay más aire entre el filete y las tarjetas (32px) que en
        las secciones de `events` (24px). */
-    gap: var(--space-6);
+    gap: var(--ds-spacing-md);
   }
 
   /*
@@ -55,7 +55,7 @@
   .image-grid .card-section__grid {
     display: grid;
     grid-template-columns: repeat(var(--card-section-columns, 3), minmax(0, 1fr));
-    gap: var(--space-5);
+    gap: var(--ds-space-6);
 
     margin-inline: 0;
     padding-inline: 0;
@@ -71,7 +71,7 @@
    * el marco del video de values-cards.
    */
   .image-grid__card.banner--image {
-    background-color: var(--neutrals-800);
+    background-color: var(--ds-color-neutral-800);
   }
 
   /*
@@ -81,11 +81,11 @@
    * adopta para todos los banners, esta regla pasa allí.
    */
   .image-grid__card .banner__arrow {
-    border-radius: 0 var(--radius-sm) var(--radius-sm) var(--radius-sm);
+    border-radius: 0 var(--ds-radius-sm) var(--ds-radius-sm) var(--ds-radius-sm);
   }
 
   /* -----------------------------------------------------------------------
-     Tableta — por debajo de 992px (o de bloque angosto).
+     Tableta — por debajo de 1024px (o de bloque angosto).
 
      Dos por fila. La tarjeta pasa a 16/9: en la maqueta de tableta es más
      apaisada que en escritorio, y con el 16/10 del banner tres filas de dos
@@ -103,9 +103,9 @@
   }
 
   /* -----------------------------------------------------------------------
-     Teléfono — 576px hacia abajo (o de bloque angosto).
+     Teléfono — por debajo de 480px (o de bloque angosto).
 
-     'sm' y no 'mobile' (768px): la maqueta de tableta, a esa medida, sigue en
+     'sm' y no 'md' (768px): la maqueta de tableta, a esa medida, sigue en
      dos por fila. El carrusel es solo para el teléfono.
 
      Vuelve el carril de .card-section tal cual —una fila que se desliza, con
@@ -115,12 +115,12 @@
   @include bp.container-down('sm') {
 
     .card-section.image-grid {
-      gap: var(--space-5);
+      gap: var(--ds-space-6);
     }
 
     .image-grid .card-section__grid {
       display: flex;
-      gap: var(--space-4);
+      gap: var(--ds-space-4);
 
       margin-inline: calc(-1 * var(--card-section-padding-x));
       padding-inline: var(--card-section-padding-x);
@@ -139,14 +139,14 @@
      * teléfono se veía más de media tarjeta siguiente.
      */
     .image-grid .card-section__grid > .image-grid__card {
-      flex: 0 0 calc(100% + var(--card-section-padding-x) - var(--space-4) - var(--image-grid-peek));
+      flex: 0 0 calc(100% + var(--card-section-padding-x) - var(--ds-space-4) - var(--image-grid-peek));
       /* De nuevo la proporción del banner, como en la maqueta de teléfono. */
       aspect-ratio: 16 / 10;
     }
 
     /* Separación entre la tarjeta y los puntos, como en la maqueta. */
     .image-grid .card-slider {
-      gap: var(--space-6);
+      gap: var(--ds-spacing-md);
     }
   }
 }

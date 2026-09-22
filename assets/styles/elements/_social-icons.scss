@@ -19,7 +19,7 @@
 .arcis-scope {
   .social-icons {
     display: flex;
-    gap: var(--space-3);
+    gap: var(--ds-spacing-xs);
   }
 
   .social-icon {
@@ -28,10 +28,10 @@
     justify-content: center;
     width: 40px;
     height: 40px;
-    border-radius: var(--radius-full);
-    border: var(--border-width-sm) solid var(--border-color-light);
-    color: var(--arcis-color-text-secondary);
-    transition: background-color var(--ease-fast), color var(--ease-fast), border-color var(--ease-fast);
+    border-radius: var(--ds-radius-full);
+    border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    color: var(--ds-color-text-secondary);
+    transition: background-color var(--ds-ease-fast), color var(--ds-ease-fast), border-color var(--ds-ease-fast);
   }
 
   .social-icon svg {
@@ -40,21 +40,21 @@
   }
 
   .social-icon:hover {
-    background-color: var(--arcis-color-global-main);
-    border-color: var(--arcis-color-global-main);
-    color: var(--arcis-color-text-inverse);
+    background-color: var(--ds-color-action-primary);
+    border-color: var(--ds-color-action-primary);
+    color: var(--ds-color-text-inverse);
   }
 
   /* Variante para footer / fondos oscuros */
   .social-icon--inverse {
-    border-color: rgba(255, 255, 255, 0.24);
-    color: var(--arcis-color-text-inverse);
+    border-color: var(--ds-color-border-inverse-subtle);
+    color: var(--ds-color-text-inverse);
   }
 
   .social-icon--inverse:hover {
-    background-color: var(--arcis-color-text-inverse);
-    border-color: var(--arcis-color-text-inverse);
-    color: var(--arcis-color-global-main);
+    background-color: var(--ds-color-action-inverse);
+    border-color: var(--ds-color-action-inverse);
+    color: var(--ds-color-text-brand);
   }
 
   /* Ícono social plano (sin badge circular) para el contexto denso del footer */
@@ -62,7 +62,7 @@
     width: auto;
     height: auto;
     border: none;
-    color: var(--neutrals-400);
+    color: var(--ds-color-neutral-300);
   }
 
   .social-icon--flat svg {
@@ -72,6 +72,6 @@
 
   .social-icon--flat:hover {
     background-color: transparent;
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 }

@@ -1,0 +1,43 @@
+/* ==========================================================================
+   ESAN · Tokens responsive por contenedor
+
+   ds-tokens.css cambia tipografía y espaciado a su versión móvil por debajo de
+   768px de VENTANA (@media sobre :root). Eso no basta en esta librería: los
+   bloques también se pintan en contenedores angostos dentro de ventanas
+   anchas —el lienzo del admin en vista móvil, una columna estrecha del
+   constructor—, y ahí seguían los valores de escritorio.
+
+   Aquí se repite el mismo bloque "Mobile" por ancho del CONTENEDOR. El
+   contenedor es .arcis-scope (ver base.scss), así que los valores se redefinen
+   en sus hijos directos y el resto los hereda: una @container nunca alcanza a
+   su propio contenedor.
+
+   ATENCIÓN: es una copia del bloque Mobile de ds-tokens.css. Si Figma cambia
+   esos valores, hay que cambiarlos también aquí.
+   ========================================================================== */
+
+@container (max-width: 767.98px) {
+  .arcis-scope > * {
+    --ds-spacing-xxs: var(--ds-space-2);
+    --ds-spacing-xs: var(--ds-space-3);
+    --ds-spacing-sm: var(--ds-space-4);
+    --ds-spacing-md: var(--ds-space-5);
+    --ds-spacing-lg: var(--ds-space-6);
+    --ds-spacing-xl: var(--ds-space-8);
+    --ds-spacing-xxl: var(--ds-space-12);
+    --ds-spacing-xxxl: var(--ds-space-16);
+
+    --ds-text-display: var(--ds-font-size-48);
+    --ds-text-giant: var(--ds-font-size-40);
+    --ds-text-h1: var(--ds-font-size-28);
+    --ds-text-h2: var(--ds-font-size-26);
+    --ds-text-h3: var(--ds-font-size-24);
+    --ds-text-h4: var(--ds-font-size-22);
+    --ds-text-h5: var(--ds-font-size-20);
+    --ds-text-h6: var(--ds-font-size-18);
+    --ds-text-body-lg: var(--ds-font-size-18);
+    --ds-text-body: var(--ds-font-size-16);
+    --ds-text-body-sm: var(--ds-font-size-12);
+    --ds-text-label: var(--ds-font-size-16);
+  }
+}

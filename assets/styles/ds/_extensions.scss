@@ -1,0 +1,37 @@
+/* ==========================================================================
+   ESAN · Extensiones locales de los tokens (arcis-2)
+
+   Lo que la librería necesita y el export de Figma (ds-tokens.css) todavía no
+   define: sombras, transiciones y el ancho del contenedor. Mismo prefijo y
+   misma forma que los tokens de Figma para que se usen igual.
+
+   Se carga ANTES que ds-tokens.css (ver tokens.scss): si Figma incorpora
+   alguno con el mismo nombre, el suyo gana por orden, sin tocar nada aquí.
+   Cuando eso pase, se borra de este archivo.
+
+   Criterio: lo que arcis-2 no define se conserva de los tokens anteriores
+   (los del kit de webunificada), con su mismo valor.
+   ========================================================================== */
+
+:root {
+
+  /*
+   * Texto compacto de 14px (antes --text-sm). arcis-2 salta de body (16px) a
+   * body-sm (12px); la librería lo usa en enlaces, menús y textos de apoyo de
+   * tarjetas, así que se conserva. Fijo en escritorio y móvil, como antes.
+   */
+  --ds-text-body-compact: 14px;
+
+  /* Sombras */
+  --ds-shadow-sm: 0 2px 8px rgb(0 0 0 / 0.06);
+  --ds-shadow-md: 0 8px 32px rgb(0 0 0 / 0.1);
+  --ds-shadow-lg: 0 24px 64px rgb(0 0 0 / 0.14);
+
+  /* Transiciones: duración y curva juntas, para `transition: color var(--ds-ease-fast)`. */
+  --ds-ease-fast: 150ms ease;
+  --ds-ease-base: 250ms ease;
+  --ds-ease-slow: 420ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Ancho máximo del contenido: el breakpoint xl de arcis-2 (1280px). */
+  --ds-container-max: 1280px;
+}

@@ -27,10 +27,10 @@
 .arcis-scope {
 
   .ecosystem {
-    --ecosystem-padding-x: var(--space-6);
+    --ecosystem-padding-x: var(--ds-spacing-md);
 
     /* Hueco entre los dos grupos grandes de la sección. */
-    --ecosystem-gap: var(--space-5);
+    --ecosystem-gap: var(--ds-space-6);
 
     /*
      * Hueco DENTRO del contenedor de facultades: entre tarjeta y tarjeta, y
@@ -38,7 +38,7 @@
      * y por eso va en su propia variable: en la maqueta las seis tarjetas se
      * leen como una rejilla compacta, no como piezas sueltas.
      */
-    --ecosystem-group-gap: var(--space-3);
+    --ecosystem-group-gap: var(--ds-spacing-xs);
 
     /*
      * Proporción de la foto de las facultades en escritorio. Es lo que decide
@@ -65,19 +65,19 @@
      */
     --ecosystem-panel-share: 40;
 
-    background-color: var(--neutrals-0);
+    background-color: var(--ds-color-background-default);
   }
 
   .ecosystem__inner {
     display: flex;
     flex-direction: column;
-    gap: var(--space-7);
+    gap: var(--ds-spacing-lg);
 
     width: 100%;
-    max-width: var(--container-max);
+    max-width: var(--ds-container-max);
     margin-inline: auto;
     /* Ritmo vertical común a todos los bloques (ver section-rhythm.scss). */
-    padding: var(--section-pad-y) var(--ecosystem-padding-x);
+    padding: var(--ds-spacing-xxl) var(--ecosystem-padding-x);
     box-sizing: border-box;
   }
 
@@ -88,23 +88,23 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-4);
+    gap: var(--ds-space-4);
   }
 
   /* Filete corto, rojo de marca, centrado entre el título y la descripción. */
   .ecosystem__rule {
     width: 40px;
     height: 2px;
-    background-color: var(--arcis-color-global-main);
+    background-color: var(--ds-color-esan-corp);
   }
 
   .ecosystem__title {
-    color: var(--arcis-color-text-primary);
+    color: var(--ds-color-text-primary);
   }
 
   .ecosystem__desc {
     max-width: 72ch;
-    color: var(--arcis-color-text-secondary);
+    color: var(--ds-color-text-secondary);
   }
 
   /* -----------------------------------------------------------------------
@@ -151,10 +151,10 @@
     flex-direction: column;
     min-width: 0;
 
-    background-color: var(--arcis-color-univ-primary);
-    /* El mismo radio de las tarjetas de facultad (--radius-sm), para que todas
+    background-color: var(--ds-color-university);
+    /* El mismo radio de las tarjetas de facultad (--ds-radius-sm), para que todas
        las esquinas del grupo se lean iguales. */
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-sm);
     overflow: hidden;
   }
 
@@ -189,8 +189,8 @@
      * redondeadas: el rojo asoma detrás de ellas. Las de abajo van rectas
      * porque ahí manda el recorte del contenedor, que ya las redondea.
      */
-    background-color: var(--neutrals-200);
-    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    background-color: var(--ds-color-background-light);
+    border-radius: var(--ds-radius-sm) var(--ds-radius-sm) 0 0;
   }
 
   /* -----------------------------------------------------------------------
@@ -203,15 +203,15 @@
   .ecosystem-bar {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
-    padding: var(--space-5);
+    gap: var(--ds-space-4);
+    padding: var(--ds-space-6);
 
     /*
      * Sin fondo propio: el rojo lo pone el contenedor, del que esta franja es
      * el encabezado. Tampoco necesita radio — las esquinas de arriba son las
      * del contenedor y él las redondea al recortar.
      */
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   .ecosystem-bar__text {
@@ -219,12 +219,12 @@
     flex: 1;
     align-items: baseline;
     flex-wrap: wrap;
-    gap: var(--space-1) var(--space-3);
+    gap: var(--ds-space-1) var(--ds-spacing-xs);
     min-width: 0;
   }
 
   .ecosystem-bar__title {
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   .ecosystem-bar__desc {
@@ -242,23 +242,23 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-sm);
     background-color: var(--ecosystem-color);
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   /*
    * Traducción de nombre a token. Es lo único que hacen estos modificadores: no
    * inventan ningún color, cada uno apunta a una variable que ya existe.
    */
-  .ecosystem-card--mba { --ecosystem-color: var(--graduate-mba-100); }
-  .ecosystem-card--government { --ecosystem-color: var(--goverment-primary-main); }
-  .ecosystem-card--blue { --ecosystem-color: var(--univ-blue-100); }
-  .ecosystem-card--wine { --ecosystem-color: var(--univ-wine-100); }
-  .ecosystem-card--green { --ecosystem-color: var(--univ-green-100); }
-  .ecosystem-card--yellow { --ecosystem-color: var(--univ-yellow-100); }
-  .ecosystem-card--cyan { --ecosystem-color: var(--univ-cyan-100); }
-  .ecosystem-card--orange { --ecosystem-color: var(--univ-orange-100); }
+  .ecosystem-card--mba { --ecosystem-color: var(--ds-color-gsb-mba-primary); }
+  .ecosystem-card--government { --ecosystem-color: var(--ds-color-government); }
+  .ecosystem-card--blue { --ecosystem-color: var(--ds-color-univ-management); }
+  .ecosystem-card--wine { --ecosystem-color: var(--ds-color-univ-economics); }
+  .ecosystem-card--green { --ecosystem-color: var(--ds-color-univ-engineering); }
+  .ecosystem-card--yellow { --ecosystem-color: var(--ds-color-univ-law); }
+  .ecosystem-card--cyan { --ecosystem-color: var(--ds-color-univ-communications); }
+  .ecosystem-card--orange { --ecosystem-color: var(--ds-color-univ-psychology); }
 
   /*
    * La foto NUNCA decide la altura de la tarjeta: va en absoluto y rellena la
@@ -273,7 +273,7 @@
   .ecosystem-card__media {
     position: relative;
     overflow: hidden;
-    background-color: var(--neutrals-800);
+    background-color: var(--ds-color-neutral-800);
   }
 
   .ecosystem-card__media img {
@@ -283,7 +283,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform var(--ease-slow);
+    transition: transform var(--ds-ease-slow);
   }
 
   .ecosystem-card:hover .ecosystem-card__media img {
@@ -317,22 +317,22 @@
     flex: 1;
     align-items: flex-start;
     justify-content: space-between;
-    gap: var(--space-3);
-    margin-top: calc(-1 * var(--radius-sm));
-    padding: var(--space-4);
-    border-radius: var(--radius-sm);
+    gap: var(--ds-spacing-xs);
+    margin-top: calc(-1 * var(--ds-radius-sm));
+    padding: var(--ds-space-4);
+    border-radius: var(--ds-radius-sm);
     background-color: var(--ecosystem-color);
   }
 
   .ecosystem-card__text {
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: var(--ds-space-1);
     min-width: 0;
   }
 
   .ecosystem-card__title {
-    color: var(--arcis-color-text-inverse);
+    color: var(--ds-color-text-inverse);
   }
 
   .ecosystem-card__desc {
@@ -354,13 +354,13 @@
   .ecosystem-card--yellow .ecosystem-card__title,
   .ecosystem-card--cyan .ecosystem-card__title,
   .ecosystem-card--orange .ecosystem-card__title {
-    color: var(--arcis-color-text-primary);
+    color: var(--ds-color-text-primary);
   }
 
   .ecosystem-card--yellow .ecosystem-card__desc,
   .ecosystem-card--cyan .ecosystem-card__desc,
   .ecosystem-card--orange .ecosystem-card__desc {
-    color: var(--arcis-color-text-secondary);
+    color: var(--ds-color-text-secondary);
   }
 
   /* Las dos grandes llevan más foto y más aire que las de facultad. */
@@ -398,7 +398,7 @@
    */
   .ecosystem-card--feature .ecosystem-card__body {
     flex: var(--ecosystem-panel-share) 1 0;
-    padding: var(--space-5);
+    padding: var(--ds-space-6);
   }
 
   /*
@@ -428,7 +428,7 @@
   }
 
   /* -----------------------------------------------------------------------
-     Tableta — por debajo de 992px.
+     Tableta — por debajo de 1024px.
 
      Los dos grupos dejan de convivir en una fila: las escuelas grandes pasan
      a dos columnas y el grupo de facultades baja entero debajo.
@@ -449,7 +449,7 @@
 
     .ecosystem__layout {
       grid-template-columns: 1fr;
-      gap: var(--space-7);
+      gap: var(--ds-spacing-lg);
     }
 
     .ecosystem__features {
@@ -510,16 +510,16 @@
     .ecosystem-card--faculty {
       flex-direction: row;
       align-items: stretch;
-      background-color: var(--neutrals-0);
-      color: var(--arcis-color-text-primary);
-      border: var(--border-width-sm) solid var(--border-color-light);
+      background-color: var(--ds-color-background-default);
+      color: var(--ds-color-text-primary);
+      border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
 
       /*
        * Filete del color de la escuela en el borde inferior, como en el Figma.
        * Tumbada sobre blanco, la tarjeta pierde su panel de color; este filete
        * y la flecha son lo que la sigue identificando con su escuela.
        */
-      border-bottom: var(--space-1) solid var(--ecosystem-color);
+      border-bottom: var(--ds-space-1) solid var(--ecosystem-color);
     }
 
     .ecosystem-card--faculty .ecosystem-card__media {
@@ -545,8 +545,8 @@
        * escritorio, girado.
        */
       margin-top: 0;
-      margin-left: calc(-1 * var(--radius-sm));
-      background-color: var(--neutrals-0);
+      margin-left: calc(-1 * var(--ds-radius-sm));
+      background-color: var(--ds-color-background-default);
     }
 
     .ecosystem-card--faculty .ecosystem-arrow.btn {
@@ -555,11 +555,11 @@
 
 
     .ecosystem-card--faculty .ecosystem-card__title {
-      color: var(--arcis-color-text-primary);
+      color: var(--ds-color-text-primary);
     }
 
     .ecosystem-card--faculty .ecosystem-card__desc {
-      color: var(--arcis-color-text-secondary);
+      color: var(--ds-color-text-secondary);
     }
 
     /*
@@ -572,7 +572,7 @@
      */
     .ecosystem-card--faculty .ecosystem-arrow.btn {
       background-color: var(--ecosystem-color);
-      color: var(--arcis-color-text-inverse);
+      color: var(--ds-color-text-inverse);
     }
 
     .ecosystem-card--faculty .ecosystem-arrow.btn:hover,
@@ -584,7 +584,7 @@
   }
 
   /* -----------------------------------------------------------------------
-     Teléfono — 576px hacia abajo.
+     Teléfono — por debajo de 480px.
 
      Todo en una columna. Las escuelas grandes también se apilan, y las
      facultades conservan la composición tumbada de tableta.
@@ -592,13 +592,13 @@
   @include bp.container-down('sm') {
 
     .ecosystem {
-      --ecosystem-padding-x: var(--space-5);
-      --ecosystem-gap: var(--space-4);
+      --ecosystem-padding-x: var(--ds-space-6);
+      --ecosystem-gap: var(--ds-space-4);
     }
 
-    /* El relleno vertical ya lo reduce --section-pad-y en móvil. */
+    /* El relleno vertical ya lo reduce --ds-spacing-xxl en móvil. */
     .ecosystem__inner {
-      gap: var(--space-6);
+      gap: var(--ds-spacing-md);
     }
 
     .ecosystem__features,

@@ -13,14 +13,11 @@ const safeConfig = computed(() => ({
     copyrightText: props.config?.copyrightText || '',
     socialLinks: props.config?.socialLinks || []
 }));
-
-
-
-console.log(safeConfig)
 </script>
 
 <template>
-    <footer class="footer-simple" :style="{
+    <!-- <div> y no <footer>: public-site ya lo envuelve en un <footer>, y no pueden anidarse. -->
+    <div class="footer-simple" :style="{
         '--fs-bg': safeConfig.bgColor,
         '--fs-text': safeConfig.textColor,
         '--fs-link': safeConfig.linkColor,
@@ -37,7 +34,7 @@ console.log(safeConfig)
                         </li>
                     </ul>
                     
-                    <AtomText class="mb-0 fs-copyright">{{ safeConfig.copyrightText }}sdsdsd</AtomText>
+                    <AtomText v-if="safeConfig.copyrightText" class="mb-0 fs-copyright">{{ safeConfig.copyrightText }}</AtomText>
                 
                 </div>
 
@@ -51,7 +48,7 @@ console.log(safeConfig)
 
             </div>
         </div>
-    </footer>
+    </div>
 </template>
 
 <style scoped>

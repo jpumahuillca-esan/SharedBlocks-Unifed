@@ -26,7 +26,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--ds-spacing-xxs);
     text-align: center;
   }
 
@@ -36,14 +36,14 @@
     justify-content: center;
     width: 36px;
     height: 36px;
-    border-radius: var(--radius-full);
-    border: var(--border-width-md) solid var(--border-color-light);
-    color: var(--arcis-color-text-disabled);
-    font-family: var(--font-display);
-    font-weight: var(--weight-semibold);
-    font-size: var(--text-sm);
-    background-color: var(--neutrals-0);
-    transition: background-color var(--ease-fast), border-color var(--ease-fast), color var(--ease-fast);
+    border-radius: var(--ds-radius-full);
+    border: var(--ds-border-width-md) solid var(--ds-color-border-subtle);
+    color: var(--ds-color-text-disabled);
+    font-family: var(--ds-font-family-display);
+    font-weight: var(--ds-weight-semibold);
+    font-size: var(--ds-text-body-compact);
+    background-color: var(--ds-color-background-default);
+    transition: background-color var(--ds-ease-fast), border-color var(--ds-ease-fast), color var(--ds-ease-fast);
   }
 
   .step__index svg {
@@ -52,40 +52,40 @@
   }
 
   .step__label {
-    font-size: var(--text-sm);
-    color: var(--arcis-color-text-disabled);
+    font-size: var(--ds-text-body-compact);
+    color: var(--ds-color-text-disabled);
     max-width: 110px;
   }
 
   .step__connector {
     flex: 1;
-    height: var(--border-width-md);
-    background-color: var(--border-color-light);
+    height: var(--ds-border-width-md);
+    background-color: var(--ds-color-border-subtle);
     margin-top: 17px;
     min-width: 32px;
   }
 
   .step.is-complete .step__index {
-    background-color: var(--arcis-color-global-main);
-    border-color: var(--arcis-color-global-main);
-    color: var(--arcis-color-text-inverse);
+    background-color: var(--ds-color-surface-primary);
+    border-color: var(--ds-color-esan-corp);
+    color: var(--ds-color-text-inverse);
   }
 
   .step.is-complete .step__label {
-    color: var(--arcis-color-text-primary);
+    color: var(--ds-color-text-primary);
   }
 
   .step.is-complete + .step__connector {
-    background-color: var(--arcis-color-global-main);
+    background-color: var(--ds-color-surface-primary);
   }
 
   .step.is-active .step__index {
-    border-color: var(--arcis-color-global-main);
-    color: var(--arcis-color-global-main);
+    border-color: var(--ds-color-esan-corp);
+    color: var(--ds-color-text-brand);
   }
 
   .step.is-active .step__label {
-    color: var(--arcis-color-text-primary);
-    font-weight: var(--weight-medium);
+    color: var(--ds-color-text-primary);
+    font-weight: var(--ds-weight-medium);
   }
 }
