@@ -25,6 +25,12 @@ const props = withDefaults(defineProps<{
   name?: string;
   id?: string;
   disabled?: boolean;
+  required?: boolean;
+  /**
+   * Etiqueta de varias líneas (una cláusula legal, por ejemplo): la casilla
+   * se alinea con la primera línea en vez de centrarse contra el párrafo.
+   */
+  multiline?: boolean;
 }>(), {
   type: 'checkbox',
 });
@@ -33,7 +39,11 @@ const emit = defineEmits<{
   'update:modelValue': [value: boolean | string];
 }>();
 
-const classes = computed(() => ['form-check', 'form-check--arcis']);
+const classes = computed(() => [
+  'form-check',
+  'form-check--arcis',
+  props.multiline ? 'form-check--multiline' : null,
+]);
 
 const isChecked = computed(() =>
   props.type === 'radio' ? props.modelValue === props.value : Boolean(props.modelValue)
@@ -55,6 +65,7 @@ const onChange = (event: Event) => {
       :name="name"
       :id="id"
       :disabled="disabled"
+      :required="required"
       :checked="isChecked"
       @change="onChange"
     />

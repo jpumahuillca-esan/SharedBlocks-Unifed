@@ -1,65 +1,67 @@
 /* ============================================================
    ARCIS Design System — ESAN University
    Elementos > Collapse (panel expandible individual — pieza base de un
-   acordeón de FAQs).
-
-   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
-   (proyecto "webunificada", sección "--- Collapse ---", ~líneas
-   2111-2169) y assets/js/main.js, función initCollapse() (~línea 445):
-   cada ".collapse" alterna su propio "is-open" al hacer click en su
-   trigger — son independientes entre sí, no es un acordeón exclusivo
-   (abrir uno no cierra los demás). Acá esa lógica es un simple toggle
-   por instancia en MoleculeCollapse.vue, no manipulación del DOM.
+   acordeón de FAQs), en variante clara y para fondo oscuro.
 
    COLISIÓN CONFIRMADA con Bootstrap 5: ".collapse" es un nombre de
    clase EXACTO de Bootstrap 5 (su propia utilidad de colapsar, con su
    propio plugin JS). Igual que con .card/.form-select/.progress/
-   .pagination/.breadcrumb/.btn-group, el markup real de webunificada
-   usa ".collapse" SOLO en su caso base (sin modificador estructural —
-   "is-open" es un estado, no cuenta), así que se inventa el mismo
-   marcador técnico "--arcis" que agrega MoleculeCollapse.vue
-   automáticamente, para que la regla real exija selector compuesto y
-   nunca coincida con un <div class="collapse"> plano de Bootstrap.
+   .pagination/.breadcrumb/.btn-group, se usa el marcador técnico
+   "--arcis" que agrega MoleculeCollapse.vue automáticamente, para que
+   la regla real exija selector compuesto y nunca coincida con un
+   <div class="collapse"> plano de Bootstrap.
 
-   COLISIÓN EN SENTIDO INVERSO (nueva, no vista en los Elementos
-   anteriores): front carga el SCSS completo de Bootstrap 5 en
-   app.scss ("@import node_modules/bootstrap/scss/bootstrap"), que
-   define ".collapse:not(.show) { display: none; }". Nuestro elemento
-   sigue teniendo la clase base ".collapse" (nunca ".show", usamos
-   ".is-open"), así que ESA regla de Bootstrap lo sigue alcanzando y
-   lo oculta por completo (todo el bloque queda en blanco), sin importar
-   que ".collapse--arcis" evite que NUESTRAS reglas pisen markup de
-   Bootstrap — el marcador "--arcis" solo protege en un sentido, no
-   evita que Bootstrap nos alcance a nosotros. Por eso acá SÍ hace falta
-   declarar "display: block" explícito (webunificada no lo necesita, no
-   tiene Bootstrap cargado) — es la única forma de ganarle a esa regla,
-   ya que si no declaramos "display" en absoluto no hay nada que
-   comparar en la cascada y la de Bootstrap simplemente aplica.
-
-   ".collapse + .collapse" (paneles apilados sin doble borde entre sí,
-   como un acordeón) también se protege con el marcador en ambos lados,
-   por consistencia.
+   COLISIÓN EN SENTIDO INVERSO: front carga el SCSS completo de
+   Bootstrap 5 en app.scss, que define ".collapse:not(.show) { display:
+   none; }". Nuestro elemento sigue teniendo la clase base ".collapse"
+   (nunca ".show", usamos ".is-open"), así que ESA regla lo alcanza y lo
+   oculta por completo — el marcador "--arcis" solo protege en un
+   sentido. Por eso acá SÍ hace falta declarar "display: block"
+   explícito: es la única forma de ganarle, ya que si no declaramos
+   "display" no hay nada que comparar en la cascada.
 
    ".collapse__trigger"/".collapse__panel"/".collapse__panel-inner"/
    ".collapse__body" son BEM y no colisionan con Bootstrap, van bare.
 
    La animación usa "display: grid; grid-template-rows: 0fr → 1fr"
-   (truco moderno de CSS, sin necesidad de calcular alturas en JS) —
-   se porta tal cual, ningún ajuste.
+   (truco moderno de CSS, sin calcular alturas en JS).
+
+   ------------------------------------------------------------
+   arcis-2 · 22-09-2026
+
+   Rehecho contra la lámina del Figma ("Collapse", en escritorio y móvil,
+   sobre fondo claro y sobre fondo negro). Lo que cambia respecto de la
+   versión portada del kit anterior:
+
+   1. Los paneles ya NO se fusionan en un acordeón de bordes compartidos:
+      cada uno es una tarjeta suelta, con sus cuatro esquinas redondeadas
+      y separada de la siguiente. Antes ".collapse + .collapse" quitaba
+      el borde superior y los radios; ahora pone la separación.
+   2. El borde pasa de border-subtle a border-default (#8591A2 medido en
+      la lámina) y el título de medium a semibold.
+   3. La flecha va en el rojo de marca, no en gris.
+   4. El cuerpo baja a 14px y se separa de la cabecera.
+   5. Aparece la variante para fondo oscuro (".collapse--inverse"):
+      fondo transparente —se apoya en el color que tenga la sección— con
+      el borde, el título y la flecha en claro.
    ============================================================ */
 
 .arcis-scope {
   .collapse.collapse--arcis {
     display: block;
-    border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    background-color: var(--ds-color-background-default);
+    border: var(--ds-border-width-sm) solid var(--ds-color-border-default);
     border-radius: var(--ds-radius-sm);
     overflow: hidden;
   }
 
+  /*
+   * Paneles apilados: cada uno es una tarjeta independiente, así que lo
+   * que va entre ellos es aire, no un borde compartido. La separación la
+   * pone el panel de abajo para que un panel suelto no arrastre margen.
+   */
   .collapse.collapse--arcis + .collapse.collapse--arcis {
-    border-top: none;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+    margin-top: var(--ds-spacing-sm);
   }
 
   .collapse__trigger {
@@ -67,21 +69,31 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--ds-spacing-xs);
-    padding: var(--ds-space-4) var(--ds-space-6);
+    gap: var(--ds-space-4);
+    padding: var(--ds-space-5) var(--ds-space-6);
     text-align: left;
-    background-color: var(--ds-color-background-default);
+    background-color: transparent;
     font-family: var(--ds-font-family-base);
-    font-weight: var(--ds-weight-medium);
+    font-weight: var(--ds-weight-semibold);
     font-size: var(--ds-text-body);
+    line-height: 1.5;
+    color: var(--ds-color-text-primary);
+    text-decoration: none;
+    /* Es un <a> sin destino (ver MoleculeCollapse.vue): el cursor no viene solo. */
+    cursor: pointer;
+  }
+
+  .collapse__trigger:hover,
+  .collapse__trigger:focus-visible {
     color: var(--ds-color-text-primary);
   }
 
   .collapse__trigger svg {
-    width: 18px;
-    height: 18px;
+    width: var(--ds-size-24);
+    height: var(--ds-size-24);
     flex-shrink: 0;
-    color: var(--ds-color-text-secondary);
+    /* El rojo de marca, como en la lámina. */
+    color: var(--ds-color-text-brand);
     transition: transform var(--ds-ease-base);
   }
 
@@ -104,8 +116,36 @@
   }
 
   .collapse__body {
-    padding: 0 var(--ds-space-6) var(--ds-space-4);
+    margin: 0;
+    padding: var(--ds-space-4) var(--ds-space-6) var(--ds-space-6);
     color: var(--ds-color-text-secondary);
-    font-size: var(--ds-text-body);
+    font-size: var(--ds-text-body-compact);
+    line-height: 1.5;
+  }
+
+  /* -----------------------------------------------------------------
+     Variante para fondo oscuro
+
+     El fondo va transparente a propósito: el panel se apoya en el color
+     que tenga la sección que lo contiene (negro en la lámina), igual que
+     .eyebrow--inverse o .spinner--inverse no traen fondo propio.
+     ----------------------------------------------------------------- */
+  .collapse.collapse--arcis.collapse--inverse {
+    background-color: transparent;
+    border-color: var(--ds-color-border-inverse);
+  }
+
+  .collapse--inverse .collapse__trigger,
+  .collapse--inverse .collapse__trigger:hover,
+  .collapse--inverse .collapse__trigger:focus-visible {
+    color: var(--ds-color-text-inverse);
+  }
+
+  .collapse--inverse .collapse__trigger svg {
+    color: var(--ds-color-text-inverse);
+  }
+
+  .collapse--inverse .collapse__body {
+    color: var(--ds-color-text-inverse-secondary);
   }
 }

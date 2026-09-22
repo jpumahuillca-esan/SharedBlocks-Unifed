@@ -5,18 +5,90 @@
 
    Fuente de verdad: webunificada/ui-kit/assets/css/main.css
    (proyecto "webunificada", sección "--- Event Card ---", ~líneas
-   2748-2902).
+   2748-2902) y la lámina "Event Cards" del Figma de arcis-2.
 
-   ".event-card"/".event-card__*" no son clases de Bootstrap ni
-   colisionan con nada en components/blocks (verificado), así que van
-   bare, sin el modificador obligatorio que sí necesitan .btn/.badge/
-   .card/.alert/.progress/.pagination/.breadcrumb/.btn-group/.collapse/
-   .dropdown/.list-group.
+   COLISIÓN CONFIRMADA (22-09-2026), antes dada por inexistente: el
+   bloque real components/blocks/grillas/eventos-noticias/Block.vue trae
+   su PROPIO markup con estas mismas clases —.event-card, __body, __meta,
+   __title, __date-badge— y sus propios estilos con ámbito. Como sus
+   reglas y las de esta hoja empatan en especificidad, lo que esta hoja
+   declaraba de más se le colaba: el badge de fecha se le iba a la
+   esquina izquierda (por el `left: 20px` de acá, que su `right: 0` no
+   puede pisar al quedar sobre-restringido), le aparecía el filete rojo
+   del ::before, su título perdía el peso 700 y su cuerpo heredaba una
+   sangría que no pidió.
+
+   Por eso ahora TODO cuelga del marcador "event-card--arcis" que agrega
+   MoleculeEventCard.vue, igual que .card--default, .collapse--arcis o
+   .form-select--arcis. El bloque antiguo se queda con sus estilos y
+   nada más.
+
+   ------------------------------------------------------------
+   arcis-2 · 22-09-2026 — dos formatos, cada uno con dos estados
+
+   La lámina pide que la tarjeta se acomode al sitio donde caiga:
+
+   - "standard" (sin imagen): en ancho va en fila —fecha | título y
+     datos | botón—; en angosto se apila, con el botón debajo alineado
+     con el título, no con la caja de fecha, y los datos (hora y lugar)
+     uno debajo del otro. El cambio es automático por ancho.
+   - "media" (con imagen): por defecto vertical —imagen arriba— y, con
+     `layout="row"`, imagen a la izquierda y contenido a la derecha; esa
+     segunda forma vuelve sola a la vertical cuando no hay ancho.
+
+   El armazón es grid y no flex justamente por el botón apilado: con
+   áreas se le puede decir "segunda fila, columna del cuerpo" sin tocar
+   el orden del DOM ni envolverlo en un div de más.
    ============================================================ */
 
+@use '../breakpoints' as bp;
+
+/* Estado apilado del formato sin imagen. Va en mixin porque lo piden dos
+   sitios: la consulta de ancho y la clase que lo fuerza a mano. */
+@mixin event-card-stacked {
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    'date body'
+    '.... cta ';
+  align-items: start;
+  row-gap: var(--ds-spacing-sm);
+
+  .event-card__cta {
+    justify-self: start;
+  }
+
+  /* Hora y lugar, uno debajo del otro. */
+  .event-card__meta {
+    flex-direction: column;
+    gap: var(--ds-space-2);
+  }
+}
+
+/* Formato con imagen en vertical: imagen arriba, cuerpo debajo. */
+@mixin event-card-media-stacked {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'media'
+    'body ';
+  align-items: stretch;
+
+  .event-card__media {
+    aspect-ratio: 16 / 9;
+    height: auto;
+  }
+
+  .event-card__media-body {
+    align-self: start;
+  }
+}
+
 .arcis-scope {
-  .event-card {
-    display: flex;
+  .event-card.event-card--arcis {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: 'date body cta';
+    align-items: center;
+    gap: var(--ds-space-4);
     padding: var(--ds-space-6);
     background-color: var(--ds-color-background-default);
     border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
@@ -24,22 +96,27 @@
     transition: box-shadow var(--ds-ease-base);
   }
 
-  .event-card:hover {
+  .event-card.event-card--arcis:hover {
     box-shadow: var(--ds-shadow-sm);
   }
 
-  .event-card__date {
-    flex-shrink: 0;
+  /* -----------------------------------------------------------------
+     Formato sin imagen
+     ----------------------------------------------------------------- */
+  .event-card--arcis .event-card__date {
+    grid-area: date;
     width: 64px;
     text-align: center;
     padding: var(--ds-spacing-xs) var(--ds-spacing-xxs);
     border-radius: var(--ds-radius-sm);
-    background-color: var(--ds-color-background-light);
+    /* Blanca, no gris: así está en la lámina. */
+    background-color: var(--ds-color-background-default);
     border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
   }
 
-  .event-card__date-day {
+  .event-card--arcis .event-card__date-day {
     display: block;
+    margin: 0;
     font-family: var(--ds-font-family-display);
     font-size: var(--ds-text-h3);
     font-weight: var(--ds-weight-bold);
@@ -47,9 +124,9 @@
     color: var(--ds-color-text-brand);
   }
 
-  .event-card__date-month {
+  .event-card--arcis .event-card__date-month {
     display: block;
-    margin-top: var(--ds-space-1);
+    margin: var(--ds-space-1) 0 0;
     font-size: var(--ds-text-body-sm);
     font-weight: var(--ds-weight-semibold);
     text-transform: uppercase;
@@ -57,12 +134,12 @@
     color: var(--ds-color-text-secondary);
   }
 
-  .event-card__body {
-    flex: 1;
+  .event-card--arcis .event-card__body {
+    grid-area: body;
     display: flex;
     flex-direction: column;
     gap: var(--ds-spacing-xxs);
-    padding-left: var(--ds-space-4);
+    min-width: 0;
   }
 
   /*
@@ -70,20 +147,22 @@
    *
    * El título es un AtomHeading, y su estilo con ámbito
    * (`.atom-heading[data-v-…]`) fija la fuente de titulares con la MISMA
-   * especificidad que tenía esta regla. Empataban, ganaba el átomo por cargarse
-   * después, y la tarjeta salía en Bricolage aunque el kit la declara en la
-   * fuente de texto. Con un nivel más de clase, esta hoja manda.
+   * especificidad que tendría una regla de una sola clase. Empataban, ganaba
+   * el átomo por cargarse después, y la tarjeta salía en Bricolage aunque el
+   * kit la declara en la fuente de texto. Con un nivel más de clase, esta
+   * hoja manda.
    *
-   * El tamaño ya no se declara aquí: AtomHeading lo fija en línea, así que una
-   * regla de hoja no tenía ningún efecto. Se decide con la prop `size` en
+   * El tamaño no se declara acá: AtomHeading lo fija en línea, así que una
+   * regla de hoja no tendría efecto. Se decide con la prop `size` en
    * MoleculeEventCard.
    */
-  .event-card .event-card__title {
+  .event-card--arcis .event-card__title {
+    margin: 0;
     font-family: var(--ds-font-family-base);
     font-weight: var(--ds-weight-semibold);
   }
 
-  .event-card__meta {
+  .event-card--arcis .event-card__meta {
     display: flex;
     flex-wrap: wrap;
     gap: var(--ds-space-4);
@@ -91,49 +170,72 @@
     color: var(--ds-color-text-secondary);
   }
 
-  .event-card__meta-item {
+  .event-card--arcis .event-card__meta-item {
     display: flex;
     align-items: center;
     gap: var(--ds-spacing-xxs);
+    margin: 0;
   }
 
-  .event-card__meta-item svg {
+  .event-card--arcis .event-card__meta-item svg {
+    flex-shrink: 0;
     width: 15px;
     height: 15px;
     color: var(--ds-color-text-disabled);
   }
 
-  /* Variante "media": imagen superior + badge de fecha en la esquina */
-  .event-card--media {
-    flex-direction: column;
-    padding: 0;
-    overflow: hidden;
+  .event-card--arcis .event-card__cta {
+    grid-area: cta;
+    justify-self: end;
   }
 
-  .event-card--media:hover {
+  /* Apilado: por ancho, o a mano con la clase. */
+  @include bp.container-down('cta') {
+    .event-card.event-card--arcis:not(.event-card--media) {
+      @include event-card-stacked;
+    }
+  }
+
+  .event-card.event-card--arcis.event-card--stacked {
+    @include event-card-stacked;
+  }
+
+  /* -----------------------------------------------------------------
+     Formato con imagen
+     ----------------------------------------------------------------- */
+  .event-card.event-card--arcis.event-card--media {
+    padding: 0;
+    gap: 0;
+    overflow: hidden;
+
+    @include event-card-media-stacked;
+  }
+
+  .event-card.event-card--arcis.event-card--media:hover {
     box-shadow: var(--ds-shadow-md);
   }
 
-  .event-card__media {
+  .event-card--arcis .event-card__media {
+    grid-area: media;
     position: relative;
-    aspect-ratio: 16 / 9;
     overflow: hidden;
     /* Sin imagen configurada el hueco se ve gris, no vacío ni roto. */
     background-color: var(--ds-color-background-light);
   }
 
-  .event-card__media img {
+  .event-card--arcis .event-card__media img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform var(--ds-ease-slow);
   }
 
-  .event-card:hover .event-card__media img {
+  .event-card.event-card--arcis:hover .event-card__media img {
     transform: scale(1.04);
   }
 
-  .event-card__date-badge {
+  .event-card--arcis .event-card__date-badge {
     position: absolute;
     top: 0;
     left: 20px;
@@ -147,7 +249,7 @@
     box-shadow: var(--ds-shadow-md);
   }
 
-  .event-card__date-badge::before {
+  .event-card--arcis .event-card__date-badge::before {
     content: '';
     display: block;
     width: 100%;
@@ -156,7 +258,8 @@
     flex-shrink: 0;
   }
 
-  .event-card__date-badge-day {
+  .event-card--arcis .event-card__date-badge-day {
+    margin: 0;
     padding-top: var(--ds-spacing-xxs);
     font-family: var(--ds-font-family-display);
     font-size: var(--ds-text-h4);
@@ -165,7 +268,8 @@
     color: var(--ds-color-text-primary);
   }
 
-  .event-card__date-badge-month {
+  .event-card--arcis .event-card__date-badge-month {
+    margin: 0;
     padding-bottom: var(--ds-spacing-xxs);
     font-size: var(--ds-text-body-sm);
     font-weight: var(--ds-weight-medium);
@@ -174,7 +278,8 @@
     color: var(--ds-color-text-secondary);
   }
 
-  .event-card__media-body {
+  .event-card--arcis .event-card__media-body {
+    grid-area: body;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -186,7 +291,7 @@
    * Fila de etiquetas. El cuerpo de la tarjeta es una columna, así que sin este
    * contenedor la segunda etiqueta caería debajo de la primera.
    */
-  .event-card__badges {
+  .event-card--arcis .event-card__badges {
     display: flex;
     flex-wrap: wrap;
     gap: var(--ds-spacing-xxs);
@@ -194,11 +299,39 @@
 
   /*
    * DESVÍO del kit, deliberado: el kit pone este título en negrita. En la
-   * maqueta del equipo va en peso medio —apenas más marcado que la descripción—
-   * y la negrita, sumada al tamaño, lo hacía verse demasiado grande.
+   * maqueta del equipo va en peso medio —apenas más marcado que la
+   * descripción— y la negrita, sumada al tamaño, lo hacía verse demasiado
+   * grande.
    */
-  .event-card--media .event-card__title {
+  .event-card--arcis.event-card--media .event-card__title {
     font-weight: var(--ds-weight-medium);
     line-height: 1.3;
+  }
+
+  /*
+   * Con imagen, en fila: la foto ocupa un tercio largo a la izquierda y el
+   * contenido se centra a su lado. La imagen se estira a lo que mida la
+   * tarjeta (object-fit la recorta), con la proporción como alto mínimo.
+   */
+  .event-card.event-card--arcis.event-card--media.event-card--row {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    grid-template-areas: 'media body';
+    align-items: stretch;
+
+    .event-card__media {
+      aspect-ratio: 4 / 3;
+      height: 100%;
+    }
+
+    .event-card__media-body {
+      align-self: center;
+    }
+  }
+
+  /* Sin ancho suficiente, la fila con imagen vuelve a la vertical. */
+  @include bp.container-down('md') {
+    .event-card.event-card--arcis.event-card--media.event-card--row {
+      @include event-card-media-stacked;
+    }
   }
 }

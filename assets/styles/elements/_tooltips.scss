@@ -28,9 +28,11 @@
     transform: translateX(-50%) translateY(4px);
     padding: var(--ds-spacing-xxs) var(--ds-spacing-xs);
     border-radius: var(--ds-radius-xs);
-    background-color: var(--ds-color-surface-dark);
+    /* Azul marino, no el casi negro de surface-dark: es el del Figma. */
+    background-color: var(--ds-color-background-dark);
     color: var(--ds-color-text-inverse);
     font-size: var(--ds-text-body-sm);
+    font-weight: var(--ds-weight-medium);
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
@@ -38,14 +40,23 @@
     z-index: 20;
   }
 
+  /*
+   * La flecha: un cuadrado de 10px del que solo se pinta un borde, así que el
+   * triángulo ocupa la MITAD de su caja, no toda.
+   *
+   * Por eso va pegada al objetivo (bottom: 100%) y no separada: su mitad
+   * visible queda entonces justo entre el objetivo y el globo, que arranca a
+   * 10px. Con una separación extra, el triángulo subía por detrás del globo y
+   * solo asomaba un píxel.
+   */
   .tooltip-trigger::before {
     content: '';
     position: absolute;
-    bottom: calc(100% + 4px);
+    bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
     border: 5px solid transparent;
-    border-top-color: var(--ds-color-surface-dark); /* el mismo token que el fondo del tooltip */
+    border-top-color: var(--ds-color-background-dark); /* el mismo token que el fondo del tooltip */
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--ds-ease-fast);
@@ -70,13 +81,71 @@
 
   .tooltip-trigger--bottom::before {
     bottom: auto;
-    top: calc(100% + 4px);
+    top: 100%;
     border-top-color: transparent;
-    border-bottom-color: var(--ds-color-surface-dark);
+    border-bottom-color: var(--ds-color-background-dark);
   }
 
   .tooltip-trigger--bottom:hover::after,
   .tooltip-trigger--bottom:focus-visible::after {
     transform: translateX(-50%) translateY(0);
+  }
+
+  /* -----------------------------------------------------------------------
+     Tooltip sobre un botón del sistema (as="button" con clases .btn)
+
+     Los botones con caja usan ::before para su persiana y `overflow: hidden`
+     para recortarla: justo el pseudo-elemento que necesita la flecha y el
+     recorte que impide que el globo salga del botón. Sin esto, el tooltip se
+     dibuja dentro del botón y la flecha se convierte en un rectángulo de
+     color.
+
+     Se abre el recorte y se le devuelve a ::before su papel de flecha. El
+     botón pierde la persiana al pasar el ratón: es el precio de llevar
+     tooltip, y a cambio el mensaje se lee.
+     ----------------------------------------------------------------------- */
+  .tooltip-trigger.btn {
+    overflow: visible;
+  }
+
+  .tooltip-trigger.btn::before {
+    inset: auto;
+    bottom: 100%;
+    left: 50%;
+    background: none;
+    z-index: auto;
+  }
+
+  .tooltip-trigger--bottom.btn::before {
+    bottom: auto;
+    top: 100%;
+  }
+
+  /*
+   * Sin persiana, el hover se pinta de una vez.
+   *
+   * Hace falta porque el botón sí cambia el color de su texto al pasar el
+   * ratón, contando con que la persiana ya lo haya cubierto: sin fondo, el
+   * texto y el ícono se volvían blancos sobre blanco y desaparecían. Cada
+   * variante toma el mismo color que su persiana revelaría.
+   */
+  .tooltip-trigger.btn--primary:hover,
+  .tooltip-trigger.btn--primary:focus-visible,
+  .tooltip-trigger.btn--secondary:hover,
+  .tooltip-trigger.btn--secondary:focus-visible,
+  .tooltip-trigger.btn--white:hover,
+  .tooltip-trigger.btn--white:focus-visible {
+    background-color: var(--ds-color-action-primary-hover);
+  }
+
+  .tooltip-trigger.btn--terciary:hover,
+  .tooltip-trigger.btn--terciary:focus-visible {
+    background-color: var(--ds-color-action-tertiary-hover);
+  }
+
+  /* En negativo, la persiana rellena de blanco y el texto pasa a rojo. */
+  .tooltip-trigger.btn--secondary.btn--negative:hover,
+  .tooltip-trigger.btn--secondary.btn--negative:focus-visible {
+    background-color: var(--ds-color-background-default);
   }
 }

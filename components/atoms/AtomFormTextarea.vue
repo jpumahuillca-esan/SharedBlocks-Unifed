@@ -5,14 +5,20 @@
  *
  * Envuelve ".form-textarea" portada en assets/styles/elements/_forms.scss.
  * No colisiona con Bootstrap, no necesita marcador extra.
+ *
+ * Mismos cuatro estados de borde que AtomFormInput (ver su comentario).
  */
-withDefaults(defineProps<{
+import { computed } from 'vue';
+
+const props = withDefaults(defineProps<{
   modelValue?: string;
   id?: string;
   placeholder?: string;
   disabled?: boolean;
   required?: boolean;
   rows?: number;
+  /** Ver AtomFormInput: "focus" es el estado dibujado, no el foco real. */
+  state?: 'focus' | 'error' | 'success';
 }>(), {
   rows: 4,
 });
@@ -20,11 +26,17 @@ withDefaults(defineProps<{
 defineEmits<{
   'update:modelValue': [value: string];
 }>();
+
+const classes = computed(() => [
+  'form-textarea',
+  props.modelValue ? 'is-filled' : null,
+  props.state ? `is-${props.state}` : null,
+]);
 </script>
 
 <template>
   <textarea
-    class="form-textarea"
+    :class="classes"
     :id="id"
     :placeholder="placeholder"
     :disabled="disabled"

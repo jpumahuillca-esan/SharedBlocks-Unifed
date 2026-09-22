@@ -8,11 +8,14 @@
  * marcador extra. El color rojo de error no se controla acá: lo aplica
  * automáticamente ".form-group.has-error .form-help" cuando este átomo
  * vive dentro de un MoleculeFormField con error.
+ *
+ * Es un <p> y no un <span>: es texto de contenido, se lee como una frase
+ * y así lo anuncia el lector de pantalla. El margen lo quita el CSS.
  */
 </script>
 
 <template>
-  <span class="form-help">
+  <p class="form-help">
     <slot />
-  </span>
+  </p>
 </template>

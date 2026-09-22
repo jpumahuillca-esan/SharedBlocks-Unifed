@@ -11,10 +11,20 @@ const badgeVariants = [
   { variant: 'brand', label: 'Nuevo' },
   { variant: 'brand-solid', label: 'Conferencia informativa' },
   { variant: 'neutral', label: 'Presencial' },
+  { variant: 'outline', label: 'Texto' },
   { variant: 'info', label: 'Informativo' },
   { variant: 'success', label: 'Acreditado' },
   { variant: 'warning', label: 'Últimas vacantes' },
   { variant: 'error', label: 'Cerrado' },
+] as const;
+
+/* En el Figma, la fila de esquinas rectas muestra la sólida y las de feedback. */
+const fixedVariants = [
+  { variant: 'brand-solid', label: 'Texto' },
+  { variant: 'info', label: 'Texto' },
+  { variant: 'success', label: 'Texto' },
+  { variant: 'warning', label: 'Texto' },
+  { variant: 'error', label: 'Texto' },
 ] as const;
 </script>
 
@@ -32,6 +42,16 @@ const badgeVariants = [
       <span class="preview-group__label">Badge</span>
       <div class="preview-row-wrap">
         <AtomBadge v-for="item in badgeVariants" :key="item.variant" :variant="item.variant">
+          {{ item.label }}
+        </AtomBadge>
+      </div>
+    </div>
+
+    <!-- "Badges fixed" del Figma: mismo color, más alta y con una sola esquina redondeada, la inferior derecha. -->
+    <div class="preview-group">
+      <span class="preview-group__label">Badge fixed (esquina inferior derecha redondeada)</span>
+      <div class="preview-row-wrap">
+        <AtomBadge v-for="item in fixedVariants" :key="item.variant" :variant="item.variant" fixed>
           {{ item.label }}
         </AtomBadge>
       </div>

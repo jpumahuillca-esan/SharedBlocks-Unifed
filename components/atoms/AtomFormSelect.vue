@@ -25,6 +25,8 @@ const props = withDefaults(defineProps<{
   placeholder?: string;
   disabled?: boolean;
   required?: boolean;
+  /** Ver AtomFormInput: "focus" es el estado dibujado, no el foco real. */
+  state?: 'focus' | 'error' | 'success';
 }>(), {
   options: () => [],
 });
@@ -33,7 +35,12 @@ defineEmits<{
   'update:modelValue': [value: string];
 }>();
 
-const classes = computed(() => ['form-select', 'form-select--arcis']);
+const classes = computed(() => [
+  'form-select',
+  'form-select--arcis',
+  props.modelValue ? 'is-filled' : null,
+  props.state ? `is-${props.state}` : null,
+]);
 </script>
 
 <template>

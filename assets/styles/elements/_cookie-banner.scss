@@ -33,7 +33,12 @@
     justify-content: space-between;
     gap: var(--ds-space-6);
     padding: var(--ds-space-6) var(--ds-spacing-md);
-    background-color: var(--ds-color-surface-dark);
+    /*
+     * El azul oscuro de arcis-2 (background-dark, #1A2B3C), no el casi negro
+     * de surface-dark con el que se portó del kit anterior: es el que trae la
+     * lámina del Figma para este aviso. Mismo token que el fondo del tooltip.
+     */
+    background-color: var(--ds-color-background-dark);
     color: var(--ds-color-text-inverse);
     box-shadow: var(--ds-shadow-lg);
     transform: translateY(100%);
@@ -53,7 +58,7 @@
   .cookie-banner__text {
     max-width: 640px;
     font-size: var(--ds-text-body-compact);
-    color: var(--ds-color-neutral-200);
+    color: var(--ds-color-text-inverse-secondary);
   }
 
   .cookie-banner__text a {

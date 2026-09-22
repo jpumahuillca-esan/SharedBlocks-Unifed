@@ -1,9 +1,7 @@
 /* ============================================================
    ARCIS Design System — ESAN University
-   Elementos > Formularios (campos, checkbox/radio, estado de error).
-
-   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
-   (proyecto "webunificada", sección "--- Formularios ---", ~líneas 1377-1445).
+   Elementos > Formularios (campos, dropdown, buscador, área de texto,
+   checkbox/radio, etiqueta flotante y sus estados).
 
    COLISIÓN CONFIRMADA con Bootstrap 5: ".form-select" y ".form-check"
    son nombres de clase EXACTOS de Bootstrap 5, y el bloque real
@@ -14,8 +12,7 @@
    bare pisaría ese formulario real (mismo bug que .btn/.badge/.card).
 
    ".form-label" es también un nombre exacto de Bootstrap 5. No hay
-   colisión activa hoy, pero se protege igual por el mismo motivo,
-   siguiendo la instrucción de cerciorarse de que este bug no se repita.
+   colisión activa hoy, pero se protege igual por el mismo motivo.
 
    A diferencia de .btn/.badge (donde el markup real de webunificada YA
    trae un segundo modificador junto a la clase base, ej. "btn btn--primary"),
@@ -25,19 +22,52 @@
    inventa un marcador técnico propio "--arcis" que nuestros átomos Vue
    agregan automáticamente junto a la clase base, para que la regla real
    exija AMBAS clases (selector compuesto) y nunca coincida con markup
-   Bootstrap plano de una sola clase. Es una desviación deliberada de la
-   guía viva, documentada acá y en los átomos que la aplican.
+   Bootstrap plano de una sola clase.
 
-   ".form-group", ".form-input", ".form-textarea" y ".form-help" NO
-   existen en Bootstrap 5 (Bootstrap usa .mb-3/.form-control/.form-text
-   respectivamente), así que van bare, sin necesidad de marcador.
+   ".form-group", ".form-field", ".form-input", ".form-textarea" y
+   ".form-help" NO existen en Bootstrap 5 (usa .mb-3/.form-control/
+   .form-text) ni en ningún bloque real (verificado), así que van bare.
+
+   ------------------------------------------------------------
+   arcis-2 · 22-09-2026
+
+   Los campos se rehicieron contra la lámina de formularios del Figma
+   ("Input Text / Dropdown / Search bar / Textarea / Checkbox & Radio /
+   Form group"). Cada estado es un token semántico de borde, y cada uno
+   se midió píxel a píxel sobre la lámina antes de elegirlo:
+
+     por defecto   --ds-color-border-default   #8591A2
+     con valor     --ds-color-border-strong    #647287
+     foco          --ds-color-border-focus     #0074AF
+     error         --ds-color-border-error     #902A31
+     éxito         --ds-color-border-success   #007F40
+
+   Dos cosas cambian respecto de la versión anterior:
+
+   1. El foco ya no pinta un halo rojo de 3px alrededor del campo (resto
+      del kit de webunificada). En el Figma el foco es solo el borde
+      azul, y eso es lo que se hace.
+   2. El checkbox y el radio marcados van en AZUL (#0074AF, medido en la
+      lámina: el color exacto de --ds-color-feedback-info), no en el rojo
+      de marca que traía el accent-color. Y ya no se dibujan con
+      accent-color sino a mano, porque la lámina define grosores y
+      tamaños que accent-color no deja tocar.
+
+   Los estados se pueden forzar con clases "is-*" en el control
+   (is-filled, is-focus, is-error, is-success) además de salir solos del
+   :focus o del .has-error del grupo. Las ponen los átomos Vue según sus
+   props; existen sueltas para que la guía viva pueda mostrar los cuatro
+   estados a la vez, ya que el foco real no se puede fotografiar.
    ============================================================ */
 
 .arcis-scope {
+  /* -----------------------------------------------------------------
+     Grupo: etiqueta + control(es) + ayuda, apilados
+     ----------------------------------------------------------------- */
   .form-group {
     display: flex;
     flex-direction: column;
-    gap: var(--ds-spacing-xxs);
+    gap: var(--ds-space-2);
     max-width: 360px;
   }
 
@@ -47,29 +77,109 @@
     color: var(--ds-color-text-primary);
   }
 
-  .form-input,
-  .form-textarea {
-    width: 100%;
-    padding: var(--ds-spacing-xs) var(--ds-space-4);
-    font-family: var(--ds-font-family-base);
-    font-size: var(--ds-text-body);
-    color: var(--ds-color-text-primary);
-    background-color: var(--ds-color-background-default);
-    border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
-    border-radius: var(--ds-radius-sm);
-    transition: border-color var(--ds-ease-fast), box-shadow var(--ds-ease-fast);
+  /*
+   * Asterisco de campo obligatorio: el rojo de marca (#E3173E medido en
+   * la lámina), no el rojo de error. Va como pseudo-elemento para que no
+   * lo lea el lector de pantalla — quien anuncia el campo obligatorio es
+   * el atributo `required` del control, no este adorno.
+   */
+  .form-label.form-label--required::after {
+    content: '*';
+    margin-left: var(--ds-space-1);
+    color: var(--ds-color-text-brand);
   }
 
+  .form-help {
+    margin: 0;
+    font-size: var(--ds-text-body-sm);
+    color: var(--ds-color-text-secondary);
+  }
+
+  /* -----------------------------------------------------------------
+     Caja del control: posiciona los íconos y la etiqueta flotante
+     ----------------------------------------------------------------- */
+  .form-field {
+    position: relative;
+    display: block;
+    width: 100%;
+  }
+
+  .form-field__icon,
+  .form-field__status {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    color: var(--ds-color-text-placeholder);
+    /* El clic atraviesa el ícono y cae en el campo, como en cualquier buscador. */
+    pointer-events: none;
+  }
+
+  .form-field__icon {
+    left: var(--ds-space-4);
+  }
+
+  .form-field__status {
+    right: var(--ds-space-4);
+  }
+
+  /* Hueco para el ícono: 16 de aire + 20 del ícono + 12 de separación. */
+  .form-field--icon-start .form-input {
+    padding-left: var(--ds-space-12);
+  }
+
+  .form-field--icon-end .form-input {
+    padding-right: var(--ds-space-12);
+  }
+
+  /* -----------------------------------------------------------------
+     Controles
+     ----------------------------------------------------------------- */
+  .form-input,
+  .form-textarea,
   .form-select.form-select--arcis {
+    box-sizing: border-box;
     width: 100%;
     padding: var(--ds-spacing-xs) var(--ds-space-4);
     font-family: var(--ds-font-family-base);
     font-size: var(--ds-text-body);
+    line-height: 1.25;
     color: var(--ds-color-text-primary);
     background-color: var(--ds-color-background-default);
-    border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    border: var(--ds-border-width-sm) solid var(--ds-color-border-default);
     border-radius: var(--ds-radius-sm);
-    transition: border-color var(--ds-ease-fast), box-shadow var(--ds-ease-fast);
+    transition: border-color var(--ds-ease-fast), color var(--ds-ease-fast);
+  }
+
+  .form-input::placeholder,
+  .form-textarea::placeholder {
+    color: var(--ds-color-text-placeholder);
+    /* Firefox baja la opacidad del placeholder por su cuenta. */
+    opacity: 1;
+  }
+
+  /*
+   * Dropdown: se apaga el dibujo nativo del sistema operativo y se pone
+   * el chevron del sistema de diseño. Va como imagen de fondo y no como
+   * un AtomIcon aparte para que el átomo sirva solo, sin envoltorio.
+   */
+  .form-select.form-select--arcis {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: var(--ds-space-10);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--ds-space-4) center;
+    background-size: var(--ds-size-16) var(--ds-size-16);
+  }
+
+  /* Sin elegir todavía: el texto de la opción vacía se lee como placeholder. */
+  .form-select.form-select--arcis:not(.is-filled) {
+    color: var(--ds-color-text-placeholder);
+  }
+
+  .form-select.form-select--arcis option {
+    color: var(--ds-color-text-primary);
   }
 
   .form-textarea {
@@ -77,40 +187,213 @@
     min-height: 96px;
   }
 
-  .form-input:focus-visible,
-  .form-textarea:focus-visible,
-  .form-select.form-select--arcis:focus-visible {
+  /* -----------------------------------------------------------------
+     Estados del control
+     ----------------------------------------------------------------- */
+  .form-input.is-filled,
+  .form-textarea.is-filled,
+  .form-select.form-select--arcis.is-filled {
+    border-color: var(--ds-color-border-strong);
+  }
+
+  .form-input:focus,
+  .form-textarea:focus,
+  .form-select.form-select--arcis:focus,
+  .form-input.is-focus,
+  .form-textarea.is-focus,
+  .form-select.form-select--arcis.is-focus {
     outline: none;
     border-color: var(--ds-color-border-focus);
-    box-shadow: 0 0 0 3px rgba(227, 23, 62, 0.15);
   }
 
-  .form-help {
-    font-size: var(--ds-text-body-sm);
-    color: var(--ds-color-text-secondary);
+  .form-group.has-success .form-input,
+  .form-group.has-success .form-textarea,
+  .form-group.has-success .form-select.form-select--arcis,
+  .form-input.is-success,
+  .form-textarea.is-success,
+  .form-select.form-select--arcis.is-success {
+    border-color: var(--ds-color-border-success);
   }
 
+  /* El error va al final para ganarle al resto cuando coinciden. */
   .form-group.has-error .form-input,
   .form-group.has-error .form-textarea,
-  .form-group.has-error .form-select.form-select--arcis {
-    border-color: var(--ds-color-feedback-error-dark);
+  .form-group.has-error .form-select.form-select--arcis,
+  .form-input.is-error,
+  .form-textarea.is-error,
+  .form-select.form-select--arcis.is-error {
+    border-color: var(--ds-color-border-error);
+  }
+
+  /*
+   * En la lámina, el campo de texto simple en error escribe también su
+   * valor en rojo — pero el rojo claro (#E94A55, feedback-error), no el
+   * oscuro del borde.
+   *
+   * Solo el simple: el dropdown, el área de texto y el campo con etiqueta
+   * flotante conservan el valor en negro y avisan con el borde, la
+   * etiqueta y el ícono. Por eso se excluye .form-field--floating.
+   */
+  .form-group.has-error .form-field:not(.form-field--floating) .form-input,
+  .form-input.is-error {
+    color: var(--ds-color-feedback-error);
   }
 
   .form-group.has-error .form-help {
-    color: var(--ds-color-feedback-error-dark);
+    color: var(--ds-color-feedback-error);
   }
 
+  .form-input:disabled,
+  .form-textarea:disabled,
+  .form-select.form-select--arcis:disabled {
+    background-color: var(--ds-color-background-light);
+    border-color: var(--ds-color-border-subtle);
+    color: var(--ds-color-text-disabled);
+    cursor: not-allowed;
+  }
+
+  /* -----------------------------------------------------------------
+     Etiqueta flotante
+
+     La etiqueta arranca dentro del campo, a la altura del texto, y sube
+     a sentarse sobre el borde superior en cuanto el campo tiene foco o
+     valor. Arriba lleva el fondo del campo y un poco de aire a los
+     lados: eso es lo que le abre la muesca al borde.
+     ----------------------------------------------------------------- */
+  .form-field--floating .form-label.form-label--floating {
+    position: absolute;
+    top: 50%;
+    left: var(--ds-space-3);
+    transform: translateY(-50%);
+    max-width: calc(100% - var(--ds-space-8));
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-inline: var(--ds-space-1);
+    background-color: var(--ds-color-background-default);
+    font-size: var(--ds-text-body);
+    font-weight: var(--ds-weight-regular);
+    color: var(--ds-color-text-placeholder);
+    /* El clic cae en el campo, no en la etiqueta. */
+    pointer-events: none;
+    transition: top var(--ds-ease-fast), font-size var(--ds-ease-fast), color var(--ds-ease-fast);
+  }
+
+  .form-field--floating:focus-within .form-label.form-label--floating,
+  .form-field--floating.is-floated .form-label.form-label--floating {
+    top: 0;
+    font-size: var(--ds-text-body-sm);
+  }
+
+  .form-field--floating:focus-within .form-label.form-label--floating {
+    color: var(--ds-color-border-focus);
+  }
+
+  .form-group.has-success .form-label.form-label--floating {
+    color: var(--ds-color-border-success);
+  }
+
+  .form-group.has-error .form-label.form-label--floating {
+    color: var(--ds-color-feedback-error);
+  }
+
+  .form-group.has-success .form-field__status {
+    color: var(--ds-color-border-success);
+  }
+
+  .form-group.has-error .form-field__status {
+    color: var(--ds-color-feedback-error);
+  }
+
+  /* -----------------------------------------------------------------
+     Checkbox & radio
+
+     Dibujados a mano (appearance: none) y no con accent-color: la lámina
+     fija el tamaño de la caja, el grosor del anillo del radio y el hueco
+     blanco de su centro, y accent-color no deja tocar ninguno de los
+     tres. La marca del checkbox va como imagen de fondo por el mismo
+     motivo que el chevron del dropdown.
+     ----------------------------------------------------------------- */
   .form-check.form-check--arcis {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: var(--ds-spacing-xxs);
+    gap: var(--ds-space-2);
     font-size: var(--ds-text-body);
     color: var(--ds-color-text-primary);
+    cursor: pointer;
   }
 
   .form-check.form-check--arcis input {
-    width: 18px;
-    height: 18px;
-    accent-color: var(--ds-color-action-primary);
+    appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    /* No se encoge ni se estira dentro del flex de la etiqueta. */
+    flex: none;
+    width: var(--ds-size-20);
+    height: var(--ds-size-20);
+    margin: 0;
+    background-color: var(--ds-color-background-default);
+    background-position: center;
+    background-repeat: no-repeat;
+    border: var(--ds-border-width-sm) solid var(--ds-color-border-default);
+    border-radius: var(--ds-radius-xs);
+    cursor: pointer;
+    transition: background-color var(--ds-ease-fast), border-color var(--ds-ease-fast);
+  }
+
+  .form-check.form-check--arcis input[type='radio'] {
+    border-radius: var(--ds-radius-full);
+  }
+
+  /*
+   * Etiqueta de varias líneas (una cláusula legal, por ejemplo): la casilla se
+   * alinea con la primera línea en vez de centrarse contra todo el párrafo.
+   */
+  .form-check.form-check--arcis.form-check--multiline {
+    align-items: flex-start;
+  }
+
+  .form-check.form-check--arcis.form-check--multiline input {
+    /* Centrada sobre la primera línea: (24 de interlineado − 20 de caja) / 2. */
+    margin-top: var(--ds-size-2);
+  }
+
+  .form-check.form-check--arcis input:hover {
+    border-color: var(--ds-color-border-strong);
+  }
+
+  .form-check.form-check--arcis input:focus-visible {
+    outline: var(--ds-border-width-md) solid var(--ds-color-border-focus);
+    outline-offset: var(--ds-size-2);
+  }
+
+  .form-check.form-check--arcis input[type='checkbox']:checked {
+    background-color: var(--ds-color-feedback-info);
+    border-color: var(--ds-color-feedback-info);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+    background-size: 14px 14px;
+  }
+
+  /*
+   * Radio marcado: relleno azul con un anillo blanco por dentro. El
+   * "punto" del centro no es un elemento, es el fondo asomando por el
+   * hueco que deja la sombra interior.
+   */
+  .form-check.form-check--arcis input[type='radio']:checked {
+    border-width: var(--ds-border-width-md);
+    border-color: var(--ds-color-feedback-info);
+    background-color: var(--ds-color-feedback-info);
+    box-shadow: inset 0 0 0 var(--ds-size-4) var(--ds-color-background-default);
+  }
+
+  .form-check.form-check--arcis input:disabled {
+    background-color: var(--ds-color-background-light);
+    border-color: var(--ds-color-border-subtle);
+    cursor: not-allowed;
+  }
+
+  .form-check.form-check--arcis:has(input:disabled) {
+    color: var(--ds-color-text-disabled);
+    cursor: not-allowed;
   }
 }

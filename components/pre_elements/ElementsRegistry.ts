@@ -70,6 +70,11 @@ export const ELEMENTS_REGISTRY: Record<string, {
     icon: 'tags',
     component: defineAsyncComponent(() => import('./PreviewChips.vue')),
   },
+  Tabs: {
+    label: 'Tabs',
+    icon: 'folder',
+    component: defineAsyncComponent(() => import('./PreviewTabs.vue')),
+  },
   Tooltips: {
     label: 'Tooltips',
     icon: 'message-circle',

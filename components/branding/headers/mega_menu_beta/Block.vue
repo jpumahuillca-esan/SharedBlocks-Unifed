@@ -5,15 +5,24 @@
   -->
   <div
     ref="root"
+    v-bind="$attrs"
     class="arcis-scope mmb-host"
     @pointerleave="onHostPointerLeave"
     @pointerenter="cancelClose"
-    @keydown.esc="closePanel"
+    @keydown.esc="closePanelAndRestoreFocus"
   >
-    <div class="mmb" :style="{ '--mmb-logo-height': `${logoHeight}px` }">
+    <!--
+      Sin lupa, la barra necesita su propio margen a la derecha: ese borde lo
+      cubría el botón rojo, que llega hasta el canto.
+    -->
+    <div
+      class="mmb"
+      :class="{ 'mmb--no-search': !searchUrl }"
+      :style="{ '--mmb-logo-height': `${logoHeight}px` }"
+    >
       <div class="mmb__bar">
         <component :is="linkTag" v-bind="getLinkProps(logoLink)" class="mmb__logo">
-          <img class="mmb__logo-image" :src="logoSrc" alt="Universidad ESAN" />
+          <img class="mmb__logo-image" :src="logoSrc" :alt="logoAlt" />
         </component>
 
         <!-- Primer nivel. Solo en escritorio: en tableta y móvil va al menú lateral. -->
@@ -53,7 +62,9 @@
         </nav>
 
         <div class="mmb__actions">
+          <!-- Sin destino no se dibuja: un botón de búsqueda que no busca engaña. -->
           <component
+            v-if="searchUrl"
             :is="linkTag"
             v-bind="getLinkProps(searchUrl)"
             class="mmb__search"
@@ -130,7 +141,7 @@
  * El menú lateral añade debajo los enlaces del topbar, que en móvil se ocultan
  * de la franja: los recibe por inyección (BRANDING_TOPBAR_KEY), no por props.
  */
-import { ref, computed, watch, inject, onMounted, onBeforeUnmount } from 'vue';
+import { ref, computed, watch, inject, nextTick, onMounted, onBeforeUnmount } from 'vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 import { useDynamicLink } from '../../../../composables/useDynamicLink';
 import { BRANDING_TOPBAR_KEY } from '../../../../helpers/branding';
@@ -149,6 +160,14 @@ const COMPACT_BELOW = 1024;
 /** Espera antes de cerrar el panel al salir con el ratón: evita que parpadee al rozar el borde. */
 const CLOSE_DELAY = 180;
 
+/*
+ * La plantilla tiene dos raíces —la cabecera y el menú lateral, que se fija a la
+ * ventana—, así que Vue no sabe en cuál poner lo que llegue de fuera (una clase
+ * del lienzo, por ejemplo) y lo descarta con un aviso. Se reparte a mano: todo
+ * va a la cabecera, que es la raíz visible.
+ */
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<{
   config: Record<string, any>;
   menu?: any[];
@@ -163,7 +182,27 @@ const { linkTag, getLinkProps } = useDynamicLink(props.linkComponent);
 const text = (value: unknown) => (typeof value === 'string' ? value : '');
 
 const logoSrc = computed(() => text(props.config?.logoUrl).trim() || defaultLogo);
-const logoLink = computed(() => text(props.config?.urlRedict).trim() || '/');
+
+/*
+ * `logoLink` manda sobre `urlRedict`: es lo que pone el layout de public-site en
+ * cada idioma (/en en inglés), por encima de lo que se haya escrito en el
+ * editor, que guarda `urlRedict`.
+ */
+const logoLink = computed(
+  () => text(props.config?.logoLink).trim() || text(props.config?.urlRedict).trim() || '/',
+);
+
+/*
+ * Texto alternativo del logo. Cada unidad sube el suyo, así que no puede decir
+ * siempre "Universidad ESAN": si no se escribe uno y hay logo propio, se
+ * describe a dónde lleva, que es lo único que se sabe con certeza.
+ */
+const logoAlt = computed(() => {
+  const custom = text(props.config?.logoAlt).trim();
+  if (custom) return custom;
+  return text(props.config?.logoUrl).trim() ? 'Inicio' : 'Universidad ESAN';
+});
+
 const searchUrl = computed(() => text(props.config?.searchUrl).trim());
 
 /** Alto del logo en escritorio. En tableta y móvil la hoja lo reduce en proporción. */
@@ -211,6 +250,24 @@ const closePanel = () => {
 const togglePanel = (id: string) => {
   cancelClose();
   activeId.value = activeId.value === id ? null : id;
+};
+
+/*
+ * Cerrar con Esc devuelve el foco al control que abrió el panel: si se queda
+ * dentro, al ocultarse el panel el foco se pierde y con teclado hay que volver
+ * a recorrer la página desde el principio.
+ *
+ * Solo aquí, y no en closePanel: al cerrar con el ratón o al seguir un enlace,
+ * mover el foco sería robárselo a quien está en otra parte.
+ */
+const closePanelAndRestoreFocus = () => {
+  const id = activeId.value;
+  closePanel();
+  if (!id) return;
+
+  nextTick(() => {
+    root.value?.querySelector<HTMLElement>(`[aria-controls="mmb-panel-${id}"]`)?.focus();
+  });
 };
 
 /*

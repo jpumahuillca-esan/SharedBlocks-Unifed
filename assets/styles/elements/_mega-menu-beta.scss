@@ -59,6 +59,15 @@
     padding-left: var(--mmb-padding-x);
   }
 
+  /*
+   * A la derecha no hay relleno porque el botón de búsqueda llega hasta el
+   * canto. Si la cabecera no tiene búsqueda configurada, el menú quedaría
+   * pegado al borde, así que la barra pone el margen ella misma.
+   */
+  .mmb--no-search .mmb__bar {
+    padding-right: var(--mmb-padding-x);
+  }
+
   .mmb__logo {
     display: inline-flex;
     flex-shrink: 0;
@@ -531,6 +540,11 @@
     .mmb {
       --mmb-bar-height: 56px;
       --mmb-padding-x: var(--ds-space-4);
+    }
+
+    /* Aquí el canto derecho lo ocupa la hamburguesa, haya búsqueda o no. */
+    .mmb--no-search .mmb__bar {
+      padding-right: 0;
     }
 
     /* En la maqueta el logo móvil mide unos tres cuartos del de escritorio. */

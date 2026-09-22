@@ -1,0 +1,223 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Elementos > Tabs (pestañas), en tres formas.
+
+   Fuente de verdad: las láminas "Tabs" del Figma de arcis-2 (horizontal
+   con subrayado, vertical, y la de tarjetas) y el carril de filtros que
+   el bloque block-beta/info/values-cards ya dibujaba a mano con chips.
+
+   ".tabs"/".tabs__list"/".tabs__tab" NO son clases de Bootstrap: Bootstrap
+   usa ".nav-tabs", ".tab-content" y ".tab-pane" (esas sí aparecen en los
+   editores de varios bloques, con su markup y su JS). Tampoco las usa
+   ningún bloque de components/. Por eso van bare, sin el marcador
+   obligatorio que sí necesitan .btn/.badge/.card/.collapse/.form-*.
+   ".is-active" tampoco colisiona (Bootstrap usa ".active").
+
+   ------------------------------------------------------------
+   Las tres formas, medidas sobre la lámina (escala 0,6):
+
+   - "underline" (por defecto): fila con un filete de 2px que cruza todo
+     el ancho; la pestaña activa apoya encima una barra roja de 3px de su
+     mismo ancho. Texto gris y regular; el activo, negro y semibold.
+   - "vertical": la misma idea girada — el filete va a la izquierda y la
+     barra roja marca el elemento activo de arriba abajo.
+   - "cards": sin filete compartido. Cada pestaña es su propia caja
+     redondeada con ícono, y la activa se rellena de rojo. Es la que ya
+     usaba values-cards; sus medidas se traen tal cual desde el bloque
+     (antes vivían en _values-cards.scss, pisando a .chip) para que el
+     bloque no cambie de aspecto al pasar a esta molécula.
+
+   El gris del filete: en la lámina el horizontal mide #A8B1BF y el
+   vertical #E8ECF1 — un escalón de la rampa de grises entre uno y otro.
+   Se unifican en border-subtle (#CCD3DC), que es el token semántico de
+   filete claro y queda justo entre los dos.
+   ============================================================ */
+
+.arcis-scope {
+  .tabs {
+    /*
+     * Grosor de la barra que marca la pestaña activa. Va como variable del
+     * componente y no suelto en cada regla porque la rampa de tamaños de
+     * arcis-2 salta de 2px a 4px y la lámina pide 3: así el valor "a mano"
+     * está en un solo sitio, con nombre, y se cambia una vez.
+     */
+    --tabs-indicator: 3px;
+
+    display: block;
+    max-width: 100%;
+  }
+
+  .tabs__list {
+    display: flex;
+    align-items: stretch;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tabs__tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-spacing-xxs);
+    font-family: var(--ds-font-family-base);
+    font-size: var(--ds-text-body);
+    font-weight: var(--ds-weight-regular);
+    color: var(--ds-color-text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+    /* Es un <a> sin destino (ver MoleculeTabs.vue): el cursor no viene solo. */
+    cursor: pointer;
+    transition: color var(--ds-ease-fast), background-color var(--ds-ease-fast),
+      border-color var(--ds-ease-fast);
+  }
+
+  .tabs__tab:hover {
+    color: var(--ds-color-text-primary);
+  }
+
+  .tabs__tab:focus-visible {
+    outline: var(--ds-border-width-md) solid var(--ds-color-border-focus);
+    outline-offset: var(--ds-size-2);
+  }
+
+  .tabs__tab.is-active {
+    color: var(--ds-color-text-primary);
+    font-weight: var(--ds-weight-semibold);
+  }
+
+  .tabs__tab svg {
+    flex-shrink: 0;
+  }
+
+  /* -----------------------------------------------------------------
+     Subrayado (horizontal)
+
+     La barra activa se dibuja con un pseudo-elemento y no con un borde
+     del propio elemento: así puede montarse sobre el filete compartido
+     —por eso el desplazamiento negativo— sin mover la pestaña ni un
+     píxel.
+     ----------------------------------------------------------------- */
+  .tabs--underline {
+    /* Si no caben, el carril se desplaza de lado en vez de partirse. */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .tabs--underline::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tabs--underline .tabs__list {
+    flex-wrap: nowrap;
+    gap: var(--ds-space-8);
+    border-bottom: var(--ds-border-width-md) solid var(--ds-color-border-subtle);
+  }
+
+  .tabs--underline .tabs__tab {
+    flex: 0 0 auto;
+    padding: var(--ds-space-4) var(--ds-space-1);
+  }
+
+  .tabs--underline .tabs__tab::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(-1 * var(--ds-border-width-md));
+    height: var(--tabs-indicator);
+    background-color: transparent;
+    transition: background-color var(--ds-ease-fast);
+  }
+
+  .tabs--underline .tabs__tab.is-active::after {
+    background-color: var(--ds-color-action-primary);
+  }
+
+  /* -----------------------------------------------------------------
+     Vertical
+     ----------------------------------------------------------------- */
+  .tabs--vertical .tabs__list {
+    flex-direction: column;
+    align-items: stretch;
+    border-left: var(--ds-border-width-md) solid var(--ds-color-border-subtle);
+  }
+
+  .tabs--vertical .tabs__tab {
+    padding: var(--ds-spacing-xs) var(--ds-space-4);
+    white-space: normal;
+  }
+
+  .tabs--vertical .tabs__tab::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(-1 * var(--ds-border-width-md));
+    width: var(--tabs-indicator);
+    background-color: transparent;
+    transition: background-color var(--ds-ease-fast);
+  }
+
+  .tabs--vertical .tabs__tab.is-active::before {
+    background-color: var(--ds-color-action-primary);
+  }
+
+  /* -----------------------------------------------------------------
+     Cards
+
+     Cada pestaña es su propia caja: sin filete compartido y sin barra
+     deslizante, la activa se rellena de color. Mismos valores que traía
+     values-cards para sus filtros.
+     ----------------------------------------------------------------- */
+  .tabs--cards {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .tabs--cards::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tabs--cards .tabs__list {
+    flex-wrap: nowrap;
+    gap: var(--ds-spacing-xs);
+  }
+
+  .tabs--cards .tabs__tab {
+    flex: 0 0 auto;
+    padding: var(--ds-spacing-xxs) var(--ds-space-4);
+    border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    border-radius: var(--ds-radius-sm);
+    background-color: var(--ds-color-background-default);
+    color: var(--ds-color-text-primary);
+    font-size: var(--ds-text-body-compact);
+  }
+
+  .tabs--cards .tabs__tab:hover {
+    border-color: var(--ds-color-border-default);
+  }
+
+  .tabs--cards .tabs__tab.is-active {
+    background-color: var(--ds-color-action-primary);
+    border-color: var(--ds-color-action-primary);
+    color: var(--ds-color-text-inverse);
+  }
+
+  /*
+   * Arrastre con el ratón (composables/useDragScroll.ts): el cursor de mano es
+   * la única señal de que el carril se puede arrastrar. Solo aparece cuando de
+   * verdad hay pestañas fuera de la vista.
+   */
+  .tabs.is-draggable {
+    cursor: grab;
+  }
+
+  .tabs.is-dragging {
+    cursor: grabbing;
+    /* Durante el gesto no debe quedar texto resaltado a su paso. */
+    user-select: none;
+  }
+}

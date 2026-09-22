@@ -43,8 +43,13 @@
     background-color: currentColor;
   }
 
+  /*
+   * En el Figma de arcis-2 esta etiqueta va en negro, no en el gris secundario
+   * con el que se portó del kit anterior. Se alinea al Figma: ningún bloque la
+   * usaba todavía, así que no cambia nada de lo ya publicado.
+   */
   .eyebrow--neutral {
-    color: var(--ds-color-text-secondary);
+    color: var(--ds-color-text-primary);
   }
 
   /* Variante "inverse": legible sobre fondos de color/oscuros (ej.
@@ -59,6 +64,7 @@
   .badge.badge--brand,
   .badge.badge--brand-solid,
   .badge.badge--neutral,
+  .badge.badge--outline,
   .badge.badge--info,
   .badge.badge--success,
   .badge.badge--warning,
@@ -110,5 +116,39 @@
   .badge.badge--error {
     background-color: var(--ds-color-feedback-error-light);
     color: var(--ds-color-feedback-error-dark);
+  }
+
+  /*
+   * Sin relleno, con contorno gris y texto negro.
+   *
+   * El contorno va como sombra interior y no como `border`: un borde real
+   * sumaría 2px al alto y esta etiqueta dejaría de medir igual que sus
+   * hermanas, que no lo llevan.
+   */
+  .badge.badge--outline {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 var(--ds-border-width-sm) var(--ds-color-border-default);
+    color: var(--ds-color-text-primary);
+  }
+
+  /*
+   * Forma "fixed" del Figma: la misma etiqueta, pero con el radio fijo en vez
+   * de la píldora, y con más aire arriba y abajo.
+   *
+   * No es un rectángulo redondeado: de sus cuatro esquinas, solo se redondea
+   * la inferior derecha; las otras tres van en ángulo recto. Es lo que dice el
+   * CSS del Figma —border-radius: 0 0 radius-sm 0— y lo que se mide en las
+   * cinco etiquetas de la lámina.
+   *
+   * Es la misma idea del button-arrow (ver _buttons.scss), que rompe la
+   * esquina contraria, la superior izquierda.
+   *
+   * También es más alta: a igual ancho, una cuarta parte más que la píldora.
+   *
+   * Va después de la regla base para poder pisarle el radio y el relleno.
+   */
+  .badge.badge--fixed {
+    padding-block: var(--ds-space-2);
+    border-radius: 0 0 var(--ds-radius-sm) 0;
   }
 }

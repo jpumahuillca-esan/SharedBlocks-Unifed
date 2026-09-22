@@ -114,21 +114,15 @@
   }
 
   /*
-   * El chip del kit es una pastilla (--ds-radius-full) y más pequeño que el filtro
-   * de esta maqueta, donde los filtros son rectángulos redondeados. Se le
-   * ajustan solo forma y tamaño; el color, el borde y el estado activo siguen
-   * saliendo de _chips.scss, que es donde deben cambiarse para toda la
-   * librería.
+   * Las pestañas ya no se ajustan acá.
    *
-   * El radio es el mismo de la tarjeta pequeña del sistema (--ds-radius-sm, 8px),
-   * para que filtros y tarjeta se lean como piezas de la misma familia.
+   * Antes esta sección dibujaba sus filtros con .chip y le pisaba forma y
+   * tamaño desde este archivo. Ahora usa MoleculeTabs en su forma "cards"
+   * (assets/styles/elements/_tabs.scss), que ya trae esas mismas medidas —el
+   * rectángulo redondeado de 8px y el texto de 14px— para toda la librería.
+   * Lo único que sigue siendo de este bloque es el carril de arriba: la
+   * sangría hasta los bordes de la sección y el cursor de arrastre.
    */
-  .values-cards__filter.chip {
-    flex: 0 0 auto;
-    padding: var(--ds-spacing-xxs) var(--ds-space-4);
-    border-radius: var(--ds-radius-sm);
-    font-size: var(--ds-text-body-compact);
-  }
 
   /* -----------------------------------------------------------------------
      Tarjeta

@@ -27,6 +27,18 @@
       </button>
     </div>
 
+    <label class="form-label">Texto alternativo del logo</label>
+    <p class="me-hint">
+      El nombre de la unidad, para buscadores y lectores de pantalla. Vacío, se
+      usa "Universidad ESAN" con el logo oficial y "Inicio" con uno propio.
+    </p>
+    <input
+      v-model="localData.logoAlt"
+      type="text"
+      class="form-control form-control-sm mb-2"
+      placeholder="Universidad ESAN"
+    />
+
     <div class="d-flex justify-content-between">
       <label class="form-label mb-0">Alto en escritorio</label>
       <span class="badge bg-light text-dark border">{{ localData.logoHeight }}px</span>
@@ -38,7 +50,7 @@
     <input v-model="localData.urlRedict" type="text" class="form-control form-control-sm mb-2" placeholder="/" />
 
     <label class="form-label">Destino de la búsqueda</label>
-    <p class="me-hint">La página a la que lleva el botón rojo de la lupa.</p>
+    <p class="me-hint">La página a la que lleva el botón rojo de la lupa. Vacío, la lupa no se muestra.</p>
     <input v-model="localData.searchUrl" type="text" class="form-control form-control-sm" placeholder="/buscar" />
 
     <hr />
@@ -164,6 +176,7 @@ const text = (value: unknown) => (typeof value === 'string' ? value : '');
 const build = (source: any) => ({
   ...(source || {}),
   logoUrl: text(source?.logoUrl),
+  logoAlt: text(source?.logoAlt),
   logoHeight: Number(source?.logoHeight) || 36,
   urlRedict: text(source?.urlRedict) || '/',
   searchUrl: text(source?.searchUrl),

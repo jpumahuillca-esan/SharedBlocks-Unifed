@@ -9,10 +9,16 @@
  */
 import { computed } from 'vue';
 
-type BadgeVariant = 'brand' | 'brand-solid' | 'neutral' | 'info' | 'success' | 'warning' | 'error';
+/** "outline" es la del Figma sin relleno: contorno gris y texto negro. */
+export type BadgeVariant = 'brand' | 'brand-solid' | 'neutral' | 'outline' | 'info' | 'success' | 'warning' | 'error';
 
 const props = withDefaults(defineProps<{
   variant?: BadgeVariant;
+  /**
+   * Forma "fixed" del Figma: esquinas rectas en vez de la píldora. Mismos
+   * colores; solo cambia el contorno de la caja.
+   */
+  fixed?: boolean;
   /** Etiqueta a renderizar. Por defecto <span>. */
   as?: string;
 }>(), {
@@ -20,7 +26,11 @@ const props = withDefaults(defineProps<{
   as: 'span',
 });
 
-const classes = computed(() => ['badge', `badge--${props.variant}`]);
+const classes = computed(() => [
+  'badge',
+  `badge--${props.variant}`,
+  props.fixed ? 'badge--fixed' : null,
+]);
 </script>
 
 <template>

@@ -2,31 +2,22 @@
   <section class="values-cards">
     <div class="values-cards__inner">
       <!--
-        Carril de filtros.
+        Carril de pestañas, en la forma "cards" del sistema: cada una es su
+        propia caja con ícono y la activa se rellena de rojo.
 
-        No se envuelve en varias líneas ni se recorta: en cuanto no caben, se
-        desplaza de lado. useDragScroll añade lo único que el desbordamiento no
-        cubre — con un ratón no hay gesto horizontal, así que el carril se
-        arrastra, igual que en la sección de historias.
+        La molécula trae lo que antes vivía en este bloque: el desplazamiento
+        lateral cuando no caben, el arrastre con el ratón y el estado activo.
+        Solo queda acá la clase del bloque, que la sangra hasta los bordes de
+        la sección.
       -->
-      <div
+      <MoleculeTabs
         v-if="items.length > 1"
-        ref="rail"
-        class="values-cards__filters"
-        role="group"
+        v-model="activeId"
+        variant="cards"
+        :items="tabItems"
         aria-label="Filtros"
-      >
-        <MoleculeChip
-          v-for="item in items"
-          :key="item.id"
-          :active="item.id === activeId"
-          class="values-cards__filter"
-          @click="activeId = item.id"
-        >
-          <AtomIcon v-if="item.icon" :name="item.icon" :size="16" />
-          {{ item.tabLabel }}
-        </MoleculeChip>
-      </div>
+        class="values-cards__filters"
+      />
 
       <article v-if="active" class="values-cards__card">
         <div class="values-cards__body">
@@ -120,7 +111,7 @@
  * ahí, a un clic en su pestaña: es un filtro, no un carrusel.
  *
  * La tarjeta no inventa piezas: el video es MoleculeVideoPreview ("featured")
- * y cada pestaña es MoleculeChip en su forma de filtro, con su estado activo.
+ * y la tira de pestañas es MoleculeTabs en su forma "cards".
  */
 import { ref, computed, watch } from 'vue';
 import AtomEyebrow from '../../../atoms/AtomEyebrow.vue';
@@ -128,9 +119,8 @@ import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import AtomButton from '../../../atoms/AtomButton.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
-import MoleculeChip from '../../../molecules/MoleculeChip.vue';
+import MoleculeTabs, { type TabItem } from '../../../molecules/MoleculeTabs.vue';
 import MoleculeVideoPreview from '../../../molecules/MoleculeVideoPreview.vue';
-import { useDragScroll } from '../../../../composables/useDragScroll';
 
 /** Un pilar ya normalizado: lo que la plantilla puede dar por hecho. */
 interface ValueItem {
@@ -151,12 +141,6 @@ interface ValueItem {
 
 const props = defineProps<{ data: any }>();
 
-/*
- * Con trackpad o pantalla táctil el carril ya se desplaza solo; con un ratón no
- * hay gesto horizontal, así que se puede arrastrar.
- */
-const rail = ref<HTMLElement | null>(null);
-useDragScroll(rail);
 
 const items = computed<ValueItem[]>(() => {
   const raw = Array.isArray(props.data?.items) ? props.data.items : [];
@@ -182,6 +166,15 @@ const items = computed<ValueItem[]>(() => {
 });
 
 const activeId = ref('');
+
+/* Lo que la molécula necesita de cada pilar: id, etiqueta e ícono. */
+const tabItems = computed<TabItem[]>(() =>
+  items.value.map((item) => ({
+    id: item.id,
+    label: item.tabLabel,
+    icon: item.icon || undefined,
+  }))
+);
 
 const active = computed(
   () => items.value.find((item) => item.id === activeId.value) ?? items.value[0] ?? null

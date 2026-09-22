@@ -86,8 +86,11 @@ export const BRANDING_REGISTRY: Record<string, any> = {
         initialData: {
             // Vacío: se usa el logo oficial de ESAN que trae la librería.
             logoUrl: '',
+            // Vacío: se describe según el logo que haya (ver Block.vue).
+            logoAlt: '',
             logoHeight: 36,
             urlRedict: '/',
+            // Vacío: la lupa no se muestra.
             searchUrl: '',
         }
     },

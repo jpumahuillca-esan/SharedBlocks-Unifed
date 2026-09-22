@@ -1,11 +1,11 @@
 <template>
-  <div class="arcis-lead-wrapper">
-    <div class="arcis-form-header mb-4">
-      <h3 class="arcis-form-title">{{ cfg.mainTitle }}</h3>
-      <p v-if="cfg.subTitle" class="arcis-form-subtitle">{{ cfg.subTitle }}</p>
+  <div class="lead-form">
+    <div class="lead-form__header">
+      <AtomHeading :level="3" size="h3" class="lead-form__title">{{ cfg.mainTitle }}</AtomHeading>
+      <AtomText v-if="cfg.subTitle" size="body-compact" class="lead-form__subtitle">{{ cfg.subTitle }}</AtomText>
     </div>
 
-    <form @submit.prevent="submit" class="arcis-lead-form">
+    <form @submit.prevent="submit" class="lead-form__form">
       <input type="hidden" name="academic_unit_id" :value="cfg.academic_unit_id" />
       <input type="hidden" name="campaign_id" :value="cfg.campaign_id" />
       <input type="hidden" name="study_program_id" :value="cfg.study_program_id" />
@@ -25,80 +25,57 @@
         <!-- Render dinámico total del esquema configurado en la campaña -->
         <template v-for="(field, idx) in activeFields" :key="field.name || idx">
           <div :class="field.col_span === 12 ? 'col-12' : 'col-12 col-md-6'">
-            <label class="arcis-label">
-              {{ field.label }} <span v-if="field.required" class="arcis-required">*</span>
-            </label>
-
-            <!-- 1. Selects (Tipo Doc, Carreras, Sedes) -->
-            <select
-              v-if="field.type === 'select'"
-              v-model="formValues[field.name]"
-              class="arcis-select"
+            <!--
+              Cada campo es un MoleculeFormField: él pone la etiqueta (con el
+              asterisco rojo si es obligatorio), el control que toque según el
+              tipo y el hueco del texto de ayuda. Antes esto era markup propio
+              con clases .arcis-* que repetían el sistema de diseño a mano.
+            -->
+            <MoleculeFormField
+              :as="field.type === 'select' ? 'select' : field.type === 'textarea' ? 'textarea' : 'input'"
+              :type="field.type === 'select' || field.type === 'textarea' ? 'text' : field.type"
+              :id="'lead-' + (field.name || idx)"
+              :label="field.label"
+              :placeholder="field.placeholder || (field.type === 'select' ? '-- Seleccionar --' : '')"
+              :options="field.options || []"
               :required="field.required"
-            >
-              <option value="" disabled>{{ field.placeholder || '-- Seleccionar --' }}</option>
-              <option v-for="(opt, optIdx) in field.options" :key="optIdx" :value="opt.value">
-                {{ opt.label }}
-              </option>
-            </select>
-
-            <!-- 2. Textarea (Consultas, Comentarios) -->
-            <textarea
-              v-else-if="field.type === 'textarea'"
               v-model="formValues[field.name]"
-              class="arcis-textarea"
-              :placeholder="field.placeholder"
-              :required="field.required"
-              rows="3"
-            ></textarea>
-
-            <!-- 3. Controles Estándar (text, email, tel, date, number) -->
-            <input
-              v-else
-              :type="field.type"
-              v-model="formValues[field.name]"
-              class="arcis-input"
-              :placeholder="field.placeholder"
-              :required="field.required"
-              @input="sanitizeField(field.name, field.type)"
+              @update:model-value="sanitizeField(field.name, field.type)"
             />
           </div>
         </template>
 
-        <!-- Checkboxes Legales ARCIS -->
-        <div class="col-12 mt-3">
-          <div class="arcis-checkbox-group">
-            <input 
-              type="checkbox" 
-              id="legal_cond" 
-              v-model="aceptaCondiciones" 
-              class="arcis-checkbox"
-              required 
-            />
-            <label for="legal_cond" class="arcis-checkbox-label">
-              Acepto las <a :href="cfg.condition" target="_blank" class="arcis-link">condiciones de tratamiento de mis datos personales</a>.
-            </label>
-          </div>
+        <!-- Checkboxes legales -->
+        <div class="col-12 mt-3 lead-form__legal">
+          <AtomFormCheck id="legal_cond" v-model="aceptaCondiciones" multiline required>
+            <span>
+              Acepto las
+              <!--
+                El enlace vive dentro de la etiqueta: sin parar el clic, abriría
+                el enlace Y marcaría la casilla a la vez.
+              -->
+              <a :href="cfg.condition" target="_blank" rel="noopener" class="lead-form__link" @click.stop>condiciones de tratamiento de mis datos personales</a>.
+            </span>
+          </AtomFormCheck>
 
-          <div class="arcis-checkbox-group mt-2">
-            <input 
-              type="checkbox" 
-              id="legal_pub" 
-              v-model="aceptaPublicidad" 
-              class="arcis-checkbox" 
-            />
-            <label for="legal_pub" class="arcis-checkbox-label">
-              Autorizo el envío de información sobre programas académicos y actividades institucionales de ESAN.
-            </label>
-          </div>
+          <AtomFormCheck id="legal_pub" v-model="aceptaPublicidad" multiline>
+            <span>
+              Autorizo el envío de información sobre programas académicos y actividades
+              institucionales de ESAN.
+            </span>
+          </AtomFormCheck>
         </div>
 
-        <!-- Botón de Envío -->
+        <!-- Botón de envío -->
         <div class="col-12 mt-4">
-          <button type="submit" class="arcis-btn-submit" :disabled="isSubmitting">
-            <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+          <AtomButton
+            variant="primary"
+            class="lead-form__submit"
+            :disabled="isSubmitting"
+            @click="submit"
+          >
             {{ isSubmitting ? 'PROCESANDO...' : cfg.button_text }}
-          </button>
+          </AtomButton>
         </div>
       </div>
     </form>
@@ -106,6 +83,11 @@
 </template>
 
 <script setup lang="ts">
+import AtomHeading from '../../../atoms/AtomHeading.vue';
+import AtomText from '../../../atoms/AtomText.vue';
+import AtomButton from '../../../atoms/AtomButton.vue';
+import AtomFormCheck from '../../../atoms/AtomFormCheck.vue';
+import MoleculeFormField from '../../../molecules/MoleculeFormField.vue';
 import { useDynamicLeadForm, type DynamicLeadFormProps } from './composables/useDynamicLeadForm';
 
 const props = withDefaults(defineProps<DynamicLeadFormProps>(), {
@@ -128,7 +110,13 @@ const {
 </script>
 
 <style scoped>
-.arcis-lead-wrapper {
+/*
+ * Solo queda lo propio de este bloque: la tarjeta que envuelve al formulario y
+ * el enlace legal. Campos, etiquetas, casillas y botón los pone el sistema de
+ * diseño (assets/styles/elements/_forms.scss y _buttons.scss) a través de los
+ * átomos, así que ya no se declaran acá.
+ */
+.lead-form {
   font-family: var(--ds-font-family-base);
   color: var(--ds-color-text-secondary);
   background: var(--ds-color-background-default);
@@ -145,104 +133,36 @@ const {
   margin-block: var(--ds-spacing-xxl);
 }
 
-.arcis-form-title {
-  font-family: var(--ds-font-family-display);
-  font-size: var(--ds-text-h3);
-  font-weight: var(--ds-weight-bold);
-  color: var(--ds-color-text-primary);
-  margin: 0 0 var(--ds-spacing-xxs) 0;
-  line-height: 1.2;
+.lead-form__header {
+  margin-bottom: var(--ds-spacing-sm);
 }
 
-.arcis-form-subtitle {
-  font-size: var(--ds-text-body-compact);
-  color: var(--ds-color-text-secondary);
+.lead-form__title {
+  margin: 0 0 var(--ds-spacing-xxs) 0;
+}
+
+.lead-form__subtitle {
   margin: 0;
 }
 
-.arcis-label {
-  display: block;
-  font-size: var(--ds-text-body-sm);
-  font-weight: var(--ds-weight-semibold);
-  color: var(--ds-color-text-secondary);
-  margin-bottom: var(--ds-space-1);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+/* El grupo del sistema trae ancho máximo propio; acá cada campo llena su columna. */
+.lead-form :deep(.form-group) {
+  max-width: none;
 }
 
-.arcis-required {
-  color: var(--ds-color-text-brand);
-}
-
-.arcis-input,
-.arcis-select,
-.arcis-textarea {
-  width: 100%;
-  padding: 10px 14px;
-  font-size: var(--ds-text-body-compact);
-  font-family: var(--ds-font-family-base);
-  color: var(--ds-color-text-primary);
-  background-color: var(--ds-color-background-light);
-  border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
-  border-radius: var(--ds-radius-sm);
-  transition: border-color var(--ds-ease-base), background-color var(--ds-ease-base);
-}
-
-.arcis-input:focus,
-.arcis-select:focus,
-.arcis-textarea:focus {
-  outline: none;
-  background-color: var(--ds-color-background-default);
-  border-color: var(--ds-color-border-focus);
-  box-shadow: 0 0 0 3px rgba(227, 23, 62, 0.15);
-}
-
-.arcis-checkbox-group {
+.lead-form__legal {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
   gap: var(--ds-spacing-xxs);
-}
-
-.arcis-checkbox {
-  margin-top: 3px;
-  accent-color: var(--ds-color-action-primary);
-  width: 16px;
-  height: 16px;
-}
-
-.arcis-checkbox-label {
   font-size: var(--ds-text-body-sm);
-  line-height: 1.4;
-  color: var(--ds-color-text-secondary);
 }
 
-.arcis-link {
+.lead-form__link {
   color: var(--ds-color-text-brand);
   text-decoration: underline;
 }
 
-.arcis-btn-submit {
+.lead-form__submit {
   width: 100%;
-  background-color: var(--ds-color-action-primary);
-  color: var(--ds-color-text-inverse);
-  border: none;
-  border-radius: var(--ds-radius-sm);
-  padding: 12px 24px;
-  font-size: var(--ds-text-body-compact);
-  font-weight: var(--ds-weight-bold);
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  box-shadow: var(--ds-shadow-sm);
-  transition: background-color var(--ds-ease-fast), transform var(--ds-ease-fast);
-}
-
-.arcis-btn-submit:hover:not(:disabled) {
-  background-color: var(--ds-color-action-primary-hover);
-  transform: translateY(-1px);
-}
-
-.arcis-btn-submit:disabled {
-  background-color: var(--ds-color-background-blend);
-  cursor: not-allowed;
 }
 </style>
