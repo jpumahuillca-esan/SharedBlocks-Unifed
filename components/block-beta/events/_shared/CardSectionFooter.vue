@@ -1,9 +1,9 @@
 <template>
   <div v-if="linkLabel" class="card-section__footer">
-    <a class="card-section__link" :href="linkUrl || '#'">
+    <AtomButton variant="link" size="sm" class="card-section__link" :href="linkUrl || '#'">
       {{ linkLabel }}
       <AtomIcon name="arrow-right" :size="16" />
-    </a>
+    </AtomButton>
   </div>
 </template>
 
@@ -18,6 +18,7 @@
  * Se duplica el marcado en lugar de moverlo con JavaScript porque el cambio lo
  * decide una consulta de medios, no el estado del componente.
  */
+import AtomButton from '../../../atoms/AtomButton.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 
 defineProps<{

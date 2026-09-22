@@ -22,14 +22,51 @@ export interface ElementDoc {
 
 export const ELEMENTS_DOCS: Record<string, ElementDoc> = {
   Buttons: {
-    description: 'Botón de acción (AtomButton): 5 variantes de color (primary, secondary, terciary, white, link), 3 tamaños, estado deshabilitado, versión solo-ícono, y la variante "negative" para legibilidad sobre fondos oscuros o de color.',
-    code: `<!-- Variantes -->
-<AtomButton variant="primary">primary</AtomButton>
-<AtomButton variant="secondary">secondary</AtomButton>
-<AtomButton variant="terciary">terciary</AtomButton>
-<AtomButton variant="link">
-  Conocer más
+    description: 'AtomButton, con las variantes del Figma de arcis-2. Con caja: primary, secondary y terciary, sin ícono o con ícono a cualquiera de los dos lados (manda el orden en el marcado), en tres tamaños. "Button Icon": text (etiqueta con flecha, sin caja) y el button-arrow, el cuadrado de solo ícono (icon) en rojo (primary) o en blanco (light, para superficies claras), con la esquina superior izquierda en ángulo recto; su ícono toma el tamaño que se le pase a AtomIcon. "Button Link": link, que además se subraya al pasar. "List-Link": list, una fila a todo el ancho con filete inferior; con la flecha al final y el texto en <span>, la flecha se empuja hasta el borde. Todas tienen hover, pressed y deshabilitado (disabled); sobre fondo oscuro, la prop negative da su versión para ese fondo (el principal pasa a blanco con texto rojo). surface es propia de la librería: blanco translúcido para ir sobre un panel de color. Siempre se renderiza como <a>: con destino (href o to) usa NuxtLink en public-site o RouterLink en el admin, si están disponibles.',
+    code: `<!-- Primary · Secondary · Terciary: sin ícono, ícono a la derecha, a la izquierda, deshabilitado -->
+<AtomButton variant="primary">Button</AtomButton>
+<AtomButton variant="primary">
+  Button
   <AtomIcon name="arrow-right" :size="16" />
+</AtomButton>
+<AtomButton variant="primary">
+  <AtomIcon name="check-circle" :size="16" />
+  Button
+</AtomButton>
+<AtomButton variant="primary" disabled>Button</AtomButton>
+<AtomButton variant="primary" disabled>
+  <AtomIcon name="check-circle" :size="16" />
+  Button
+</AtomButton>
+
+<AtomButton variant="secondary">Button</AtomButton>
+<AtomButton variant="secondary">
+  Button
+  <AtomIcon name="arrow-right" :size="16" />
+</AtomButton>
+<AtomButton variant="secondary">
+  <AtomIcon name="check-circle" :size="16" />
+  Button
+</AtomButton>
+<AtomButton variant="secondary" disabled>Button</AtomButton>
+<AtomButton variant="secondary" disabled>
+  <AtomIcon name="check-circle" :size="16" />
+  Button
+</AtomButton>
+
+<AtomButton variant="terciary">Button</AtomButton>
+<AtomButton variant="terciary">
+  Button
+  <AtomIcon name="arrow-right" :size="16" />
+</AtomButton>
+<AtomButton variant="terciary">
+  <AtomIcon name="check-circle" :size="16" />
+  Button
+</AtomButton>
+<AtomButton variant="terciary" disabled>Button</AtomButton>
+<AtomButton variant="terciary" disabled>
+  <AtomIcon name="check-circle" :size="16" />
+  Button
 </AtomButton>
 
 <!-- Tamaños -->
@@ -37,19 +74,125 @@ export const ELEMENTS_DOCS: Record<string, ElementDoc> = {
 <AtomButton variant="primary" size="md">Mediano</AtomButton>
 <AtomButton variant="primary" size="lg">Grande</AtomButton>
 
-<!-- Estados -->
-<AtomButton variant="primary">Normal</AtomButton>
-<AtomButton variant="primary" disabled>Deshabilitado</AtomButton>
-<AtomButton variant="secondary" icon aria-label="Buscar">
-  <AtomIcon name="search" :size="16" />
+<!-- Button Icon: texto con flecha (a la izquierda o a la derecha) -->
+<AtomButton variant="text">
+  <AtomIcon name="arrow-right" :size="16" />
+  label
+</AtomButton>
+<AtomButton variant="text">
+  label
+  <AtomIcon name="arrow-right" :size="16" />
+</AtomButton>
+<AtomButton variant="text" disabled>
+  label
+  <AtomIcon name="arrow-right" :size="16" />
 </AtomButton>
 
-<!-- Sobre fondo oscuro: "white" y "negative" -->
-<AtomButton variant="white">CTA principal</AtomButton>
-<AtomButton variant="secondary" negative>Ver programas</AtomButton>
-<AtomButton variant="link" negative>
-  Conocer más
+<!-- Button Icon: button-arrow, solo ícono (siempre con aria-label) -->
+<AtomButton variant="primary" icon size="sm" aria-label="Siguiente">
+  <AtomIcon name="chevron-right" :size="16" />
+</AtomButton>
+<AtomButton variant="primary" icon aria-label="Siguiente">
+  <AtomIcon name="chevron-right" :size="16" />
+</AtomButton>
+<AtomButton variant="primary" icon size="lg" aria-label="Siguiente">
+  <AtomIcon name="chevron-right" :size="24" />
+</AtomButton>
+<AtomButton variant="primary" icon disabled aria-label="Siguiente">
+  <AtomIcon name="chevron-right" :size="16" />
+</AtomButton>
+
+<!-- En blanco, sobre una superficie clara (--ds-color-background-light) -->
+<AtomButton variant="light" icon size="sm" aria-label="Siguiente">
+  <AtomIcon name="chevron-right" :size="16" />
+</AtomButton>
+<AtomButton variant="light" icon aria-label="Siguiente">
+  <AtomIcon name="chevron-right" :size="16" />
+</AtomButton>
+<AtomButton variant="light" icon size="lg" aria-label="Siguiente">
+  <AtomIcon name="chevron-right" :size="24" />
+</AtomButton>
+<AtomButton variant="light" icon disabled aria-label="Siguiente">
+  <AtomIcon name="chevron-right" :size="16" />
+</AtomButton>
+
+<!-- Button Link: se subraya al pasar -->
+<AtomButton variant="link" href="/historias">
+  Ver historia
   <AtomIcon name="arrow-right" :size="16" />
+</AtomButton>
+<AtomButton variant="link" size="sm" href="/historias">
+  Ver historia
+  <AtomIcon name="arrow-right" :size="16" />
+</AtomButton>
+<AtomButton variant="link" disabled>
+  Ver historia
+  <AtomIcon name="arrow-right" :size="16" />
+</AtomButton>
+
+<!-- List-Link: fila a todo el ancho; con la flecha al final y el texto en <span>, va al borde -->
+<AtomButton variant="list" href="/carreras">
+  <span>Placeholder</span>
+  <AtomIcon name="arrow-right" :size="16" />
+</AtomButton>
+<AtomButton variant="list" href="/carreras">
+  <AtomIcon name="arrow-right" :size="16" />
+  Placeholder
+</AtomButton>
+<AtomButton variant="list" disabled>
+  <span>Placeholder</span>
+  <AtomIcon name="arrow-right" :size="16" />
+</AtomButton>
+
+<!-- Sobre fondo oscuro: negative -->
+<AtomButton variant="primary" negative>Primary</AtomButton>
+<AtomButton variant="primary" negative>
+  Primary
+  <AtomIcon name="arrow-right" :size="16" />
+</AtomButton>
+<AtomButton variant="primary" negative>
+  <AtomIcon name="check-circle" :size="16" />
+  Primary
+</AtomButton>
+<AtomButton variant="secondary" negative>Secondary</AtomButton>
+<AtomButton variant="secondary" negative>
+  Secondary
+  <AtomIcon name="arrow-right" :size="16" />
+</AtomButton>
+<AtomButton variant="secondary" negative>
+  <AtomIcon name="check-circle" :size="16" />
+  Secondary
+</AtomButton>
+<AtomButton variant="text" negative>
+  <AtomIcon name="arrow-right" :size="16" />
+  label
+</AtomButton>
+<AtomButton variant="text" negative>
+  label
+  <AtomIcon name="arrow-right" :size="16" />
+</AtomButton>
+<AtomButton variant="link" negative>
+  Ver historia
+  <AtomIcon name="arrow-right" :size="16" />
+</AtomButton>
+<AtomButton variant="list" negative>
+  <AtomIcon name="arrow-right" :size="16" />
+  Placeholder
+</AtomButton>
+<AtomButton variant="list" negative>
+  <span>Placeholder</span>
+  <AtomIcon name="arrow-right" :size="16" />
+</AtomButton>
+
+<!-- Sobre un panel de color: surface -->
+<AtomButton variant="surface" icon size="sm" aria-label="Ir">
+  <AtomIcon name="chevron-right" :size="16" />
+</AtomButton>
+<AtomButton variant="surface" icon aria-label="Ir">
+  <AtomIcon name="chevron-right" :size="16" />
+</AtomButton>
+<AtomButton variant="primary" negative icon size="sm" aria-label="Ir">
+  <AtomIcon name="chevron-right" :size="16" />
 </AtomButton>`,
   },
   Badges: {

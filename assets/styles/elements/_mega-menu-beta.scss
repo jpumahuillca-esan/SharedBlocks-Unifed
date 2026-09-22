@@ -431,21 +431,15 @@
     margin-top: var(--ds-spacing-md);
   }
 
-  .mmb-drawer__item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--ds-spacing-xs);
-    padding: var(--ds-space-4) 0;
-    border-bottom: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
-    font-size: var(--ds-text-body-compact);
-    color: var(--ds-color-text-primary);
-    cursor: pointer;
-  }
-
-  .mmb-drawer__item svg {
-    flex-shrink: 0;
-    color: var(--ds-color-text-brand);
+  /*
+   * Los ítems son el List-Link del sistema (AtomButton variant="list"): fila,
+   * filete, chevron al borde y hover los pone _buttons.scss. Lo único propio
+   * del menú lateral es la altura: filas más altas, porque aquí se tocan con el
+   * dedo. Primitivo y no semántico: es una medida del área táctil y no debe
+   * encogerse en móvil, que es justo donde se usa.
+   */
+  .mmb-drawer__item.btn.btn--list {
+    padding-block: var(--ds-space-4);
   }
 
   .mmb-drawer__back {

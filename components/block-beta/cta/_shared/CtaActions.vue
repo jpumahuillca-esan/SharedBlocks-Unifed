@@ -1,35 +1,41 @@
 <template>
   <div v-if="hasAnyAction" class="ctaband__actions">
-    <a
+    <AtomButton
       v-if="primary.label"
-      class="btn"
-      :class="primaryClass"
+      variant="primary"
+      :negative="negative"
       :href="primary.url || '#'"
     >
       {{ primary.label }}
-    </a>
+    </AtomButton>
 
     <!-- El segundo botón existe solo si la variante está configurada con dos -->
-    <a
+    <AtomButton
       v-if="buttonCount === 2 && secondary.label"
-      class="btn"
-      :class="secondaryClass"
+      variant="secondary"
+      :negative="negative"
       :href="secondary.url || '#'"
     >
       {{ secondary.label }}
-    </a>
+    </AtomButton>
   </div>
 </template>
 
 <script setup lang="ts">
 /**
- * Área de acciones de un CTA Band.
+ * Área de acciones de un CTA Band: el botón principal y, si la variante lleva
+ * dos, el secundario.
  *
- * Las clases de cada botón se reciben desde la variante porque el kit usa
- * combinaciones distintas según el fondo: sobre el fondo oscuro de la variante
- * con imagen el secundario va en negativo, y sobre la sólida solo hay uno.
+ * Son AtomButton, no clases .btn escritas a mano: su aspecto y sus estados
+ * (hover, pressed, deshabilitado) los pone el sistema.
+ *
+ * Todas las bandas van sobre un fondo de color o una foto oscurecida, así que
+ * por defecto usan la versión para fondo oscuro del Figma: el principal blanco
+ * con texto rojo y el secundario en contorno blanco. Una banda clara pasaría
+ * `:negative="false"`.
  */
 import { computed } from 'vue';
+import AtomButton from '../../../atoms/AtomButton.vue';
 import type { CtaAction, CtaButtonCount } from './types';
 
 const props = withDefaults(
@@ -37,13 +43,10 @@ const props = withDefaults(
     primary: CtaAction;
     secondary: CtaAction;
     buttonCount: CtaButtonCount;
-    primaryClass?: string;
-    secondaryClass?: string;
+    /** Versión para fondo oscuro. */
+    negative?: boolean;
   }>(),
-  {
-    primaryClass: 'btn--white',
-    secondaryClass: 'btn--secondary btn--negative',
-  },
+  { negative: true },
 );
 
 /**

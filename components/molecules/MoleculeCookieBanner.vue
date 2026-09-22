@@ -75,6 +75,9 @@ const respond = (value: 'accept' | 'reject') => {
   emit('consent', value);
 };
 
+/* La versión por defecto es la oscura; `light` es la excepción. */
+const isDark = computed(() => props.variant !== 'light');
+
 const classes = computed(() => [
   'cookie-banner',
   props.variant === 'light' ? 'cookie-banner--light' : null,
@@ -87,10 +90,15 @@ const classes = computed(() => [
   <div :class="classes">
     <p class="cookie-banner__text">{{ text }} <a :href="linkHref">{{ linkText }}</a>.</p>
     <div class="cookie-banner__actions">
-      <AtomButton variant="secondary" size="sm" :tabindex="preview ? -1 : undefined" @click="respond('reject')">
+      <!--
+        En la versión oscura, los botones van en su versión para fondo oscuro
+        (`negative`), como pide el Figma: el secundario rojo sobre el fondo
+        oscuro no llegaba al contraste mínimo.
+      -->
+      <AtomButton variant="secondary" size="sm" :negative="isDark" :tabindex="preview ? -1 : undefined" @click="respond('reject')">
         {{ rejectLabel }}
       </AtomButton>
-      <AtomButton variant="primary" size="sm" :tabindex="preview ? -1 : undefined" @click="respond('accept')">
+      <AtomButton variant="primary" size="sm" :negative="isDark" :tabindex="preview ? -1 : undefined" @click="respond('accept')">
         {{ acceptLabel }}
       </AtomButton>
     </div>

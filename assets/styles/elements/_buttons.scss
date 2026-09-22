@@ -1,41 +1,102 @@
 /* ============================================================
-   ARCIS Design System — ESAN University
-   Elementos > Botones.
+   ESAN · Elementos > Botones (AtomButton)
 
-   Fuente de verdad: webunificada/ui-kit/assets/css/main.css
-   (proyecto "webunificada", sección "--- Botones ---", ~líneas 984-1158).
+   Variantes del Figma de arcis-2 (láminas "Variantes", "Button Icon",
+   "Button Link" y "List-Link"):
 
-   Igual que en base.scss: todo va bajo .arcis-scope porque la
-   clase ".btn" de ARCIS colisiona con la ".btn" de Bootstrap (que
-   ya usa front). Sin aislar, esto pisaría el estilo de TODOS los
-   botones del panel de administración, no solo los de los bloques.
+     primary · secondary · terciary   botones con caja, con o sin ícono
+                                      (a la izquierda o a la derecha:
+                                      manda el orden en el marcado)
+     text      "Button Icon": etiqueta con flecha, sin caja
+     link      "Button Link": como text, y además se subraya al pasar
+     list      "List-Link": fila a todo el ancho, con filete inferior
+     light     blanco con el ícono en rojo, para superficies claras
+     surface   blanco translúcido, para ir sobre paneles de color. Propia
+               de la librería (ver su bloque más abajo).
 
-   IMPORTANTE — por qué las reglas base usan ".btn.btn--*" en vez
-   de ".btn" a secas: varios bloques reales (HeroWelcome, AcuerdosScrollHub,
-   NoticiasEventosHub, HeaderBtn, Form, etc.) ya traían sus propios botones
-   con clases nativas de Bootstrap, class="btn btn-primary" (guion simple).
-   Un selector ".btn" a secas (misma especificidad que el ".btn" de
-   Bootstrap, cargado después) les pisaba el tamaño/padding/display a
-   ESOS botones también, no solo a los de AtomButton — rompía el layout
-   de cualquier bloque con botones nativos apenas se renderizaba dentro
-   del editor. Exigir un modificador ARCIS (doble guion, "--") junto a
-   ".btn" hace que la regla solo aplique a botones que de verdad pasan
-   por AtomButton.vue (que siempre agrega "btn--{variant}"), y nunca a
-   "btn btn-primary" de Bootstrap.
+   Con `icon`, cualquiera de ellas es el cuadrado de solo ícono: el
+   componente "button-arrow" del Figma, en rojo (primary) o en blanco
+   (light). No es un cuadrado redondeado sin más: la esquina superior
+   izquierda va en ángulo recto (ver arrow-shape).
 
-   Nota: la guía viva ui-kit.html describe los botones como "forma
-   pill (--ds-radius-full)", pero el CSS real usa --ds-radius-xs (4px).
-   Se portó el CSS real (fuente de verdad), no la descripción textual
-   desactualizada — pendiente de corregir en origen (webunificada).
+   Estados, en todas: por defecto, hover, pressed (:active) y
+   deshabilitado (.is-disabled, porque un <a> no admite :disabled).
+   Sobre fondo oscuro, la prop `negative` (.btn--negative) da la versión
+   del Figma para ese fondo: el principal pasa a blanco con texto rojo, y
+   el secundario, el de texto, el enlace y la fila, a blanco.
+
+   Por qué todo va bajo .arcis-scope: la clase ".btn" colisiona con la
+   ".btn" de Bootstrap, que carga el panel de administración. Sin aislar,
+   esto pisaría todos los botones del panel, no solo los de los bloques.
+
+   Por qué las reglas base usan ".btn.btn--*" y no ".btn" a secas:
+   varios bloques antiguos traen botones nativos de Bootstrap
+   (class="btn btn-primary", guion simple). Un ".btn" a secas, con la
+   misma especificidad que el de Bootstrap, les pisaba tamaño y padding
+   apenas se renderizaban dentro del editor. Exigir el modificador ARCIS
+   (doble guion) hace que las reglas solo apliquen a lo que pasa por
+   AtomButton.vue, que siempre agrega "btn--{variante}".
    ============================================================ */
 
+@use 'sass:list';
+
+$variants: primary, secondary, terciary, white, text, link, list, light, surface;
+
+/* Los botones con caja: los únicos con persiana y con el leve hundido al pulsar. */
+$boxed: primary, secondary, terciary, white, light, surface;
+
+/* ".btn.btn--primary<sufijo>, .btn.btn--secondary<sufijo>, …" para una lista de variantes. */
+@function selectors($names, $suffix: '') {
+  $out: ();
+  @each $name in $names {
+    $out: list.append($out, '.btn.btn--#{$name}#{$suffix}', $separator: comma);
+  }
+  @return $out;
+}
+
+/*
+ * Forma del "button-arrow" del Figma: tres esquinas redondeadas y la superior
+ * izquierda en ángulo recto, como una pestaña.
+ *
+ * Es un mixin porque la usan también piezas que no pueden ser un AtomButton,
+ * como la flecha decorativa de MoleculeBanner: va dentro de un enlace que
+ * cubre todo el banner, y un <a> no puede ir dentro de otro.
+ */
+@mixin arrow-shape {
+  border-radius: 0 var(--ds-radius-sm) var(--ds-radius-sm) var(--ds-radius-sm);
+}
+
+/*
+ * El principal sobre fondo oscuro: blanco con el texto rojo. Al pasar, la
+ * persiana del primario lo cubre de rojo oscuro, así que el texto tiene que
+ * pasar a blanco o queda rojo sobre rojo.
+ *
+ * Es un mixin para que el hero, que necesita este aspecto solo en teléfono
+ * (y eso solo lo sabe el CSS, no la prop), lo tome de aquí en vez de
+ * copiarlo. `@include buttons.primary-negative` en su regla.
+ */
+@mixin primary-negative {
+  background-color: var(--ds-color-action-inverse);
+  color: var(--ds-color-text-brand);
+  /*
+   * El color acompaña al barrido de la persiana (--ds-ease-slow). Con la
+   * velocidad rápida el texto se volvería blanco antes de que el fondo lo
+   * cubra, dejando un parpadeo de blanco sobre blanco.
+   */
+  transition: background-color var(--ds-ease-fast), color var(--ds-ease-slow),
+              border-color var(--ds-ease-fast), transform var(--ds-ease-fast);
+
+  &:hover {
+    color: var(--ds-color-text-inverse);
+  }
+}
+
 .arcis-scope {
-  .btn.btn--primary,
-  .btn.btn--secondary,
-  .btn.btn--terciary,
-  .btn.btn--white,
-  .btn.btn--surface,
-  .btn.btn--link {
+
+  /* -----------------------------------------------------------------------
+     Base común
+     ----------------------------------------------------------------------- */
+  #{selectors($variants)} {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -50,46 +111,35 @@
     cursor: pointer;
     border: var(--ds-border-width-md) solid transparent;
     padding: var(--ds-spacing-xs) var(--ds-spacing-md);
-    transition: background-color var(--ds-ease-fast), color var(--ds-ease-fast), border-color var(--ds-ease-fast), transform var(--ds-ease-fast);
+    transition: background-color var(--ds-ease-fast), color var(--ds-ease-fast),
+                border-color var(--ds-ease-fast), transform var(--ds-ease-fast);
   }
 
-  .btn.btn--primary svg,
-  .btn.btn--secondary svg,
-  .btn.btn--terciary svg,
-  .btn.btn--white svg,
-  .btn.btn--surface svg,
-  .btn.btn--link svg {
+  #{selectors($variants, ' svg')} {
+    flex-shrink: 0;
     width: 16px;
     height: 16px;
     transition: transform var(--ds-ease-fast);
   }
 
-  .btn.btn--primary:active,
-  .btn.btn--secondary:active,
-  .btn.btn--terciary:active,
-  .btn.btn--white:active,
-  .btn.btn--surface:active,
-  .btn.btn--link:active {
+  #{selectors($boxed, ':active')} {
     transform: scale(0.97);
   }
 
-  .btn.btn--primary:disabled,
-  .btn.btn--secondary:disabled,
-  .btn.btn--terciary:disabled,
-  .btn.btn--white:disabled,
-  .btn.btn--surface:disabled,
-  .btn.btn--link:disabled,
+  /* El aspecto de cada variante deshabilitada va con ella; esto es lo común. */
   .btn.is-disabled {
-    opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
   }
 
-  /* .btn.btn--sm (no ".btn--sm" a secas): necesita la misma especificidad
-     que la regla base de arriba (.btn.btn--{variante}) para poder pisarle
-     el padding/font-size — si tuviera menos especificidad, la regla base
-     seguiría ganando aunque venga después en el archivo, y los 3 tamaños
-     se verían idénticos (bug real que pasó antes de este ajuste). */
+  /* -----------------------------------------------------------------------
+     Tamaños
+
+     .btn.btn--sm y no ".btn--sm" a secas: necesita la misma especificidad
+     que la regla base (.btn.btn--{variante}) para poder pisarle el relleno
+     y el tamaño de letra; con menos, la base seguiría ganando y los tres
+     tamaños se verían idénticos (pasó antes de este ajuste).
+     ----------------------------------------------------------------------- */
   .btn.btn--sm {
     padding: var(--ds-spacing-xxs) var(--ds-space-6);
     font-size: var(--ds-text-body-compact);
@@ -102,90 +152,38 @@
   }
 
   /*
-   * Variante "surface" — AÑADIDA, no viene de webunificada.
-   *
-   * Control compacto que vive SOBRE una superficie de color y toma de ella su
-   * contraste: se dibuja con blanco translúcido, así que funciona igual encima
-   * de cualquier color sin declarar una variante por cada uno.
-   *
-   * Nace de la sección del ecosistema académico, donde la misma flecha aparece
-   * sobre ocho colores distintos de escuela. Ninguna de las variantes portadas
-   * servía: todas fijan un color propio, que sobre un panel de color o compite
-   * o desaparece.
-   *
-   * No entra en el hover de persiana: esa animación está pensada para botones
-   * de texto con recorrido, y en un cuadrado de 36px se lee como un parpadeo.
+   * Solo ícono: el "button-arrow". Cuadrado, con la forma de pestaña del
+   * Figma. Con el prefijo .btn por la misma razón que los tamaños; sin él, el
+   * relleno de la base ganaba y el botón quedaba ancho.
    */
-  .btn.btn--surface {
-    background-color: rgba(255, 255, 255, 0.22);
-    color: var(--ds-color-text-inverse);
-  }
-
-  .btn.btn--surface:hover,
-  .btn.btn--surface:focus-visible {
-    background-color: rgba(255, 255, 255, 0.38);
+  .btn.btn--icon {
+    padding: var(--ds-spacing-xs);
+    aspect-ratio: 1;
+    @include arrow-shape;
   }
 
   /*
-   * Un botón de solo ícono en tamaño pequeño necesita también el relleno
-   * pequeño. .btn--icon llega después de .btn--sm en este archivo y con la
-   * misma especificidad, así que le ganaba el relleno grande y el cuadrado
-   * salía igual de ancho en los tres tamaños.
+   * El ícono de un botón de solo ícono toma el tamaño que se le pide a AtomIcon
+   * (`:size`), en vez de los 16px fijos de la base: en el Figma, el
+   * button-arrow grande lleva un chevron más grande.
    */
+  .btn.btn--icon svg {
+    width: auto;
+    height: auto;
+  }
+
+  /* El cuadrado pequeño necesita también el relleno pequeño. */
   .btn.btn--icon.btn--sm {
     padding: var(--ds-spacing-xxs);
     min-height: 0;
   }
 
-  .btn.btn--primary {
-    background-color: var(--ds-color-action-primary);
-    color: var(--ds-color-text-inverse);
-  }
+  /* -----------------------------------------------------------------------
+     Persiana horizontal (hover de los botones con caja)
 
-  .btn.btn--secondary {
-    background-color: transparent;
-    border-color: var(--ds-color-action-primary);
-    color: var(--ds-color-text-brand);
-    transition: color var(--ds-ease-slow), border-color var(--ds-ease-fast), transform var(--ds-ease-fast);
-  }
-
-  .btn.btn--secondary:hover {
-    color: var(--ds-color-text-inverse);
-  }
-
-  /* arcis-2 define el botón terciario: azul casi negro, más claro al pasar. */
-  .btn.btn--terciary {
-    background-color: var(--ds-color-action-tertiary);
-    color: var(--ds-color-text-inverse);
-  }
-
-  /* Variante "white": CTA principal sobre fondos rojos/oscuros (ej. Hero) */
-  .btn.btn--white {
-    background-color: var(--ds-color-background-default);
-    color: var(--ds-color-text-brand);
-    /*
-     * Igual que la base, pero el color acompaña al barrido de la persiana
-     * (--ds-ease-slow). Con la velocidad rápida el texto se volvería blanco antes
-     * de que el fondo lo cubra, dejando un parpadeo de blanco sobre blanco.
-     */
-    transition: background-color var(--ds-ease-fast), color var(--ds-ease-slow),
-                border-color var(--ds-ease-fast), transform var(--ds-ease-fast);
-  }
-
-  /*
-   * Al pasar el mouse, la persiana cubre el botón con el rojo oscuro. El texto
-   * debe pasar a blanco o queda rojo sobre rojo y se vuelve ilegible.
-   *
-   * El kit original no contempla este caso: define el relleno del hover pero no
-   * cambia el color del texto de esta variante, a diferencia de la secundaria,
-   * que sí lo hace. Es una corrección nuestra sobre el porte.
-   */
-  .btn.btn--white:hover {
-    color: var(--ds-color-text-inverse);
-  }
-
-  /* Hover "persiana horizontal": lamas que se despliegan de izquierda a derecha
-     revelando el tono de acento, como una persiana al cerrarse */
+     Lamas que se despliegan de izquierda a derecha revelando el tono de
+     hover, como una persiana al cerrarse.
+     ----------------------------------------------------------------------- */
   .btn--primary,
   .btn--secondary,
   .btn--terciary,
@@ -208,27 +206,142 @@
     transition: transform var(--ds-ease-slow);
   }
 
+  .btn--primary:hover::before,
+  .btn--secondary:hover::before,
+  .btn--terciary:hover::before,
+  .btn--white:hover::before {
+    transform: scaleX(1);
+  }
+
+  /* -----------------------------------------------------------------------
+     Primary
+     ----------------------------------------------------------------------- */
+  .btn.btn--primary {
+    background-color: var(--ds-color-action-primary);
+    color: var(--ds-color-text-inverse);
+  }
+
   .btn--primary::before {
     background: var(--ds-color-action-primary-hover);
   }
 
-  .btn--secondary::before {
-    background: var(--ds-color-action-primary-hover);
+  .btn.btn--primary:active::before {
+    background: var(--ds-color-action-primary-focus);
   }
 
-  .btn--terciary::before {
-    background: var(--ds-color-action-tertiary-hover);
+  .btn.btn--primary.is-disabled {
+    background-color: var(--ds-color-action-disabled);
+    color: var(--ds-color-text-inverse);
+  }
+
+  .btn.btn--primary.btn--negative {
+    @include primary-negative;
+  }
+
+  /*
+   * white: el mismo botón con otro nombre. AtomButton la emite como su propia
+   * clase (.btn--white), así que aquí toma el aspecto del principal sobre fondo
+   * oscuro, con su persiana, su pressed y su deshabilitado.
+   */
+  .btn.btn--white {
+    @include primary-negative;
   }
 
   .btn--white::before {
     background: var(--ds-color-action-primary-hover);
   }
 
-  .btn--primary:hover::before,
-  .btn--secondary:hover::before,
-  .btn--terciary:hover::before,
-  .btn--white:hover::before {
-    transform: scaleX(1);
+  .btn.btn--white:active::before {
+    background: var(--ds-color-action-primary-focus);
+  }
+
+  .btn.btn--white.is-disabled,
+  .btn.btn--primary.btn--negative.is-disabled {
+    background-color: var(--ds-color-white-20);
+    color: var(--ds-color-white-60);
+  }
+
+  /* -----------------------------------------------------------------------
+     Secondary: contorno rojo; al pasar, la persiana lo rellena.
+     ----------------------------------------------------------------------- */
+  .btn.btn--secondary {
+    background-color: transparent;
+    border-color: var(--ds-color-action-primary);
+    color: var(--ds-color-text-brand);
+    transition: color var(--ds-ease-slow), border-color var(--ds-ease-fast), transform var(--ds-ease-fast);
+  }
+
+  .btn--secondary::before {
+    background: var(--ds-color-action-primary-hover);
+  }
+
+  .btn.btn--secondary:hover {
+    color: var(--ds-color-text-inverse);
+  }
+
+  /*
+   * Pressed: en el Figma el secundario presionado vuelve a ser contorno, en el
+   * tono de foco. La persiana se retira de golpe (sin transición) para que el
+   * cambio se lea como respuesta al clic y no como una animación.
+   */
+  .btn.btn--secondary:active {
+    border-color: var(--ds-color-action-primary-focus);
+    color: var(--ds-color-action-primary-focus);
+  }
+
+  .btn.btn--secondary:active::before {
+    transform: scaleX(0);
+    transition: none;
+  }
+
+  .btn.btn--secondary.is-disabled {
+    border-color: var(--ds-color-action-disabled);
+    color: var(--ds-color-text-disabled);
+  }
+
+  /* Sobre fondo oscuro: contorno blanco; la persiana rellena de blanco. */
+  .btn.btn--secondary.btn--negative {
+    border-color: var(--ds-color-action-inverse);
+    color: var(--ds-color-text-inverse);
+  }
+
+  .btn--secondary.btn--negative::before {
+    background: var(--ds-color-background-default);
+  }
+
+  .btn.btn--secondary.btn--negative:hover {
+    color: var(--ds-color-text-brand);
+  }
+
+  .btn.btn--secondary.btn--negative:active {
+    border-color: var(--ds-color-action-inverse);
+    color: var(--ds-color-text-inverse);
+  }
+
+  .btn.btn--secondary.btn--negative.is-disabled {
+    border-color: var(--ds-color-white-40);
+    color: var(--ds-color-white-40);
+  }
+
+  /* -----------------------------------------------------------------------
+     Terciary: azul casi negro, más claro al pasar.
+     ----------------------------------------------------------------------- */
+  .btn.btn--terciary {
+    background-color: var(--ds-color-action-tertiary);
+    color: var(--ds-color-text-inverse);
+  }
+
+  .btn--terciary::before {
+    background: var(--ds-color-action-tertiary-hover);
+  }
+
+  .btn.btn--terciary:active::before {
+    background: var(--ds-color-action-tertiary-focus);
+  }
+
+  .btn.btn--terciary.is-disabled {
+    background-color: var(--ds-color-action-disabled);
+    color: var(--ds-color-text-inverse);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -239,55 +352,220 @@
       transition: none;
     }
 
-    .btn--secondary {
+    .btn.btn--secondary {
       transition: color var(--ds-ease-fast), border-color var(--ds-ease-fast), transform var(--ds-ease-fast);
     }
   }
 
-  /* Variante "inverse": btn--secondary y btn--link legibles sobre fondos oscuros */
-  .btn--secondary.btn--negative {
-    border-color: var(--ds-color-action-inverse);
-    color: var(--ds-color-text-inverse);
-  }
+  /* -----------------------------------------------------------------------
+     Text ("Button Icon") y Link ("Button Link")
 
-  .btn--secondary.btn--negative::before {
-    background: var(--ds-color-background-default);
-  }
+     Etiqueta con flecha y sin caja. Los dos comparten todo menos el hover:
+     el de texto oscurece el color; el enlace se subraya.
 
-  .btn--secondary.btn--negative:hover {
-    color: var(--ds-color-text-brand);
-  }
-
+     Conservan la altura mínima de la base a propósito: es el área que se
+     puede tocar. Si un bloque necesita alinearlo a una línea de texto, se la
+     quita él (ver .story-section__link) o usa size="sm".
+     ----------------------------------------------------------------------- */
+  .btn.btn--text,
   .btn.btn--link {
-    border-radius: 0;
     padding: 0;
+    border: 0;
+    border-radius: 0;
     background: none;
     color: var(--ds-color-text-brand);
     font-weight: var(--ds-weight-semibold);
   }
 
-  .btn.btn--link:hover {
-    color: var(--ds-color-text-brand);
-  }
-
+  .btn.btn--text:hover svg,
   .btn.btn--link:hover svg {
     transform: translateX(4px);
   }
 
-  .btn.btn--link.btn--negative {
+  .btn.btn--text:hover {
+    color: var(--ds-color-action-primary-hover);
+  }
+
+  .btn.btn--text:active,
+  .btn.btn--link:active {
+    color: var(--ds-color-action-primary-focus);
+  }
+
+  .btn.btn--text.is-disabled,
+  .btn.btn--link.is-disabled {
+    color: var(--ds-color-text-disabled);
+  }
+
+  .btn.btn--text.btn--negative,
+  .btn.btn--link.btn--negative,
+  .btn.btn--text.btn--negative:hover,
+  .btn.btn--text.btn--negative:active,
+  .btn.btn--link.btn--negative:active {
     color: var(--ds-color-text-inverse);
   }
 
-  .btn.btn--link.btn--negative:hover {
+  .btn.btn--text.btn--negative.is-disabled,
+  .btn.btn--link.btn--negative.is-disabled {
+    color: var(--ds-color-white-40);
+  }
+
+  /*
+   * Subrayado del enlace: una línea bajo etiqueta y flecha que se despliega de
+   * izquierda a derecha, igual que la persiana.
+   *
+   * Se ancla al centro de la caja y no a su borde inferior: el enlace conserva
+   * la altura mínima de la base, y su borde queda lejos del texto. Con
+   * line-height 1, el texto mide 1em, así que su pie está a 50% + 0,5em.
+   */
+  .btn.btn--link {
+    position: relative;
+  }
+
+  .btn.btn--link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(50% + 0.5em + var(--ds-space-1));
+    height: var(--ds-border-width-md);
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--ds-ease-base);
+  }
+
+  .btn.btn--link:hover::after,
+  .btn.btn--link:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  /* -----------------------------------------------------------------------
+     List ("List-Link")
+
+     Una fila a todo el ancho con su filete inferior, para listas de enlaces.
+     La flecha va a la izquierda o a la derecha según el orden en el marcado;
+     a la derecha se empuja hasta el borde si el texto va en un <span>:
+       <AtomButton variant="list"><span>Texto</span><AtomIcon … /></AtomButton>
+     Hace falta el <span> porque un texto suelto no es un elemento, y desde
+     el CSS no se distingue "Texto →" de "→ Texto".
+
+     Letra de cuerpo y no la de los botones: se lee como texto de una lista.
+     ----------------------------------------------------------------------- */
+  .btn.btn--list {
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--ds-spacing-xs);
+    width: 100%;
+    min-height: 0;
+    padding: var(--ds-spacing-xs) 0;
+    border: 0;
+    border-bottom: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+    border-radius: 0;
+    background: none;
+    font-family: var(--ds-font-family-base);
+    font-weight: var(--ds-weight-regular);
+    font-size: var(--ds-text-body-compact);
+    line-height: var(--ds-line-height-125);
+    color: var(--ds-color-text-primary);
+    text-align: left;
+    white-space: normal;
+  }
+
+  .btn.btn--list svg {
+    color: var(--ds-color-text-brand);
+  }
+
+  .btn.btn--list > span {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .btn.btn--list:hover {
+    color: var(--ds-color-text-brand);
+    border-bottom-color: var(--ds-color-action-primary);
+  }
+
+  .btn.btn--list:active {
+    color: var(--ds-color-action-primary-focus);
+  }
+
+  .btn.btn--list.is-disabled,
+  .btn.btn--list.is-disabled svg {
+    color: var(--ds-color-text-disabled);
+  }
+
+  /*
+   * Sobre fondo oscuro: gris claro que pasa a blanco. No hay semántico de
+   * texto secundario para fondo oscuro; neutral-300 es el mismo que usa el
+   * texto del footer. La flecha acompaña al texto en vez de ir en rojo, que
+   * sobre oscuro competiría con él.
+   */
+  .btn.btn--list.btn--negative {
+    color: var(--ds-color-neutral-300);
+    border-bottom-color: var(--ds-color-border-inverse-subtle);
+  }
+
+  .btn.btn--list.btn--negative svg {
+    color: currentColor;
+  }
+
+  /* Al pasar solo se aclara el texto: un filete blanco encendido sobre oscuro
+     pesaría más que el propio enlace. */
+  .btn.btn--list.btn--negative:hover {
     color: var(--ds-color-text-inverse);
   }
 
-  /* .btn.btn--icon (no ".btn--icon" a secas): igual razón que .btn--sm/.btn--lg
-     más arriba — sin el prefijo ".btn", su "padding" pierde contra la regla
-     base y el botón queda ancho en vez de cuadrado, apretando/recortando
-     visualmente cualquier ícono adentro. */
-  .btn.btn--icon {
-    padding: var(--ds-spacing-xs);
-    aspect-ratio: 1;
+  /* -----------------------------------------------------------------------
+     Light: blanco con el ícono en rojo. Con `icon` es el button-arrow blanco
+     del Figma, pensado para ir sobre una superficie clara (el gris de
+     --ds-color-background-light); sobre blanco no se distinguiría.
+
+     Al pasar, un tinte rojo suave: el Figma no dibuja el hover de esta
+     variante, y la persiana del primario sería demasiado en un cuadrado.
+     ----------------------------------------------------------------------- */
+  .btn.btn--light {
+    background-color: var(--ds-color-background-default);
+    color: var(--ds-color-text-brand);
+  }
+
+  .btn.btn--light:hover,
+  .btn.btn--light:active {
+    background-color: var(--ds-color-surface-primary-soft);
+  }
+
+  .btn.btn--light:active {
+    color: var(--ds-color-action-primary-focus);
+  }
+
+  .btn.btn--light.is-disabled {
+    color: var(--ds-color-text-disabled);
+  }
+
+  /* -----------------------------------------------------------------------
+     Surface — propia de la librería, no está en el Figma.
+
+     Control compacto que vive SOBRE una superficie de color y toma de ella su
+     contraste: blanco translúcido, así que funciona igual encima de cualquier
+     color sin declarar una variante por cada uno. Nace del ecosistema
+     académico, donde la misma flecha va sobre ocho colores de escuela.
+
+     Sin persiana: en un cuadrado de 36px se lee como un parpadeo.
+     ----------------------------------------------------------------------- */
+  .btn.btn--surface {
+    background-color: var(--ds-color-white-20);
+    color: var(--ds-color-text-inverse);
+  }
+
+  .btn.btn--surface:hover,
+  .btn.btn--surface:focus-visible {
+    background-color: var(--ds-color-white-40);
+  }
+
+  .btn.btn--surface:active {
+    background-color: var(--ds-color-white-60);
+  }
+
+  .btn.btn--surface.is-disabled {
+    color: var(--ds-color-white-40);
   }
 }

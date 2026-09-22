@@ -274,24 +274,12 @@
     color: var(--ds-color-text-secondary);
   }
 
-  .ctaband__link {
-    display: inline-flex;
+  /*
+   * El enlace es un AtomButton variant="link": aspecto, flecha y subrayado los
+   * pone el sistema. Aquí solo se impide que el texto de al lado lo encoja.
+   */
+  .ctaband__link.btn {
     flex-shrink: 0;
-    align-items: center;
-    gap: var(--ds-spacing-xxs);
-    font-weight: var(--ds-weight-medium);
-    color: var(--ds-color-text-brand);
-    white-space: nowrap;
-  }
-
-  .ctaband__link svg {
-    width: 16px;
-    height: 16px;
-    transition: transform var(--ds-ease-base);
-  }
-
-  .ctaband__link:hover svg {
-    transform: translateX(4px);
   }
 
   /* -----------------------------------------------------------------------
@@ -341,7 +329,7 @@
       flex: none;
     }
 
-    .ctaband--compact .ctaband__link {
+    .ctaband--compact .ctaband__link.btn {
       align-self: center;
     }
   }

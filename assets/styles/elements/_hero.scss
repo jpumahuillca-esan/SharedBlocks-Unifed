@@ -17,6 +17,7 @@
    ========================================================================= */
 
 @use '../breakpoints' as bp;
+@use './buttons';
 
 .arcis-scope {
 
@@ -313,33 +314,15 @@
     }
 
     /*
-     * Sobre el panel rojo, un botón rojo desaparece: el principal se viste como
-     * la variante "white" del sistema, que existe justo para esto — su propio
-     * comentario en _buttons.scss dice "CTA principal sobre fondos rojos/oscuros
-     * (ej. Hero)".
+     * Sobre el panel rojo, un botón rojo desaparece: el principal toma su
+     * versión para fondo oscuro (blanco con texto rojo, como `negative`).
      *
-     * Se copia su comportamiento en vez de cambiar la prop del átomo porque
-     * quién manda aquí es el ancho de la pantalla, y eso solo lo sabe el CSS.
+     * No se cambia la prop del átomo porque quien manda aquí es el ancho de la
+     * pantalla, y eso solo lo sabe el CSS. Tampoco se copia el aspecto: sale
+     * del mismo mixin que usa .btn--primary.btn--negative en _buttons.scss.
      */
     .hero__actions .btn.btn--primary {
-      background-color: var(--ds-color-background-default);
-      color: var(--ds-color-text-brand);
-      /*
-       * El color acompaña al barrido de la persiana (--ds-ease-slow). Con la
-       * velocidad rápida el texto se volvería blanco antes de que el fondo lo
-       * cubra, dejando un parpadeo de blanco sobre blanco.
-       */
-      transition: background-color var(--ds-ease-fast), color var(--ds-ease-slow),
-                  border-color var(--ds-ease-fast), transform var(--ds-ease-fast);
-    }
-
-    /*
-     * Imprescindible: la persiana de .btn--primary revela --ds-color-action-primary-hover.
-     * Sin esto el texto se queda rojo sobre rojo oscuro y desaparece. Es el
-     * mismo caso que _buttons.scss ya corrige para .btn--white.
-     */
-    .hero__actions .btn.btn--primary:hover {
-      color: var(--ds-color-text-inverse);
+      @include buttons.primary-negative;
     }
 
     /*

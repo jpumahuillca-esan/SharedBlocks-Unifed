@@ -174,24 +174,16 @@
     flex-direction: column;
   }
 
-  .footer-v1__link {
-    display: flex;
-    align-items: center;
-    gap: var(--ds-spacing-xxs);
-    padding: var(--ds-spacing-xs) 0;
-    border-bottom: var(--ds-border-width-sm) solid var(--ds-color-neutral-800);
-    color: inherit;
-    transition: color var(--ds-ease-fast);
-  }
-
-  .footer-v1__link:hover {
-    color: var(--ds-color-text-inverse);
-  }
-
-  .footer-v1__link svg {
-    flex-shrink: 0;
-    width: 14px;
-    height: 14px;
+  /*
+   * Los enlaces son el List-Link del sistema (AtomButton variant="list"
+   * negative): fila, flecha, colores y hover los pone _buttons.scss.
+   *
+   * Lo único propio del pie es el filete entre enlaces, más oscuro que el
+   * semántico de borde sobre fondo oscuro: en la maqueta del pie estas líneas
+   * casi no se ven, y las que separan las secciones sí.
+   */
+  .footer-v1__link.btn.btn--list {
+    border-bottom-color: var(--ds-color-neutral-800);
   }
 
   /*
@@ -346,12 +338,12 @@
       visibility: visible;
     }
 
-    .footer-v1__link {
+    .footer-v1__link.btn {
       border-bottom: none;
       border-top: var(--ds-border-width-sm) solid rgba(255, 255, 255, 0.06);
     }
 
-    .footer-v1__link:first-child {
+    .footer-v1__link.btn:first-child {
       border-top: none;
     }
 

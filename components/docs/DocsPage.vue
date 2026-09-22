@@ -112,8 +112,8 @@ const scrollTo = (id: string) => {
       <header class="docs-page__header">
         <h1 class="docs-page__header-title">ARCIS Design System</h1>
         <p class="docs-page__header-text">
-          Documentación de referencia para desarrolladores — Foundations y Elements de SharedBlocks-Unifed,
-          fuente de verdad: <code>webunificada/ui-kit</code>.
+          Documentación de referencia para desarrolladores — Foundations y Elements de SharedBlocks-Unifed.
+          Tokens: arcis-2, el export de variables de Figma (<code>assets/styles/ds/ds-tokens.css</code>).
         </p>
       </header>
 

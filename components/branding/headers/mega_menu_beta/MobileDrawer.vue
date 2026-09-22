@@ -36,41 +36,53 @@
       <div class="mmb-drawer__body" @click="closeOnLink">
         <!-- Primer nivel: el menú principal y, debajo, los enlaces del topbar. -->
         <template v-if="!view">
+          <!--
+            Cada ítem es el "List-Link" del sistema (AtomButton variant="list").
+            Los que abren un nivel van sin destino: el átomo les da rol de botón,
+            foco y teclado. Los que navegan usan NuxtLink en public-site: el
+            átomo lo resuelve por su cuenta.
+          -->
           <ul class="mmb-drawer__list">
             <li v-for="root in roots" :key="root.id">
-              <a
+              <AtomButton
                 v-if="root.children.length"
+                variant="list"
                 class="mmb-drawer__item"
-                role="button"
-                tabindex="0"
                 @click="push({ kind: 'root', root })"
-                @keydown="onControlKeydown($event, () => push({ kind: 'root', root }))"
               >
                 <span>{{ root.title }}</span>
                 <AtomIcon name="chevron-right" :size="16" />
-              </a>
-              <component v-else :is="linkTag" v-bind="getLinkProps(root.url)" class="mmb-drawer__item">
+              </AtomButton>
+              <AtomButton
+                v-else
+                variant="list"
+                class="mmb-drawer__item"
+                :href="root.url || '#'"
+              >
                 {{ root.title }}
-              </component>
+              </AtomButton>
             </li>
           </ul>
 
           <ul v-if="secondary.length" class="mmb-drawer__list mmb-drawer__list--secondary">
             <li v-for="link in secondary" :key="link.id">
-              <a
+              <AtomButton
                 v-if="link.children.length"
+                variant="list"
                 class="mmb-drawer__item"
-                role="button"
-                tabindex="0"
                 @click="push({ kind: 'secondary', link })"
-                @keydown="onControlKeydown($event, () => push({ kind: 'secondary', link }))"
               >
                 <span>{{ link.label }}</span>
                 <AtomIcon name="chevron-right" :size="16" />
-              </a>
-              <component v-else :is="linkTag" v-bind="getLinkProps(link.url)" class="mmb-drawer__item">
+              </AtomButton>
+              <AtomButton
+                v-else
+                variant="list"
+                class="mmb-drawer__item"
+                :href="link.url || '#'"
+              >
                 {{ link.label }}
-              </component>
+              </AtomButton>
             </li>
           </ul>
         </template>
@@ -101,20 +113,23 @@
 
             <ul class="mmb-drawer__list">
               <li v-for="tab in view.root.children" :key="tab.id">
-                <a
+                <AtomButton
                   v-if="tab.children.length"
+                  variant="list"
                   class="mmb-drawer__item"
-                  role="button"
-                  tabindex="0"
                   @click="push({ kind: 'tab', tab })"
-                  @keydown="onControlKeydown($event, () => push({ kind: 'tab', tab }))"
                 >
                   <span>{{ tab.title }}</span>
                   <AtomIcon name="chevron-right" :size="16" />
-                </a>
-                <component v-else :is="linkTag" v-bind="getLinkProps(tab.url)" class="mmb-drawer__item">
+                </AtomButton>
+                <AtomButton
+                  v-else
+                  variant="list"
+                  class="mmb-drawer__item"
+                  :href="tab.url || '#'"
+                >
                   {{ tab.title }}
-                </component>
+                </AtomButton>
               </li>
             </ul>
           </template>
@@ -166,9 +181,13 @@
 
             <ul class="mmb-drawer__list">
               <li v-for="child in view.link.children" :key="child.id">
-                <component :is="linkTag" v-bind="getLinkProps(child.url)" class="mmb-drawer__item">
+                <AtomButton
+                  variant="list"
+                  class="mmb-drawer__item"
+                  :href="child.url || '#'"
+                >
                   {{ child.label }}
-                </component>
+                </AtomButton>
               </li>
             </ul>
           </template>
@@ -189,6 +208,7 @@
  * abrirlo se empieza por el principio.
  */
 import { ref, computed, nextTick, onMounted } from 'vue';
+import AtomButton from '../../../atoms/AtomButton.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 import { useDynamicLink } from '../../../../composables/useDynamicLink';
 import type { MenuRoot, MenuTab, SecondaryLink } from './menu';

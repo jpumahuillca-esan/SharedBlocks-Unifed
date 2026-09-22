@@ -74,17 +74,23 @@
 
             <div class="footer-v1__panel">
               <div class="footer-v1__panel-inner">
+                <!--
+                  Cada enlace es el "List-Link" del sistema en su versión para
+                  fondo oscuro, con la flecha delante. En public-site el átomo
+                  usa NuxtLink por su cuenta (lo resuelve él mismo).
+                -->
                 <nav class="footer-v1__links" :aria-label="column.title || undefined">
-                  <component
-                    :is="linkTag"
+                  <AtomButton
                     v-for="link in column.links"
                     :key="link.id"
-                    v-bind="getLinkProps(link.url)"
+                    variant="list"
+                    negative
+                    :href="link.url || '#'"
                     class="footer-v1__link"
                   >
-                    <AtomIcon name="arrow-right" :size="14" />
+                    <AtomIcon name="arrow-right" :size="16" />
                     {{ link.label }}
-                  </component>
+                  </AtomButton>
                 </nav>
               </div>
             </div>
@@ -146,6 +152,7 @@
  */
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import AtomText from '../../../atoms/AtomText.vue';
+import AtomButton from '../../../atoms/AtomButton.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 import AtomSocialIcon from '../../../atoms/AtomSocialIcon.vue';
 import { useDynamicLink } from '../../../../composables/useDynamicLink';

@@ -9,10 +9,11 @@
       <p v-if="data.desc" class="ctaband__text-desc">{{ data.desc }}</p>
     </div>
 
-    <a v-if="data.linkLabel" class="ctaband__link" :href="data.linkUrl || '#'">
+    <!-- El "Button Link" del sistema. -->
+    <AtomButton v-if="data.linkLabel" variant="link" class="ctaband__link" :href="data.linkUrl || '#'">
       {{ data.linkLabel }}
       <AtomIcon name="arrow-right" :size="16" />
-    </a>
+    </AtomButton>
   </div>
 </template>
 
@@ -27,6 +28,7 @@
  * Conserva su arquitectura original: un enlace único con flecha, no un área de
  * acciones con botones.
  */
+import AtomButton from '../../../atoms/AtomButton.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 
 defineProps<{ data: any }>();

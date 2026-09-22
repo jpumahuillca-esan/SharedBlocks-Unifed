@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { computed, resolveComponent } from 'vue';
 
-type ButtonVariant = 'primary' | 'secondary' | 'terciary' | 'white' | 'surface' | 'link';
+/**
+ * Variantes del Figma de arcis-2 (ver la cabecera de _buttons.scss):
+ * primary · secondary · terciary (con caja) · text ("Button Icon") ·
+ * link ("Button Link") · list ("List-Link") · light (blanco, para superficies
+ * claras) · surface (translúcido, sobre paneles de color) · white (= primary
+ * con negative). Con `icon`, el "button-arrow".
+ */
+type ButtonVariant = 'primary' | 'secondary' | 'terciary' | 'white' | 'surface' | 'link' | 'text' | 'list' | 'light';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
 const props = withDefaults(defineProps<{

@@ -1,18 +1,24 @@
 <script setup lang="ts">
 /**
- * FoundationsBorders — anchos y colores de borde (ARCIS Design System,
- * Foundations > Borders), para la página de Documentación. Lista
- * mantenida a mano en sincronía con assets/styles/tokens.scss.
+ * FoundationsBorders — anchos y colores de borde de arcis-2 (Foundations >
+ * Borders), para la página de Documentación.
+ *
+ * Los anchos son --ds-border-width-*; los colores, el grupo semántico
+ * "Color / Border" del export. Todo sale de ds-tokens.css a través de
+ * dsTokens.ts.
  */
-const widths = [
-  { label: 'border-width-sm', cssVar: '--border-width-sm' },
-  { label: 'border-width-md', cssVar: '--border-width-md' },
-];
+import { groupsWhere, referenceOf, resolveToken, shortName, tokensByPrefix, type DsToken } from '../content/dsTokens';
 
-const colors = [
-  { label: 'border-color-light', cssVar: '--border-color-light' },
-  { label: 'border-color-dark', cssVar: '--border-color-dark' },
-];
+const widths = tokensByPrefix('--ds-border-width-');
+const colors = groupsWhere('semantic', 'Color / Border').flatMap((group) => group.tokens);
+
+/* Los bordes "inverse" son para fondos oscuros: sobre blanco no se verían. */
+const onDark = (token: DsToken) => token.name.includes('inverse');
+
+const reference = (token: DsToken) => {
+  const target = referenceOf(token);
+  return target ? shortName(target, target.startsWith('--ds-color-') ? '--ds-color-' : '--ds-') : '';
+};
 </script>
 
 <template>
@@ -20,19 +26,28 @@ const colors = [
     <div class="fb__group">
       <h4 class="fb__group-title">Anchos</h4>
       <div class="fb__grid">
-        <div v-for="w in widths" :key="w.cssVar" class="fb__item">
-          <span class="fb__box" :style="{ borderWidth: `var(${w.cssVar})`, borderColor: 'var(--arcis-color-global-main)', borderStyle: 'solid' }"></span>
-          <span class="fb__token">{{ w.cssVar }}</span>
+        <div v-for="w in widths" :key="w.name" class="fb__item">
+          <span
+            class="fb__box"
+            :style="{ borderWidth: `var(${w.name})`, borderColor: 'var(--ds-color-action-primary)', borderStyle: 'solid' }"
+          ></span>
+          <span class="fb__token" :title="w.name">{{ shortName(w.name) }}</span>
+          <span class="fb__value">{{ resolveToken(w.name) }}</span>
         </div>
       </div>
     </div>
 
     <div class="fb__group">
-      <h4 class="fb__group-title">Colores</h4>
+      <h4 class="fb__group-title">Colores (semánticos)</h4>
       <div class="fb__grid">
-        <div v-for="c in colors" :key="c.cssVar" class="fb__item">
-          <span class="fb__box" :style="{ borderWidth: '2px', borderColor: `var(${c.cssVar})`, borderStyle: 'solid' }"></span>
-          <span class="fb__token">{{ c.cssVar }}</span>
+        <div v-for="c in colors" :key="c.name" class="fb__item">
+          <span
+            class="fb__box"
+            :class="{ 'is-dark': onDark(c) }"
+            :style="{ borderWidth: '2px', borderColor: `var(${c.name})`, borderStyle: 'solid' }"
+          ></span>
+          <span class="fb__token" :title="c.name">{{ shortName(c.name, '--ds-color-') }}</span>
+          <span class="fb__value" :title="`${resolveToken(c.name)} · ${reference(c)}`">{{ resolveToken(c.name) }}<template v-if="reference(c)"> · {{ reference(c) }}</template></span>
         </div>
       </div>
     </div>
@@ -40,6 +55,8 @@ const colors = [
 </template>
 
 <style scoped>
+/* El recuadro de vista previa es siempre claro (ver DocsSection.vue): el texto usa
+   los tokens de arcis-2 y no los --docs-* del tema, que en oscuro serían claros. */
 .fb__group {
   margin-bottom: 24px;
 }
@@ -52,7 +69,7 @@ const colors = [
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--docs-text-subtle);
+  color: var(--ds-color-text-secondary);
 }
 .fb__grid {
   display: flex;
@@ -63,19 +80,35 @@ const colors = [
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  width: 140px;
 }
 .fb__box {
-  /* fijo blanco a propósito: border-color-dark es un gris medio,
-     perdería contraste sobre un fondo oscuro que también cambie */
+  /* Blanco fijo a propósito: los grises de borde perderían contraste sobre el
+     fondo de la documentación, que cambia con su tema claro/oscuro. */
   width: 72px;
   height: 72px;
+  margin-bottom: 2px;
   border-radius: 8px;
-  background: #ffffff;
+  background: var(--ds-color-white);
+}
+.fb__box.is-dark {
+  background: var(--ds-color-background-inverse);
+}
+.fb__token,
+.fb__value {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: 'SFMono-Regular', Consolas, monospace;
 }
 .fb__token {
   font-size: 11px;
-  font-family: 'SFMono-Regular', Consolas, monospace;
-  color: var(--docs-text-subtle);
+  color: var(--ds-color-text-primary);
+}
+.fb__value {
+  font-size: 10px;
+  color: var(--ds-color-text-secondary);
 }
 </style>

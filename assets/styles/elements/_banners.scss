@@ -30,6 +30,8 @@
    está en el CSS fuente tal cual, se porta sin modificar.
    ============================================================ */
 
+@use './buttons';
+
 .arcis-scope {
   .banner {
     display: flex;
@@ -176,13 +178,18 @@
     color: var(--ds-color-yellow-500);
   }
 
+  /*
+   * Es el button-arrow rojo del sistema, pero decorativo: el enlace es el
+   * banner entero, y un AtomButton sería un <a> dentro de otro. La forma de
+   * pestaña la toma del mismo mixin que los botones de solo ícono.
+   */
   .banner__arrow {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 48px;
     height: 48px;
-    border-radius: var(--ds-radius-sm);
+    @include buttons.arrow-shape;
     background-color: var(--ds-color-action-primary);
     box-shadow: var(--ds-shadow-md);
     transition: transform var(--ds-ease-fast);

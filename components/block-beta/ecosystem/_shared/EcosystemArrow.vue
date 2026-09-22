@@ -1,6 +1,11 @@
 <template>
+  <!--
+    `white` es el principal en su versión para fondo oscuro (primary +
+    negative), como lo nombra el Figma.
+  -->
   <AtomButton
-    :variant="variant"
+    :variant="variant === 'white' ? 'primary' : variant"
+    :negative="variant === 'white'"
     size="sm"
     icon
     class="ecosystem-arrow"
@@ -26,6 +31,7 @@
  * Dos acabados, como en la maqueta:
  *   surface  sobre el panel de color de una tarjeta, en blanco translúcido
  *   white    sobre la franja roja, en blanco sólido con el chevron en rojo
+ *            (el principal del sistema en su versión `negative`)
  */
 import AtomButton from '../../../atoms/AtomButton.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';

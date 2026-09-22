@@ -93,25 +93,13 @@
     color: var(--ds-color-text-primary);
   }
 
-  .card-section__link {
-    display: inline-flex;
+  /*
+   * El enlace es un AtomButton variant="link" size="sm": su aspecto, la flecha
+   * que se desliza y el subrayado al pasar los pone el sistema. Aquí solo se
+   * impide que el título largo de al lado lo encoja.
+   */
+  .card-section__link.btn {
     flex-shrink: 0;
-    align-items: center;
-    gap: var(--ds-spacing-xxs);
-    font-size: var(--ds-text-body-compact);
-    font-weight: var(--ds-weight-medium);
-    color: var(--ds-color-text-brand);
-    white-space: nowrap;
-  }
-
-  .card-section__link svg {
-    width: 16px;
-    height: 16px;
-    transition: transform var(--ds-ease-base);
-  }
-
-  .card-section__link:hover svg {
-    transform: translateX(4px);
   }
 
   /*
@@ -225,7 +213,8 @@
     }
 
     /* El enlace pasa al final de la sección, donde queda más a mano. */
-    .card-section__header .card-section__link {
+    /* Con `.btn` para ganarle al display de la regla base de botones. */
+    .card-section__header .card-section__link.btn {
       display: none;
     }
 

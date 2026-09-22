@@ -18,10 +18,11 @@
       <AtomText v-if="desc" size="body-compact" class="card-section__desc">{{ desc }}</AtomText>
     </div>
 
-    <a v-if="linkLabel" class="card-section__link" :href="linkUrl || '#'">
+    <!-- El "Button Link" del sistema; en pequeño, al tamaño del texto de apoyo. -->
+    <AtomButton v-if="linkLabel" variant="link" size="sm" class="card-section__link" :href="linkUrl || '#'">
       {{ linkLabel }}
       <AtomIcon name="arrow-right" :size="16" />
-    </a>
+    </AtomButton>
   </div>
 </template>
 
@@ -38,6 +39,7 @@
  */
 import AtomEyebrow from '../../../atoms/AtomEyebrow.vue';
 import AtomText from '../../../atoms/AtomText.vue';
+import AtomButton from '../../../atoms/AtomButton.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 
 defineProps<{

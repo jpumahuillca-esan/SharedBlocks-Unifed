@@ -1,42 +1,49 @@
 <script setup lang="ts">
 /**
- * PreviewButtons — muestra todas las variantes de AtomButton juntas
- * (Elementos > Botones de webunificada), para la pestaña "Elementos"
- * del sidebar del editor. Solo vista previa, no se usa en bloques reales.
+ * PreviewButtons — todas las variantes de AtomButton juntas, ordenadas como
+ * las láminas del Figma de arcis-2 ("Variantes", "Button Icon", "Button Link"
+ * y "List-Link"). La usan la pestaña "Elementos" del editor y la página de
+ * Documentación; no se usa en bloques reales.
+ *
+ * Hover y pressed no se pueden mostrar quietos: se ven al pasar el ratón y al
+ * pulsar sobre cada muestra. El resto de estados (deshabilitado, fondo oscuro)
+ * sí están aquí.
  */
 import AtomButton from '../atoms/AtomButton.vue';
 import AtomIcon from '../atoms/AtomIcon.vue';
 
-// "link" queda fuera de esta lista a propósito: en webunificada siempre
-// lleva el ícono arrow-right + "Conocer más" (con animación de deslizar al
-// hacer hover — ver .btn--link:hover svg en elements/_buttons.scss), no un
-// texto genérico como los demás.
-//
-// "white" también queda fuera: es fondo blanco + texto rojo, pensada para
-// ir SOBRE fondos rojos/oscuros (ver comentario en .btn--white de
-// elements/_buttons.scss). Mostrarla acá, sobre el fondo blanco de la
-// página, hace que el botón se vuelva invisible y solo quede el texto rojo
-// flotando — no es que le falte contraste, es que este no es su contexto.
-// Se muestra más abajo, en el grupo "Sobre fondo oscuro", donde sí tiene
-// sentido.
-const variants = [
-  { variant: 'primary', label: 'primary' },
-  { variant: 'secondary', label: 'secondary' },
-  { variant: 'terciary', label: 'terciary' },
+const boxed = [
+  { variant: 'primary', label: 'Primary' },
+  { variant: 'secondary', label: 'Secondary' },
+  { variant: 'terciary', label: 'Tertiary' },
+] as const;
+
+/* En el Figma, sobre fondo oscuro solo hay principal y secundario. */
+const onDark = [
+  { variant: 'primary', label: 'Primary' },
+  { variant: 'secondary', label: 'Secondary' },
 ] as const;
 </script>
 
 <template>
   <div class="preview-stack">
-    <div class="preview-group">
-      <span class="preview-group__label">Variantes</span>
+    <!-- Variantes con caja: sin ícono, con ícono a cada lado y deshabilitadas. -->
+    <div v-for="item in boxed" :key="item.variant" class="preview-group">
+      <span class="preview-group__label">{{ item.label }}</span>
       <div class="preview-row-wrap">
-        <AtomButton v-for="item in variants" :key="item.variant" :variant="item.variant">
-          {{ item.label }}
-        </AtomButton>
-        <AtomButton variant="link">
-          Conocer más
+        <AtomButton :variant="item.variant">Button</AtomButton>
+        <AtomButton :variant="item.variant">
+          Button
           <AtomIcon name="arrow-right" :size="16" />
+        </AtomButton>
+        <AtomButton :variant="item.variant">
+          <AtomIcon name="check-circle" :size="16" />
+          Button
+        </AtomButton>
+        <AtomButton :variant="item.variant" disabled>Button</AtomButton>
+        <AtomButton :variant="item.variant" disabled>
+          <AtomIcon name="check-circle" :size="16" />
+          Button
         </AtomButton>
       </div>
     </div>
@@ -50,25 +57,150 @@ const variants = [
       </div>
     </div>
 
+    <!-- "Button Icon": la etiqueta con flecha y los cuadrados de solo ícono. -->
     <div class="preview-group">
-      <span class="preview-group__label">Estados</span>
+      <span class="preview-group__label">Button Icon — texto con flecha</span>
       <div class="preview-row-wrap">
-        <AtomButton variant="primary">Normal</AtomButton>
-        <AtomButton variant="primary" disabled>Deshabilitado</AtomButton>
-        <AtomButton variant="secondary" icon aria-label="Buscar">
-          <AtomIcon name="search" :size="16" />
+        <AtomButton variant="text">
+          <AtomIcon name="arrow-right" :size="16" />
+          label
+        </AtomButton>
+        <AtomButton variant="text">
+          label
+          <AtomIcon name="arrow-right" :size="16" />
+        </AtomButton>
+        <AtomButton variant="text" disabled>
+          label
+          <AtomIcon name="arrow-right" :size="16" />
         </AtomButton>
       </div>
     </div>
 
-    <div class="preview-group preview-group--dark">
-      <span class="preview-group__label">Sobre fondo oscuro</span>
+    <!--
+      El "button-arrow": sobre el gris claro del marco del Figma, porque el
+      blanco (light) está pensado para superficies claras y sobre blanco no se
+      vería. La esquina superior izquierda va en ángulo recto.
+    -->
+    <div class="preview-group preview-group--light">
+      <span class="preview-group__label">Button Icon — solo ícono (button-arrow)</span>
       <div class="preview-row-wrap">
-        <AtomButton variant="white">CTA principal</AtomButton>
-        <AtomButton variant="secondary" negative>Ver programas</AtomButton>
-        <AtomButton variant="link" negative>
-          Conocer más
+        <AtomButton variant="primary" icon size="sm" aria-label="Siguiente">
+          <AtomIcon name="chevron-right" :size="16" />
+        </AtomButton>
+        <AtomButton variant="primary" icon aria-label="Siguiente">
+          <AtomIcon name="chevron-right" :size="16" />
+        </AtomButton>
+        <AtomButton variant="primary" icon size="lg" aria-label="Siguiente">
+          <AtomIcon name="chevron-right" :size="24" />
+        </AtomButton>
+        <AtomButton variant="primary" icon disabled aria-label="Siguiente">
+          <AtomIcon name="chevron-right" :size="16" />
+        </AtomButton>
+      </div>
+      <div class="preview-row-wrap">
+        <AtomButton variant="light" icon size="sm" aria-label="Siguiente">
+          <AtomIcon name="chevron-right" :size="16" />
+        </AtomButton>
+        <AtomButton variant="light" icon aria-label="Siguiente">
+          <AtomIcon name="chevron-right" :size="16" />
+        </AtomButton>
+        <AtomButton variant="light" icon size="lg" aria-label="Siguiente">
+          <AtomIcon name="chevron-right" :size="24" />
+        </AtomButton>
+        <AtomButton variant="light" icon disabled aria-label="Siguiente">
+          <AtomIcon name="chevron-right" :size="16" />
+        </AtomButton>
+      </div>
+    </div>
+
+    <div class="preview-group">
+      <span class="preview-group__label">Button Link</span>
+      <div class="preview-row-wrap">
+        <AtomButton variant="link">
+          Ver historia
           <AtomIcon name="arrow-right" :size="16" />
+        </AtomButton>
+        <AtomButton variant="link" size="sm">
+          Ver historia
+          <AtomIcon name="arrow-right" :size="16" />
+        </AtomButton>
+        <AtomButton variant="link" disabled>
+          Ver historia
+          <AtomIcon name="arrow-right" :size="16" />
+        </AtomButton>
+      </div>
+    </div>
+
+    <div class="preview-group">
+      <span class="preview-group__label">List-Link</span>
+      <div class="preview-list">
+        <AtomButton variant="list">
+          <span>Placeholder</span>
+          <AtomIcon name="arrow-right" :size="16" />
+        </AtomButton>
+        <AtomButton variant="list">
+          <AtomIcon name="arrow-right" :size="16" />
+          Placeholder
+        </AtomButton>
+        <AtomButton variant="list" disabled>
+          <span>Placeholder</span>
+          <AtomIcon name="arrow-right" :size="16" />
+        </AtomButton>
+      </div>
+    </div>
+
+    <!-- Sobre fondo oscuro: la prop `negative`. -->
+    <div class="preview-group preview-group--dark">
+      <span class="preview-group__label">Sobre fondo oscuro (negative)</span>
+      <div v-for="item in onDark" :key="item.variant" class="preview-row-wrap">
+        <AtomButton :variant="item.variant" negative>{{ item.label }}</AtomButton>
+        <AtomButton :variant="item.variant" negative>
+          {{ item.label }}
+          <AtomIcon name="arrow-right" :size="16" />
+        </AtomButton>
+        <AtomButton :variant="item.variant" negative>
+          <AtomIcon name="check-circle" :size="16" />
+          {{ item.label }}
+        </AtomButton>
+      </div>
+      <div class="preview-row-wrap">
+        <AtomButton variant="text" negative>
+          <AtomIcon name="arrow-right" :size="16" />
+          label
+        </AtomButton>
+        <AtomButton variant="text" negative>
+          label
+          <AtomIcon name="arrow-right" :size="16" />
+        </AtomButton>
+        <AtomButton variant="link" negative>
+          Ver historia
+          <AtomIcon name="arrow-right" :size="16" />
+        </AtomButton>
+      </div>
+      <div class="preview-list">
+        <AtomButton variant="list" negative>
+          <AtomIcon name="arrow-right" :size="16" />
+          Placeholder
+        </AtomButton>
+        <AtomButton variant="list" negative>
+          <span>Placeholder</span>
+          <AtomIcon name="arrow-right" :size="16" />
+        </AtomButton>
+      </div>
+    </div>
+
+    <!-- Sobre un panel de color: surface (propia de la librería). -->
+    <div class="preview-group preview-group--brand">
+      <span class="preview-group__label">Sobre un panel de color (surface)</span>
+      <div class="preview-row-wrap">
+        <AtomButton variant="surface" icon size="sm" aria-label="Ir">
+          <AtomIcon name="chevron-right" :size="16" />
+        </AtomButton>
+        <AtomButton variant="surface" icon aria-label="Ir">
+          <AtomIcon name="chevron-right" :size="16" />
+        </AtomButton>
+        <AtomButton variant="primary" negative icon size="sm" aria-label="Ir">
+          <AtomIcon name="chevron-right" :size="16" />
         </AtomButton>
       </div>
     </div>
@@ -87,21 +219,45 @@ const variants = [
   flex-direction: column;
   gap: 8px;
 }
+/* Mismo azul del fondo oscuro de la lámina del Figma. */
 .preview-group--dark {
-  background: #212121;
-  padding: 12px;
+  gap: 12px;
+  padding: 16px;
   border-radius: 8px;
+  background: var(--ds-color-background-dark);
+}
+/* El gris claro del marco del button-arrow en el Figma. */
+.preview-group--light {
+  gap: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--ds-color-background-light);
+}
+.preview-group--brand {
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--ds-color-surface-primary);
 }
 .preview-group__label {
   font-size: 10px;
   font-family: monospace;
-  color: #999;
+  color: var(--ds-color-text-secondary);
   text-transform: uppercase;
+}
+.preview-group--dark .preview-group__label,
+.preview-group--brand .preview-group__label {
+  color: var(--ds-color-white-80);
 }
 .preview-row-wrap {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
+}
+/* La fila del List-Link ocupa todo el ancho: se acota para que se lea como lista. */
+.preview-list {
+  display: flex;
+  flex-direction: column;
+  max-width: 360px;
 }
 </style>
