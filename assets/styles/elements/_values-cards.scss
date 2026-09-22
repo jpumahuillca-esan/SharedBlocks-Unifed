@@ -46,10 +46,10 @@
     --values-cards-media-min: 220px;
 
     /*
-     * Fondo de la maqueta. Va el hex y no un token porque no hay ninguno que le
-     * corresponda: los grises de ARCIS son neutros (--ds-color-neutral-*) y este tira a
-     * azul. Tampoco se agrega a tokens.scss, que es espejo de webunificada (ver
-     * su cabecera): cuando la fuente incorpore este gris, se cambia por su token.
+     * Fondo de la maqueta. Va el hex y no un token porque arcis-2 no tiene
+     * ninguno con este valor (el gris más cercano, --ds-color-neutral-100, es
+     * #F1F5F9). No se inventa uno en la librería: los tokens son el export de
+     * Figma tal cual (ver tokens.scss). Cuando Figma lo publique, se cambia.
      */
     background-color: #E4E6ED;
   }

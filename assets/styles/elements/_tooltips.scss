@@ -45,7 +45,7 @@
     left: 50%;
     transform: translateX(-50%);
     border: 5px solid transparent;
-    border-top-color: var(--ds-color-neutral-900);
+    border-top-color: var(--ds-color-surface-dark); /* el mismo token que el fondo del tooltip */
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--ds-ease-fast);
@@ -72,7 +72,7 @@
     bottom: auto;
     top: calc(100% + 4px);
     border-top-color: transparent;
-    border-bottom-color: var(--ds-color-neutral-900);
+    border-bottom-color: var(--ds-color-surface-dark);
   }
 
   .tooltip-trigger--bottom:hover::after,

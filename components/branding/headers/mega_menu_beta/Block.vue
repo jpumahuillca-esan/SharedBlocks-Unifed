@@ -38,6 +38,7 @@
                 tabindex="0"
                 aria-haspopup="true"
                 :aria-expanded="String(activeId === item.id)"
+                :aria-controls="panelId(item)"
                 @click="togglePanel(item.id)"
                 @keydown="onControlKeydown($event, () => togglePanel(item.id))"
               >
@@ -75,13 +76,28 @@
         </div>
       </div>
 
+      <!--
+        Todos los paneles se dibujan desde el principio y se muestran u ocultan
+        con v-show, no con v-if: así sus enlaces ya vienen en el HTML que entrega
+        el servidor y los buscadores los encuentran sin tener que pasar el ratón.
+
+        La animación va en el contenedor y no en cada panel: se anima al abrir y
+        al cerrar, pero pasar de una entrada a otra es un cambio seco, como
+        antes. Con una transición por panel, los dos se fundirían uno sobre otro.
+      -->
       <Transition name="mmb-panel">
-        <MegaPanel
-          v-if="activeRoot"
-          :root="activeRoot"
-          :link-component="linkComponent"
-          @close="closePanel"
-        />
+        <div v-show="activeRoot" class="mmb-panels">
+          <MegaPanel
+            v-for="item in panelRoots"
+            v-show="activeId === item.id"
+            :id="panelId(item)"
+            :key="item.id"
+            :root="item"
+            :open="activeId === item.id"
+            :link-component="linkComponent"
+            @close="closePanel"
+          />
+        </div>
       </Transition>
     </div>
   </div>
@@ -173,6 +189,15 @@ const activeId = ref<string | null>(null);
 const activeRoot = computed(
   () => roots.value.find((item) => item.id === activeId.value && item.children.length) ?? null,
 );
+
+/* Solo las entradas con submenú tienen panel; las demás son enlaces directos. */
+const panelRoots = computed(() => roots.value.filter((item) => item.children.length));
+
+/*
+ * Id del panel de cada entrada. Ahora que todos existen desde el principio, el
+ * control puede apuntar al suyo con aria-controls.
+ */
+const panelId = (item: MenuRoot) => `mmb-panel-${item.id}`;
 
 let closeTimer: ReturnType<typeof setTimeout> | undefined;
 

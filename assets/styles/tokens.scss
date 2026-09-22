@@ -22,10 +22,12 @@
                               contenedor). Va primero: si Figma lo añade, gana.
      2. ds/ds-tokens.css      el export de Figma.
      3. ds/_responsive-container
-     4. ds/_legacy            nombres antiguos como alias, para lo no migrado.
+
+   Los nombres de la primera versión de ARCIS (--arcis-color-*, --neutrals-*,
+   --space-*, --text-*...) se retiraron el 22-09-2026 y ya no existen: todo usa
+   --ds-*. Si aparece uno en un componente, hay que pasarlo a su token de arcis-2.
    ========================================================================== */
 
 @use './ds/extensions';
 @use './ds/ds-tokens';
 @use './ds/responsive-container';
-@use './ds/legacy';

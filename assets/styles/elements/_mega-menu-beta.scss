@@ -13,7 +13,8 @@
    Tres piezas:
      .mmb         barra: logo, entradas de primer nivel y búsqueda (escritorio);
                   logo, lupa y hamburguesa (tableta y móvil)
-     .mmb-panel   panel a todo el ancho bajo la barra, solo en escritorio
+     .mmb-panel   panel a todo el ancho bajo la barra, solo en escritorio; hay
+                  uno por entrada, todos dentro de .mmb-panels
      .mmb-drawer  menú lateral por niveles, solo en tableta y móvil
 
    Todo bajo .arcis-scope por la razón explicada en base.scss. La cabecera y el
@@ -144,11 +145,23 @@
   /* =======================================================================
      Panel de escritorio
      ======================================================================= */
-  .mmb-panel {
+  /*
+   * Contenedor de todos los paneles, uno por entrada con submenú. Están siempre
+   * en el HTML (para que los buscadores vean sus enlaces) y solo se muestra el
+   * de la entrada elegida.
+   *
+   * La posición va aquí y no en cada panel: el contenedor es el que se anima al
+   * abrir y cerrar, y un `transform` en él lo convertiría en la referencia de
+   * un panel absoluto, que se movería de sitio durante la animación.
+   */
+  .mmb-panels {
     position: absolute;
     top: 100%;
     left: 0;
     width: 100%;
+  }
+
+  .mmb-panel {
     background-color: var(--ds-color-background-default);
     border-top: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
     box-shadow: var(--ds-shadow-md);
@@ -532,7 +545,7 @@
     }
 
     .mmb__nav,
-    .mmb-panel {
+    .mmb-panels {
       display: none;
     }
 

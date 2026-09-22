@@ -38,11 +38,22 @@
           </li>
         </ul>
 
-        <!-- Contenido de la pestaña activa. -->
-        <div v-if="activeTab" class="mmb-panel__content">
+        <!--
+          Contenido de cada pestaña. Están todas en el HTML y solo se ve la
+          activa (v-show, no v-if): así los enlaces de todas las pestañas llegan
+          ya en el HTML del servidor, no solo los de la que se pase con el ratón.
+          El banner de las ocultas no se descarga: su imagen es `lazy` y no se
+          pide hasta que se muestra.
+        -->
+        <div
+          v-for="tab in root.children"
+          v-show="activeTab?.id === tab.id"
+          :key="tab.id"
+          class="mmb-panel__content"
+        >
           <!-- En columnas: cada grupo (nivel 3) con sus enlaces (nivel 4). -->
-          <div v-if="activeTab.layout === 'columns'" class="mmb-panel__columns">
-            <div v-for="group in activeTab.children" :key="group.id" class="mmb-panel__group">
+          <div v-if="tab.layout === 'columns'" class="mmb-panel__columns">
+            <div v-for="group in tab.children" :key="group.id" class="mmb-panel__group">
               <component
                 :is="group.url ? linkTag : 'p'"
                 v-bind="group.url ? getLinkProps(group.url) : {}"
@@ -63,13 +74,13 @@
           <div v-else class="mmb-panel__split">
             <div class="mmb-panel__group">
               <component
-                :is="activeTab.url ? linkTag : 'p'"
-                v-bind="activeTab.url ? getLinkProps(activeTab.url) : {}"
+                :is="tab.url ? linkTag : 'p'"
+                v-bind="tab.url ? getLinkProps(tab.url) : {}"
                 class="mmb-panel__group-title"
-              >{{ activeTab.title }}</component>
+              >{{ tab.title }}</component>
 
-              <ul v-if="activeTab.children.length" class="mmb-panel__links">
-                <li v-for="link in activeTab.children" :key="link.id">
+              <ul v-if="tab.children.length" class="mmb-panel__links">
+                <li v-for="link in tab.children" :key="link.id">
                   <component :is="linkTag" v-bind="getLinkProps(link.url)" class="mmb-panel__link">
                     {{ link.title }}
                   </component>
@@ -82,23 +93,23 @@
               panel ya muestra dónde va el banner mientras no se sube.
             -->
             <component
-              :is="activeTab.bannerUrl ? linkTag : 'div'"
-              v-bind="activeTab.bannerUrl ? getLinkProps(activeTab.bannerUrl) : {}"
+              :is="tab.bannerUrl ? linkTag : 'div'"
+              v-bind="tab.bannerUrl ? getLinkProps(tab.bannerUrl) : {}"
               class="mmb-panel__banner"
-              :class="{ 'is-empty': !activeTab.bannerImage }"
+              :class="{ 'is-empty': !tab.bannerImage }"
             >
               <img
-                v-if="activeTab.bannerImage"
+                v-if="tab.bannerImage"
                 class="mmb-panel__banner-image"
-                :src="activeTab.bannerImage"
-                :alt="activeTab.bannerTitle"
+                :src="tab.bannerImage"
+                :alt="tab.bannerTitle"
                 loading="lazy"
                 decoding="async"
               />
-              <p v-if="activeTab.bannerImage && activeTab.bannerTitle" class="mmb-panel__banner-title">
-                {{ activeTab.bannerTitle }}
+              <p v-if="tab.bannerImage && tab.bannerTitle" class="mmb-panel__banner-title">
+                {{ tab.bannerTitle }}
               </p>
-              <p v-else-if="!activeTab.bannerImage" class="mmb-panel__banner-placeholder">Banner</p>
+              <p v-else-if="!tab.bannerImage" class="mmb-panel__banner-placeholder">Banner</p>
             </component>
           </div>
         </div>
@@ -111,7 +122,8 @@
 /**
  * Panel del mega menú en escritorio: título con filete, pestañas a la izquierda
  * y, a la derecha, el contenido de la pestaña activa (columnas de grupos, o
- * lista con banner). Lo abre la cabecera (Block.vue) al elegir una entrada.
+ * lista con banner). La cabecera (Block.vue) monta uno por cada entrada con
+ * submenú y muestra el de la entrada elegida.
  */
 import { ref, computed, watch } from 'vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
@@ -120,6 +132,8 @@ import type { MenuRoot, MenuTab } from './menu';
 
 const props = defineProps<{
   root: MenuRoot;
+  /** Si es el panel visible. La cabecera los tiene todos montados y muestra uno. */
+  open: boolean;
   linkComponent?: any;
 }>();
 
@@ -127,13 +141,19 @@ const emit = defineEmits<{ (e: 'close'): void }>();
 
 const { linkTag, getLinkProps } = useDynamicLink(props.linkComponent);
 
-/* De entrada, la primera pestaña: el panel nunca se abre con la derecha vacía. */
+/*
+ * De entrada, la primera pestaña: el panel nunca se abre con la derecha vacía.
+ *
+ * Se vuelve a ella en cada apertura y no solo al montar: el panel ya no se
+ * destruye al cerrarse (v-show), así que sin esto se reabriría en la última
+ * pestaña que se pasó con el ratón.
+ */
 const activeTabId = ref<string | null>(null);
 
 watch(
-  () => props.root.id,
-  () => {
-    activeTabId.value = props.root.children[0]?.id ?? null;
+  () => props.open,
+  (open) => {
+    if (open) activeTabId.value = props.root.children[0]?.id ?? null;
   },
   { immediate: true },
 );

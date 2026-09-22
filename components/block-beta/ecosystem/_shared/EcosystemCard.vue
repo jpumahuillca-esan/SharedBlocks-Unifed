@@ -60,7 +60,7 @@ const props = defineProps<{
  */
 const sizes = computed(() =>
   props.variant === 'feature'
-    ? { title: 'h6', desc: 'sm' } as const
-    : { title: 'body', desc: 'xs' } as const,
+    ? { title: 'h6', desc: 'body-compact' } as const
+    : { title: 'body', desc: 'body-sm' } as const,
 );
 </script>

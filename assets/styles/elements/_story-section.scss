@@ -66,10 +66,10 @@
      * Paradas del degradado (Figma: degradado radial #E3173E → #480300).
      *
      * La primera es --ds-color-action-primary, mismo valor. La segunda no tiene
-     * token: tokens.scss es un espejo de webunificada y no corresponde
-     * inventarle escalas desde aquí (ver su cabecera), así que queda como
-     * variable local, en un solo punto, para el día que el sistema publique una
-     * escala roja oscura.
+     * token con ese valor (el rojo más oscuro de arcis-2, --ds-color-red-900, es
+     * #3F020A), y los tokens son el export de Figma tal cual (ver tokens.scss):
+     * no se inventan aquí. Queda como variable local, en un solo punto, para el
+     * día que Figma lo publique.
      */
     --story-section-bg-from: var(--ds-color-surface-primary);
     --story-section-bg-to: #480300;

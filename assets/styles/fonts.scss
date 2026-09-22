@@ -1,6 +1,6 @@
 /* =======================================
    INTER (ARCIS Design System — webunificada)
-   Requerida por --font-body. No se auto-hospeda todavía
+   Requerida por --ds-font-family-base. No se auto-hospeda todavía
    (webunificada tampoco trae los archivos locales, los sirve
    vía Google Fonts) — se mantiene el mismo import CDN que usa
    webunificada/ui-kit/assets/css/main.css para no divergir.
@@ -20,7 +20,7 @@
     format('truetype');
   /* Fuente variable: el archivo trae los ejes opsz/wdth/wght. Sin declarar
      el rango de peso aqui, el navegador no tiene garantia de exponer los
-     pesos intermedios (--weight-medium: 500, --weight-semibold: 600, etc.)
+     pesos intermedios (--ds-weight-medium: 500, --ds-weight-semibold: 600, etc.)
      que usan los botones y titulos. webunificada declara el mismo rango
      200-800 en la URL de Google Fonts (wght@200..800); esto replica lo mismo
      para la copia auto-hospedada. */
