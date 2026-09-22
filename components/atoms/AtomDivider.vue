@@ -38,7 +38,9 @@ const classes = computed(() => {
 </script>
 
 <template>
-  <component :is="tag" :class="classes">
-    <slot v-if="variant === 'label'" />
-  </component>
+  <hr v-if="variant === 'horizontal'" :class="classes" />
+  <span v-else-if="variant === 'vertical'" :class="classes"></span>
+  <div v-else :class="classes">
+    <slot />
+  </div>
 </template>
