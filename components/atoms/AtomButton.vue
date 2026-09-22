@@ -10,7 +10,6 @@ const props = withDefaults(defineProps<{
   icon?: boolean;
   negative?: boolean;
   disabled?: boolean;
-  /** Destino: soporta rutas internas ('/universidad') o externas */
   href?: string;
   to?: string;
 }>(), {
@@ -21,11 +20,10 @@ const props = withDefaults(defineProps<{
 const targetUrl = computed(() => props.to || props.href);
 const isAction = computed(() => !targetUrl.value);
 
-// Determinar el componente dinámico según el entorno y destino
+// Determinar el componente
 const linkTag = computed(() => {
   if (props.disabled || isAction.value) return 'a';
 
-  // Si estamos en Nuxt, resuelve NuxtLink; si estamos en Vue SPA puro, RouterLink; si falla, 'a'
   try {
     const nuxtLink = resolveComponent('NuxtLink');
     if (typeof nuxtLink !== 'string') return nuxtLink;
@@ -37,6 +35,21 @@ const linkTag = computed(() => {
   } catch (_) {}
 
   return 'a';
+});
+
+// Atributos limpios: jamás envía 'to' y 'href' juntos
+const linkProps = computed(() => {
+  if (props.disabled || isAction.value || !targetUrl.value) {
+    return {};
+  }
+
+  // Si es un ancla HTML nativa, solo pasamos href
+  if (linkTag.value === 'a') {
+    return { href: targetUrl.value };
+  }
+
+  // Si es NuxtLink o RouterLink, pasamos solo 'to' (NuxtLink maneja enlaces externos e internos)
+  return { to: targetUrl.value };
 });
 
 const classes = computed(() => [
@@ -60,8 +73,7 @@ const onKeydown = (event: KeyboardEvent) => {
 <template>
   <component
     :is="linkTag"
-    :to="disabled ? undefined : targetUrl"
-    :href="disabled ? undefined : targetUrl"
+    v-bind="linkProps"
     :role="isAction ? 'button' : undefined"
     :tabindex="disabled ? -1 : (isAction ? 0 : undefined)"
     :aria-disabled="disabled ? 'true' : undefined"
