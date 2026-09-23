@@ -4,11 +4,13 @@
  * Elementos > Formularios > Checkbox & Radio).
  *
  * Envuelve ".form-check" portada en assets/styles/elements/_forms.scss.
- * ".form-check" es un nombre de clase de Bootstrap 5, y el bloque real
- * form/lead-form-hero/Form.vue ya lo usa con markup Bootstrap plano: por
- * eso este átomo agrega también el marcador "form-check--arcis" (ver
- * comentario de colisión al inicio de _forms.scss) — nunca usar
- * ".form-check" a mano en markup real, siempre a través de este átomo.
+ * ".form-check" es un nombre de clase de Bootstrap 5, y el admin carga
+ * Bootstrap entero: por eso este átomo agrega también el marcador
+ * "form-check--arcis" (ver comentario de colisión al inicio de
+ * _forms.scss) — nunca usar ".form-check" a mano en markup real, siempre
+ * a través de este átomo. El bloque que motivó la protección
+ * (form/lead-form-hero) se purgó el 23-09-2026; el marcador se conserva
+ * porque el riesgo sigue vivo con cualquier markup Bootstrap del admin.
  *
  * type="checkbox": modelValue es boolean.
  * type="radio": modelValue es el valor del grupo completo; se marca

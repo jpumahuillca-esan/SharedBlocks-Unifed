@@ -11,7 +11,12 @@
 import { computed, ref } from 'vue';
 import NewsArticle from './components/NewsArticle.vue';
 import NewsAside from './components/NewsAside.vue';
-import HeroDefault from '../../blocks/hero/hero-default/Block.vue'
+/*
+ * La portada del artículo. Vivía en components/blocks/hero/hero-default, el
+ * catálogo antiguo que se purgó el 23-09-2026; como esta página era su único
+ * consumidor, el componente se mudó aquí en vez de desaparecer con él.
+ */
+import HeroDefault from './components/HeroDefault.vue'
 type AgreementColor = 'red' | 'blue'
 
 interface Agreement {
