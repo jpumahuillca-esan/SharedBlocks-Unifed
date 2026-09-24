@@ -4,11 +4,13 @@
  * Elementos > Formularios > Campos).
  *
  * Envuelve ".form-select" portada en assets/styles/elements/_forms.scss.
- * ".form-select" es un nombre de clase de Bootstrap 5, y el bloque real
- * form/lead-form-hero/Form.vue ya lo usa con markup Bootstrap plano: por
- * eso este átomo agrega también el marcador "form-select--arcis" (ver
- * comentario de colisión al inicio de _forms.scss) — nunca usar
- * ".form-select" a mano en markup real, siempre a través de este átomo.
+ * ".form-select" es un nombre de clase de Bootstrap 5, y el admin carga
+ * Bootstrap entero: por eso este átomo agrega también el marcador
+ * "form-select--arcis" (ver comentario de colisión al inicio de
+ * _forms.scss) — nunca usar ".form-select" a mano en markup real, siempre
+ * a través de este átomo. El bloque que motivó la protección
+ * (form/lead-form-hero) se purgó el 23-09-2026; el marcador se conserva
+ * porque el riesgo sigue vivo con cualquier markup Bootstrap del admin.
  */
 import { computed } from 'vue';
 

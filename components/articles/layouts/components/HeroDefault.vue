@@ -1,3 +1,10 @@
+<!--
+  Portada de la página de artículo.
+
+  Era el bloque "HeroDefault" del catálogo antiguo (components/blocks/hero/
+  hero-default). Al purgar ese catálogo el 23-09-2026 se trajo aquí, junto al
+  layout que lo usa, que es el único sitio donde queda en pie.
+-->
 <template>
   <section
     class="hero"
