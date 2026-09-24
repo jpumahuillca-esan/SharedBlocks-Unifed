@@ -7,9 +7,11 @@
     ref="root"
     v-bind="$attrs"
     class="arcis-scope mmb-host"
+    :class="{ 'is-pinned': pinned, 'is-shown': shown, 'is-animated': animated }"
     @pointerleave="onHostPointerLeave"
     @pointerenter="cancelClose"
     @keydown.esc="closePanelAndRestoreFocus"
+    @focusin="onHostFocusIn"
   >
     <!--
       Sin lupa, la barra necesita su propio margen a la derecha: ese borde lo
@@ -113,6 +115,14 @@
     </div>
   </div>
 
+  <!--
+    Con la barra fija (modo "aparece al subir") guarda su sitio en la página:
+    sin él, todo lo de debajo subiría de golpe lo que mide la barra. Es una
+    raíz hermana y no un hijo porque lo que se fija es la propia cabecera: su
+    `.arcis-scope` lleva container-type, que encierra a los hijos fijos.
+  -->
+  <div v-if="pinned" ref="spacer" aria-hidden="true" :style="{ height: `${barHeight}px` }"></div>
+
   <Transition name="mmb-drawer">
     <MobileDrawer
       v-if="drawerOpen"
@@ -140,6 +150,10 @@
  *
  * El menú lateral añade debajo los enlaces del topbar, que en móvil se ocultan
  * de la franja: los recibe por inyección (BRANDING_TOPBAR_KEY), no por props.
+ *
+ * Al desplazar (`config.scrollBehavior`): 'static' deja la cabecera en su
+ * sitio; 'reveal' la fija arriba escondida en cuanto sale de la pantalla y la
+ * hace asomar al subir un poco. Ver "Comportamiento al desplazar".
  */
 import { ref, computed, watch, inject, nextTick, onMounted, onBeforeUnmount } from 'vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
@@ -326,7 +340,135 @@ const onResize = () => {
   const width = root.value?.clientWidth ?? 0;
   if (width >= COMPACT_BELOW) drawerOpen.value = false;
   else closePanel();
+
+  // La barra cambia de alto con el tamaño (80px / 56px): el hueco la sigue.
+  if (pinned.value && root.value) barHeight.value = root.value.offsetHeight;
 };
+
+/* -------------------------------------------------------------------------
+   Comportamiento al desplazar
+
+   'reveal' pasa por tres estados:
+     en su sitio  mientras se ve el sitio de la cabecera en la página
+     fija oculta  en cuanto ese sitio sale por arriba de la pantalla
+     fija visible al subir REVEAL_TOLERANCE px; al volver a bajar, se oculta
+   Vuelve a su sitio cuando, subiendo, se llega de nuevo a él: en ese punto la
+   barra fija y su sitio coinciden, así que el cambio no se nota.
+   ------------------------------------------------------------------------- */
+
+/** Lo que hay que subir para que la barra asome: un roce del trackpad no la saca. */
+const REVEAL_TOLERANCE = 8;
+
+/*
+ * En el lienzo del admin (el único que pasa viewMode) no se activa: lo que se
+ * desplaza es la página del admin, y el lienzo encierra a los elementos fijos
+ * (`contain: layout` en .window-content), así que la barra se fijaría dentro
+ * de él.
+ */
+const revealEnabled = computed(() => props.config?.scrollBehavior === 'reveal' && !props.viewMode);
+
+const pinned = ref(false);
+const shown = ref(false);
+/*
+ * La transición se enciende después de fijar la barra: si estuviera activa en
+ * ese momento, se la vería pasar de su sitio a escondida deslizándose.
+ */
+const animated = ref(false);
+const barHeight = ref(0);
+const spacer = ref<HTMLElement | null>(null);
+
+let lastScrollY = 0;
+let upDistance = 0;
+let frame = 0;
+
+const pin = () => {
+  barHeight.value = root.value?.offsetHeight ?? 0;
+  pinned.value = true;
+  shown.value = false;
+  upDistance = 0;
+  // Dos fotogramas: el primero pinta la barra ya escondida, sin transición.
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      if (pinned.value) animated.value = true;
+    }),
+  );
+};
+
+const unpin = () => {
+  pinned.value = false;
+  shown.value = false;
+  animated.value = false;
+};
+
+/* Al esconderse, un panel abierto se quedaría flotando sin su barra. */
+const hide = () => {
+  if (!shown.value) return;
+  shown.value = false;
+  closePanel();
+};
+
+const updatePinState = () => {
+  frame = 0;
+  const host = root.value;
+  const anchor = pinned.value ? spacer.value : host;
+  if (!host || !anchor) return;
+
+  const y = window.scrollY;
+  const delta = y - lastScrollY;
+  lastScrollY = y;
+
+  // Dónde está la cabecera en la página; con la barra fija lo marca el hueco.
+  const top = anchor.getBoundingClientRect().top + y;
+  const bottom = top + host.offsetHeight;
+
+  if (!pinned.value) {
+    if (y > bottom) pin();
+    return;
+  }
+
+  if (y <= top) {
+    unpin();
+  } else if (y < bottom) {
+    // Asoma el hueco que guarda su sitio: la barra lo cubre en vez de dejarlo en blanco.
+    shown.value = true;
+  } else if (delta > 0) {
+    upDistance = 0;
+    hide();
+  } else if (delta < 0) {
+    upDistance -= delta;
+    if (upDistance >= REVEAL_TOLERANCE) shown.value = true;
+  }
+};
+
+/* Un cálculo por fotograma, por muchos eventos de scroll que lleguen. */
+const onWindowScroll = () => {
+  if (!frame) frame = requestAnimationFrame(updatePinState);
+};
+
+/* Con teclado, el foco puede entrar en la barra escondida: se muestra para que se vea dónde está. */
+const onHostFocusIn = () => {
+  if (pinned.value) shown.value = true;
+};
+
+const startReveal = () => {
+  lastScrollY = window.scrollY;
+  window.addEventListener('scroll', onWindowScroll, { passive: true });
+  // Si la página se abre ya desplazada (recargar a media página), la barra se fija desde el principio.
+  updatePinState();
+};
+
+const stopReveal = () => {
+  window.removeEventListener('scroll', onWindowScroll);
+  cancelAnimationFrame(frame);
+  frame = 0;
+  unpin();
+};
+
+watch(revealEnabled, (enabled: boolean) => {
+  if (typeof window === 'undefined') return;
+  if (enabled) startReveal();
+  else stopReveal();
+});
 
 onMounted(() => {
   document.addEventListener('click', onDocumentClick);
@@ -335,12 +477,15 @@ onMounted(() => {
     observer = new ResizeObserver(onResize);
     observer.observe(root.value);
   }
+
+  if (revealEnabled.value) startReveal();
 });
 
 onBeforeUnmount(() => {
   document.removeEventListener('click', onDocumentClick);
   observer?.disconnect();
   cancelClose();
+  stopReveal();
   if (drawerOpen.value) document.body.style.overflow = '';
 });
 </script>

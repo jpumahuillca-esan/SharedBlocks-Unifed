@@ -33,6 +33,73 @@
     z-index: 1030;
   }
 
+  /*
+   * Modo "aparece al subir" (scrollBehavior: 'reveal', lo gestiona Block.vue).
+   * Se fija la raíz entera y no .mmb: la raíz lleva container-type (ver
+   * base.scss), que haría de bloque contenedor de un hijo fijo.
+   *
+   * Fija, espera escondida justo encima de la ventana y baja al mostrarse. La
+   * sombra solo cuando se ve: escondida asomaría por el borde de arriba.
+   *
+   * La aparición:
+   *   - baja con --ds-ease-slow, que frena al llegar, y se va con la curva
+   *     base, más corta: al bajar la página la barra no debe entretener.
+   *   - flota sobre el contenido con la sombra media.
+   *   - al asentarse, el filete rojo de marca se dibuja de izquierda a derecha
+   *     por el borde inferior. Al esconderse se recoge sin transición: ya no
+   *     se ve, y así la próxima vez vuelve a dibujarse desde cero.
+   */
+  &.mmb-host.is-pinned {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    transform: translateY(-100%);
+
+    &::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: var(--ds-border-width-md);
+      background-color: var(--ds-color-action-primary);
+      transform: scaleX(0);
+      transform-origin: left center;
+      pointer-events: none;
+    }
+  }
+
+  &.mmb-host.is-shown {
+    transform: none;
+    box-shadow: var(--ds-shadow-md);
+
+    &::after {
+      transform: scaleX(1);
+    }
+  }
+
+  &.mmb-host.is-animated {
+    transition: transform var(--ds-ease-base), box-shadow var(--ds-ease-base);
+
+    &.is-shown {
+      transition: transform var(--ds-ease-slow), box-shadow var(--ds-ease-slow);
+
+      /* Empieza cuando la barra casi ha llegado: el trazo cierra el movimiento. */
+      &::after {
+        transition: transform var(--ds-ease-slow) 180ms;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &,
+      &.is-shown,
+      &.is-shown::after {
+        transition: none;
+      }
+    }
+  }
+
   /* =======================================================================
      Barra
      ======================================================================= */

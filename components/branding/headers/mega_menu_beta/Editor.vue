@@ -55,6 +55,39 @@
 
     <hr />
 
+    <!-- Comportamiento al desplazar -->
+    <h6 class="fw-bold small text-uppercase mb-1">Al desplazar la página</h6>
+
+    <div class="form-check">
+      <input
+        id="mmb-scroll-static"
+        v-model="localData.scrollBehavior"
+        class="form-check-input"
+        type="radio"
+        value="static"
+      />
+      <label class="form-check-label" for="mmb-scroll-static">En su sitio</label>
+      <p class="me-hint">La cabecera se queda arriba de la página y se va con ella al bajar.</p>
+    </div>
+
+    <div class="form-check">
+      <input
+        id="mmb-scroll-reveal"
+        v-model="localData.scrollBehavior"
+        class="form-check-input"
+        type="radio"
+        value="reveal"
+      />
+      <label class="form-check-label" for="mmb-scroll-reveal">Aparece al subir</label>
+      <p class="me-hint">
+        Empieza en su sitio. Al bajar se esconde y, en cuanto se sube un poco,
+        baja fija desde arriba. La vista previa no lo simula: se ve en el sitio
+        publicado.
+      </p>
+    </div>
+
+    <hr />
+
     <!-- Menú -->
     <div class="d-flex align-items-center justify-content-between mb-1">
       <h6 class="fw-bold small text-uppercase m-0">Menú</h6>
@@ -180,6 +213,7 @@ const build = (source: any) => ({
   logoHeight: Number(source?.logoHeight) || 36,
   urlRedict: text(source?.urlRedict) || '/',
   searchUrl: text(source?.searchUrl),
+  scrollBehavior: source?.scrollBehavior === 'reveal' ? 'reveal' : 'static',
   menu_tree: Array.isArray(source?.menu_tree) ? JSON.parse(JSON.stringify(source.menu_tree)) : [],
 });
 
