@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import HttpClient from "@/helpers/http-client";
+import { DEFAULT_MAX_UPLOAD_BYTES, describeUploadError, escapeHtml, formatBytes } from '@/helpers/upload';
 import Swal from "sweetalert2";
-import { useAuthStore } from "@/stores/auth"; 
+import { useAuthStore } from "@/stores/auth";
+import { promptNewFolder } from "@/helpers/folder-prompt";
 
 
 interface MediaFolder {
   id: number;
   name: string;
   parent_id: number | null;
+  is_global?: boolean;
 }
 
 interface MediaItem {
@@ -17,6 +20,7 @@ interface MediaItem {
   filename: string;
   mime_type: string;
   size: number;
+  is_global?: boolean;
 }
 
 
@@ -38,6 +42,8 @@ const effectiveUnitId = computed(() => {
   return props.academicUnitId || authStore.academicUnitId || 1;
 });
 
+const canManageGlobal = computed(() => authStore.hasRole('Super-Admin'));
+
 
 const folders = ref<MediaFolder[]>([]);
 const files = ref<MediaItem[]>([]);
@@ -48,8 +54,9 @@ const fileInput = ref<HTMLInputElement | null>(null);
 
 
 const currentFolderId = ref<number | null>(null);
+const currentFolderIsGlobal = ref(false);
 const parentFolderId = ref<number | null>(null);
-const breadcrumbPath = ref<{id: number, name: string}[]>([]);
+const breadcrumbPath = ref<{id: number, name: string, is_global: boolean}[]>([]);
 
 
 const formatImageUrl = (url: string | null | undefined): string => {
@@ -92,8 +99,17 @@ const handleUpload = async (event: Event) => {
   const file = target.files?.[0];
   if (!file) return;
 
-  if (file.size > 5 * 1024 * 1024) {
-    Swal.fire("Archivo muy grande", "El peso máximo permitido es de 5MB", "warning");
+  if (file.size > DEFAULT_MAX_UPLOAD_BYTES) {
+    Swal.fire({
+        title: "Archivo muy pesado",
+        html: `«${escapeHtml(file.name)}» pesa ${formatBytes(file.size)} y el máximo permitido es ${formatBytes(DEFAULT_MAX_UPLOAD_BYTES)}.`
+            + `<br><br><span class="text-muted small">Guárdala en menor resolución o comprímela antes de subirla.</span>`,
+        icon: "warning",
+        didOpen: () => {
+            const container = Swal.getContainer();
+            if (container) container.style.zIndex = "3000";
+        }
+    });
     if (fileInput.value) fileInput.value.value = '';
     return;
   }
@@ -106,18 +122,24 @@ const handleUpload = async (event: Event) => {
   if (currentFolderId.value) {
       formData.append('folder_id', String(currentFolderId.value));
   }
-  if (props.collection) {
-    formData.append('collection', props.collection);
-  }
 
   try {
     await HttpClient.post('media/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': 'multipart/form-data' },
+        skipGlobalErrorHandler: true
+    } as any);
+    searchQuery.value = '';
+    await loadMedia();
+  } catch (e: any) {
+    Swal.fire({
+        title: e.response?.status === 422 ? "No se pudo subir" : "Error al subir",
+        html: describeUploadError(e),
+        icon: e.response?.status === 422 ? "warning" : "error",
+        didOpen: () => {
+            const container = Swal.getContainer();
+            if (container) container.style.zIndex = "3000";
+        }
     });
-    searchQuery.value = ''; 
-    await loadMedia(); 
-  } catch (e) {
-    Swal.fire("Error", "No se pudo subir el archivo", "error");
   } finally {
     uploading.value = false;
     if (fileInput.value) fileInput.value.value = ''; 
@@ -127,90 +149,60 @@ const handleUpload = async (event: Event) => {
 
 const openFolder = (folder: MediaFolder) => {
     currentFolderId.value = folder.id;
-    breadcrumbPath.value.push({id: folder.id, name: folder.name});
+    currentFolderIsGlobal.value = !!folder.is_global;
+    breadcrumbPath.value.push({id: folder.id, name: folder.name, is_global: !!folder.is_global});
     loadMedia();
 };
 
 const goUp = () => {
     currentFolderId.value = parentFolderId.value;
     breadcrumbPath.value.pop();
+    currentFolderIsGlobal.value = breadcrumbPath.value[breadcrumbPath.value.length - 1]?.is_global ?? false;
     loadMedia();
 };
 
 const createFolder = async () => {
-    console.log("▶️ INICIANDO: Abriendo modal de SweetAlert...");
-    
-    const { value: name } = await Swal.fire({
-        title: 'Nueva Carpeta',
-        input: 'text',
-        inputPlaceholder: 'Nombre de la carpeta',
-        showCancelButton: true,
-        confirmButtonText: 'Crear',
-        cancelButtonText: 'Cancelar',
-        didOpen: () => {
-            const container = Swal.getContainer();
-            if (container) container.style.zIndex = "3000"; 
-        }
+    const folder = await promptNewFolder({
+        path: breadcrumbPath.value.map(crumb => crumb.name),
+        offerGlobal: canManageGlobal.value && currentFolderId.value === null,
+        inheritGlobal: currentFolderIsGlobal.value,
+        zIndex: 3000
     });
 
-    console.log("⏸️ Swal cerrado. Valor recibido (name):", name);
+    if (!folder) return;
 
-    if (name) {
-        try {
-            console.log("⏳ ENVIANDO a Laravel el nombre:", name);
-            console.log("Datos enviados:", {
-                academic_unit_id: effectiveUnitId.value,
-                parent_id: currentFolderId.value,
-                name: name
-            });
+    try {
+        await HttpClient.post('media-folders', {
+            academic_unit_id: effectiveUnitId.value,
+            parent_id: currentFolderId.value,
+            name: folder.name,
+            is_global: folder.isGlobal
+        });
 
-            
-            const response = await HttpClient.post('media-folders', {
-                academic_unit_id: effectiveUnitId.value,
-                parent_id: currentFolderId.value,
-                name: name
-            });
+        searchQuery.value = '';
+        await loadMedia();
 
-            console.log("✅ RESPUESTA DE LARAVEL RECIBIDA:", response);
-
-            
-            searchQuery.value = '';
-
-            
-            console.log("🔄 Ejecutando loadMedia()...");
-            await loadMedia();
-            console.log("✅ loadMedia() terminó correctamente.");
-
-            
-            console.log("🎉 Mostrando Toast de éxito...");
-            Swal.fire({
-                toast: true,
-                position: 'top-end',
-                icon: 'success',
-                title: 'Carpeta creada con éxito',
-                showConfirmButton: false,
-                timer: 2000,
-                didOpen: (toast) => { 
-                    toast.style.zIndex = "3500"; 
-                }
-            });
-
-        } catch (e: any) {
-            console.error("❌ ERROR ATRAPADO EN EL CATCH:", e);
-            console.error("Detalle del error de Axios:", e.response?.data || e.message);
-            
-            Swal.fire({
-                title: 'Error',
-                text: 'Revisa la consola (F12) para ver el error exacto',
-                icon: 'error',
-                didOpen: () => {
-                   const container = Swal.getContainer();
-                   if (container) container.style.zIndex = "3000";
-                }
-            });
-        }
-    } else {
-        console.log("⏹️ Creación cancelada o nombre vacío.");
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: folder.isGlobal ? 'Carpeta global creada' : 'Carpeta creada con éxito',
+            showConfirmButton: false,
+            timer: 2000,
+            didOpen: (toast) => {
+                toast.style.zIndex = "3500";
+            }
+        });
+    } catch (e: any) {
+        Swal.fire({
+            title: 'Error',
+            text: e.response?.data?.message || 'No se pudo crear la carpeta',
+            icon: 'error',
+            didOpen: () => {
+                const container = Swal.getContainer();
+                if (container) container.style.zIndex = "3000";
+            }
+        });
     }
 };
 
@@ -293,7 +285,8 @@ onMounted(loadMedia);
                 
                 <div v-for="folder in filteredFolders" :key="'f-'+folder.id" class="col-xl-2 col-lg-3 col-md-4 col-6">
                     <div class="card h-100 folder-card border-0 shadow-sm" @click="openFolder(folder)" :title="folder.name">
-                        <div class="card-body text-center p-3">
+                        <div class="card-body text-center p-3 position-relative">
+                            <span v-if="folder.is_global" class="badge bg-primary position-absolute top-0 end-0 m-2" style="font-size: 0.6rem;">GLOBAL</span>
                             <i class="las la-folder text-warning display-4"></i>
                             <div class="text-truncate fw-bold mt-2 small text-dark">{{ folder.name }}</div>
                         </div>

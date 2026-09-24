@@ -24,6 +24,8 @@ export const BRANDING_REGISTRY: Record<string, any> = {
             urlRedict: '/',
             // Vacío: la lupa no se muestra.
             searchUrl: '',
+            // 'static': en su sitio; 'reveal': se esconde al bajar y aparece al subir.
+            scrollBehavior: 'static',
         }
     },
 
