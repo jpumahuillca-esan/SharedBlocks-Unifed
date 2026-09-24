@@ -1,0 +1,54 @@
+/* =========================================================================
+   CONTENT RULES
+
+   Reglas reutilizables para controlar contenido textual.
+
+   No define colores, fuentes, tamaños ni tokens visuales.
+   Solo comportamiento del contenido.
+   ========================================================================= */
+
+
+/* -------------------------------------------------------------------------
+   UNA SOLA LÍNEA
+
+   Ejemplo:
+   @include content.one-line;
+
+   El texto nunca baja a una segunda línea.
+   Si no cabe, termina en ...
+   ------------------------------------------------------------------------- */
+
+@mixin one-line {
+  min-width: 0;
+  max-width: 100%;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* -------------------------------------------------------------------------
+   MÁXIMO N LÍNEAS
+
+   Ejemplo:
+   @include content.line-clamp(2);
+
+   También protege contra cadenas sin espacios:
+   sssssssssssssssssssssssssssss
+   ------------------------------------------------------------------------- */
+
+@mixin line-clamp($lines) {
+  min-width: 0;
+  max-width: 100%;
+
+  overflow-wrap: anywhere;
+  word-break: normal;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+  line-clamp: $lines;
+
+  overflow: hidden;
+}

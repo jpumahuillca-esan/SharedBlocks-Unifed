@@ -1,0 +1,348 @@
+@use '../breakpoints' as bp;
+@use '../content-rules' as content;
+
+.arcis-scope {
+  /* =======================================================================
+     ROOT
+     ======================================================================= */
+
+  .subhero {
+    --subhero-panel-width: 54.1667%;
+    --subhero-slant: 110px;
+    --subhero-padding-y: 28px;
+    --subhero-padding-x: 36px;
+    --subhero-content-height: 184px;
+
+    position: relative;
+    width: 100%;
+    height: 360px;
+    overflow: hidden;
+    color: var(--ds-color-text-inverse);
+  }
+
+  /* =======================================================================
+     BACKGROUND
+     ======================================================================= */
+
+  .subhero__background {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* =======================================================================
+     PANEL
+     ======================================================================= */
+
+  .subhero__brand {
+    position: relative;
+    z-index: 1;
+
+    width: calc(var(--subhero-panel-width) + var(--subhero-slant));
+    height: 100%;
+    flex-shrink: 0;
+
+    margin-right: calc(-1 * var(--subhero-slant));
+
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      calc(100% - var(--subhero-slant)) 100%,
+      0 100%
+    );
+  }
+
+  /* =======================================================================
+     IMAGE
+     ======================================================================= */
+
+  .subhero__media {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  .subhero__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* =======================================================================
+     CONTENT CONTAINER
+     ======================================================================= */
+
+  .subhero__inner {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    max-width: var(--ds-container-max);
+    height: 100%;
+
+    margin-inline: auto;
+    box-sizing: border-box;
+  }
+
+  /* =======================================================================
+     COLUMNS
+     ======================================================================= */
+
+  .subhero__columns {
+    display: grid;
+
+    grid-template-columns:
+      minmax(0, var(--subhero-panel-width))
+      minmax(0, 1fr);
+
+    width: 100%;
+    height: var(--subhero-content-height);
+  }
+
+  /* =======================================================================
+     CONTENT
+     ======================================================================= */
+
+  .subhero__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+
+    gap: var(--ds-space-2);
+
+    padding:
+      var(--subhero-padding-y)
+      var(--subhero-padding-x);
+
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    box-sizing: border-box;
+    background: transparent;
+  }
+
+  /* =======================================================================
+     EYEBROW — 1 LINE
+     ======================================================================= */
+
+  .subhero__eyebrow {
+    width: auto;
+    color: var(--ds-color-text-inverse);
+
+    @include content.one-line;
+  }
+
+  /* =======================================================================
+     TITLE
+     ======================================================================= */
+
+  .subhero__title {
+    width: 100%;
+    color: var(--ds-color-text-inverse);
+
+    line-height: var(--ds-line-height-125);
+    letter-spacing: -0.01em;
+
+    @include content.line-clamp(3);
+  }
+
+  /* =======================================================================
+     DESCRIPTION — 2 LINES
+     ======================================================================= */
+
+  .subhero__desc {
+    width: 100%;
+    color: var(--ds-color-text-inverse);
+
+    font-family: var(--ds-font-family-base);
+    font-size: var(--ds-text-body-lg);
+    font-weight: var(--ds-weight-regular);
+    line-height: 1.4;
+    letter-spacing: 0;
+
+    @include content.line-clamp(2);
+  }
+
+  .subhero__empty {
+    min-width: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* =======================================================================
+     < 1440px — DESKTOP 1366
+     ======================================================================= */
+
+  @include bp.container-down('2xl') {
+    .subhero {
+      --subhero-panel-width: 55.8565%;
+    }
+
+    /*
+     * Desde 1366 hacia abajo quitamos únicamente
+     * el padding propio de .subhero__content.
+     *
+     * No estamos tocando .subhero__inner.
+     */
+    .subhero__content {
+      padding: 0;
+    }
+  }
+
+  /* =======================================================================
+     < 1280px
+     ======================================================================= */
+
+  @include bp.container-down('xl') {
+    /*
+     * Este gutter pertenece al container general
+     * y se conserva también durante tablet.
+     */
+    .subhero__inner {
+      padding-inline: var(--ds-spacing-md);
+    }
+  }
+
+  /* =======================================================================
+     < 768px — TABLET
+     ======================================================================= */
+
+  @include bp.container-down('md') {
+    .subhero {
+      --subhero-panel-width: 53.4031%;
+    }
+
+    .subhero__columns {
+      grid-template-columns:
+        minmax(0, var(--subhero-panel-width))
+        minmax(0, 1fr);
+    }
+
+    /*
+     * No tocamos:
+     *
+     * .subhero__inner
+     * .subhero__content
+     *
+     * Por cascada:
+     *
+     * inner   → conserva var(--ds-spacing-md)
+     * content → conserva padding: 0 de 2xl
+     */
+  }
+
+  /* =======================================================================
+     < 480px — MOBILE
+     ======================================================================= */
+
+  @include bp.container-down('sm') {
+    .subhero {
+      display: block;
+      width: 100%;
+      height: 362px;
+      min-height: 362px;
+      overflow: hidden;
+    }
+
+    /* IMAGE AREA — 200px */
+
+    .subhero__background {
+      position: relative;
+      inset: auto;
+
+      display: block;
+
+      width: 100%;
+      height: 200px;
+    }
+
+    .subhero__brand {
+      display: none;
+    }
+
+    .subhero__media {
+      position: relative;
+
+      width: 100%;
+      height: 200px;
+
+      overflow: hidden;
+
+      clip-path: polygon(
+        0 0,
+        100% 0,
+        100% 100%,
+        0 calc(100% - 20px)
+      );
+    }
+
+    .subhero__media img {
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+      object-position: center;
+    }
+
+    /* CONTENT AREA — 162px */
+
+    .subhero__inner {
+      position: relative;
+      z-index: 2;
+
+      display: block;
+
+      width: 100%;
+      max-width: none;
+      height: 162px;
+
+      margin: 0;
+      padding: 0;
+
+      background: transparent;
+    }
+
+    .subhero__columns {
+      display: block;
+
+      width: 100%;
+      height: 162px;
+      min-height: 162px;
+    }
+
+    /*
+     * Mobile sí recupera su padding propio.
+     */
+    .subhero__content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+
+      width: 100%;
+      max-width: 100%;
+      height: 162px;
+
+      padding: var(--ds-spacing-md);
+
+      box-sizing: border-box;
+    }
+
+    .subhero__empty {
+      display: none;
+    }
+  }
+}
