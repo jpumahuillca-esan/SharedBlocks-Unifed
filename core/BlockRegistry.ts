@@ -213,6 +213,23 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         },
     },
 
+    SubHero: {
+        label: 'Portada (pregrado)',
+        icon: 'las la-images',
+        group: 'Heros',
+        beta: true,
+        // La foto sangra a todo el ancho: no va dentro de una caja.
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/hero/sub-hero/Block.vue')),
+        initialData: {
+            eyebrow: 'ESAN UNIVERSITY',
+            title: 'Explora nuestras 17 carreras universitarias',
+            desc: '',
+            image: '',
+            imageAlt: '',
+        },
+    },
+
     StoriesFeatured: {
         label: 'Historias destacadas (video)',
         icon: 'las la-play-circle',

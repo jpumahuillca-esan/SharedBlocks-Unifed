@@ -1,656 +1,588 @@
 <template>
   <div class="sh-editor">
-
-    <!-- =====================================================
-         ANTETÍTULO
-         ===================================================== -->
-
-    <label class="form-label">
-      Antetítulo
-    </label>
-
+    <!-- ANTETÍTULO -->
+    <label class="form-label">Antetítulo</label>
     <input
       v-model="localData.eyebrow"
       type="text"
       class="form-control form-control-sm mb-1"
       placeholder="ESAN UNIVERSITY"
+      :maxlength="rules.eyebrow.maxLength"
     />
+    <div class="sh-field-meta mb-2">
+      <span>Máximo {{ rules.eyebrow.maxLength }} caracteres</span>
+      <span>{{ localData.eyebrow.length }}/{{ rules.eyebrow.maxLength }}</span>
+    </div>
 
-    <p class="sh-hint mb-3">
-      Máximo 1 línea en el SubHero.
-    </p>
+    <!-- H1 -->
+    <div class="form-check form-switch mb-3">
+      <input
+        id="subhero-eyebrow-h1"
+        v-model="localData.eyebrowAsH1"
+        class="form-check-input"
+        type="checkbox"
+        :disabled="!localData.eyebrow.trim()"
+      />
+      <label class="form-check-label sh-switch-label" for="subhero-eyebrow-h1">
+        Usar antetítulo como H1
+      </label>
+      <p class="sh-hint mt-1">
+        Si se activa, el título mantiene su diseño pero deja de ser H1.
+      </p>
+    </div>
 
-
-    <!-- =====================================================
-         TÍTULO
-         ===================================================== -->
-
-    <label class="form-label">
-      Título
-    </label>
-
+    <!-- TÍTULO -->
+    <label class="form-label">Título</label>
     <textarea
       v-model="localData.title"
       class="form-control form-control-sm mb-1"
       rows="2"
       placeholder="Explora nuestras 17 carreras universitarias"
+      :maxlength="rules.title.maxLength"
     ></textarea>
+    <div class="sh-field-meta mb-3">
+      <span>Máximo {{ rules.title.maxLength }} caracteres</span>
+      <span>{{ localData.title.length }}/{{ rules.title.maxLength }}</span>
+    </div>
 
-    <p class="sh-hint mb-3">
-      Máximo 2 líneas en el SubHero.
-    </p>
-
-
-    <!-- =====================================================
-         DESCRIPCIÓN
-         ===================================================== -->
-
-    <label class="form-label">
-      Descripción
-    </label>
-
+    <!-- DESCRIPCIÓN -->
+    <label class="form-label">Descripción</label>
     <textarea
       v-model="localData.desc"
       class="form-control form-control-sm mb-1"
       rows="2"
       placeholder="Ingresa una descripción complementaria"
+      :maxlength="rules.desc.maxLength"
     ></textarea>
-
-    <p class="sh-hint mb-3">
-      Máximo 2 líneas en el SubHero.
-    </p>
-
-
-    <!-- =====================================================
-         COLOR DEL PANEL
-         ===================================================== -->
-
-    <label class="form-label">
-      Color del panel
-    </label>
-
-    <div class="sh-color-picker mb-3">
-
-      <button
-        v-for="option in colorOptions"
-        :key="option.token"
-        type="button"
-        class="sh-color-option"
-        :class="{
-          'is-active':
-            localData.panelColorToken === option.token
-        }"
-        @click="
-          localData.panelColorToken = option.token
-        "
-      >
-
-        <!-- Color real proveniente del Design System -->
-        <span
-          class="sh-color-option__swatch"
-          :style="{
-            backgroundColor: `var(${option.token})`
-          }"
-          aria-hidden="true"
-        ></span>
-
-
-        <!-- Nombre corto -->
-        <span class="sh-color-option__label">
-          {{ option.label }}
-        </span>
-
-
-        <!-- Seleccionado -->
-        <span
-          v-if="
-            localData.panelColorToken === option.token
-          "
-          class="sh-color-option__check"
-          aria-hidden="true"
-        >
-          <i class="las la-check"></i>
-        </span>
-
-      </button>
-
+    <div class="sh-field-meta mb-3">
+      <span>Máximo {{ rules.desc.maxLength }} caracteres</span>
+      <span>{{ localData.desc.length }}/{{ rules.desc.maxLength }}</span>
     </div>
 
+    <!-- COLOR -->
+    <label class="form-label">Color del panel</label>
+    <div class="sh-color-selector mb-3">
+      <button
+        type="button"
+        class="sh-color-current"
+        :aria-expanded="colorsOpen"
+        aria-controls="subhero-color-options"
+        @click="colorsOpen = !colorsOpen"
+      >
+        <span
+          class="sh-color-swatch"
+          :style="{ backgroundColor: `var(${selectedColor.token})` }"
+          aria-hidden="true"
+        ></span>
+        <span class="sh-color-current__label">{{ selectedColor.label }}</span>
+        <span class="sh-color-current__action">
+          Cambiar
+          <i class="las" :class="colorsOpen ? 'la-angle-up' : 'la-angle-down'"></i>
+        </span>
+      </button>
 
-    <!-- =====================================================
-         IMAGEN
-         ===================================================== -->
+      <div v-if="colorsOpen" id="subhero-color-options" class="sh-color-options">
+        <button
+          v-for="option in otherColorOptions"
+          :key="option.token"
+          type="button"
+          class="sh-color-option"
+          @click="selectColor(option.token)"
+        >
+          <span
+            class="sh-color-swatch"
+            :style="{ backgroundColor: `var(${option.token})` }"
+            aria-hidden="true"
+          ></span>
+          <span class="sh-color-option__label">{{ option.label }}</span>
+        </button>
+      </div>
+    </div>
 
-    <label class="form-label">
-      Imagen
-    </label>
-
+    <!-- IMAGEN -->
+    <label class="form-label">Imagen</label>
     <div class="sh-image-preview mb-2">
-
       <img
         v-if="localData.image"
         :src="localData.image"
-        alt=""
+        :alt="localData.imageAlt"
+        :style="{
+          objectPosition: `${localData.imageFocusX}% ${localData.imageFocusY}%`
+        }"
       />
-
-      <span
-        v-else
-        class="text-muted small"
-      >
-        Sin imagen
-      </span>
-
+      <span v-else class="text-muted small">Sin imagen</span>
     </div>
 
-
-    <!-- =====================================================
-         ACCIONES DE IMAGEN
-         ===================================================== -->
-
-    <div class="d-flex gap-2">
-
+    <div class="d-flex gap-2 mb-3">
       <button
         type="button"
         class="btn btn-sm btn-outline-secondary flex-grow-1"
-        @click="$emit('select-image', {
-          item: localData,
-          field: 'image'
-        })"
+        @click="selectImage"
       >
-
         <i class="las la-image me-1"></i>
-
-        {{
-          localData.image
-            ? 'Cambiar imagen'
-            : 'Subir imagen'
-        }}
-
+        {{ localData.image ? 'Cambiar imagen' : 'Subir imagen' }}
       </button>
-
 
       <button
         v-if="localData.image"
         type="button"
         class="btn btn-sm btn-outline-danger"
         title="Quitar imagen"
-        @click="localData.image = ''"
+        @click="removeImage"
       >
-
         <i class="las la-trash"></i>
-
       </button>
-
     </div>
 
+    <template v-if="localData.image">
+      <!-- ALT -->
+      <label class="form-label">Texto alternativo de la imagen</label>
+      <input
+        v-model="localData.imageAlt"
+        type="text"
+        class="form-control form-control-sm mb-1"
+        :maxlength="IMAGE_ALT_MAX_LENGTH"
+        placeholder="Ej. Estudiantes de ESAN en el campus"
+      />
+
+      <div class="sh-field-meta mb-1">
+        <span>Máximo {{ IMAGE_ALT_MAX_LENGTH }} caracteres</span>
+        <span>{{ localData.imageAlt.length }}/{{ IMAGE_ALT_MAX_LENGTH }}</span>
+      </div>
+
+      <p class="sh-hint mb-3">
+        Describe la imagen si aporta información. Déjalo vacío si es decorativa.
+      </p>
+
+      <!-- PUNTO FOCAL -->
+      <div class="sh-focus-header mb-2">
+        <label class="form-label mb-0">Punto de enfoque</label>
+        <button
+          type="button"
+          class="btn btn-sm btn-link sh-focus-reset"
+          @click="resetFocus"
+        >
+          Centrar
+        </button>
+      </div>
+
+      <p class="sh-hint mb-2">
+        Haz clic o arrastra el punto hacia la zona que debe mantenerse visible.
+      </p>
+
+      <div
+        ref="focusArea"
+        class="sh-focus-editor"
+        @pointerdown="startFocusDrag"
+        @pointermove="moveFocus"
+        @pointerup="endFocusDrag"
+        @pointercancel="endFocusDrag"
+      >
+        <img
+          :src="localData.image"
+          alt=""
+          draggable="false"
+        />
+
+        <span
+          class="sh-focus-point"
+          :style="{
+            left: `${localData.imageFocusX}%`,
+            top: `${localData.imageFocusY}%`
+          }"
+          aria-hidden="true"
+        ></span>
+      </div>
+
+      <div class="sh-field-meta mt-1 mb-3">
+        <span>X: {{ Math.round(localData.imageFocusX) }}%</span>
+        <span>Y: {{ Math.round(localData.imageFocusY) }}%</span>
+      </div>
+    </template>
   </div>
 </template>
 
-
 <script setup lang="ts">
-
-import { ref, watch } from 'vue';
-
-
-/*
-|--------------------------------------------------------------------------
-| PROPS
-|--------------------------------------------------------------------------
-*/
+import { computed, ref, watch } from 'vue';
+import {
+  SUBHERO_COLOR_OPTIONS,
+  resolvePanelColorToken
+} from './shared/config';
+import { SUBHERO_CONTENT_RULES } from './shared/rule';
 
 const props = defineProps<{
   modelValue: any;
-
-  availableSections?: Array<{
-    id: string;
-    title: string;
-  }>;
 }>();
 
+const emit = defineEmits<{
+  (event: 'update:modelValue', value: any): void;
+  (
+    event: 'select-image',
+    payload: {
+      item: any;
+      field: string;
+    }
+  ): void;
+}>();
 
-/*
-|--------------------------------------------------------------------------
-| EMITS
-|--------------------------------------------------------------------------
-*/
+const rules = SUBHERO_CONTENT_RULES;
+const colorOptions = SUBHERO_COLOR_OPTIONS;
+const IMAGE_ALT_MAX_LENGTH = 150;
 
-const emit = defineEmits([
-  'update:modelValue',
-  'select-image'
-]);
+const colorsOpen = ref(false);
+const focusArea = ref<HTMLElement | null>(null);
+const draggingFocus = ref(false);
 
-
-/*
-|--------------------------------------------------------------------------
-| TOKENS DE COLOR DISPONIBLES
-|--------------------------------------------------------------------------
-|
-| Acá únicamente definimos qué tokens del
-| Design System puede seleccionar el editor.
-|
-| No guardamos HEX.
-| No creamos variantes CSS del SubHero.
-|
-| Para añadir otro color en el futuro:
-|
-| {
-|   label: 'Economics',
-|   token: '--ds-color-univ-economics'
-| }
-|
-| Y nada más.
-|
-*/
-
-const colorOptions = [
-
-  {
-    label: 'University',
-    token: '--ds-color-university'
-  },
-
-  {
-    label: 'Management',
-    token: '--ds-color-univ-management'
-  }
-
-] as const;
-
-
-/*
-|--------------------------------------------------------------------------
-| TOKEN POR DEFECTO
-|--------------------------------------------------------------------------
-*/
-
-const DEFAULT_PANEL_COLOR_TOKEN =
-  '--ds-color-university';
-
-
-/*
-|--------------------------------------------------------------------------
-| NORMALIZAR TOKEN
-|--------------------------------------------------------------------------
-|
-| Mantiene compatibilidad con bloques antiguos
-| que todavía tengan:
-|
-| brand: 'university'
-| brand: 'management'
-|
-*/
-
-const normalizePanelColorToken = (
-  source: any
-): string => {
-
-  /*
-  |--------------------------------------------------------------------------
-  | FORMATO ACTUAL
-  |--------------------------------------------------------------------------
-  */
-
-  if (
-    typeof source?.panelColorToken === 'string'
-    &&
-    source.panelColorToken.startsWith('--')
-  ) {
-    return source.panelColorToken;
-  }
-
-
-  /*
-  |--------------------------------------------------------------------------
-  | FORMATO ANTERIOR
-  |--------------------------------------------------------------------------
-  */
-
-  if (
-    source?.brand === 'management'
-  ) {
-    return '--ds-color-univ-management';
-  }
-
-
-  return DEFAULT_PANEL_COLOR_TOKEN;
-
+const normalizeFocus = (value: unknown): number => {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return 50;
+  return Math.min(100, Math.max(0, number));
 };
 
+const build = (source: any) => {
+  const eyebrow = source?.eyebrow ?? '';
 
-/*
-|--------------------------------------------------------------------------
-| NORMALIZAR DATA
-|--------------------------------------------------------------------------
-*/
+  return {
+    eyebrow,
+    eyebrowAsH1:
+      eyebrow.trim().length > 0 &&
+      source?.eyebrowAsH1 === true,
+    title: source?.title ?? '',
+    desc: source?.desc ?? '',
+    panelColorToken: resolvePanelColorToken(source),
+    image: source?.image ?? '',
+    imageAlt: source?.imageAlt ?? '',
+    imageFocusX: normalizeFocus(source?.imageFocusX),
+    imageFocusY: normalizeFocus(source?.imageFocusY)
+  };
+};
 
-const build = (
-  source: any
-) => ({
+const localData = ref(build(props.modelValue));
 
-  eyebrow:
-    source?.eyebrow ?? '',
+const selectedColor = computed(() =>
+  colorOptions.find(
+    (option) =>
+      option.token === localData.value.panelColorToken
+  ) ?? colorOptions[0]
+);
 
-  title:
-    source?.title ?? '',
-
-  desc:
-    source?.desc ?? '',
-
-  panelColorToken:
-    normalizePanelColorToken(source),
-
-  image:
-    source?.image ?? ''
-
-});
-
-
-/*
-|--------------------------------------------------------------------------
-| ESTADO LOCAL
-|--------------------------------------------------------------------------
-*/
-
-const localData = ref(
-  build(
-    props.modelValue
+const otherColorOptions = computed(() =>
+  colorOptions.filter(
+    (option) =>
+      option.token !== localData.value.panelColorToken
   )
 );
 
+const selectColor = (token: string) => {
+  localData.value.panelColorToken = token;
+  colorsOpen.value = false;
+};
 
-/*
-|--------------------------------------------------------------------------
-| DATOS EXTERNOS → EDITOR
-|--------------------------------------------------------------------------
-*/
+const selectImage = () => {
+  emit('select-image', {
+    item: localData.value,
+    field: 'image'
+  });
+};
 
+const removeImage = () => {
+  localData.value.image = '';
+  localData.value.imageAlt = '';
+  localData.value.imageFocusX = 50;
+  localData.value.imageFocusY = 50;
+};
+
+const resetFocus = () => {
+  localData.value.imageFocusX = 50;
+  localData.value.imageFocusY = 50;
+};
+
+const updateFocus = (event: PointerEvent) => {
+  const element = focusArea.value;
+  if (!element) return;
+
+  const rect = element.getBoundingClientRect();
+
+  if (!rect.width || !rect.height) return;
+
+  const x = ((event.clientX - rect.left) / rect.width) * 100;
+  const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+  localData.value.imageFocusX = Math.min(100, Math.max(0, x));
+  localData.value.imageFocusY = Math.min(100, Math.max(0, y));
+};
+
+const startFocusDrag = (event: PointerEvent) => {
+  draggingFocus.value = true;
+
+  const element = event.currentTarget as HTMLElement;
+
+  if (element.setPointerCapture) {
+    element.setPointerCapture(event.pointerId);
+  }
+
+  updateFocus(event);
+};
+
+const moveFocus = (event: PointerEvent) => {
+  if (!draggingFocus.value) return;
+  updateFocus(event);
+};
+
+const endFocusDrag = (event: PointerEvent) => {
+  draggingFocus.value = false;
+
+  const element = event.currentTarget as HTMLElement;
+
+  if (
+    element.hasPointerCapture &&
+    element.hasPointerCapture(event.pointerId)
+  ) {
+    element.releasePointerCapture(event.pointerId);
+  }
+};
+
+/* Si se borra el antetítulo no puede mantenerse activo como H1. */
 watch(
-
-  () =>
-    props.modelValue,
-
-  (newVal) => {
-
-    if (!newVal) {
-      return;
+  () => localData.value.eyebrow,
+  (eyebrow) => {
+    if (!eyebrow.trim()) {
+      localData.value.eyebrowAsH1 = false;
     }
+  }
+);
 
+/* Bloque → Editor */
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    if (!newValue) return;
+
+    const normalized = build(newValue);
 
     if (
-      JSON.stringify(newVal)
-      ===
+      JSON.stringify(normalized) ===
       JSON.stringify(localData.value)
     ) {
       return;
     }
 
-
-    localData.value =
-      build(newVal);
-
+    localData.value = normalized;
   },
-
   {
     deep: true
   }
-
 );
 
-
-/*
-|--------------------------------------------------------------------------
-| EDITOR → BLOQUE
-|--------------------------------------------------------------------------
-*/
-
+/* Editor → Bloque */
 watch(
-
   localData,
-
-  (newVal) => {
-
+  (newValue) => {
     emit(
       'update:modelValue',
-
-      JSON.parse(
-        JSON.stringify(newVal)
-      )
+      JSON.parse(JSON.stringify(newValue))
     );
-
   },
-
   {
     deep: true
   }
-
 );
-
 </script>
 
-
 <style scoped>
-
-/* =========================================================================
-   TEXTO DE AYUDA
-   ========================================================================= */
-
 .sh-hint {
   margin: 0;
-
   font-size: 11.5px;
-
   line-height: 1.45;
-
-  color:
-    var(--bs-secondary-color);
+  color: var(--bs-secondary-color);
 }
 
-
-/* =========================================================================
-   SELECTOR DE COLOR
-   ========================================================================= */
-
-.sh-color-picker {
-  display: grid;
-
-  grid-template-columns:
-    repeat(
-      2,
-      minmax(0, 1fr)
-    );
-
+.sh-field-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 8px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--bs-secondary-color);
 }
 
+.sh-switch-label {
+  font-size: 12.5px;
+  font-weight: 500;
+}
 
-/* =========================================================================
-   OPCIÓN
-   ========================================================================= */
+/* COLOR */
+.sh-color-selector {
+  position: relative;
+}
 
+.sh-color-current,
 .sh-color-option {
   display: flex;
-
   align-items: center;
-
-  min-width: 0;
-
   gap: 8px;
-
-  padding: 8px 9px;
-
-  border:
-    1px solid
-    var(--bs-border-color);
-
-  border-radius:
-    var(--bs-border-radius);
-
-  background:
-    var(--bs-body-bg);
-
-  color:
-    var(--bs-body-color);
-
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
   text-align: left;
-
   cursor: pointer;
-
-  transition:
-    border-color 0.15s ease,
-    background-color 0.15s ease,
-    box-shadow 0.15s ease;
 }
 
+.sh-color-current {
+  padding: 8px 10px;
+}
 
-/* =========================================================================
-   HOVER
-   ========================================================================= */
-
+.sh-color-current:hover,
 .sh-color-option:hover {
-  background:
-    var(--bs-tertiary-bg);
+  background: var(--bs-tertiary-bg);
 }
 
-
-/* =========================================================================
-   ACTIVO
-   ========================================================================= */
-
-.sh-color-option.is-active {
-  border-color:
-    var(--bs-secondary-color);
-
-  background:
-    var(--bs-tertiary-bg);
-
-  box-shadow:
-    0 0 0 1px
-    var(--bs-border-color);
-}
-
-
-/* =========================================================================
-   SWATCH
-   ========================================================================= */
-
-.sh-color-option__swatch {
+.sh-color-swatch {
   width: 24px;
-
   height: 24px;
-
-  flex:
-    0 0 24px;
-
-  border-radius:
-    var(--bs-border-radius-sm);
-
-  border:
-    1px solid
-    var(--bs-border-color);
+  flex: 0 0 24px;
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius-sm);
 }
 
-
-/* =========================================================================
-   LABEL
-   ========================================================================= */
-
+.sh-color-current__label,
 .sh-color-option__label {
   min-width: 0;
-
-  flex-grow: 1;
-
+  flex: 1;
   font-size: 12.5px;
-
   font-weight: 600;
-
   overflow: hidden;
-
   white-space: nowrap;
-
   text-overflow: ellipsis;
 }
 
-
-/* =========================================================================
-   CHECK
-   ========================================================================= */
-
-.sh-color-option__check {
+.sh-color-current__action {
   display: inline-flex;
-
   align-items: center;
-
-  justify-content: center;
-
-  width: 20px;
-
-  height: 20px;
-
-  flex:
-    0 0 20px;
-
-  border-radius: 50%;
-
-  background:
-    var(--bs-body-color);
-
-  color:
-    var(--bs-body-bg);
-
-  font-size: 12px;
+  gap: 5px;
+  flex-shrink: 0;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--bs-secondary-color);
 }
 
+.sh-color-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 6px;
+  padding: 6px;
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  background: var(--bs-tertiary-bg);
+}
 
-/* =========================================================================
-   PREVIEW DE IMAGEN
-   ========================================================================= */
+.sh-color-option {
+  padding: 7px 8px;
+}
 
+/* IMAGE */
 .sh-image-preview {
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   width: 100%;
-
   height: 130px;
-
-  border:
-    1px dashed
-    var(--bs-border-color);
-
-  border-radius:
-    var(--bs-border-radius);
-
-  background:
-    var(--bs-tertiary-bg);
-
+  border: 1px dashed var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  background: var(--bs-tertiary-bg);
   overflow: hidden;
 }
 
-
 .sh-image-preview img {
   display: block;
-
   width: 100%;
-
   height: 100%;
-
   object-fit: cover;
 }
 
-
-/* =========================================================================
-   PANEL MUY ANGOSTO
-   ========================================================================= */
-
-@media (max-width: 340px) {
-
-  .sh-color-picker {
-    grid-template-columns: 1fr;
-  }
-
+/* FOCUS */
+.sh-focus-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
+.sh-focus-reset {
+  padding: 0;
+  border: 0;
+  font-size: 11.5px;
+  text-decoration: none;
+}
+
+.sh-focus-editor {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  background: var(--bs-tertiary-bg);
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+}
+
+.sh-focus-editor img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.sh-focus-point {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  transform: translate(-50%, -50%);
+  border: 3px solid var(--bs-body-bg);
+  border-radius: 50%;
+  background: color-mix(
+    in srgb,
+    var(--bs-body-color) 65%,
+    transparent
+  );
+  box-shadow: 0 0 0 2px color-mix(
+    in srgb,
+    var(--bs-body-color) 35%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+.sh-focus-point::before,
+.sh-focus-point::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: var(--bs-body-bg);
+  transform: translate(-50%, -50%);
+}
+
+.sh-focus-point::before {
+  width: 8px;
+  height: 2px;
+}
+
+.sh-focus-point::after {
+  width: 2px;
+  height: 8px;
+}
+
+@media (max-width: 340px) {
+  .sh-color-options {
+    grid-template-columns: 1fr;
+  }
+}
 </style>

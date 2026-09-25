@@ -10,6 +10,7 @@ export const EDITOR_REGISTRY: Record<string, any> = {
     CtaBandCompact: defineAsyncComponent(() => import('../components/block-beta/cta/ctaband-compact/Editor.vue')),
     StoriesFeatured: defineAsyncComponent(() => import('../components/block-beta/testimonials/stories-featured/Editor.vue')),
     HeroSlider: defineAsyncComponent(() => import('../components/block-beta/hero/hero-slider/Editor.vue')),
+    SubHero: defineAsyncComponent(() => import('../components/block-beta/hero/sub-hero/Editor.vue')),
     SectionEcosystem: defineAsyncComponent(() => import('../components/block-beta/ecosystem/section-ecosystem/Editor.vue')),
     InfoMapamundi: defineAsyncComponent(() => import('../components/block-beta/info/mapamundi/Editor.vue')),
     InfoValuesCards: defineAsyncComponent(() => import('../components/block-beta/info/values-cards/Editor.vue')),
