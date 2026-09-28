@@ -4,7 +4,7 @@
  *
  * Único lugar donde se decide cómo se ve un h1-h6 en toda la librería.
  * Consume los tokens semánticos de arcis-2 (assets/styles/tokens.scss):
- * --ds-text-* y --ds-weight-*. Cambiar el diseño de un
+ * --ds-heading-*, --ds-text-* y --ds-weight-*. Cambiar el diseño de un
  * titular se hace aquí una sola vez y se propaga a todo lo que use
  * este átomo, en vez de tocar cada bloque por separado.
  *
@@ -25,10 +25,11 @@ import { computed } from 'vue';
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 /*
- * Los nombres son los de la escala tipográfica de arcis-2 (--ds-text-*), y cada
- * uno se traduce a su token. Los de texto corrido (body-lg, body, body-compact,
- * body-sm, label) están aquí a propósito: hay titulares que semánticamente son
- * un h3 pero se ven al tamaño del texto, como el título de una tarjeta. Sin
+ * Los nombres son los de la escala tipográfica de arcis-2, y cada uno se traduce
+ * a su token (--ds-heading-* los titulares, --ds-text-* el texto corrido). Los
+ * de texto corrido (body-lg, body, body-compact, body-sm, label) están aquí a
+ * propósito: hay titulares que semánticamente son un h3 pero se ven al tamaño
+ * del texto, como el título de una tarjeta. Sin
  * ellos, el más pequeño posible era h6, y la única salida era un "h7" que no
  * existe: el navegador descarta el token y el título hereda el tamaño del padre
  * por accidente.
@@ -46,7 +47,7 @@ type TextAlign = 'left' | 'center' | 'right';
 const props = withDefaults(defineProps<{
   /** Etiqueta semántica a renderizar: 1 => <h1> ... 6 => <h6>. */
   level?: HeadingLevel;
-  /** Tamaño visual (token --ds-text-*). Por defecto, el mismo que `level`. */
+  /** Tamaño visual (token --ds-heading-* o --ds-text-*). Por defecto, el mismo que `level`. */
   size?: HeadingSize;
   /** Peso de fuente (token --ds-weight-*). Por defecto el del reset (semibold). */
   weight?: FontWeight;
@@ -65,14 +66,34 @@ const props = withDefaults(defineProps<{
   level: 2,
 });
 
+/*
+ * Los titulares de arcis-2 se llaman --ds-heading-* con escala de camiseta
+ * (h1 = 2xl ... h6 = xs). `size` conserva los nombres h1..h6 porque son los
+ * que ya están guardados en el contenido de las páginas; aquí se traducen.
+ * Los de texto corrido siguen en --ds-text-*.
+ */
+const HEADING_TOKENS: Partial<Record<HeadingSize, string>> = {
+  display: '--ds-heading-display',
+  giant: '--ds-heading-giant',
+  h1: '--ds-heading-2xl',
+  h2: '--ds-heading-xl',
+  h3: '--ds-heading-lg',
+  h4: '--ds-heading-md',
+  h5: '--ds-heading-sm',
+  h6: '--ds-heading-xs',
+};
+
 const tag = computed(() => props.as ?? `h${props.level}`);
 
-const styleObject = computed(() => ({
-  fontSize: `var(--ds-text-${props.size ?? `h${props.level}`})`,
-  fontWeight: props.weight ? `var(--ds-weight-${props.weight})` : undefined,
-  textAlign: props.align,
-  color: props.color,
-}));
+const styleObject = computed(() => {
+  const size = props.size ?? (`h${props.level}` as HeadingSize);
+  return {
+    fontSize: `var(${HEADING_TOKENS[size] ?? `--ds-text-${size}`})`,
+    fontWeight: props.weight ? `var(--ds-weight-${props.weight})` : undefined,
+    textAlign: props.align,
+    color: props.color,
+  };
+});
 </script>
 
 <template>

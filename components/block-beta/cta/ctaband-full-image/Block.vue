@@ -15,10 +15,12 @@
         <h2 v-if="data.title" class="ctaband__title">{{ data.title }}</h2>
         <p v-if="data.desc" class="ctaband__desc">{{ data.desc }}</p>
 
+        <!-- Sobre la foto oscurecida el principal va rojo, no blanco. -->
         <CtaActions
           :primary="primary"
           :secondary="secondary"
           :button-count="buttonCount"
+          :negative-primary="false"
         />
       </div>
     </div>

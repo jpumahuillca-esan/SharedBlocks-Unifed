@@ -109,12 +109,12 @@
     line-height: 1.15;
   }
 
-  h1 { font-size: var(--ds-text-h1); }
-  h2 { font-size: var(--ds-text-h2); }
-  h3 { font-size: var(--ds-text-h3); }
-  h4 { font-size: var(--ds-text-h4); }
-  h5 { font-size: var(--ds-text-h5); }
-  h6 { font-size: var(--ds-text-h6); }
+  h1 { font-size: var(--ds-heading-2xl); }
+  h2 { font-size: var(--ds-heading-xl); }
+  h3 { font-size: var(--ds-heading-lg); }
+  h4 { font-size: var(--ds-heading-md); }
+  h5 { font-size: var(--ds-heading-sm); }
+  h6 { font-size: var(--ds-heading-xs); }
 
   /* Foco visible siempre — accesibilidad de teclado */
   :focus-visible {

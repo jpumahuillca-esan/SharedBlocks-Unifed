@@ -26,7 +26,8 @@ const families = tokensByPrefix('--ds-font-family-').map((token) => ({
 }));
 
 /* De mayor a menor, como se lee una escala: el orden del archivo no lo es. */
-const scale = tokensByPrefix('--ds-text-').sort((a, b) => px(b) - px(a));
+const scale = [...tokensByPrefix('--ds-heading-'), ...tokensByPrefix('--ds-text-')]
+  .sort((a, b) => px(b) - px(a));
 
 const weights = tokensByPrefix('--ds-weight-');
 const lineHeights = tokensByPrefix('--ds-line-height-');

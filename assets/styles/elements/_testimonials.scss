@@ -180,12 +180,12 @@
   /*
    * Tipografía del overlay.
    *
-   * DESVÍO del kit, deliberado: allí el nombre usa --ds-text-h6 y el cargo hereda
+   * DESVÍO del kit, deliberado: allí el nombre usa --ds-heading-xs y el cargo hereda
    * --ds-text-body-lg de la regla base. En tokens.scss ambos valen 18px, así que
    * nombre y cargo salían del mismo tamaño y la tarjeta perdía la jerarquía que
    * sí tiene el diseño. Se bajan un escalón cada uno, siempre con tokens.
    *
-   * PENDIENTE: que --ds-text-h6 y --ds-text-body-lg midan lo mismo huele a
+   * PENDIENTE: que --ds-heading-xs y --ds-text-body-lg midan lo mismo huele a
    * desincronización con webunificada (la cabecera de tokens.scss ya avisa de
    * otro caso parecido en los clamp()). Si allí resultan tener valores
    * distintos, conviene volver a los tokens del kit y borrar este desvío.

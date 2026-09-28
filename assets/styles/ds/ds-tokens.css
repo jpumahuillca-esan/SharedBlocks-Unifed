@@ -538,14 +538,14 @@
   --ds-spacing-xxxl: var(--ds-space-32);
 
   /* Typography */
-  --ds-text-display: var(--ds-font-size-96);
-  --ds-text-giant: var(--ds-font-size-80);
-  --ds-text-h1: var(--ds-font-size-48);
-  --ds-text-h2: var(--ds-font-size-40);
-  --ds-text-h3: var(--ds-font-size-32);
-  --ds-text-h4: var(--ds-font-size-28);
-  --ds-text-h5: var(--ds-font-size-24);
-  --ds-text-h6: var(--ds-font-size-20);
+  --ds-heading-display: var(--ds-font-size-96);
+  --ds-heading-giant: var(--ds-font-size-80);
+  --ds-heading-2xl: var(--ds-font-size-48);
+  --ds-heading-xl: var(--ds-font-size-40);
+  --ds-heading-lg: var(--ds-font-size-32);
+  --ds-heading-md: var(--ds-font-size-28);
+  --ds-heading-sm: var(--ds-font-size-24);
+  --ds-heading-xs: var(--ds-font-size-20);
   --ds-text-body-lg: var(--ds-font-size-18);
   --ds-text-body: var(--ds-font-size-16);
   --ds-text-body-sm: var(--ds-font-size-12);
@@ -569,14 +569,14 @@
     --ds-spacing-xxl: var(--ds-space-12);
     --ds-spacing-xxxl: var(--ds-space-16);
 
-    --ds-text-display: var(--ds-font-size-48);
-    --ds-text-giant: var(--ds-font-size-40);
-    --ds-text-h1: var(--ds-font-size-28);
-    --ds-text-h2: var(--ds-font-size-26);
-    --ds-text-h3: var(--ds-font-size-24);
-    --ds-text-h4: var(--ds-font-size-22);
-    --ds-text-h5: var(--ds-font-size-20);
-    --ds-text-h6: var(--ds-font-size-18);
+    --ds-heading-display: var(--ds-font-size-48);
+    --ds-heading-giant: var(--ds-font-size-40);
+    --ds-heading-2xl: var(--ds-font-size-28);
+    --ds-heading-xl: var(--ds-font-size-26);
+    --ds-heading-lg: var(--ds-font-size-24);
+    --ds-heading-md: var(--ds-font-size-22);
+    --ds-heading-sm: var(--ds-font-size-20);
+    --ds-heading-xs: var(--ds-font-size-18);
     --ds-text-body-lg: var(--ds-font-size-18);
     --ds-text-body: var(--ds-font-size-16);
     --ds-text-body-sm: var(--ds-font-size-12);

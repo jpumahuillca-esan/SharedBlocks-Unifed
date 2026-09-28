@@ -3,7 +3,7 @@
     <AtomButton
       v-if="primary.label"
       variant="primary"
-      :negative="negative"
+      :negative="primaryNegative"
       :href="primary.url || '#'"
     >
       {{ primary.label }}
@@ -33,6 +33,9 @@
  * por defecto usan la versión para fondo oscuro del Figma: el principal blanco
  * con texto rojo y el secundario en contorno blanco. Una banda clara pasaría
  * `:negative="false"`.
+ *
+ * `primaryNegative` separa el principal del secundario: la variante a sangre
+ * lo quiere rojo sobre la foto, conservando el contorno blanco del secundario.
  */
 import { computed } from 'vue';
 import AtomButton from '../../../atoms/AtomButton.vue';
@@ -45,8 +48,14 @@ const props = withDefaults(
     buttonCount: CtaButtonCount;
     /** Versión para fondo oscuro. */
     negative?: boolean;
+    /** Solo para el principal. Si no se indica, sigue a `negative`. */
+    negativePrimary?: boolean;
   }>(),
-  { negative: true },
+  { negative: true, negativePrimary: undefined },
+);
+
+const primaryNegative = computed(() =>
+  props.negativePrimary === undefined ? props.negative : props.negativePrimary,
 );
 
 /**

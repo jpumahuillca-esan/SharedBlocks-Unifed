@@ -182,5 +182,28 @@
       padding-right: 0;
       border-right: none;
     }
+
+    /* El menú mide 220px y, anclado a la izquierda del disparador, sobresalía
+       por la derecha: aun cerrado ocupa caja y ensanchaba la página. Alineado
+       al borde derecho del disparador cabe dentro del viewport. */
+    .topbar-v1 .dropdown__menu {
+      left: auto;
+      right: 0;
+    }
+  }
+
+  /* -----------------------------------------------------------------------
+     Entre tableta y escritorio — por debajo de 1280px.
+
+     Los enlaces institucionales ocupan 912px y no se encogen. Junto al grupo
+     del portal necesitan 1255px de ventana, así que entre 1024 y 1280 se
+     salían por la derecha y ensanchaban toda la página. Se ocultan hasta que
+     hay sitio; el reparto de copias above/below sigue atado a `lg`, que es
+     donde el navbar pasa a menú móvil.
+     ----------------------------------------------------------------------- */
+  @include bp.container-down('xl') {
+    .topbar-v1__group--end {
+      display: none;
+    }
   }
 }

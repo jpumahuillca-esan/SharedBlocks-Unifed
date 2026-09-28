@@ -264,7 +264,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--ds-spacing-xxs);
-    font-size: var(--ds-text-h6);
+    font-size: var(--ds-heading-xs);
     font-weight: var(--ds-weight-semibold);
     color: var(--ds-color-text-primary);
     transition: color var(--ds-ease-fast);
@@ -400,7 +400,7 @@
     inset: auto 0 0;
     padding: var(--ds-spacing-md) var(--ds-space-6) var(--ds-space-4);
     background: linear-gradient(180deg, var(--ds-color-dark-0) 0%, var(--ds-color-dark-80) 100%);
-    font-size: var(--ds-text-h6);
+    font-size: var(--ds-heading-xs);
     font-weight: var(--ds-weight-semibold);
     color: var(--ds-color-text-inverse);
   }
@@ -413,7 +413,7 @@
   }
 
   .mmb-panel__banner-placeholder {
-    font-size: var(--ds-text-h6);
+    font-size: var(--ds-heading-xs);
     color: var(--ds-color-text-inverse);
   }
 

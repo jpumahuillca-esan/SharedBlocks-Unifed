@@ -77,6 +77,20 @@
             {{ isSubmitting ? 'PROCESANDO...' : cfg.button_text }}
           </AtomButton>
         </div>
+
+        <!--
+          Atribución que Google exige cuando su distintivo no se muestra.
+          El sitio lo oculta para que no abra una franja vacía a la derecha.
+        -->
+        <div class="col-12 mt-3">
+          <AtomText size="body-sm" color="secondary" class="lead-form__recaptcha">
+            Este sitio está protegido por reCAPTCHA y se aplican la
+            <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" class="lead-form__link">Política de Privacidad</a>
+            y los
+            <a href="https://policies.google.com/terms" target="_blank" rel="noopener" class="lead-form__link">Términos de Servicio</a>
+            de Google.
+          </AtomText>
+        </div>
       </div>
     </form>
   </div>
@@ -164,5 +178,9 @@ const {
 
 .lead-form__submit {
   width: 100%;
+}
+
+.lead-form__recaptcha {
+  margin-bottom: 0;
 }
 </style>

@@ -71,7 +71,7 @@
   }
 
   .ctaband__title {
-    font-size: var(--ds-text-h2);
+    font-size: var(--ds-heading-xl);
     font-weight: var(--ds-weight-bold);
   }
 
@@ -154,12 +154,17 @@
     justify-content: center;
   }
 
+  /*
+   * El velo va más denso que en las otras variantes: aquí el texto se apoya
+   * sobre el centro de la foto, no sobre una franja ya oscura, y con 0.55 la
+   * imagen competía con el título.
+   */
   .ctaband--full-image::after {
     content: '';
     position: absolute;
     inset: 0;
     z-index: 0;
-    background-color: rgba(33, 33, 33, 0.55);
+    background-color: rgba(33, 33, 33, 0.82);
   }
 
   .ctaband--full-image .ctaband__content {
@@ -169,7 +174,7 @@
   }
 
   .ctaband--full-image .ctaband__eyebrow {
-    color: var(--ds-color-yellow-500);
+    color: var(--ds-color-text-inverse);
   }
 
   .ctaband--full-image .ctaband__desc {
@@ -309,6 +314,20 @@
     /* Sin ancho para separar texto y foto, el velo se degrada hacia abajo. */
     .ctaband--image::after {
       background: linear-gradient(180deg, var(--ds-color-surface-dark) 0%, rgba(33, 33, 33, 0.55) 100%);
+    }
+
+    /*
+     * Apilados y con anchos distintos según el largo del texto, los dos botones
+     * quedaban desalineados en una columna estrecha. A ancho completo forman un
+     * par parejo bajo la descripción.
+     */
+    .ctaband--full-image .ctaband__actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .ctaband--full-image .ctaband__actions .btn {
+      width: 100%;
     }
 
     /*

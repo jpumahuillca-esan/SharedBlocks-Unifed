@@ -19,7 +19,7 @@ export const FOUNDATIONS_REGISTRY: Record<string, {
   },
   Typography: {
     label: 'Typography',
-    description: 'Familias, escala semántica de tamaños (--ds-text-*) con su valor de escritorio y de móvil, pesos, interlineado y espaciado entre letras.',
+    description: 'Familias, escala semántica de tamaños (--ds-heading-* y --ds-text-*) con su valor de escritorio y de móvil, pesos, interlineado y espaciado entre letras.',
     component: defineAsyncComponent(() => import('../foundations/FoundationsTypography.vue')),
   },
   Spacing: {

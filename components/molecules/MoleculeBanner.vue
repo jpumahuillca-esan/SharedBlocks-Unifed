@@ -52,7 +52,7 @@ const props = withDefaults(defineProps<{
   title?: string;
   /** Etiqueta del titular (h1..h6). No cambia su tamaño: eso es `titleSize`. */
   titleLevel?: HeadingLevel;
-  /** Tamaño visual del titular (token --ds-text-*). */
+  /** Tamaño visual del titular (token --ds-heading-* o --ds-text-*). */
   titleSize?: HeadingSize;
   text?: string;
   /** Tamaño del texto de apoyo (token --ds-text-*). */
