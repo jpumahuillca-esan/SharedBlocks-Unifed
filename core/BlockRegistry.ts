@@ -132,6 +132,7 @@ export const BLOCK_REGISTRY: Record<string, any> = {
                     image: '', imageAlt: '', href: '',
                 },
             ],
+            featuresTitleLevel: 2,
             bar: {
                 title: 'ESAN University',
                 desc: 'Carreras de pregrado, postgrado y para gente que trabaja (DPA)',
@@ -163,6 +164,7 @@ export const BLOCK_REGISTRY: Record<string, any> = {
                     desc: 'Carreras de ciencias sociales', image: '', imageAlt: '', href: '',
                 },
             ],
+            facultiesTitleLevel: 3,
         },
     },
 

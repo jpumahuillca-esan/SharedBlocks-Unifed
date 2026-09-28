@@ -29,6 +29,7 @@
             :key="card.id"
             :card="card"
             variant="feature"
+            :title-level="featuresTitleLevel"
           />
         </div>
 
@@ -47,6 +48,7 @@
               :key="card.id"
               :card="card"
               variant="faculty"
+              :title-level="facultiesTitleLevel"
             />
           </div>
         </div>
@@ -72,7 +74,13 @@ import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import EcosystemCard from '../_shared/EcosystemCard.vue';
 import EcosystemBar from '../_shared/EcosystemBar.vue';
-import { normalizeEcosystemCard, type EcosystemCardItem } from '../_shared/types';
+import {
+  DEFAULT_FACULTIES_TITLE_LEVEL,
+  DEFAULT_FEATURES_TITLE_LEVEL,
+  normalizeEcosystemCard,
+  normalizeEcosystemTitleLevel,
+  type EcosystemCardItem,
+} from '../_shared/types';
 
 const props = defineProps<{ data: any }>();
 
@@ -82,6 +90,13 @@ const toCards = (raw: unknown): EcosystemCardItem[] =>
 
 const features = computed(() => toCards(props.data?.features));
 const faculties = computed(() => toCards(props.data?.faculties));
+
+const featuresTitleLevel = computed(() =>
+  normalizeEcosystemTitleLevel(props.data?.featuresTitleLevel, DEFAULT_FEATURES_TITLE_LEVEL),
+);
+const facultiesTitleLevel = computed(() =>
+  normalizeEcosystemTitleLevel(props.data?.facultiesTitleLevel, DEFAULT_FACULTIES_TITLE_LEVEL),
+);
 
 const bar = computed(() => ({
   title: props.data?.bar?.title ?? '',

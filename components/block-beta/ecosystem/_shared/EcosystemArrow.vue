@@ -10,7 +10,7 @@
     icon
     class="ecosystem-arrow"
     :href="href || undefined"
-    :aria-label="`Ir a ${label}`"
+    v-bind="decorative ? { 'aria-hidden': 'true', tabindex: -1 } : { 'aria-label': `Ir a ${label}` }"
   >
     <AtomIcon name="chevron-right" :size="16" />
   </AtomButton>
@@ -42,7 +42,13 @@ withDefaults(
     /** Va al aria-label: la flecha es solo un ícono y no dice a dónde lleva. */
     label: string;
     variant?: 'surface' | 'white';
+    /**
+     * Cuando otro enlace de la tarjeta ya lleva al mismo destino: la flecha
+     * queda fuera del tabulador y de los lectores de pantalla, pero se sigue
+     * pudiendo pulsar.
+     */
+    decorative?: boolean;
   }>(),
-  { variant: 'surface' },
+  { variant: 'surface', decorative: false },
 );
 </script>

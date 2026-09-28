@@ -17,6 +17,15 @@
     </div>
     <p class="ec-hint">Las tarjetas grandes de la columna izquierda.</p>
 
+    <label class="form-label">Etiqueta del título</label>
+    <select v-model.number="localData.featuresTitleLevel" class="form-select form-select-sm mb-1">
+      <option v-for="level in ECOSYSTEM_TITLE_LEVELS" :key="level" :value="level">H{{ level }}</option>
+    </select>
+    <p class="ec-hint">
+      Nivel del título en la estructura de la página (SEO y lectores de pantalla).
+      No cambia el tamaño. Por defecto, H2.
+    </p>
+
     <CardAccordionItem
       v-for="(card, index) in localData.features"
       :key="card.id"
@@ -77,6 +86,15 @@
     </div>
     <p class="ec-hint">Las tarjetas del grupo de la derecha.</p>
 
+    <label class="form-label">Etiqueta del título</label>
+    <select v-model.number="localData.facultiesTitleLevel" class="form-select form-select-sm mb-1">
+      <option v-for="level in ECOSYSTEM_TITLE_LEVELS" :key="level" :value="level">H{{ level }}</option>
+    </select>
+    <p class="ec-hint">
+      Nivel del título en la estructura de la página. Por defecto, H3: las
+      facultades cuelgan de la franja, que ya es un H2. No cambia el tamaño.
+    </p>
+
     <CardAccordionItem
       v-for="(card, index) in localData.faculties"
       :key="card.id"
@@ -114,8 +132,12 @@ import { ref, watch } from 'vue';
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
 import EcosystemCardFields from '../_shared/EcosystemCardFields.vue';
 import {
+  DEFAULT_FACULTIES_TITLE_LEVEL,
+  DEFAULT_FEATURES_TITLE_LEVEL,
+  ECOSYSTEM_TITLE_LEVELS,
   newEcosystemCardId,
   normalizeEcosystemCard,
+  normalizeEcosystemTitleLevel,
   type EcosystemCardItem,
 } from '../_shared/types';
 
@@ -138,12 +160,14 @@ const build = (source: any) => ({
   title: source?.title ?? '',
   desc: source?.desc ?? '',
   features: Array.isArray(source?.features) ? source.features.map(buildCard) : [],
+  featuresTitleLevel: normalizeEcosystemTitleLevel(source?.featuresTitleLevel, DEFAULT_FEATURES_TITLE_LEVEL),
   bar: {
     title: source?.bar?.title ?? '',
     desc: source?.bar?.desc ?? '',
     href: source?.bar?.href ?? '',
   },
   faculties: Array.isArray(source?.faculties) ? source.faculties.map(buildCard) : [],
+  facultiesTitleLevel: normalizeEcosystemTitleLevel(source?.facultiesTitleLevel, DEFAULT_FACULTIES_TITLE_LEVEL),
 });
 
 const localData = ref(build(props.modelValue));

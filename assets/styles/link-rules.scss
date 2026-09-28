@@ -1,0 +1,50 @@
+/* =========================================================================
+   LINK RULES
+
+   Reglas reutilizables para enlaces.
+   ========================================================================= */
+
+
+/* -------------------------------------------------------------------------
+   ENLACE EXTENDIDO
+
+   Ejemplo:
+   @use '../link-rules' as link;
+   .tarjeta           { position: relative; }
+   .tarjeta__titulo a { @include link.stretched; }
+
+   Hace que toda la tarjeta sea clicable sin envolverla en un <a>: el enlace
+   del título tiende una capa invisible (::after) sobre la tarjeta entera.
+   Envolverla no sirve cuando dentro ya hay otros enlaces (una flecha, un
+   play): un <a> dentro de otro es HTML no válido y el navegador rompe el
+   árbol, lo que en Nuxt acaba en errores de hidratación.
+
+   Condiciones:
+   - La tarjeta tiene `position` y NINGÚN elemento entre ella y el enlace
+     la tiene: la capa se mide contra el ancestro posicionado más cercano.
+   - Lo que deba seguir pulsándose por su cuenta (flecha, play) va por
+     encima con `position: relative` y `z-index: 2`.
+
+   El foco de teclado se dibuja en la capa, alrededor de toda la tarjeta, y
+   no alrededor del título. `$radius` es el de la tarjeta, para que el
+   contorno siga sus esquinas.
+   ------------------------------------------------------------------------- */
+
+@mixin stretched($radius: 0) {
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: $radius;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible::after {
+    outline: var(--ds-border-width-md) solid var(--ds-color-border-focus);
+    outline-offset: calc(-1 * var(--ds-border-width-md));
+  }
+}

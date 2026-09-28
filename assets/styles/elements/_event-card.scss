@@ -42,6 +42,7 @@
    ============================================================ */
 
 @use '../breakpoints' as bp;
+@use '../link-rules' as link;
 
 /* Estado apilado del formato sin imagen. Va en mixin porque lo piden dos
    sitios: la consulta de ancho y la clase que lo fuerza a mano. */
@@ -231,8 +232,23 @@
     transition: transform var(--ds-ease-slow);
   }
 
-  .event-card.event-card--arcis:hover .event-card__media img {
-    transform: scale(1.04);
+  .event-card.event-card--arcis:hover .event-card__media img,
+  .event-card.event-card--arcis:focus-within .event-card__media img {
+    transform: scale(1.06);
+  }
+
+  /*
+   * Toda la tarjeta es clicable: el enlace del título se extiende sobre ella.
+   * Solo con imagen y con destino (MoleculeEventCard pone --linked). Entre la
+   * tarjeta y el enlace nada tiene `position`: la foto sí la tiene, pero es
+   * hermana del cuerpo y no ancestro del título.
+   */
+  .event-card.event-card--arcis.event-card--linked {
+    position: relative;
+  }
+
+  .event-card--arcis.event-card--linked .event-card__title a {
+    @include link.stretched(var(--ds-radius-sm));
   }
 
   .event-card--arcis .event-card__date-badge {

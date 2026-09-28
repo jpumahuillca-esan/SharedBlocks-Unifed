@@ -73,6 +73,12 @@ const classes = computed(() => [
   'event-card',
   'event-card--arcis',
   props.variant === 'media' ? 'event-card--media' : null,
+  /*
+   * Con imagen y con destino, toda la tarjeta es clicable: el enlace del título
+   * se extiende sobre ella (ver _event-card.scss). Sin destino no, para no
+   * llevar a "#" desde cualquier punto de la tarjeta.
+   */
+  props.variant === 'media' && props.href ? 'event-card--linked' : null,
   props.layout === 'row' ? 'event-card--row' : null,
   props.layout === 'stacked' ? 'event-card--stacked' : null,
 ]);
