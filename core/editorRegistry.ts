@@ -12,6 +12,7 @@ export const EDITOR_REGISTRY: Record<string, any> = {
     HeroSlider: defineAsyncComponent(() => import('../components/block-beta/hero/hero-slider/Editor.vue')),
     SubHero: defineAsyncComponent(() => import('../components/block-beta/hero/sub-hero/Editor.vue')),
     SectionEcosystem: defineAsyncComponent(() => import('../components/block-beta/ecosystem/section-ecosystem/Editor.vue')),
+    EcosystemEsan: defineAsyncComponent(() => import('../components/block-beta/ecosystem/ecosystem-esan/Editor.vue')),
     InfoMapamundi: defineAsyncComponent(() => import('../components/block-beta/info/mapamundi/Editor.vue')),
     InfoValuesCards: defineAsyncComponent(() => import('../components/block-beta/info/values-cards/Editor.vue')),
     AwardsFeatured: defineAsyncComponent(() => import('../components/block-beta/awards/awards-featured/Editor.vue')),

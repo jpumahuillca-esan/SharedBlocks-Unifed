@@ -166,6 +166,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         },
     },
 
+    
+
     HeroSlider: {
         label: 'Portada (carrusel)',
         icon: 'las la-images',
@@ -551,6 +553,7 @@ const betaBaseGroups = [
     { id: 'Awards', label: 'Awards', color: 'outline-dark', icon: 'las la-award' },
     // 'Cards' no coincide con ningún id de baseGroups: no se cuela en el catálogo clásico.
     { id: 'Cards', label: 'Cards', color: 'outline-success', icon: 'las la-th-large' },
+    
 ];
 
 /** Claves de los bloques marcados como beta, sin agrupar. */
