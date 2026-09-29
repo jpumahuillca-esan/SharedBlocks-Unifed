@@ -632,7 +632,9 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         isBoxed: false,
         component: defineAsyncComponent(() => import('../components/block-beta/cards/cards-version-2/Block.vue')),
         initialData: {
+            backgroundColor: '#F1F5F9',
             eyebrow: '+ PREGRADO',
+            eyebrowColorToken: '--ds-color-univ-management',
             title: 'Carreras universitarias en ciencias administrativas',
             desc: '',
             cards: [
@@ -641,6 +643,26 @@ export const BLOCK_REGISTRY: Record<string, any> = {
                 { id: 'cv2-3', icon: 'graduation-cap', title: 'Administración y Marketing', desc: '', href: '' },
                 { id: 'cv2-4', icon: 'graduation-cap', title: 'Administración y Negocios Internacionales', desc: '', href: '' },
                 { id: 'cv2-5', icon: 'graduation-cap', title: 'Contabilidad', desc: '', href: '' },
+            ],
+        },
+    },
+
+    CardsReasonVersion3: {
+        label: 'Tarjetas de razones (versión 3)',
+        icon: 'las la-th-large',
+        group: 'Cards',
+        beta: true,
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/cards/cards-reason-version-3/Block.vue')),
+        initialData: {
+            eyebrow: '',
+            title: '¿Por qué elegir a ESAN?',
+            desc: '',
+            cards: [
+                { id: 'cr3-1', number: '1º', label: 'Ranking Merco Empresas 2025 - Sector Educación', href: '' },
+                { id: 'cr3-2', number: '3º', label: 'Preferencia Carreras Universitarias 2025*', href: '' },
+                { id: 'cr3-3', number: '11', label: 'Dobles Grados Internacionales', href: '' },
+                { id: 'cr3-4', number: '+130', label: 'Convenios internacionales', href: '' },
             ],
         },
     },

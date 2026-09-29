@@ -1,10 +1,25 @@
 <template>
   <div class="cards-v2-editor">
     <!-- Encabezado de la sección -->
-    <h6 class="fw-bold small text-uppercase mb-2">Encabezado</h6>
+    <h6 class="fw-bold small text-uppercase mb-2">Encabezado y Diseño</h6>
     <p class="cv2-hint">
-      El encabezado se centra sobre la grilla de tarjetas. Deja un campo vacío si no deseas mostrarlo.
+      Configura el fondo del bloque y los textos de cabecera. Deja un campo vacío si no deseas mostrarlo.
     </p>
+
+    <!-- Color de fondo de la sección -->
+    <label class="form-label">Color de fondo del bloque</label>
+    <p class="cv2-hint">Selecciona el color de fondo para la sección.</p>
+    <div class="d-flex align-items-center gap-2 mb-3">
+      <span
+        class="cv2-bg-preview"
+        :style="{ backgroundColor: localData.backgroundColor || '#F1F5F9' }"
+        aria-hidden="true"
+      ></span>
+      <select v-model="localData.backgroundColor" class="form-select form-select-sm">
+        <option value="#F1F5F9">Gris claro (#F1F5F9)</option>
+        <option value="#FFFFFF">Blanco (#FFFFFF)</option>
+      </select>
+    </div>
 
     <label class="form-label">Etiqueta superior (Eyebrow)</label>
     <p class="cv2-hint">Texto corto en color institucional (ej. "+ PREGRADO").</p>
@@ -14,6 +29,14 @@
       class="form-control form-control-sm mb-2"
       placeholder="+ PREGRADO"
     />
+
+    <!-- Selector único de color institucional para el Eyebrow (texto y punto) -->
+    <div v-if="localData.eyebrow" class="mb-3">
+      <BrandColorPicker
+        v-model="localData.eyebrowColorToken"
+        label="Color del antetítulo (texto y punto)"
+      />
+    </div>
 
     <label class="form-label">Título principal</label>
     <p class="cv2-hint">Título de la sección. Lleva siempre el guion rojo de acento debajo.</p>
@@ -149,6 +172,7 @@
 import { ref, watch } from 'vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
+import BrandColorPicker from '../../_shared/BrandColorPicker.vue';
 import { ICON_SUGGESTIONS } from '../../../../helpers/iconOptions';
 import { buildCard, buildCardsVersion2Data, type CardVersion2Item } from './types';
 
@@ -215,6 +239,16 @@ watch(
   font-size: 11.5px;
   line-height: 1.45;
   color: #6b7688;
+}
+
+.cv2-bg-preview {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
 }
 
 .cv2-icon-preview {

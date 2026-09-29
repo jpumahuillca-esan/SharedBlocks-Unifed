@@ -1,9 +1,16 @@
 <template>
-  <section class="cards-v2-section">
+  <section
+    class="cards-v2-section"
+    :class="{ 'cards-v2-section--white': (data?.backgroundColor || normalized.backgroundColor) === '#FFFFFF' }"
+    :style="{ backgroundColor: data?.backgroundColor || normalized.backgroundColor || '#F1F5F9' }"
+  >
     <div class="cards-v2__container">
       <!-- Encabezado centrado construido con átomos ARCIS -->
       <header v-if="data.eyebrow || data.title || data.desc" class="cards-v2__header">
-        <AtomEyebrow v-if="data.eyebrow">
+        <AtomEyebrow
+          v-if="data.eyebrow"
+          :color-token="data.eyebrowColorToken"
+        >
           {{ data.eyebrow }}
         </AtomEyebrow>
 

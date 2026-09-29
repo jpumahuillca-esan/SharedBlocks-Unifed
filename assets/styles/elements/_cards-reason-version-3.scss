@@ -1,0 +1,145 @@
+/* =========================================================================
+   CARDS REASON VERSION 3 — ARCIS Design System
+   
+   Grilla centrada de métricas e indicadores de elección institucional.
+   La usa el bloque block-beta/cards/cards-reason-version-3.
+   
+   Comportamiento responsivo:
+     escritorio: 4 columnas en una sola fila
+     tableta:    2 columnas por fila (rejilla 2x2)
+     teléfono:   1 columna por fila (100% ancho)
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+
+  .cards-reason-v3-section {
+    width: 100%;
+    background-color: #ffffff;
+    padding-block: var(--ds-spacing-xxl, 64px);
+    box-sizing: border-box;
+
+    @include bp.container-down('md') {
+      padding-block: var(--ds-spacing-xl, 40px);
+    }
+  }
+
+  .cards-r3__container {
+    width: 100%;
+    max-width: var(--ds-container-max, 1280px);
+    margin-inline: auto;
+    padding-inline: var(--ds-spacing-md, 24px);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Encabezado centrado */
+  .cards-r3__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    margin-bottom: var(--ds-space-8, 36px);
+
+    @include bp.container-down('sm') {
+      margin-bottom: var(--ds-space-6, 24px);
+    }
+  }
+
+  .cards-r3__title {
+    margin: 0;
+    line-height: 1.25;
+    text-align: center;
+  }
+
+  .cards-r3__rule {
+    display: block;
+    width: 38px;
+    height: 2.5px;
+    background-color: var(--ds-color-brand-red, #c52b27);
+    margin-inline: auto;
+    margin-top: 4px;
+    border-radius: 2px;
+  }
+
+  .cards-r3__desc {
+    max-width: 680px;
+    margin: 8px auto 0;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* Grilla de métricas */
+  .cards-r3__grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* Tarjeta individual de razón */
+  .cards-r3__card {
+    flex: 0 0 calc((100% - 3 * 20px) / 4);
+    max-width: calc((100% - 3 * 20px) / 4);
+    min-width: 0;
+    box-sizing: border-box;
+
+    @include bp.container-down('lg') {
+      flex: 0 0 calc((100% - 20px) / 2);
+      max-width: calc((100% - 20px) / 2);
+    }
+
+    @include bp.container-down('sm') {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+
+    background-color: var(--ds-color-bg-subtle, #f0f4f8);
+    border-radius: var(--ds-radius-lg, 12px);
+    padding: 22px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.2s ease;
+    cursor: default;
+
+    &[href] {
+      cursor: pointer;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    }
+  }
+
+  /* Cifra o indicador en rojo institucional */
+  .cards-r3__card-number {
+    color: var(--ds-color-brand-red, #c52b27) !important;
+    font-size: clamp(2rem, 3vw, 2.75rem) !important;
+    font-weight: 700 !important;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    flex-shrink: 0;
+  }
+
+  /* Texto descriptivo de la métrica */
+  .cards-r3__card-text {
+    font-size: 13.5px !important;
+    line-height: 1.35;
+    color: var(--ds-color-text-primary, #1e293b);
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+  }
+}

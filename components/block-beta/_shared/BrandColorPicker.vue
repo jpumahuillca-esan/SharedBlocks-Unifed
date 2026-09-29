@@ -1,7 +1,7 @@
 <template>
   <div class="brand-color-picker">
-    <label class="form-label">
-      Color institucional
+    <label v-if="label" class="form-label">
+      {{ label }}
     </label>
 
     <!-- ================================================================
@@ -129,9 +129,15 @@ import {
   type BrandColorGroupId,
 } from './brandColors';
 
-const props = defineProps<{
-  modelValue: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    modelValue: string;
+    label?: string;
+  }>(),
+  {
+    label: 'Color institucional',
+  },
+);
 
 const emit = defineEmits<{
   (

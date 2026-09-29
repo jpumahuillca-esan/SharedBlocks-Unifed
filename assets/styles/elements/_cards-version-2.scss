@@ -17,12 +17,26 @@
 
   .cards-v2-section {
     width: 100%;
-    background-color: var(--ds-color-bg-subtle, #f4f7fb);
+    background-color: var(--ds-color-bg-subtle, #F1F5F9);
     padding-block: var(--ds-spacing-xxl, 64px);
     box-sizing: border-box;
 
     @include bp.container-down('md') {
       padding-block: var(--ds-spacing-xl, 40px);
+    }
+
+    &--white {
+      background-color: #ffffff;
+
+      .cards-v2__card {
+        border-color: #e2e8f0;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+
+        &:hover {
+          border-color: #cbd5e1;
+          box-shadow: 0 10px 24px rgba(15, 23, 42, 0.09);
+        }
+      }
     }
   }
 
@@ -48,17 +62,6 @@
     @include bp.container-down('sm') {
       margin-bottom: var(--ds-space-6, 24px);
     }
-  }
-
-  .cards-v2__eyebrow {
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ds-color-primary, #004481);
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
   }
 
   .cards-v2__title {
