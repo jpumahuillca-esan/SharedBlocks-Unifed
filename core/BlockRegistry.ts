@@ -168,6 +168,181 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         },
     },
 
+    EcosystemEsan: {
+    label: 'Ecosystem ESAN',
+    icon: 'las la-sitemap',
+    group: 'Ecosystem',
+    beta: true,
+    isBoxed: true,
+    component: defineAsyncComponent(() => import('../components/block-beta/ecosystem/ecosystem-esan/Block.vue')),
+    initialData: {
+        title: 'En ESAN University conviertes tu talento en oportunidades',
+        desc: 'Encuentra la carrera que se adapte a tu vocación',
+        columns: 3,
+        items: [
+            {
+                id: 'management',
+                title: 'ESAN Management',
+                desc: 'Carreras de ciencias administrativas',
+                image: '',
+                imageAlt: '',
+                href: '',
+                colorToken: '--ds-color-univ-management',
+
+                links: [
+                {
+                    id: 'management-1',
+                    label: 'Administración',
+                    href: '',
+                },
+                {
+                    id: 'management-2',
+                    label: 'Administración y Finanzas',
+                    href: '',
+                },
+                {
+                    id: 'management-3',
+                    label: 'Administración y Marketing',
+                    href: '',
+                },
+                {
+                    id: 'management-4',
+                    label: 'Administración y Negocios Internacionales',
+                    href: '',
+                },
+                {
+                    id: 'management-5',
+                    label: 'Contabilidad',
+                    href: '',
+                },
+                ],
+            },
+
+            {
+                id: 'engineering',
+                title: 'ESAN Engineering',
+                desc: 'Carreras de ingeniería',
+                image: '',
+                imageAlt: '',
+                href: '',
+                colorToken: '--ds-color-univ-engineering',
+
+                links: [
+                {
+                    id: 'engineering-1',
+                    label: 'Ingeniería Industrial y Comercial',
+                    href: '',
+                },
+                {
+                    id: 'engineering-2',
+                    label: 'Ingeniería de Software',
+                    href: '',
+                },
+                {
+                    id: 'engineering-3',
+                    label: 'Ingeniería de Tecnología de Información y Sistemas',
+                    href: '',
+                },
+                {
+                    id: 'engineering-4',
+                    label: 'Ingeniería en Ciencias de Datos',
+                    href: '',
+                },
+                {
+                    id: 'engineering-5',
+                    label: 'Ingeniería en Inteligencia Artificial',
+                    href: '',
+                },
+                ],
+            },
+
+            {
+                id: 'economics',
+                title: 'ESAN Economics',
+                desc: 'Carreras de ciencias económicas',
+                image: '',
+                imageAlt: '',
+                href: '',
+                colorToken: '--ds-color-univ-economics',
+
+                links: [
+                {
+                    id: 'economics-1',
+                    label: 'Economía',
+                    href: '',
+                },
+                {
+                    id: 'economics-2',
+                    label: 'Economía y Negocios Internacionales',
+                    href: '',
+                },
+                {
+                    id: 'economics-3',
+                    label: 'Economía y Finanzas',
+                    href: '',
+                },
+                ],
+            },
+
+            {
+                id: 'law',
+                title: 'ESAN Law',
+                desc: 'Carreras de derecho',
+                image: '',
+                imageAlt: '',
+                href: '',
+                colorToken: '--ds-color-univ-law',
+
+                links: [
+                {
+                    id: 'law-1',
+                    label: 'Derecho',
+                    href: '',
+                },
+                ],
+            },
+
+            {
+                id: 'communications',
+                title: 'ESAN Communications',
+                desc: 'Carreras de comunicación empresarial',
+                image: '',
+                imageAlt: '',
+                href: '',
+                colorToken: '--ds-color-univ-communications',
+
+                links: [
+                {
+                    id: 'communications-1',
+                    label: 'Comunicación Empresarial y Marketing Digital',
+                    href: '',
+                },
+                ],
+            },
+
+            {
+                id: 'psychology',
+                title: 'ESAN Psychology',
+                desc: 'Carreras de ciencias sociales',
+                image: '',
+                imageAlt: '',
+                href: '',
+                colorToken: '--ds-color-univ-psychology',
+
+                links: [
+                {
+                    id: 'psychology-1',
+                    label: 'Psicología',
+                    href: '',
+                },
+                ],
+            },
+            ],
+        },
+    },
+
+    
+
     HeroSlider: {
         label: 'Portada (carrusel)',
         icon: 'las la-images',
@@ -575,6 +750,7 @@ const betaBaseGroups = [
     { id: 'Awards', label: 'Awards', color: 'outline-dark', icon: 'las la-award' },
     // 'Cards' no coincide con ningún id de baseGroups: no se cuela en el catálogo clásico.
     { id: 'Cards', label: 'Cards', color: 'outline-success', icon: 'las la-th-large' },
+    
 ];
 
 /** Claves de los bloques marcados como beta, sin agrupar. */
