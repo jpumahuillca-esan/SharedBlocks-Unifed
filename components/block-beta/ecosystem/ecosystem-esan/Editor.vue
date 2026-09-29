@@ -20,10 +20,15 @@
       placeholder="En ESAN University conviertes tu talento en oportunidades"
     ></textarea>
 
-    <p class="ees-hint ees-hint--limit mb-3">
-      Máximo {{ rules.title.maxLength }} caracteres.
-      {{ localData.title.length }}/{{ rules.title.maxLength }}
-    </p>
+    <div class="ees-limit mb-3">
+      <span>
+        Máximo {{ rules.title.maxLength }} caracteres.
+      </span>
+
+      <span class="ees-limit__counter">
+        {{ localData.title.length }}/{{ rules.title.maxLength }}
+      </span>
+    </div>
 
     <label class="form-label">
       Descripción
@@ -37,10 +42,15 @@
       placeholder="Encuentra la carrera que se adapte a tu vocación"
     ></textarea>
 
-    <p class="ees-hint ees-hint--limit mb-3">
-      Máximo {{ rules.desc.maxLength }} caracteres.
-      {{ localData.desc.length }}/{{ rules.desc.maxLength }}
-    </p>
+    <div class="ees-limit mb-3">
+      <span>
+        Máximo {{ rules.desc.maxLength }} caracteres.
+      </span>
+
+      <span class="ees-limit__counter">
+        {{ localData.desc.length }}/{{ rules.desc.maxLength }}
+      </span>
+    </div>
 
     <hr />
 
@@ -122,10 +132,15 @@
           placeholder="ESAN Management"
         />
 
-        <p class="ees-hint ees-hint--limit mb-3">
-          Máximo {{ rules.card.title.maxLength }} caracteres.
-          {{ item.title.length }}/{{ rules.card.title.maxLength }}
-        </p>
+        <div class="ees-limit mb-3">
+          <span>
+            Máximo {{ rules.card.title.maxLength }} caracteres.
+          </span>
+
+          <span class="ees-limit__counter">
+            {{ item.title.length }}/{{ rules.card.title.maxLength }}
+          </span>
+        </div>
 
         <!-- ============================================================
              Descripción del card
@@ -143,10 +158,15 @@
           placeholder="Carreras de ciencias administrativas"
         ></textarea>
 
-        <p class="ees-hint ees-hint--limit mb-3">
-          Máximo {{ rules.card.desc.maxLength }} caracteres.
-          {{ item.desc.length }}/{{ rules.card.desc.maxLength }}
-        </p>
+        <div class="ees-limit mb-3">
+          <span>
+            Máximo {{ rules.card.desc.maxLength }} caracteres.
+          </span>
+
+          <span class="ees-limit__counter">
+            {{ item.desc.length }}/{{ rules.card.desc.maxLength }}
+          </span>
+        </div>
 
         <!-- ============================================================
              Color institucional
@@ -216,7 +236,7 @@
         </div>
 
         <!-- ============================================================
-             Alt de imagen
+             Texto alternativo
              ============================================================ -->
 
         <label class="form-label">
@@ -231,10 +251,15 @@
           placeholder="Describe brevemente la imagen"
         />
 
-        <p class="ees-hint ees-hint--limit mb-3">
-          Máximo {{ rules.card.imageAlt.maxLength }} caracteres.
-          {{ item.imageAlt.length }}/{{ rules.card.imageAlt.maxLength }}
-        </p>
+        <div class="ees-limit mb-3">
+          <span>
+            Máximo {{ rules.card.imageAlt.maxLength }} caracteres.
+          </span>
+
+          <span class="ees-limit__counter">
+            {{ item.imageAlt.length }}/{{ rules.card.imageAlt.maxLength }}
+          </span>
+        </div>
 
         <!-- ============================================================
              Destino del card
@@ -326,10 +351,15 @@
             placeholder="Administración y Finanzas"
           />
 
-          <p class="ees-hint ees-hint--limit mb-3">
-            Máximo {{ rules.link.label.maxLength }} caracteres.
-            {{ link.label.length }}/{{ rules.link.label.maxLength }}
-          </p>
+          <div class="ees-limit mb-3">
+            <span>
+              Máximo {{ rules.link.label.maxLength }} caracteres.
+            </span>
+
+            <span class="ees-limit__counter">
+              {{ link.label.length }}/{{ rules.link.label.maxLength }}
+            </span>
+          </div>
 
           <label class="form-label">
             Destino
@@ -466,7 +496,7 @@ const build = (
 };
 
 /* ==========================================================================
-   State
+   Estado
    ========================================================================== */
 
 const localData =
@@ -493,7 +523,7 @@ const toggle = (
 };
 
 /* ==========================================================================
-   Categories
+   Categorías
    ========================================================================== */
 
 const addItem = () => {
@@ -502,8 +532,7 @@ const addItem = () => {
 
   const colorToken =
     COLOR_SEQUENCE[
-      index %
-        COLOR_SEQUENCE.length
+      index % COLOR_SEQUENCE.length
     ];
 
   localData.value.items.push(
@@ -588,7 +617,7 @@ const moveItem = (
 };
 
 /* ==========================================================================
-   Image
+   Imagen
    ========================================================================== */
 
 const selectImage = (
@@ -646,8 +675,7 @@ const moveLink = (
 
   if (
     target < 0 ||
-    target >=
-      item.links.length
+    target >= item.links.length
   ) {
     return;
   }
@@ -666,8 +694,7 @@ const moveLink = (
    ========================================================================== */
 
 watch(
-  () =>
-    props.modelValue,
+  () => props.modelValue,
   (newValue) => {
     if (!newValue) {
       return;
@@ -726,12 +753,37 @@ watch(
   line-height: 1.45;
 }
 
-.ees-hint--limit {
+/* ==========================================================================
+   Límites de contenido
+   ========================================================================== */
+
+.ees-limit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+
+  gap: 12px;
+
+  color: #6b7688;
+
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.ees-limit__counter {
+  flex: 0 0 auto;
+
+  color: #8591a2;
+
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
   text-align: right;
 }
 
 /* ==========================================================================
-   Image preview
+   Preview de imagen
    ========================================================================== */
 
 .ees-image-preview {
@@ -755,6 +807,10 @@ watch(
   object-fit: cover;
 }
 
+/*
+ * El lienzo vacío existe solamente dentro
+ * del área del preview de imagen.
+ */
 .ees-image-empty {
   display: flex;
   flex-direction: column;
@@ -776,6 +832,10 @@ watch(
   text-align: center;
 
   cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .ees-image-empty:hover {

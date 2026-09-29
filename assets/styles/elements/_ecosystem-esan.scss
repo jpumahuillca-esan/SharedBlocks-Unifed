@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ECOSYSTEM ESAN — ARCIS Design System
+   ECOSYSTEM ESAN
    ========================================================================== */
 
 .arcis-scope {
@@ -26,14 +26,14 @@
     display: flex;
     flex-direction: column;
 
-    gap:
-      var(--ds-space-10);
-
     width: 100%;
     max-width:
       var(--ds-container-max);
 
     margin-inline: auto;
+
+    gap:
+      var(--ds-space-10);
   }
 
   /* ==========================================================================
@@ -45,13 +45,13 @@
     flex-direction: column;
     align-items: center;
 
-    gap:
-      var(--ds-space-4);
-
     width: 100%;
     max-width: 960px;
 
     margin-inline: auto;
+
+    gap:
+      var(--ds-space-4);
   }
 
   .ecosystem-esan__title {
@@ -72,8 +72,8 @@
     line-height: 1.25;
 
     /*
-     * Figma especifica -1%.
-     * El DS aún no dispone de un token exacto.
+     * Figma usa -1%.
+     * No existe token exacto en el DS.
      */
     letter-spacing:
       -0.01em;
@@ -83,14 +83,12 @@
 
   .ecosystem-esan__rule {
     display: block;
+    flex: 0 0 auto;
 
     width:
       var(--ds-space-10);
 
-    height:
-      var(--ds-border-width-md);
-
-    flex: 0 0 auto;
+    height: 2px;
 
     background-color:
       var(--ds-color-surface-primary);
@@ -112,8 +110,8 @@
       var(--ds-weight-regular);
 
     /*
-     * Figma especifica 140%.
-     * El DS actual no tiene un token exacto.
+     * Figma usa 140%.
+     * No existe token exacto en el DS.
      */
     line-height: 1.4;
 
@@ -163,10 +161,10 @@
     display: flex;
     flex-direction: column;
 
+    min-width: 0;
+
     gap:
       var(--ds-space-6);
-
-    min-width: 0;
   }
 
   /* ==========================================================================
@@ -191,7 +189,7 @@
   }
 
   /* ==========================================================================
-     Card image — SIEMPRE 155px
+     Media
      ========================================================================== */
 
   .ecosystem-esan-card__media {
@@ -215,14 +213,16 @@
     object-fit: cover;
   }
 
+  /* ==========================================================================
+     Placeholder de imagen
+     ========================================================================== */
+
   /*
-   * Placeholder.
+   * Este placeholder vive exclusivamente
+   * dentro de __media.
    *
-   * IMPORTANTE:
-   * vive dentro de __media.
-   *
-   * Su height: 100% significa 155px,
-   * NO los 255px del card completo.
+   * __media mide exactamente 155px.
+   * Nunca ocupa los 255px del card.
    */
   .ecosystem-esan-card__media-empty {
     display: flex;
@@ -248,7 +248,7 @@
       var(--ds-space-10);
 
     border:
-      var(--ds-border-width-sm)
+      1px
       solid
       var(--ds-color-border-subtle);
 
@@ -311,14 +311,17 @@
      ========================================================================== */
 
   /*
-   * El card completo mide 255px.
+   * Card:
+   * 255px total.
    *
-   * Imagen: 155px.
-   * Panel base: 100px.
+   * Imagen:
+   * 155px.
    *
-   * El panel está anclado abajo.
-   * Si necesita más espacio por texto largo,
-   * crece hacia arriba sin cambiar los 255px.
+   * Panel:
+   * 100px mínimo.
+   *
+   * Si el texto necesita mayor altura,
+   * el panel crece hacia arriba.
    */
   .ecosystem-esan-card__body {
     position: absolute;
@@ -329,17 +332,13 @@
     left: 0;
 
     display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
 
-    align-items:
-      flex-start;
-
-    justify-content:
-      space-between;
+    min-height: 100px;
 
     gap:
       var(--ds-spacing-xs);
-
-    min-height: 100px;
 
     padding:
       var(--ds-space-4)
@@ -357,17 +356,18 @@
 
   .ecosystem-esan-card__text {
     display: flex;
-
     flex: 1;
+    flex-direction: column;
 
-    flex-direction:
-      column;
+    min-width: 0;
 
     gap:
       var(--ds-spacing-xxs);
-
-    min-width: 0;
   }
+
+  /* ==========================================================================
+     Card title
+     ========================================================================== */
 
   .ecosystem-esan-card__title {
     margin: 0;
@@ -390,6 +390,10 @@
       -0.01em;
   }
 
+  /* ==========================================================================
+     Card description
+     ========================================================================== */
+
   .ecosystem-esan-card__desc {
     margin: 0;
 
@@ -410,13 +414,16 @@
     letter-spacing: 0;
   }
 
+  /* ==========================================================================
+     Card action
+     ========================================================================== */
+
   /*
-   * La flecha se queda abajo,
-   * no verticalmente centrada.
+   * La flecha siempre queda anclada
+   * visualmente al fondo del panel.
    */
   .ecosystem-esan-card__action.btn {
-    flex:
-      0 0 auto;
+    flex: 0 0 auto;
 
     align-self:
       flex-end;
@@ -428,8 +435,7 @@
 
   .ecosystem-esan__links {
     display: flex;
-    flex-direction:
-      column;
+    flex-direction: column;
 
     width: 100%;
 
