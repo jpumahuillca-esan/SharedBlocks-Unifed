@@ -448,6 +448,28 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         },
     },
 
+    CardsVersion2: {
+        label: 'Tarjetas compactas (versión 2)',
+        icon: 'las la-th-large',
+        group: 'Cards',
+        beta: true,
+        // Fondo suave que sangra a todo el ancho con contenedor centrado.
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/cards/cards-version-2/Block.vue')),
+        initialData: {
+            eyebrow: '+ PREGRADO',
+            title: 'Carreras universitarias en ciencias administrativas',
+            desc: '',
+            cards: [
+                { id: 'cv2-1', icon: 'graduation-cap', title: 'Titulo', desc: 'Descripcion corta', href: '' },
+                { id: 'cv2-2', icon: 'graduation-cap', title: 'Administración y Finanzas', desc: '', href: '' },
+                { id: 'cv2-3', icon: 'graduation-cap', title: 'Administración y Marketing', desc: '', href: '' },
+                { id: 'cv2-4', icon: 'graduation-cap', title: 'Administración y Negocios Internacionales', desc: '', href: '' },
+                { id: 'cv2-5', icon: 'graduation-cap', title: 'Contabilidad', desc: '', href: '' },
+            ],
+        },
+    },
+
     CtaBandImage: {
         label: 'CTA con imagen',
         icon: 'las la-image',
