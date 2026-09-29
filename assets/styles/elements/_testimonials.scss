@@ -21,6 +21,8 @@
    se porta tal cual, sin inventarle una regla base que no existe.
    ============================================================ */
 
+@use '../link-rules' as link;
+
 .arcis-scope {
   .testimonial-card {
     display: flex;
@@ -69,12 +71,27 @@
     color: var(--ds-color-text-secondary);
   }
 
-  /* Variante "video": testimonio en formato video, foto a sangre + overlay */
+  /*
+   * Variante "video": testimonio en formato video, foto a sangre + overlay.
+   *
+   * El texto (overlay) va en el flujo, abajo del todo, y no en absoluto: toda
+   * la tarjeta es clicable porque el enlace del nombre se extiende sobre ella,
+   * y esa capa se mide contra el ancestro posicionado más cercano. Con el
+   * overlay en absoluto, la capa se quedaría en el recuadro del texto.
+   *
+   * Para que el texto quede encima de la foto y del velo sin `position`, los
+   * dos van con z-index negativo, y `isolation` evita que se caigan por
+   * detrás del fondo de la tarjeta. El padding hace de los antiguos
+   * left/right/bottom del overlay.
+   */
   .testimonial-card--video {
     position: relative;
-    display: block;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
     aspect-ratio: 3 / 4;
-    padding: 0;
+    padding: var(--ds-space-6);
     background-color: var(--ds-color-surface-dark);
     border: none;
     overflow: hidden;
@@ -94,6 +111,10 @@
     inset: 0;
   }
 
+  .testimonial-card--video .testimonial-card__media {
+    z-index: -1;
+  }
+
   .testimonial-card__media img {
     width: 100%;
     height: 100%;
@@ -101,14 +122,17 @@
     transition: transform var(--ds-ease-slow);
   }
 
-  .testimonial-card--video:hover .testimonial-card__media img {
-    transform: scale(1.04);
+  .testimonial-card--video:hover .testimonial-card__media img,
+  .testimonial-card--video:focus-within .testimonial-card__media img {
+    transform: scale(1.06);
   }
 
+  /* Velo. Después de la foto en el marcado, así que con el mismo z-index la tapa. */
   .testimonial-card--video::after {
     content: '';
     position: absolute;
     inset: 0;
+    z-index: -1;
     background: linear-gradient(180deg, rgba(11, 12, 16, 0) 42%, rgba(11, 12, 16, 0.92) 100%);
   }
 
@@ -123,11 +147,15 @@
    * (.testimonial-card__play--action), su área de clic deja de cubrir el texto,
    * así que el enlace "Ver historia" queda despejado.
    */
+  /*
+   * z-index 2: por encima de la capa del enlace de la tarjeta (1), para que el
+   * play siga reproduciendo en lugar de navegar.
+   */
   .testimonial-card__play {
     position: absolute;
     inset: 0;
     bottom: var(--testimonial-card-play-safe);
-    z-index: 1;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -158,12 +186,8 @@
     margin-left: 2px;
   }
 
+  /* En el flujo, sin `position`: ver .testimonial-card--video. */
   .testimonial-card__overlay {
-    position: absolute;
-    left: var(--ds-space-6);
-    right: var(--ds-space-6);
-    bottom: var(--ds-space-6);
-    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -195,6 +219,11 @@
     color: var(--ds-color-text-inverse);
   }
 
+  /* Toda la tarjeta es clicable: el enlace del nombre la cubre entera. */
+  .testimonial-card__link {
+    @include link.stretched(var(--ds-radius-sm));
+  }
+
   .testimonial-card__overlay .testimonial-card__author-role {
     font-size: var(--ds-text-body-compact);
     color: rgba(255, 255, 255, 0.85);
@@ -209,7 +238,13 @@
     font-size: var(--ds-text-body-compact);
   }
 
+  /*
+   * Por encima de la capa del enlace de la tarjeta, para conservar su propio
+   * subrayado al pasar el ratón. Lleva al mismo destino. `position: relative`
+   * ya lo trae .btn--link.
+   */
   .testimonial-card--video .testimonial-card__cta {
+    z-index: 2;
     margin-top: var(--ds-space-1);
     color: var(--ds-color-text-inverse);
   }

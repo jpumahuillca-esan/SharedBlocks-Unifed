@@ -6,10 +6,15 @@
       líneas.
     -->
     <div v-if="eyebrow || title || desc" class="card-section__heading">
-      <!-- Opcional. En <p>, no en el <span> por defecto del átomo: es contenido. -->
-      <AtomEyebrow v-if="eyebrow" as="p">{{ eyebrow }}</AtomEyebrow>
+      <!-- Opcional. Cuando está, es el titular de la sección (h2). -->
+      <AtomEyebrow v-if="eyebrow" as="h2">{{ eyebrow }}</AtomEyebrow>
 
-      <h2 v-if="title" class="card-section__title">{{ title }}</h2>
+      <!--
+        Un solo h2 por encabezado: si la etiqueta ya lo es, el título queda en
+        <p>; sin etiqueta, el título es el h2. El aspecto es el mismo en los dos
+        casos (ver .card-section__title en _card-section.scss).
+      -->
+      <component :is="eyebrow ? 'p' : 'h2'" v-if="title" class="card-section__title">{{ title }}</component>
 
       <!-- Guion rojo bajo el título. Adorno: acompaña siempre al título. -->
       <span v-if="title" class="card-section__rule" aria-hidden="true"></span>

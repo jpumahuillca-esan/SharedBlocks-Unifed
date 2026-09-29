@@ -87,8 +87,15 @@
     color: var(--ds-color-text-secondary);
   }
 
+  /*
+   * Sale como <p> o como <h2> según haya etiqueta encima (CardSectionHeader).
+   * La familia y el interlineado se fijan aquí para que el h2 no tome los del
+   * reset de titulares (Bricolage, 1.15) y se vea igual que el <p>.
+   */
   .card-section__title {
+    font-family: var(--ds-font-family-base);
     font-size: var(--ds-heading-lg);
+    line-height: var(--ds-line-height-150);
     font-weight: var(--ds-weight-bold);
     color: var(--ds-color-text-primary);
   }

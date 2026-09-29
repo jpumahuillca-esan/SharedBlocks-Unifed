@@ -193,7 +193,16 @@ watch(
       </a>
 
       <div class="testimonial-card__overlay">
-        <p class="testimonial-card__author-name">{{ authorName }}</p>
+        <!--
+          Con destino, el nombre es el enlace de la tarjeta y se extiende sobre
+          toda ella: cualquier punto lleva a la historia, igual que "Ver
+          historia". El play y el propio "Ver historia" quedan por encima y
+          conservan su comportamiento (el play reproduce, no navega).
+        -->
+        <p class="testimonial-card__author-name">
+          <a v-if="href" :href="href" class="testimonial-card__link">{{ authorName }}</a>
+          <template v-else>{{ authorName }}</template>
+        </p>
         <span class="testimonial-card__accent"></span>
         <p v-if="authorRole" class="testimonial-card__author-role">{{ authorRole }}</p>
         <AtomButton variant="link" class="testimonial-card__cta" :href="href || '#'">

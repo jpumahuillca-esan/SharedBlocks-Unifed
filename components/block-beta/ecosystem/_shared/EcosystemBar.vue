@@ -1,7 +1,7 @@
 <template>
   <div class="ecosystem-bar">
     <div class="ecosystem-bar__text">
-      <AtomHeading :level="3" size="h5" weight="bold" class="ecosystem-bar__title">
+      <AtomHeading :level="2" size="h5" weight="bold" class="ecosystem-bar__title">
         {{ title }}
       </AtomHeading>
 

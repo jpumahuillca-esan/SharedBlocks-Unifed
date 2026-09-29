@@ -23,6 +23,7 @@
    ========================================================================= */
 
 @use '../breakpoints' as bp;
+@use '../link-rules' as link;
 
 .arcis-scope {
 
@@ -237,8 +238,14 @@
      Misma anatomía para las dos grandes y para las de facultad: foto arriba,
      panel de color debajo con el texto y la flecha.
      ----------------------------------------------------------------------- */
+  /*
+   * `isolation` hace de la tarjeta su propio contexto de apilamiento: así la
+   * foto puede ir con z-index negativo (por debajo del panel) sin caerse por
+   * detrás del fondo de la tarjeta. Ver .ecosystem-card__body.
+   */
   .ecosystem-card {
     position: relative;
+    isolation: isolate;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -272,6 +279,7 @@
    */
   .ecosystem-card__media {
     position: relative;
+    z-index: -1;
     overflow: hidden;
     background-color: var(--ds-color-neutral-800);
   }
@@ -286,8 +294,9 @@
     transition: transform var(--ds-ease-slow);
   }
 
-  .ecosystem-card:hover .ecosystem-card__media img {
-    transform: scale(1.04);
+  .ecosystem-card:hover .ecosystem-card__media img,
+  .ecosystem-card:focus-within .ecosystem-card__media img {
+    transform: scale(1.06);
   }
 
   /*
@@ -306,13 +315,12 @@
    * color de fondo de la tarjeta y no se notarían. Por eso el recuadro sube
    * sobre la foto justo lo que mide su radio, y la foto asoma por las esquinas.
    *
-   * Necesita `position` y `z-index` para quedar ENCIMA de la foto: la imagen va
-   * en absoluto, y un elemento posicionado se pinta por delante de uno que no lo
-   * está aunque venga antes en el marcado.
+   * Queda ENCIMA de la foto porque la foto va con z-index negativo, no porque
+   * el panel tenga `position`. NO debe tenerla: el enlace del título se extiende
+   * sobre toda la tarjeta midiéndose contra el ancestro posicionado más cercano,
+   * y si fuera el panel, la foto quedaría fuera de la zona clicable.
    */
   .ecosystem-card__body {
-    position: relative;
-    z-index: 1;
     display: flex;
     flex: 1;
     align-items: flex-start;
@@ -333,6 +341,11 @@
 
   .ecosystem-card__title {
     color: var(--ds-color-text-inverse);
+  }
+
+  /* Toda la tarjeta es clicable: el enlace del título la cubre entera. */
+  .ecosystem-card__link {
+    @include link.stretched(var(--ds-radius-sm));
   }
 
   .ecosystem-card__desc {
@@ -426,6 +439,15 @@
   .ecosystem-arrow.btn {
     flex-shrink: 0;
     align-self: flex-end;
+  }
+
+  /*
+   * En la tarjeta, la flecha va por encima de la capa del enlace del título
+   * para conservar su propio hover. Lleva al mismo destino.
+   */
+  .ecosystem-card .ecosystem-arrow.btn {
+    position: relative;
+    z-index: 2;
   }
 
   /* -----------------------------------------------------------------------

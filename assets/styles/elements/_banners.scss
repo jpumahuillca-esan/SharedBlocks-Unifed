@@ -135,8 +135,13 @@
     transition: transform var(--ds-ease-slow);
   }
 
-  .banner--image:hover .banner__media img {
-    transform: scale(1.04);
+  /*
+   * Toda la tarjeta ya es el enlace (MoleculeBanner la renderiza como <a> si
+   * tiene destino), así que el foco de teclado cae en ella misma.
+   */
+  .banner--image:hover .banner__media img,
+  .banner--image:focus-visible .banner__media img {
+    transform: scale(1.06);
   }
 
   .banner--image::after {
@@ -196,7 +201,8 @@
     flex-shrink: 0;
   }
 
-  .banner--image:hover .banner__arrow {
+  .banner--image:hover .banner__arrow,
+  .banner--image:focus-visible .banner__arrow {
     transform: scale(1.08);
   }
 

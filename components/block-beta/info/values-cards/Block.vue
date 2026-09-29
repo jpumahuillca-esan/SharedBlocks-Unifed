@@ -27,7 +27,7 @@
             parejos. Agrupados, ese hueco lo pone un solo `gap` en el cuerpo.
           -->
           <div class="values-cards__heading">
-            <AtomEyebrow v-if="active.eyebrow" as="p">{{ active.eyebrow }}</AtomEyebrow>
+            <AtomEyebrow v-if="active.eyebrow" as="h2">{{ active.eyebrow }}</AtomEyebrow>  
 
             <!--
               Es un h3 y no un h2: el bloque se inserta dentro de una página que

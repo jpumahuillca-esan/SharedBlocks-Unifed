@@ -53,6 +53,39 @@ export const normalizeEcosystemColor = (value: unknown): EcosystemColor =>
         ? (value as EcosystemColor)
         : 'blue';
 
+/**
+ * Etiqueta del título de las tarjetas: h2, h3 o h4.
+ *
+ * Solo decide la jerarquía del documento, no el tamaño, que lo fija la
+ * variante de tarjeta. Se elige por grupo y no por tarjeta: mezclar niveles
+ * dentro de un mismo grupo rompe el índice de títulos de la página. El h1 no
+ * se ofrece porque es el título de la página.
+ */
+export type EcosystemTitleLevel = 2 | 3 | 4;
+
+export const ECOSYSTEM_TITLE_LEVELS: EcosystemTitleLevel[] = [2, 3, 4];
+
+/**
+ * Por defecto las escuelas son h2 y las facultades h3: las facultades cuelgan
+ * de la franja "ESAN University", que ya es un h2.
+ */
+export const DEFAULT_FEATURES_TITLE_LEVEL: EcosystemTitleLevel = 2;
+export const DEFAULT_FACULTIES_TITLE_LEVEL: EcosystemTitleLevel = 3;
+
+/**
+ * Normaliza el nivel ante cualquier valor guardado. Las páginas creadas antes
+ * de que existiera el campo no lo traen y caen en el valor por defecto.
+ */
+export const normalizeEcosystemTitleLevel = (
+    value: unknown,
+    fallback: EcosystemTitleLevel,
+): EcosystemTitleLevel => {
+    const level = Number(value);
+    return ECOSYSTEM_TITLE_LEVELS.includes(level as EcosystemTitleLevel)
+        ? (level as EcosystemTitleLevel)
+        : fallback;
+};
+
 /** Una tarjeta, tanto de las dos grandes como de las seis de facultad. */
 export interface EcosystemCardItem {
     id: string;
@@ -77,9 +110,13 @@ export interface SectionEcosystemData {
     desc: string;
     /** Las dos tarjetas grandes de la columna izquierda. */
     features: EcosystemCardItem[];
+    /** Etiqueta del título de las escuelas. Por defecto, h2. */
+    featuresTitleLevel: EcosystemTitleLevel;
     bar: EcosystemBarItem;
     /** Las tarjetas de facultad del grupo de la derecha. */
     faculties: EcosystemCardItem[];
+    /** Etiqueta del título de las facultades. Por defecto, h3. */
+    facultiesTitleLevel: EcosystemTitleLevel;
 }
 
 /** Identificador local para las tarjetas que se agregan desde el editor. */

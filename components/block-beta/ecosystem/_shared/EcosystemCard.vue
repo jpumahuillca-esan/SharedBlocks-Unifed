@@ -10,8 +10,14 @@
 
     <div class="ecosystem-card__body">
       <div class="ecosystem-card__text">
-        <AtomHeading :level="3" :size="sizes.title" weight="bold" class="ecosystem-card__title">
-          {{ card.title }}
+        <!--
+          Con destino, el título es el enlace de la tarjeta y se extiende sobre
+          toda ella (.ecosystem-card__link): cualquier punto lleva al mismo sitio
+          que la flecha. Sin destino queda como texto y nada es clicable.
+        -->
+        <AtomHeading :level="titleLevel" :size="sizes.title" weight="bold" class="ecosystem-card__title">
+          <a v-if="card.href" :href="card.href" class="ecosystem-card__link">{{ card.title }}</a>
+          <template v-else>{{ card.title }}</template>
         </AtomHeading>
 
         <AtomText v-if="card.desc" :size="sizes.desc" class="ecosystem-card__desc">
@@ -19,7 +25,12 @@
         </AtomText>
       </div>
 
-      <EcosystemArrow :href="card.href" :label="card.title" />
+      <!--
+        Con el título como enlace, la flecha repite el mismo destino: se saca del
+        orden de tabulación y de los lectores de pantalla para que la tarjeta sea
+        una sola parada y no se anuncie dos veces. Sigue siendo un <a> pulsable.
+      -->
+      <EcosystemArrow :href="card.href" :label="card.title" :decorative="!!card.href" />
     </div>
   </article>
 </template>
@@ -41,12 +52,14 @@ import { computed } from 'vue';
 import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import EcosystemArrow from './EcosystemArrow.vue';
-import type { EcosystemCardItem } from './types';
+import type { EcosystemCardItem, EcosystemTitleLevel } from './types';
 
 const props = defineProps<{
   card: EcosystemCardItem;
   /** 'feature' son las dos grandes; 'faculty', las del grupo de la derecha. */
   variant: 'feature' | 'faculty';
+  /** Etiqueta del título (h2, h3 o h4). No cambia el tamaño: ese va por variante. */
+  titleLevel: EcosystemTitleLevel;
 }>();
 
 /*
