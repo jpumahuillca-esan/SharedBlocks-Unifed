@@ -15,6 +15,7 @@
           weight="semibold"
           align="center"
           class="ecosystem-esan__title"
+          v-bind="edit('title')"
         >
           {{ dataNormalized.title }}
         </AtomHeading>
@@ -30,6 +31,7 @@
           size="body-lg"
           align="center"
           class="ecosystem-esan__desc"
+          v-bind="edit('desc')"
         >
           {{ dataNormalized.desc }}
         </AtomText>
@@ -40,7 +42,8 @@
         class="ecosystem-esan__grid"
       >
         <EcosystemEsanColumn
-          v-for="item in dataNormalized.items"
+          v-for="(item, i) in dataNormalized.items"
+          v-bind="edit(`items.${i}`)"
           :key="item.id"
           :item="item"
         />
@@ -60,6 +63,10 @@ import EcosystemEsanColumn from './shared/EcosystemEsanColumn.vue';
 import {
   normalizeEcosystemEsanData,
 } from './shared/types';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 const props = defineProps<{
   data: any;

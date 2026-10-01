@@ -12,6 +12,7 @@
       <p class="cs-hint">Texto corto sobre el título. Se muestra en mayúsculas.</p>
       <input
         :value="eyebrow"
+        data-edit-target="eyebrow"
         type="text"
         class="form-control form-control-sm mb-2"
         placeholder="Comunidad y vida ESAN"
@@ -23,13 +24,14 @@
     <p class="cs-hint">Lleva siempre el guion rojo debajo.</p>
     <input
       :value="title"
+      data-edit-target="title"
       type="text"
       class="form-control form-control-sm mb-2"
       @input="$emit('update:title', ($event.target as HTMLInputElement).value)"
     />
 
     <!-- Descripción — opcional -->
-    <div class="cs-optional">
+    <div class="cs-optional" data-edit-target="desc">
       <div class="cs-optional__head">
         <label class="form-label m-0">Descripción</label>
         <button
@@ -64,6 +66,7 @@
     <label class="form-label">Texto del enlace</label>
     <input
       :value="linkLabel"
+      data-edit-target="linkLabel"
       type="text"
       class="form-control form-control-sm mb-2"
       placeholder="Ver todos"
@@ -73,6 +76,7 @@
     <label class="form-label">Destino del enlace</label>
     <input
       :value="linkUrl"
+      data-edit-target="linkUrl"
       type="text"
       class="form-control form-control-sm"
       placeholder="/ruta o https://"

@@ -9,6 +9,7 @@
     <label class="form-label">Etiqueta superior (Eyebrow - opcional)</label>
     <input
       v-model="localData.eyebrow"
+      data-edit-target="eyebrow"
       type="text"
       class="form-control form-control-sm mb-2"
       placeholder="Ej: ¿POR QUÉ ESAN?"
@@ -18,6 +19,7 @@
     <p class="cr3-hint">Título de la sección. Lleva siempre el guion rojo de acento debajo.</p>
     <input
       v-model="localData.title"
+      data-edit-target="title"
       type="text"
       class="form-control form-control-sm mb-2"
       placeholder="¿Por qué elegir a ESAN?"
@@ -26,6 +28,7 @@
     <label class="form-label">Descripción de apoyo (opcional)</label>
     <textarea
       v-model="localData.desc"
+      data-edit-target="desc"
       class="form-control form-control-sm mb-3"
       rows="2"
       placeholder="Descripción o subtítulo complementario"
@@ -54,6 +57,7 @@
 
     <CardAccordionItem
       v-for="(card, index) in localData.cards"
+      :edit-key="`cards.${index}`"
       :key="card.id"
       :title="`${card.number} - ${card.label || 'Sin descripción'}`"
       :index="index"
@@ -70,6 +74,7 @@
         <p class="cr3-hint">Aparece en rojo y con tamaño grande (ej: 1º, 3º, 11, +130, 95%).</p>
         <input
           v-model="card.number"
+          data-edit-target=".number"
           type="text"
           class="form-control form-control-sm mb-2"
           placeholder="Ej: 1º"
@@ -79,6 +84,7 @@
         <label class="form-label">Texto explicativo / Razón</label>
         <textarea
           v-model="card.label"
+          data-edit-target=".label"
           class="form-control form-control-sm mb-2"
           rows="2"
           placeholder="Ej: Ranking Merco Empresas 2025 - Sector Educación"
@@ -88,6 +94,7 @@
         <label class="form-label">Enlace de destino (opcional)</label>
         <input
           v-model="card.href"
+          data-edit-target=".href"
           type="text"
           class="form-control form-control-sm mb-2"
           placeholder="/reconocimientos o https://"
@@ -98,6 +105,7 @@
           <input
             :id="`target-r3-${card.id}`"
             v-model="card.target"
+            data-edit-target=".target"
             type="checkbox"
             class="form-check-input"
             true-value="_blank"

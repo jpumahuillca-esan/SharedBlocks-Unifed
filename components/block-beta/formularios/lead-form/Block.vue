@@ -1,8 +1,8 @@
 <template>
   <div class="lead-form">
     <div class="lead-form__header">
-      <AtomHeading :level="3" size="h3" class="lead-form__title">{{ cfg.mainTitle }}</AtomHeading>
-      <AtomText v-if="cfg.subTitle" size="body-compact" class="lead-form__subtitle">{{ cfg.subTitle }}</AtomText>
+      <AtomHeading :level="3" size="h3" class="lead-form__title" v-bind="edit('mainTitle')">{{ cfg.mainTitle }}</AtomHeading>
+      <AtomText v-if="cfg.subTitle" size="body-compact" class="lead-form__subtitle" v-bind="edit('subTitle')">{{ cfg.subTitle }}</AtomText>
     </div>
 
     <form @submit.prevent="submit" class="lead-form__form">
@@ -21,7 +21,7 @@
         autocomplete="off"
       />
 
-      <div class="row g-3">
+      <div class="row g-3" v-bind="edit('campaign_id')">
         <!-- Render dinámico total del esquema configurado en la campaña -->
         <template v-for="(field, idx) in activeFields" :key="field.name || idx">
           <div :class="field.col_span === 12 ? 'col-12' : 'col-12 col-md-6'">
@@ -71,6 +71,7 @@
           <AtomButton
             variant="primary"
             class="lead-form__submit"
+            v-bind="edit('button_text')"
             :disabled="isSubmitting"
             @click="submit"
           >
@@ -103,6 +104,10 @@ import AtomButton from '../../../atoms/AtomButton.vue';
 import AtomFormCheck from '../../../atoms/AtomFormCheck.vue';
 import MoleculeFormField from '../../../molecules/MoleculeFormField.vue';
 import { useDynamicLeadForm, type DynamicLeadFormProps } from './composables/useDynamicLeadForm';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 const props = withDefaults(defineProps<DynamicLeadFormProps>(), {
   data: () => ({}),

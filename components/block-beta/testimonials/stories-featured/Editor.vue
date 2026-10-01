@@ -3,16 +3,17 @@
     <h6 class="fw-bold small text-uppercase mb-1">Encabezado</h6>
 
     <label class="form-label">Título</label>
-    <textarea v-model="localData.title" class="form-control form-control-sm mb-2" rows="2"></textarea>
+    <textarea v-model="localData.title" data-edit-target="title" class="form-control form-control-sm mb-2" rows="2"></textarea>
 
     <label class="form-label">Línea de apoyo</label>
     <p class="st-hint">Texto corto bajo el título. Déjalo vacío para ocultarlo.</p>
-    <textarea v-model="localData.subtitle" class="form-control form-control-sm mb-2" rows="2"></textarea>
+    <textarea v-model="localData.subtitle" data-edit-target="subtitle" class="form-control form-control-sm mb-2" rows="2"></textarea>
 
     <label class="form-label">Texto del enlace</label>
     <p class="st-hint">Vacío oculta el enlace del encabezado.</p>
     <input
       v-model="localData.linkLabel"
+      data-edit-target="linkLabel"
       type="text"
       class="form-control form-control-sm mb-2"
       placeholder="Conoce más historias"
@@ -21,13 +22,14 @@
     <label class="form-label">Destino del enlace</label>
     <input
       v-model="localData.linkUrl"
+      data-edit-target="linkUrl"
       type="text"
       class="form-control form-control-sm mb-2"
       placeholder="/ruta o https://"
     />
 
     <label class="form-label">Tarjetas visibles a la vez</label>
-    <select v-model.number="localData.cardCount" class="form-select form-select-sm mb-2">
+    <select v-model.number="localData.cardCount" data-edit-target="cardCount" class="form-select form-select-sm mb-2">
       <option :value="2">2 tarjetas</option>
       <option :value="3">3 tarjetas</option>
       <option :value="4">4 tarjetas</option>
@@ -50,6 +52,7 @@
 
     <CardAccordionItem
       v-for="(card, index) in localData.cards"
+      :edit-key="`cards.${index}`"
       :key="card.id"
       :title="card.name"
       :index="index"
@@ -63,10 +66,10 @@
       <div>
         <label class="form-label">Nombre</label>
         <p class="st-hint">Se muestra sobre la foto.</p>
-        <input v-model="card.name" type="text" class="form-control form-control-sm mb-2" />
+        <input v-model="card.name" data-edit-target=".name" type="text" class="form-control form-control-sm mb-2" />
 
         <label class="form-label">Cargo o programa</label>
-        <textarea v-model="card.role" class="form-control form-control-sm mb-2" rows="2"></textarea>
+        <textarea v-model="card.role" data-edit-target=".role" class="form-control form-control-sm mb-2" rows="2"></textarea>
 
         <label class="form-label">Foto</label>
         <p class="st-hint">Se recorta en vertical (3:4). Elige una imagen alta.</p>
@@ -78,6 +81,7 @@
           <button
             type="button"
             class="btn btn-sm btn-outline-secondary flex-grow-1"
+            data-edit-target=".image"
             @click="$emit('select-image', { item: card, field: 'image' })"
           >
             <i class="las la-image me-1"></i>
@@ -95,11 +99,12 @@
         </div>
 
         <label class="form-label">Texto alternativo</label>
-        <input v-model="card.imageAlt" type="text" class="form-control form-control-sm mb-2" />
+        <input v-model="card.imageAlt" data-edit-target=".imageAlt" type="text" class="form-control form-control-sm mb-2" />
 
         <label class="form-label">Video</label>
         <input
           v-model="card.videoUrl"
+          data-edit-target=".videoUrl"
           type="text"
           class="form-control form-control-sm"
           placeholder="https://www.youtube.com/watch?v=..."
@@ -111,6 +116,7 @@
         <label class="form-label">Destino de la historia</label>
         <input
           v-model="card.href"
+          data-edit-target=".href"
           type="text"
           class="form-control form-control-sm mb-2"
           placeholder="/ruta o https://"
@@ -119,6 +125,7 @@
         <label class="form-label">Texto del enlace</label>
         <input
           v-model="card.ctaLabel"
+          data-edit-target=".ctaLabel"
           type="text"
           class="form-control form-control-sm"
           placeholder="Ver historia"

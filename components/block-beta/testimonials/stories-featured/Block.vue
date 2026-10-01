@@ -29,7 +29,8 @@
         :style="{ '--story-section-columns': String(cardCount) }"
       >
         <MoleculeTestimonial
-          v-for="card in cards"
+          v-for="(card, i) in cards"
+          v-bind="edit(`cards.${i}`)"
           :key="card.id"
           variant="video"
           :author-name="card.name"
@@ -66,6 +67,10 @@ import MoleculeTestimonial from '../../../molecules/MoleculeTestimonial.vue';
 import StorySectionHeader from '../_shared/StorySectionHeader.vue';
 import { useDragScroll } from '../../../../composables/useDragScroll';
 import { normalizeStoryCardCount, type StoryCardItem } from '../_shared/types';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 const props = defineProps<{ data: any }>();
 

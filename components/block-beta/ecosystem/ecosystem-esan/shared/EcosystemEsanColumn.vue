@@ -12,7 +12,8 @@
       "
     >
       <li
-        v-for="link in item.links"
+        v-for="(link, li) in item.links"
+        v-bind="edit(`.links.${li}.label`)"
         :key="link.id"
         class="ecosystem-esan__link-item"
       >
@@ -47,6 +48,10 @@ import EcosystemEsanCard from './EcosystemEsanCard.vue';
 import type {
   EcosystemEsanItem,
 } from './types';
+import { useEditTarget } from '../../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 defineProps<{
   item: EcosystemEsanItem;

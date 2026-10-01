@@ -9,7 +9,7 @@
           La clase propia es solo para quitarle el punto que el átomo pone
           delante en el resto de la librería: aquí va el filete de abajo.
         -->
-        <AtomEyebrow v-if="data.eyebrow" as="p" class="mapamundi__eyebrow">
+        <AtomEyebrow v-if="data.eyebrow" as="p" class="mapamundi__eyebrow" v-bind="edit('eyebrow')">
           {{ data.eyebrow }}
         </AtomEyebrow>
 
@@ -27,6 +27,7 @@
           size="h2"
           weight="bold"
           class="mapamundi__title"
+          v-bind="edit('title')"
         >
           {{ data.title }}
         </AtomHeading>
@@ -61,6 +62,7 @@
           :key="card.side"
           class="mapamundi-card"
           :class="`mapamundi-card--${card.side}`"
+          v-bind="edit(card.key)"
         >
           <!--
             La cabecera es el titular de la tarjeta aunque solo muestre el logo:
@@ -79,9 +81,9 @@
           </AtomHeading>
 
           <ul v-if="card.items.length" class="mapamundi-card__list">
-            <li v-for="item in card.items" :key="item.id" class="mapamundi-card__item">
-              <AtomPictogram :name="item.icon" :size="32" />
-              <AtomText size="body-compact" class="mapamundi-card__text">
+            <li v-for="item in card.items" :key="item.id" class="mapamundi-card__item" v-bind="edit(`.items.${item.index}`)">
+              <AtomPictogram :name="item.icon" :size="32" v-bind="edit('.icon')" />
+              <AtomText size="body-compact" class="mapamundi-card__text" v-bind="edit('.text')">
                 {{ item.text }}
               </AtomText>
             </li>
@@ -97,6 +99,7 @@
           v-if="button.label"
           variant="primary"
           class="mapamundi__action"
+          v-bind="edit('button.label')"
           :href="button.url || '#'"
         >
           {{ button.label }}
@@ -135,6 +138,10 @@ import AtomPictogram from '../../../atoms/AtomPictogram.vue';
 import mapamundiUrl from '../../../../assets/images/mapamundi.svg';
 import logoUniversityUrl from '../../../../assets/images/logos/logo-esan-university-light.svg';
 import logoBusinessUrl from '../../../../assets/images/logos/logo-esan-business-light.svg';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 const props = defineProps<{ data: any }>();
 
@@ -158,20 +165,23 @@ const toItems = (raw: unknown) =>
   (Array.isArray(raw) ? raw : [])
     .map((item: any, i: number) => ({
       id: item?.id || `mapamundi-item-${i}`,
+      // Posición en el dato, antes de filtrar: es la que usa el editor.
+      index: i,
       icon: item?.icon ?? '',
       text: item?.text ?? '',
     }))
     .filter((item) => item.text.trim());
 
-const toCard = (raw: any, side: 'start' | 'end') => ({
+const toCard = (raw: any, side: 'start' | 'end', key: 'left' | 'right') => ({
   side,
+  key,
   logo: LOGOS[side],
   items: toItems(raw?.items),
 });
 
 const cards = computed(() => [
-  toCard(props.data?.left, 'start'),
-  toCard(props.data?.right, 'end'),
+  toCard(props.data?.left, 'start', 'left'),
+  toCard(props.data?.right, 'end', 'right'),
 ]);
 
 const button = computed(() => ({

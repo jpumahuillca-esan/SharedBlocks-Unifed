@@ -26,6 +26,7 @@
 
     <CardAccordionItem
       v-for="(award, index) in localData.awards"
+      :edit-key="`awards.${index}`"
       :key="award.id"
       :title="headLabel(award)"
       :index="index"
@@ -46,6 +47,7 @@
           <button
             type="button"
             class="btn btn-sm btn-outline-secondary flex-grow-1"
+            data-edit-target=".image"
             @click="$emit('select-image', { item: award, field: 'image' })"
           >
             <i class="las la-image me-1"></i>
@@ -69,6 +71,7 @@
         </p>
         <input
           v-model="award.imageAlt"
+          data-edit-target=".imageAlt"
           type="text"
           class="form-control form-control-sm"
           placeholder="N.º 1 en QS Executive MBA Rankings 2026"

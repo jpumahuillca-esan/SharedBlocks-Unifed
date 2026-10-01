@@ -7,7 +7,7 @@
          Imagen
          ================================================================ -->
 
-    <div class="ecosystem-esan-card__media">
+    <div class="ecosystem-esan-card__media" v-bind="edit('.image')">
       <img
         v-if="item.image"
         :src="item.image"
@@ -42,6 +42,7 @@
           size="h5"
           weight="semibold"
           class="ecosystem-esan-card__title"
+          v-bind="edit('.title')"
         >
           {{ item.title }}
         </AtomHeading>
@@ -50,6 +51,7 @@
           v-if="item.desc"
           size="body"
           class="ecosystem-esan-card__desc"
+          v-bind="edit('.desc')"
         >
           {{ item.desc }}
         </AtomText>
@@ -61,6 +63,7 @@
         :href="item.href || undefined"
         :aria-label="`Ir a ${item.title || 'la sección'}`"
         class="ecosystem-esan-card__action"
+        v-bind="edit('.href')"
       >
         <AtomIcon
           name="chevron-right"
@@ -89,6 +92,10 @@ import {
 import type {
   EcosystemEsanItem,
 } from './types';
+import { useEditTarget } from '../../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 const props = defineProps<{
   item: EcosystemEsanItem;

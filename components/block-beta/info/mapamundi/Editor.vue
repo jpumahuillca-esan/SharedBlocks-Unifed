@@ -6,13 +6,14 @@
     <p class="mm-hint">Texto corto en rojo sobre el título. Vacío la oculta.</p>
     <input
       v-model="localData.eyebrow"
+      data-edit-target="eyebrow"
       type="text"
       class="form-control form-control-sm mb-2"
       placeholder="ESAN Global Experience"
     />
 
     <label class="form-label">Título</label>
-    <textarea v-model="localData.title" class="form-control form-control-sm mb-2" rows="2"></textarea>
+    <textarea v-model="localData.title" data-edit-target="title" class="form-control form-control-sm mb-2" rows="2"></textarea>
 
     <p class="mm-hint">
       <i class="las la-globe-americas me-1"></i>
@@ -22,7 +23,7 @@
     <template v-for="side in SIDES" :key="side.key">
       <hr />
 
-      <div class="d-flex align-items-center justify-content-between mb-1">
+      <div class="d-flex align-items-center justify-content-between mb-1" :data-edit-target="side.key">
         <h6 class="fw-bold small text-uppercase m-0">{{ side.title }}</h6>
         <span class="badge bg-secondary">{{ localData[side.key].items.length }}</span>
       </div>
@@ -30,6 +31,7 @@
 
       <CardAccordionItem
         v-for="(item, index) in localData[side.key].items"
+        :edit-key="`${side.key}.items.${index}`"
         :key="item.id"
         :title="item.text"
         :index="index"
@@ -55,7 +57,7 @@
               aria-hidden="true"
               v-html="pictogramSvg(item.icon)"
             ></span>
-            <select v-model="item.icon" class="form-select form-select-sm">
+            <select v-model="item.icon" data-edit-target=".icon" class="form-select form-select-sm">
               <option value="">Sin pictograma</option>
               <option v-for="option in PICTOGRAM_OPTIONS" :key="option.value" :value="option.value">
                 {{ option.label }}
@@ -64,7 +66,7 @@
           </div>
 
           <label class="form-label">Texto</label>
-          <textarea v-model="item.text" class="form-control form-control-sm" rows="2"></textarea>
+          <textarea v-model="item.text" data-edit-target=".text" class="form-control form-control-sm" rows="2"></textarea>
           <p class="mm-hint mt-1">Un ítem sin texto no se muestra.</p>
         </div>
       </CardAccordionItem>
@@ -82,6 +84,7 @@
     <p class="mm-hint">Vacío oculta el botón.</p>
     <input
       v-model="localData.button.label"
+      data-edit-target="button.label"
       type="text"
       class="form-control form-control-sm mb-2"
       placeholder="Descubre ESAN Internacional"
@@ -90,6 +93,7 @@
     <label class="form-label">Destino del botón</label>
     <input
       v-model="localData.button.url"
+      data-edit-target="button.url"
       type="text"
       class="form-control form-control-sm"
       placeholder="/ruta o https://"

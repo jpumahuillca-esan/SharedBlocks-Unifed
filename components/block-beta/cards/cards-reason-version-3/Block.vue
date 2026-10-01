@@ -3,7 +3,7 @@
     <div class="cards-r3__container">
       <!-- Encabezado centrado construido con átomos ARCIS -->
       <header v-if="data.eyebrow || data.title || data.desc" class="cards-r3__header">
-        <AtomEyebrow v-if="data.eyebrow">
+        <AtomEyebrow v-if="data.eyebrow" v-bind="edit('eyebrow')">
           {{ data.eyebrow }}
         </AtomEyebrow>
 
@@ -13,6 +13,7 @@
           size="h2"
           weight="bold"
           class="cards-r3__title"
+          v-bind="edit('title')"
         >
           {{ data.title }}
         </AtomHeading>
@@ -26,6 +27,7 @@
           size="body"
           color="secondary"
           class="cards-r3__desc"
+          v-bind="edit('desc')"
         >
           {{ data.desc }}
         </AtomText>
@@ -34,7 +36,8 @@
       <!-- Rejilla de tarjetas -->
       <div v-if="cards.length" class="cards-r3__grid">
         <AtomLink
-          v-for="card in cards"
+          v-for="(card, i) in cards"
+          v-bind="edit(`cards.${i}`)"
           :key="card.id"
           :href="card.href || undefined"
           as="div"
@@ -47,6 +50,7 @@
             size="h1"
             weight="bold"
             class="cards-r3__card-number"
+            v-bind="edit('.number')"
           >
             {{ card.number }}
           </AtomHeading>
@@ -55,6 +59,7 @@
           <AtomText
             size="body-sm"
             class="cards-r3__card-text"
+            v-bind="edit('.label')"
           >
             {{ card.label }}
           </AtomText>
@@ -85,6 +90,10 @@ import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import AtomLink from '../../../atoms/AtomLink.vue';
 import { buildCardsReasonVersion3Data, type CardReasonItem } from './types';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 const props = defineProps<{
   data: any;

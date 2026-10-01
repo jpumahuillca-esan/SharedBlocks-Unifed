@@ -1,5 +1,5 @@
 <template>
-  <div class="card-acc" :class="{ 'is-open': open }">
+  <div class="card-acc" :class="{ 'is-open': open }" :data-edit-target="editKey || undefined">
     <button type="button" class="card-acc__head" :aria-expanded="open" @click="$emit('toggle')">
       <i class="las card-acc__caret" :class="open ? 'la-angle-down' : 'la-angle-right'"></i>
 
@@ -53,23 +53,53 @@
  *
  * El contenido se destruye al cerrar (v-if y no v-show) para no montar todos
  * los campos de todas las tarjetas a la vez.
+ *
+ * Con `edit-key` (la ruta de la tarjeta en el dato, ej. "features.1") se abre
+ * sola cuando en el lienzo se pulsa esa tarjeta o algo suyo, y sus campos
+ * pueden marcarse con rutas relativas (data-edit-target=".title"). Ver
+ * core/editFocus.ts. La apertura la sigue decidiendo el editor padre: aquí
+ * solo se le pide con el mismo `toggle` que el clic en la cabecera.
  */
-withDefaults(
+import { inject, watch } from 'vue';
+import { EDIT_FOCUS_KEY, isWithinPath } from '../../../../core/editFocus';
+
+const props = withDefaults(
   defineProps<{
     title: string;
     index: number;
     total: number;
     open: boolean;
     removeLabel?: string;
+    /** Ruta de la tarjeta en el dato del bloque, para el enfoque desde el lienzo. */
+    editKey?: string;
   }>(),
-  { removeLabel: 'Quitar' },
+  { removeLabel: 'Quitar', editKey: '' },
 );
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'toggle'): void;
   (e: 'move', delta: number): void;
   (e: 'remove'): void;
 }>();
+
+const focus = inject(EDIT_FOCUS_KEY, null);
+
+/*
+ * Solo reacciona a una petición NUEVA (cambia su nonce), no a cada render: si
+ * después el usuario la cierra a mano, se queda cerrada. `immediate` cubre el
+ * caso de que el editor se monte ya con la petición puesta (primer clic).
+ */
+watch(
+  () => focus?.value?.nonce,
+  () => {
+    const path = focus?.value?.path;
+    if (props.editKey && path && isWithinPath(path, props.editKey) && !props.open) {
+      emit('toggle');
+    }
+  },
+  // 'post': se le pide al padre que la abra ya montada, no a mitad de su render.
+  { immediate: true, flush: 'post' },
+);
 </script>
 
 <style scoped>

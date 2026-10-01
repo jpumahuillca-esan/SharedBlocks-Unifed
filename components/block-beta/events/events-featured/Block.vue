@@ -14,7 +14,8 @@
         bloque de fecha también sale con imagen.
       -->
       <MoleculeEventCard
-        v-for="card in visibleCards"
+        v-for="(card, i) in visibleCards"
+        v-bind="edit(`cards.${i}`)"
         :key="card.id"
         variant="media"
         :day="card.day"
@@ -51,8 +52,12 @@ import CardSectionFooter from '../_shared/CardSectionFooter.vue';
 import CardSlider from '../_shared/CardSlider.vue';
 import { normalizeCardCount, type EventCardItem } from '../_shared/types';
 import { toEventDateParts } from '../_shared/date';
+import { useEditTarget } from '../../../../core/editFocus';
 
 const props = defineProps<{ data: any }>();
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 const cardCount = computed(() => normalizeCardCount(props.data?.cardCount));
 

@@ -1,6 +1,7 @@
 <template>
   <section
     class="cards-v2-section"
+    v-bind="edit('backgroundColor')"
     :class="{ 'cards-v2-section--white': (data?.backgroundColor || normalized.backgroundColor) === '#FFFFFF' }"
     :style="{ backgroundColor: data?.backgroundColor || normalized.backgroundColor || '#F1F5F9' }"
   >
@@ -10,6 +11,7 @@
         <AtomEyebrow
           v-if="data.eyebrow"
           :color-token="data.eyebrowColorToken"
+          v-bind="edit('eyebrow')"
         >
           {{ data.eyebrow }}
         </AtomEyebrow>
@@ -20,6 +22,7 @@
           size="h2"
           weight="bold"
           class="cards-v2__title"
+          v-bind="edit('title')"
         >
           {{ data.title }}
         </AtomHeading>
@@ -33,6 +36,7 @@
           size="body"
           color="secondary"
           class="cards-v2__desc"
+          v-bind="edit('desc')"
         >
           {{ data.desc }}
         </AtomText>
@@ -41,14 +45,15 @@
       <!-- Rejilla de tarjetas -->
       <div v-if="cards.length" class="cards-v2__grid">
         <AtomLink
-          v-for="card in cards"
+          v-for="(card, i) in cards"
+          v-bind="edit(`cards.${i}`)"
           :key="card.id"
           :href="card.href || undefined"
           as="div"
           class="cards-v2__card"
         >
           <!-- Ícono izquierdo en recuadro suave con AtomIcon -->
-          <span class="cards-v2__icon-box" aria-hidden="true">
+          <span class="cards-v2__icon-box" aria-hidden="true" v-bind="edit('.icon')">
             <AtomIcon :name="card.icon || 'graduation-cap'" :size="22" />
           </span>
 
@@ -59,6 +64,7 @@
               size="body"
               weight="semibold"
               class="cards-v2__card-title"
+              v-bind="edit('.title')"
             >
               {{ card.title }}
             </AtomHeading>
@@ -68,13 +74,14 @@
               size="body-sm"
               color="secondary"
               class="cards-v2__card-desc"
+              v-bind="edit('.desc')"
             >
               {{ card.desc }}
             </AtomText>
           </div>
 
           <!-- Flecha roja a la derecha con AtomIcon -->
-          <span class="cards-v2__arrow" aria-hidden="true">
+          <span class="cards-v2__arrow" aria-hidden="true" v-bind="edit('.href')">
             <AtomIcon name="chevron-right" :size="18" />
           </span>
         </AtomLink>
@@ -105,6 +112,10 @@ import AtomText from '../../../atoms/AtomText.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 import AtomLink from '../../../atoms/AtomLink.vue';
 import { buildCardsVersion2Data, type CardVersion2Item } from './types';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 const props = defineProps<{
   data: any;

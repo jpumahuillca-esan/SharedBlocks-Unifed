@@ -15,7 +15,7 @@
         :style="{ backgroundColor: localData.backgroundColor || '#F1F5F9' }"
         aria-hidden="true"
       ></span>
-      <select v-model="localData.backgroundColor" class="form-select form-select-sm">
+      <select v-model="localData.backgroundColor" data-edit-target="backgroundColor" class="form-select form-select-sm">
         <option value="#F1F5F9">Gris claro (#F1F5F9)</option>
         <option value="#FFFFFF">Blanco (#FFFFFF)</option>
       </select>
@@ -25,6 +25,7 @@
     <p class="cv2-hint">Texto corto en color institucional (ej. "+ PREGRADO").</p>
     <input
       v-model="localData.eyebrow"
+      data-edit-target="eyebrow"
       type="text"
       class="form-control form-control-sm mb-2"
       placeholder="+ PREGRADO"
@@ -34,6 +35,7 @@
     <div v-if="localData.eyebrow" class="mb-3">
       <BrandColorPicker
         v-model="localData.eyebrowColorToken"
+        data-edit-target="eyebrowColorToken"
         label="Color del antetítulo (texto y punto)"
       />
     </div>
@@ -42,6 +44,7 @@
     <p class="cv2-hint">Título de la sección. Lleva siempre el guion rojo de acento debajo.</p>
     <input
       v-model="localData.title"
+      data-edit-target="title"
       type="text"
       class="form-control form-control-sm mb-2"
       placeholder="Carreras universitarias en ciencias administrativas"
@@ -50,6 +53,7 @@
     <label class="form-label">Descripción de apoyo (opcional)</label>
     <textarea
       v-model="localData.desc"
+      data-edit-target="desc"
       class="form-control form-control-sm mb-3"
       rows="2"
       placeholder="Descripción o subtítulo opcional de la sección"
@@ -78,6 +82,7 @@
 
     <CardAccordionItem
       v-for="(card, index) in localData.cards"
+      :edit-key="`cards.${index}`"
       :key="card.id"
       :title="card.title || 'Tarjeta sin título'"
       :index="index"
@@ -95,7 +100,7 @@
           <span class="cv2-icon-preview" aria-hidden="true">
             <AtomIcon :name="card.icon || 'graduation-cap'" :size="18" />
           </span>
-          <select v-model="card.icon" class="form-select form-select-sm">
+          <select v-model="card.icon" data-edit-target=".icon" class="form-select form-select-sm">
             <option v-for="name in ICON_SUGGESTIONS" :key="name" :value="name">
               {{ name }}
             </option>
@@ -106,6 +111,7 @@
         <label class="form-label">Título de la tarjeta</label>
         <input
           v-model="card.title"
+          data-edit-target=".title"
           type="text"
           class="form-control form-control-sm mb-2"
           placeholder="Ej: Administración y Finanzas"
@@ -116,6 +122,7 @@
         <p class="cv2-hint">Texto complementario visible bajo el título.</p>
         <input
           v-model="card.desc"
+          data-edit-target=".desc"
           type="text"
           class="form-control form-control-sm mb-2"
           placeholder="Ej: Descripción corta"
@@ -125,6 +132,7 @@
         <label class="form-label">Enlace de destino (URL)</label>
         <input
           v-model="card.href"
+          data-edit-target=".href"
           type="text"
           class="form-control form-control-sm mb-2"
           placeholder="/carreras/administracion-y-finanzas"
@@ -135,6 +143,7 @@
           <input
             :id="`target-${card.id}`"
             v-model="card.target"
+            data-edit-target=".target"
             type="checkbox"
             class="form-check-input"
             true-value="_blank"

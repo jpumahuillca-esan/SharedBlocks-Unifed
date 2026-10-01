@@ -1,17 +1,17 @@
 <template>
   <div class="ecosystem-bar">
     <div class="ecosystem-bar__text">
-      <AtomHeading :level="2" size="h5" weight="bold" class="ecosystem-bar__title">
+      <AtomHeading :level="2" size="h5" weight="bold" class="ecosystem-bar__title" v-bind="edit('.title')">
         {{ title }}
       </AtomHeading>
 
-      <AtomText v-if="desc" size="body-compact" class="ecosystem-bar__desc">
+      <AtomText v-if="desc" size="body-compact" class="ecosystem-bar__desc" v-bind="edit('.desc')">
         {{ desc }}
       </AtomText>
     </div>
 
     <!-- Sobre el rojo de la franja, la flecha va en blanco sólido. -->
-    <EcosystemArrow :href="href" :label="title" variant="white" />
+    <EcosystemArrow :href="href" :label="title" variant="white" v-bind="edit('.href')" />
   </div>
 </template>
 
@@ -26,6 +26,10 @@
 import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import EcosystemArrow from './EcosystemArrow.vue';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 defineProps<{
   title: string;

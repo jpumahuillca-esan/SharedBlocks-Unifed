@@ -1,8 +1,8 @@
 <template>
   <div class="subhero__background">
-    <div class="subhero__brand" :style="panelStyle"></div>
+    <div class="subhero__brand" :style="panelStyle" v-bind="edit('panelColorToken')"></div>
 
-    <div class="subhero__media">
+    <div class="subhero__media" v-bind="edit('image')">
       <img
         v-if="image"
         :src="image"
@@ -18,6 +18,11 @@
 </template>
 
 <script setup lang="ts">
+import { useEditTarget } from '../../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
+
 withDefaults(
   defineProps<{
     image: string;

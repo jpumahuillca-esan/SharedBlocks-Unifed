@@ -1,6 +1,6 @@
 <template>
   <div v-if="linkLabel" class="card-section__footer">
-    <AtomButton variant="link" size="sm" class="card-section__link" :href="linkUrl || '#'">
+    <AtomButton variant="link" size="sm" class="card-section__link" :href="linkUrl || '#'" v-bind="edit('linkLabel')">
       {{ linkLabel }}
       <AtomIcon name="arrow-right" :size="16" />
     </AtomButton>
@@ -20,6 +20,10 @@
  */
 import AtomButton from '../../../atoms/AtomButton.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 defineProps<{
   linkLabel: string;

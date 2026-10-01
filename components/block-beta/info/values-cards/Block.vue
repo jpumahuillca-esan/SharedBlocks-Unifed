@@ -19,7 +19,7 @@
         class="values-cards__filters"
       />
 
-      <article v-if="active" class="values-cards__card">
+      <article v-if="active" class="values-cards__card" v-bind="edit(`items.${activeIndex}`)">
         <div class="values-cards__body">
           <!--
             Etiqueta, título y filete van juntos en un grupo: entre ellos el aire
@@ -27,7 +27,7 @@
             parejos. Agrupados, ese hueco lo pone un solo `gap` en el cuerpo.
           -->
           <div class="values-cards__heading">
-            <AtomEyebrow v-if="active.eyebrow" as="h2">{{ active.eyebrow }}</AtomEyebrow>  
+            <AtomEyebrow v-if="active.eyebrow" as="h2" v-bind="edit('.eyebrow')">{{ active.eyebrow }}</AtomEyebrow>  
 
             <!--
               Es un h3 y no un h2: el bloque se inserta dentro de una página que
@@ -40,6 +40,7 @@
               size="h3"
               weight="bold"
               class="values-cards__title"
+              v-bind="edit('.title')"
             >
               {{ active.title }}
             </AtomHeading>
@@ -48,11 +49,11 @@
             <span v-if="active.title" class="values-cards__rule" aria-hidden="true"></span>
           </div>
 
-          <AtomText v-if="active.desc" size="body-compact" class="values-cards__desc">
+          <AtomText v-if="active.desc" size="body-compact" class="values-cards__desc" v-bind="edit('.desc')">
             {{ active.desc }}
           </AtomText>
 
-          <ul v-if="active.bullets.length" class="values-cards__list">
+          <ul v-if="active.bullets.length" class="values-cards__list" v-bind="edit('.bullets')">
             <li v-for="(bullet, i) in active.bullets" :key="i" class="values-cards__item">
               <AtomText size="body-compact">{{ bullet }}</AtomText>
             </li>
@@ -62,6 +63,7 @@
             v-if="active.linkLabel"
             variant="link"
             class="values-cards__link"
+            v-bind="edit('.linkLabel')"
             :href="active.linkUrl || '#'"
           >
             {{ active.linkLabel }}
@@ -82,7 +84,7 @@
           La `key` remonta el reproductor al cambiar de pilar: sin ella, pasar a
           otra pestaña con un video abierto dejaría sonando el anterior.
         -->
-        <div class="values-cards__media">
+        <div class="values-cards__media" v-bind="edit('.image')">
           <MoleculeVideoPreview
             :key="active.id"
             variant="featured"
@@ -121,6 +123,10 @@ import AtomButton from '../../../atoms/AtomButton.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 import MoleculeTabs, { type TabItem } from '../../../molecules/MoleculeTabs.vue';
 import MoleculeVideoPreview from '../../../molecules/MoleculeVideoPreview.vue';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 /** Un pilar ya normalizado: lo que la plantilla puede dar por hecho. */
 interface ValueItem {
@@ -179,6 +185,9 @@ const tabItems = computed<TabItem[]>(() =>
 const active = computed(
   () => items.value.find((item) => item.id === activeId.value) ?? items.value[0] ?? null
 );
+
+/* Posición del pilar visible en el dato, para el enfoque de campos del constructor. */
+const activeIndex = computed(() => (active.value ? items.value.indexOf(active.value) : 0));
 
 /*
  * El pilar elegido se guarda por id y no por posición, para que reordenar la

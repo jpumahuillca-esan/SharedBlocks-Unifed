@@ -7,6 +7,7 @@
         <input
           id="hs-seo-heading"
           v-model="localData.showSeoHeading"
+          data-edit-target="showSeoHeading"
           class="form-check-input"
           type="checkbox"
           role="switch"
@@ -40,6 +41,7 @@
 
     <CardAccordionItem
       v-for="(slide, index) in localData.slides"
+      :edit-key="`slides.${index}`"
       :key="slide.id"
       :title="slide.title"
       :index="index"
@@ -69,6 +71,7 @@
           <template v-if="isOpen(slide, 'eyebrow')">
             <input
               v-model="slide.eyebrow"
+              data-edit-target=".eyebrow"
               type="text"
               class="form-control form-control-sm"
               placeholder="Admisión 2026 - Examen virtual en plataforma"
@@ -85,7 +88,7 @@
         </div>
 
         <label class="form-label">Título</label>
-        <textarea v-model="slide.title" class="form-control form-control-sm mb-2" rows="2"></textarea>
+        <textarea v-model="slide.title" data-edit-target=".title" class="form-control form-control-sm mb-2" rows="2"></textarea>
 
         <!-- Descripción — opcional -->
         <div class="hs-optional">
@@ -105,6 +108,7 @@
           <textarea
             v-if="isOpen(slide, 'desc')"
             v-model="slide.desc"
+            data-edit-target=".desc"
             class="form-control form-control-sm"
             rows="3"
           ></textarea>
@@ -127,6 +131,7 @@
           <button
             type="button"
             class="btn btn-sm btn-outline-secondary flex-grow-1"
+            data-edit-target=".image"
             @click="$emit('select-image', { item: slide, field: 'image' })"
           >
             <i class="las la-image me-1"></i>
@@ -144,7 +149,7 @@
         </div>
 
         <label class="form-label">Texto alternativo</label>
-        <input v-model="slide.imageAlt" type="text" class="form-control form-control-sm mb-3" />
+        <input v-model="slide.imageAlt" data-edit-target=".imageAlt" type="text" class="form-control form-control-sm mb-3" />
 
         <hr />
 
@@ -152,6 +157,7 @@
         <label class="form-label">Texto</label>
         <input
           v-model="slide.primary.label"
+          data-edit-target=".primary.label"
           type="text"
           class="form-control form-control-sm mb-2"
           placeholder="Habla con un asesor"
@@ -159,6 +165,7 @@
         <label class="form-label">Destino</label>
         <input
           v-model="slide.primary.url"
+          data-edit-target=".primary.url"
           type="text"
           class="form-control form-control-sm mb-3"
           placeholder="/ruta o https://"
@@ -183,6 +190,7 @@
             <label class="form-label">Texto</label>
             <input
               v-model="slide.secondary.label"
+              data-edit-target=".secondary.label"
               type="text"
               class="form-control form-control-sm mb-2"
               placeholder="Postula ahora"
@@ -190,6 +198,7 @@
             <label class="form-label">Destino</label>
             <input
               v-model="slide.secondary.url"
+              data-edit-target=".secondary.url"
               type="text"
               class="form-control form-control-sm"
               placeholder="/ruta o https://"
