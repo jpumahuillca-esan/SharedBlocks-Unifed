@@ -9,6 +9,7 @@
           weight="bold"
           align="center"
           class="ecosystem__title"
+          v-bind="edit('title')"
         >
           {{ data.title }}
         </AtomHeading>
@@ -16,7 +17,7 @@
         <!-- Entre el título y la descripción, como en la referencia. -->
         <span class="ecosystem__rule" aria-hidden="true"></span>
 
-        <AtomText v-if="data.desc" size="body" align="center" class="ecosystem__desc">
+        <AtomText v-if="data.desc" size="body" align="center" class="ecosystem__desc" v-bind="edit('desc')">
           {{ data.desc }}
         </AtomText>
       </header>
@@ -25,7 +26,8 @@
         <!-- Columna izquierda: las tarjetas grandes -->
         <div v-if="features.length" class="ecosystem__features">
           <EcosystemCard
-            v-for="card in features"
+            v-for="(card, i) in features"
+            v-bind="edit(`features.${i}`)"
             :key="card.id"
             :card="card"
             variant="feature"
@@ -37,6 +39,7 @@
         <div class="ecosystem__group">
           <EcosystemBar
             v-if="bar.title"
+            v-bind="edit('bar')"
             :title="bar.title"
             :desc="bar.desc"
             :href="bar.href"
@@ -44,7 +47,8 @@
 
           <div v-if="faculties.length" class="ecosystem__faculties">
             <EcosystemCard
-              v-for="card in faculties"
+              v-for="(card, i) in faculties"
+              v-bind="edit(`faculties.${i}`)"
               :key="card.id"
               :card="card"
               variant="faculty"
@@ -74,6 +78,7 @@ import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import EcosystemCard from '../_shared/EcosystemCard.vue';
 import EcosystemBar from '../_shared/EcosystemBar.vue';
+import { useEditTarget } from '../../../../core/editFocus';
 import {
   DEFAULT_FACULTIES_TITLE_LEVEL,
   DEFAULT_FEATURES_TITLE_LEVEL,
@@ -83,6 +88,9 @@ import {
 } from '../_shared/types';
 
 const props = defineProps<{ data: any }>();
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 /** Las dos listas se normalizan igual; solo cambia de dónde salen. */
 const toCards = (raw: unknown): EcosystemCardItem[] =>

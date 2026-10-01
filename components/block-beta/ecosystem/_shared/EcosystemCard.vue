@@ -3,7 +3,7 @@
     class="ecosystem-card"
     :class="[`ecosystem-card--${variant}`, `ecosystem-card--${card.color}`]"
   >
-    <div class="ecosystem-card__media">
+    <div class="ecosystem-card__media" v-bind="edit('.image')">
       <!-- Sin imagen no se emite <img>: un src vacío da un icono roto. -->
       <img v-if="card.image" :src="card.image" :alt="card.imageAlt || ''" loading="lazy" />
     </div>
@@ -15,12 +15,12 @@
           toda ella (.ecosystem-card__link): cualquier punto lleva al mismo sitio
           que la flecha. Sin destino queda como texto y nada es clicable.
         -->
-        <AtomHeading :level="titleLevel" :size="sizes.title" weight="bold" class="ecosystem-card__title">
-          <a v-if="card.href" :href="card.href" class="ecosystem-card__link">{{ card.title }}</a>
+        <AtomHeading :level="titleLevel" :size="sizes.title" weight="bold" class="ecosystem-card__title" v-bind="edit('.title')">
+          <AtomLink v-if="card.href" :href="card.href" class="ecosystem-card__link">{{ card.title }}</AtomLink>
           <template v-else>{{ card.title }}</template>
         </AtomHeading>
 
-        <AtomText v-if="card.desc" :size="sizes.desc" class="ecosystem-card__desc">
+        <AtomText v-if="card.desc" :size="sizes.desc" class="ecosystem-card__desc" v-bind="edit('.desc')">
           {{ card.desc }}
         </AtomText>
       </div>
@@ -30,7 +30,7 @@
         orden de tabulación y de los lectores de pantalla para que la tarjeta sea
         una sola parada y no se anuncie dos veces. Sigue siendo un <a> pulsable.
       -->
-      <EcosystemArrow :href="card.href" :label="card.title" :decorative="!!card.href" />
+      <EcosystemArrow :href="card.href" :label="card.title" :decorative="!!card.href" v-bind="edit('.href')" />
     </div>
   </article>
 </template>
@@ -51,8 +51,13 @@
 import { computed } from 'vue';
 import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
+import AtomLink from '../../../atoms/AtomLink.vue';
 import EcosystemArrow from './EcosystemArrow.vue';
 import type { EcosystemCardItem, EcosystemTitleLevel } from './types';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 const props = defineProps<{
   card: EcosystemCardItem;

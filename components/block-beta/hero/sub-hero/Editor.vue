@@ -4,6 +4,7 @@
     <label class="form-label">Antetítulo</label>
     <input
       v-model="localData.eyebrow"
+      data-edit-target="eyebrow"
       type="text"
       class="form-control form-control-sm mb-1"
       placeholder="ESAN UNIVERSITY"
@@ -19,6 +20,7 @@
       <input
         id="subhero-eyebrow-h1"
         v-model="localData.eyebrowAsH1"
+        data-edit-target="eyebrowAsH1"
         class="form-check-input"
         type="checkbox"
         :disabled="!localData.eyebrow.trim()"
@@ -35,6 +37,7 @@
     <label class="form-label">Título</label>
     <textarea
       v-model="localData.title"
+      data-edit-target="title"
       class="form-control form-control-sm mb-1"
       rows="2"
       placeholder="Explora nuestras 17 carreras universitarias"
@@ -49,6 +52,7 @@
     <label class="form-label">Descripción</label>
     <textarea
       v-model="localData.desc"
+      data-edit-target="desc"
       class="form-control form-control-sm mb-1"
       rows="2"
       placeholder="Ingresa una descripción complementaria"
@@ -83,6 +87,7 @@
       <button
         type="button"
         class="btn btn-sm btn-outline-secondary flex-grow-1"
+        data-edit-target="image"
         @click="selectImage"
       >
         <i class="las la-image me-1"></i>
@@ -105,6 +110,7 @@
       <label class="form-label">Texto alternativo de la imagen</label>
       <input
         v-model="localData.imageAlt"
+        data-edit-target="imageAlt"
         type="text"
         class="form-control form-control-sm mb-1"
         :maxlength="IMAGE_ALT_MAX_LENGTH"

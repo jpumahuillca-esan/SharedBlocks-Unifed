@@ -1,0 +1,204 @@
+/* =========================================================================
+   CARDS VERSION 2 — ARCIS Design System
+   
+   Grilla centrada de tarjetas compactas con ícono suave a la izquierda,
+   título con descripción opcional y flecha roja a la derecha.
+   La usa el bloque block-beta/cards/cards-version-2.
+   
+   Comportamiento responsivo:
+     escritorio: 3 por fila (filas incompletas centradas)
+     tableta:    2 por fila (última tarjeta centrada)
+     teléfono:   1 por fila (100% ancho)
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+
+  .cards-v2-section {
+    width: 100%;
+    background-color: var(--ds-color-bg-subtle, #F1F5F9);
+    padding-block: var(--ds-spacing-xxl, 64px);
+    box-sizing: border-box;
+
+    @include bp.container-down('md') {
+      padding-block: var(--ds-spacing-xl, 40px);
+    }
+
+    &--white {
+      background-color: #ffffff;
+
+      .cards-v2__card {
+        border-color: #e2e8f0;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+
+        &:hover {
+          border-color: #cbd5e1;
+          box-shadow: 0 10px 24px rgba(15, 23, 42, 0.09);
+        }
+      }
+    }
+  }
+
+  .cards-v2__container {
+    width: 100%;
+    max-width: var(--ds-container-max, 1280px);
+    margin-inline: auto;
+    padding-inline: var(--ds-spacing-md, 24px);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Encabezado centrado */
+  .cards-v2__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    margin-bottom: var(--ds-space-8, 36px);
+
+    @include bp.container-down('sm') {
+      margin-bottom: var(--ds-space-6, 24px);
+    }
+  }
+
+  .cards-v2__title {
+    font-family: inherit;
+    font-size: clamp(1.5rem, 2.3vw, 2.15rem);
+    font-weight: 700;
+    color: var(--ds-color-text-primary, #0f172a);
+    margin: 0;
+    line-height: 1.25;
+    text-align: center;
+  }
+
+  .cards-v2__rule {
+    display: block;
+    width: 38px;
+    height: 2.5px;
+    background-color: var(--ds-color-brand-red, #c52b27);
+    margin-inline: auto;
+    margin-top: 4px;
+    border-radius: 2px;
+  }
+
+  .cards-v2__desc {
+    font-size: 15px;
+    color: var(--ds-color-text-secondary, #64748b);
+    max-width: 680px;
+    margin: 8px auto 0;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* Rejilla de tarjetas con centrado automático de filas restantes */
+  .cards-v2__grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* Tarjeta individual */
+  .cards-v2__card {
+    flex: 0 0 calc((100% - 2 * 20px) / 3);
+    max-width: calc((100% - 2 * 20px) / 3);
+    min-width: 0;
+    box-sizing: border-box;
+
+    @include bp.container-down('lg') {
+      flex: 0 0 calc((100% - 20px) / 2);
+      max-width: calc((100% - 20px) / 2);
+    }
+
+    @include bp.container-down('sm') {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+
+    background-color: #ffffff;
+    border-radius: var(--ds-radius-lg, 12px);
+    border: 1px solid #edf2f7;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.2s ease,
+                border-color 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+      border-color: #cbd5e1;
+
+      .cards-v2__arrow {
+        transform: translateX(3px);
+      }
+    }
+  }
+
+  /* Caja del ícono a la izquierda */
+  .cards-v2__icon-box {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    background-color: #f0f4f8;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1e293b;
+    flex-shrink: 0;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  /* Contenido central */
+  .cards-v2__content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    text-align: left;
+  }
+
+  .cards-v2__card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+    line-height: 1.3;
+    display: block;
+  }
+
+  .cards-v2__card-desc {
+    font-size: 13px;
+    font-weight: 400;
+    color: #64748b;
+    line-height: 1.35;
+    margin: 0;
+    display: block;
+  }
+
+  /* Chevron derecho */
+  .cards-v2__arrow {
+    color: var(--ds-color-brand-red, #c52b27);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+}

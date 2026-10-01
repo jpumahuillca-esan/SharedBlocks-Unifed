@@ -14,11 +14,12 @@
         size="h2"
         weight="bold"
         class="story-section__title"
+        v-bind="edit('title')"
       >
         {{ title }}
       </AtomHeading>
 
-      <AtomText v-if="subtitle" size="body" class="story-section__subtitle">
+      <AtomText v-if="subtitle" size="body" class="story-section__subtitle" v-bind="edit('subtitle')">
         {{ subtitle }}
       </AtomText>
     </div>
@@ -30,6 +31,7 @@
       variant="link"
       negative
       class="story-section__link"
+      v-bind="edit('linkLabel')"
       :href="linkUrl || '#'"
     >
       {{ linkLabel }}
@@ -58,6 +60,10 @@ import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import AtomButton from '../../../atoms/AtomButton.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 defineProps<{
   title: string;

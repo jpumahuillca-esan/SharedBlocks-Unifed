@@ -1,18 +1,18 @@
 <template>
   <div>
     <label class="form-label">Título</label>
-    <input v-model="card.title" type="text" class="form-control form-control-sm mb-2" />
+    <input v-model="card.title" data-edit-target=".title" type="text" class="form-control form-control-sm mb-2" />
 
     <label class="form-label">Descripción</label>
     <p class="ecf-hint">Opcional. Vacía, no se muestra.</p>
-    <textarea v-model="card.desc" class="form-control form-control-sm mb-2" rows="2"></textarea>
+    <textarea v-model="card.desc" data-edit-target=".desc" class="form-control form-control-sm mb-2" rows="2"></textarea>
 
     <label class="form-label">Color</label>
     <p class="ecf-hint">
       Son los colores de marca del sistema. No hay selector libre a propósito:
       así, si la marca corrige un tono, las páginas ya publicadas lo siguen solas.
     </p>
-    <select v-model="card.color" class="form-select form-select-sm mb-1">
+    <select v-model="card.color" data-edit-target=".color" class="form-select form-select-sm mb-1">
       <option v-for="option in ECOSYSTEM_COLORS" :key="option.value" :value="option.value">
         {{ option.label }}
       </option>
@@ -32,6 +32,8 @@
       ></button>
     </div>
 
+    <!-- Vista previa y botones juntos: es lo que se resalta al pulsar la foto en el lienzo. -->
+    <div data-edit-target=".image">
     <label class="form-label">Imagen</label>
     <div class="ecf-image-preview mb-2">
       <img v-if="card.image" :src="card.image" alt="" />
@@ -56,13 +58,15 @@
         <i class="las la-trash"></i>
       </button>
     </div>
+    </div>
 
     <label class="form-label">Texto alternativo</label>
-    <input v-model="card.imageAlt" type="text" class="form-control form-control-sm mb-2" />
+    <input v-model="card.imageAlt" data-edit-target=".imageAlt" type="text" class="form-control form-control-sm mb-2" />
 
     <label class="form-label">Destino</label>
     <input
       v-model="card.href"
+      data-edit-target=".href"
       type="text"
       class="form-control form-control-sm"
       placeholder="/ruta o https://"

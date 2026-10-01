@@ -12,6 +12,7 @@
 
     <CardAccordionItem
       v-for="(item, index) in localData.items"
+      :edit-key="`items.${index}`"
       :key="item.id"
       :title="item.tabLabel"
       :index="index"
@@ -25,7 +26,7 @@
       <div>
         <label class="form-label">Texto del filtro</label>
         <p class="vc-hint">Va dentro de la pastilla, arriba de la tarjeta.</p>
-        <input v-model="item.tabLabel" type="text" class="form-control form-control-sm mb-2" />
+        <input v-model="item.tabLabel" data-edit-target=".tabLabel" type="text" class="form-control form-control-sm mb-2" />
 
         <label class="form-label">Ícono del filtro</label>
         <div class="d-flex align-items-center gap-2 mb-2">
@@ -37,7 +38,7 @@
           <span class="vc-icon-preview" :class="{ 'is-empty': !item.icon }" aria-hidden="true">
             <AtomIcon v-if="item.icon" :name="item.icon" :size="18" />
           </span>
-          <select v-model="item.icon" class="form-select form-select-sm">
+          <select v-model="item.icon" data-edit-target=".icon" class="form-select form-select-sm">
             <option value="">Sin ícono</option>
             <option v-for="name in ICON_SUGGESTIONS" :key="name" :value="name">
               {{ name }}
@@ -49,16 +50,17 @@
 
         <label class="form-label">Etiqueta superior</label>
         <p class="vc-hint">Texto corto en rojo sobre el título. Vacío la oculta.</p>
-        <input v-model="item.eyebrow" type="text" class="form-control form-control-sm mb-2" />
+        <input v-model="item.eyebrow" data-edit-target=".eyebrow" type="text" class="form-control form-control-sm mb-2" />
 
         <label class="form-label">Título</label>
-        <textarea v-model="item.title" class="form-control form-control-sm mb-2" rows="2"></textarea>
+        <textarea v-model="item.title" data-edit-target=".title" class="form-control form-control-sm mb-2" rows="2"></textarea>
 
         <label class="form-label">Texto de apoyo</label>
-        <textarea v-model="item.desc" class="form-control form-control-sm mb-2" rows="3"></textarea>
+        <textarea v-model="item.desc" data-edit-target=".desc" class="form-control form-control-sm mb-2" rows="3"></textarea>
 
         <BadgeListEditor
           :badges="item.bullets"
+          data-edit-target=".bullets"
           label="Viñetas"
           hint="Se listan bajo el texto de apoyo, una debajo de otra. Una viñeta sin texto no se muestra."
           placeholder="Texto de la viñeta"
@@ -69,6 +71,7 @@
         <p class="vc-hint">Vacío oculta el enlace del pie.</p>
         <input
           v-model="item.linkLabel"
+          data-edit-target=".linkLabel"
           type="text"
           class="form-control form-control-sm mb-2"
           placeholder="Explora nuestros programas"
@@ -77,6 +80,7 @@
         <label class="form-label">Destino del enlace</label>
         <input
           v-model="item.linkUrl"
+          data-edit-target=".linkUrl"
           type="text"
           class="form-control form-control-sm mb-2"
           placeholder="/ruta o https://"
@@ -94,6 +98,7 @@
           <button
             type="button"
             class="btn btn-sm btn-outline-secondary flex-grow-1"
+            data-edit-target=".image"
             @click="$emit('select-image', { item, field: 'image' })"
           >
             <i class="las la-image me-1"></i>
@@ -111,11 +116,12 @@
         </div>
 
         <label class="form-label">Texto alternativo</label>
-        <input v-model="item.imageAlt" type="text" class="form-control form-control-sm mb-2" />
+        <input v-model="item.imageAlt" data-edit-target=".imageAlt" type="text" class="form-control form-control-sm mb-2" />
 
         <label class="form-label">Video</label>
         <input
           v-model="item.videoUrl"
+          data-edit-target=".videoUrl"
           type="text"
           class="form-control form-control-sm"
           placeholder="https://www.youtube.com/watch?v=..."
@@ -128,6 +134,7 @@
         <p class="vc-hint">Se muestra arriba del video, ej. 02:15. Vacío la oculta.</p>
         <input
           v-model="item.duration"
+          data-edit-target=".duration"
           type="text"
           class="form-control form-control-sm"
           placeholder="02:15"

@@ -17,6 +17,12 @@ const props = withDefaults(defineProps<{
    * "inverse" (blanco, para fondos de color/oscuros — ej. banner--brand). */
   variant?: EyebrowVariant;
   as?: string;
+  /** Token institucional o valor CSS para texto y punto (ej: '--ds-color-univ-management') */
+  colorToken?: string;
+  /** Token institucional o valor CSS explícito para el texto (opcional) */
+  textColorToken?: string;
+  /** Token institucional o valor CSS explícito para el punto (opcional) */
+  dotColorToken?: string;
 }>(), {
   variant: 'brand',
   as: 'span',
@@ -26,10 +32,24 @@ const classes = computed(() => [
   'eyebrow',
   props.variant !== 'brand' ? `eyebrow--${props.variant}` : null,
 ]);
+
+const styleObject = computed(() => {
+  const styles: Record<string, string> = {};
+  const effectiveText = props.textColorToken?.trim() || props.colorToken?.trim();
+  const effectiveDot = props.dotColorToken?.trim() || props.colorToken?.trim();
+
+  if (effectiveText) {
+    styles['--eyebrow-text-color'] = effectiveText.startsWith('--') ? `var(${effectiveText})` : effectiveText;
+  }
+  if (effectiveDot) {
+    styles['--eyebrow-dot-color'] = effectiveDot.startsWith('--') ? `var(${effectiveDot})` : effectiveDot;
+  }
+  return styles;
+});
 </script>
 
 <template>
-  <component :is="as" :class="classes">
+  <component :is="as" :class="classes" :style="styleObject">
     <slot />
   </component>
 </template>

@@ -14,6 +14,7 @@
 
     <textarea
       v-model="localData.title"
+      data-edit-target="title"
       class="form-control form-control-sm mb-1"
       rows="2"
       :maxlength="rules.title.maxLength"
@@ -36,6 +37,7 @@
 
     <textarea
       v-model="localData.desc"
+      data-edit-target="desc"
       class="form-control form-control-sm mb-1"
       rows="3"
       :maxlength="rules.desc.maxLength"
@@ -72,6 +74,7 @@
 
     <select
       v-model.number="localData.columns"
+      data-edit-target="columns"
       class="form-select form-select-sm mb-3"
     >
       <option :value="3">
@@ -105,6 +108,7 @@
 
     <CardAccordionItem
       v-for="(item, index) in localData.items"
+      :edit-key="`items.${index}`"
       :key="item.id"
       :title="item.title || `Categoría ${index + 1}`"
       :index="index"
@@ -126,6 +130,7 @@
 
         <input
           v-model="item.title"
+          data-edit-target=".title"
           type="text"
           class="form-control form-control-sm mb-1"
           :maxlength="rules.card.title.maxLength"
@@ -152,6 +157,7 @@
 
         <textarea
           v-model="item.desc"
+          data-edit-target=".desc"
           class="form-control form-control-sm mb-1"
           rows="3"
           :maxlength="rules.card.desc.maxLength"
@@ -174,6 +180,7 @@
 
         <BrandColorPicker
           v-model="item.colorToken"
+          data-edit-target=".colorToken"
           class="mb-3"
         />
 
@@ -196,6 +203,7 @@
             v-else
             type="button"
             class="ees-image-empty"
+            data-edit-target=".image"
             @click="selectImage(item)"
           >
             <span class="ees-image-empty__icon">
@@ -219,6 +227,7 @@
           <button
             type="button"
             class="btn btn-sm btn-outline-secondary flex-grow-1"
+            data-edit-target=".image"
             @click="selectImage(item)"
           >
             <i class="las la-image me-1"></i>
@@ -245,6 +254,7 @@
 
         <input
           v-model="item.imageAlt"
+          data-edit-target=".imageAlt"
           type="text"
           class="form-control form-control-sm mb-1"
           :maxlength="rules.card.imageAlt.maxLength"
@@ -271,6 +281,7 @@
 
         <input
           v-model="item.href"
+          data-edit-target=".href"
           type="text"
           class="form-control form-control-sm mb-3"
           :maxlength="rules.card.href.maxLength"
@@ -299,6 +310,7 @@
 
         <div
           v-for="(link, linkIndex) in item.links"
+          :data-edit-target="`.links.${linkIndex}`"
           :key="link.id"
           class="ees-link-card"
         >
@@ -345,6 +357,7 @@
 
           <input
             v-model="link.label"
+            data-edit-target=".label"
             type="text"
             class="form-control form-control-sm mb-1"
             :maxlength="rules.link.label.maxLength"
@@ -367,6 +380,7 @@
 
           <input
             v-model="link.href"
+            data-edit-target=".href"
             type="text"
             class="form-control form-control-sm"
             :maxlength="rules.link.href.maxLength"

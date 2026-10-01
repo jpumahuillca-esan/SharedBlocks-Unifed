@@ -2,6 +2,7 @@
   <div v-if="hasAnyAction" class="ctaband__actions">
     <AtomButton
       v-if="primary.label"
+      v-bind="edit('primary.label')"
       variant="primary"
       :negative="primaryNegative"
       :href="primary.url || '#'"
@@ -12,6 +13,7 @@
     <!-- El segundo botón existe solo si la variante está configurada con dos -->
     <AtomButton
       v-if="buttonCount === 2 && secondary.label"
+      v-bind="edit('secondary.label')"
       variant="secondary"
       :negative="negative"
       :href="secondary.url || '#'"
@@ -40,6 +42,10 @@
 import { computed } from 'vue';
 import AtomButton from '../../../atoms/AtomButton.vue';
 import type { CtaAction, CtaButtonCount } from './types';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 const props = withDefaults(
   defineProps<{

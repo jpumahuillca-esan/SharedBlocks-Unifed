@@ -10,7 +10,8 @@
     <CardSlider :count="visibleCards.length" :columns="cardCount">
       <!-- Siempre el formato de noticia: es el diseño de esta sección. -->
       <MoleculePostCard
-        v-for="card in visibleCards"
+        v-for="(card, i) in visibleCards"
+        v-bind="edit(`cards.${i}`)"
         :key="card.id"
         variant="news"
         :image="card.image"
@@ -44,6 +45,10 @@ import CardSectionFooter from '../_shared/CardSectionFooter.vue';
 import CardSlider from '../_shared/CardSlider.vue';
 import { normalizeCardCount, type PostCardItem } from '../_shared/types';
 import { toDisplayDate } from '../_shared/date';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 const props = defineProps<{ data: any }>();
 

@@ -30,6 +30,7 @@ import AtomHeading from '../atoms/AtomHeading.vue';
 import AtomIcon from '../atoms/AtomIcon.vue';
 import AtomButton from '../atoms/AtomButton.vue';
 import AtomBadge, { type BadgeVariant } from '../atoms/AtomBadge.vue';
+import AtomLink from '../atoms/AtomLink.vue';
 
 /** Una etiqueta suelta, o con su variante propia si se quiere otro color. */
 export type EventCardBadge = string | { label: string; variant?: BadgeVariant };
@@ -131,7 +132,8 @@ const resolvedBadges = computed(() =>
           la maqueta el título de este formato va al tamaño del texto corrido.
         -->
         <AtomHeading v-if="title" :level="3" size="body" class="event-card__title">
-          <a :href="href || '#'">{{ title }}</a>
+          <AtomLink v-if="href" :href="href">{{ title }}</AtomLink>
+          <template v-else>{{ title }}</template>
         </AtomHeading>
       </div>
     </template>
@@ -143,7 +145,8 @@ const resolvedBadges = computed(() =>
       </div>
       <div class="event-card__body">
         <AtomHeading v-if="title" :level="3" size="h6" class="event-card__title">
-          <a :href="href || '#'">{{ title }}</a>
+          <AtomLink v-if="href" :href="href">{{ title }}</AtomLink>
+          <template v-else>{{ title }}</template>
         </AtomHeading>
         <div v-if="time || location" class="event-card__meta">
           <p v-if="time" class="event-card__meta-item">

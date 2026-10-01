@@ -8,13 +8,13 @@
 
     <label class="form-label">Antetítulo</label>
     <p class="cta-hint">Línea corta sobre el título. Se muestra en mayúsculas.</p>
-    <input v-model="localData.eyebrow" type="text" class="form-control form-control-sm mb-2" />
+    <input v-model="localData.eyebrow" data-edit-target="eyebrow" type="text" class="form-control form-control-sm mb-2" />
 
     <label class="form-label">Título</label>
-    <textarea v-model="localData.title" class="form-control form-control-sm mb-2" rows="2"></textarea>
+    <textarea v-model="localData.title" data-edit-target="title" class="form-control form-control-sm mb-2" rows="2"></textarea>
 
     <label class="form-label">Descripción</label>
-    <textarea v-model="localData.desc" class="form-control form-control-sm mb-3" rows="3"></textarea>
+    <textarea v-model="localData.desc" data-edit-target="desc" class="form-control form-control-sm mb-3" rows="3"></textarea>
 
     <hr />
 
@@ -35,6 +35,7 @@
         <button
           type="button"
           class="btn btn-sm btn-outline-secondary flex-grow-1"
+          data-edit-target="image"
           @click="$emit('select-image', { item: localData, field: 'image' })"
         >
           <i class="las la-image me-1"></i>
@@ -55,6 +56,7 @@
     <label class="form-label">Texto alternativo</label>
     <input
       v-model="localData.imageAlt"
+      data-edit-target="imageAlt"
       type="text"
       class="form-control form-control-sm mb-3"
       placeholder="Descripción de la imagen para accesibilidad"

@@ -11,7 +11,7 @@
          Imagen
          ================================================================ -->
 
-    <div class="ecosystem-esan-card__media">
+    <div class="ecosystem-esan-card__media" v-bind="edit('.image')">
       <img
         v-if="item.image"
         :src="item.image"
@@ -50,6 +50,7 @@
           size="h5"
           weight="semibold"
           class="ecosystem-esan-card__title"
+          v-bind="edit('.title')"
         >
           {{ title }}
         </AtomHeading>
@@ -58,21 +59,30 @@
           v-if="description"
           size="body"
           class="ecosystem-esan-card__desc"
+          v-bind="edit('.desc')"
         >
           {{ description }}
         </AtomText>
       </div>
 
-      <span
+      <!-- <span
         v-if="href"
         aria-hidden="true"
-        class="ecosystem-esan-card__action btn btn--surface btn--icon"
+        class="ecosystem-esan-card__action btn btn--surface btn--icon" -->
+      <AtomButton
+        variant="surface"
+        icon
+        :href="item.href || undefined"
+        :aria-label="`Ir a ${item.title || 'la sección'}`"
+        class="ecosystem-esan-card__action"
+        v-bind="edit('.href')"
       >
         <AtomIcon
           name="chevron-right"
           :size="16"
         />
-      </span>
+      </AtomButton>
+      <!-- </span> -->
     </div>
   </component>
 </template>
@@ -94,6 +104,10 @@ import {
 import type {
   EcosystemEsanItem,
 } from './types';
+import { useEditTarget } from '../../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 const props = defineProps<{
   item: EcosystemEsanItem;

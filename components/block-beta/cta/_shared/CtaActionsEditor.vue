@@ -38,38 +38,42 @@
     </template>
 
     <template v-else>
-      <div class="action-card">
+      <div class="action-card" data-edit-target="primary">
         <div class="action-card__head">
           <span class="action-dot is-primary"></span>
           <strong>Botón principal</strong>
         </div>
         <input
           v-model="primary.label"
+          data-edit-target="primary.label"
           type="text"
           class="form-control form-control-sm mb-2"
           placeholder="Texto del botón"
         />
         <input
           v-model="primary.url"
+          data-edit-target="primary.url"
           type="text"
           class="form-control form-control-sm"
           placeholder="Destino: /ruta o https://"
         />
       </div>
 
-      <div v-if="buttonCount === 2" class="action-card">
+      <div v-if="buttonCount === 2" class="action-card" data-edit-target="secondary">
         <div class="action-card__head">
           <span class="action-dot is-secondary"></span>
           <strong>Botón secundario</strong>
         </div>
         <input
           v-model="secondary.label"
+          data-edit-target="secondary.label"
           type="text"
           class="form-control form-control-sm mb-2"
           placeholder="Texto del botón"
         />
         <input
           v-model="secondary.url"
+          data-edit-target="secondary.url"
           type="text"
           class="form-control form-control-sm"
           placeholder="Destino: /ruta o https://"

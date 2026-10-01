@@ -35,6 +35,7 @@ import { ref, computed, watch } from 'vue';
 import AtomAvatar from '../atoms/AtomAvatar.vue';
 import AtomIcon from '../atoms/AtomIcon.vue';
 import AtomButton from '../atoms/AtomButton.vue';
+import AtomLink from '../atoms/AtomLink.vue';
 import { toVideoSource } from '../../helpers/video';
 
 const props = withDefaults(defineProps<{
@@ -200,7 +201,7 @@ watch(
           conservan su comportamiento (el play reproduce, no navega).
         -->
         <p class="testimonial-card__author-name">
-          <a v-if="href" :href="href" class="testimonial-card__link">{{ authorName }}</a>
+          <AtomLink v-if="href" :href="href" class="testimonial-card__link">{{ authorName }}</AtomLink>
           <template v-else>{{ authorName }}</template>
         </p>
         <span class="testimonial-card__accent"></span>

@@ -32,7 +32,7 @@
     font-weight: var(--ds-weight-semibold);
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--ds-color-text-brand);
+    color: var(--eyebrow-text-color, var(--ds-color-text-brand));
   }
 
   .eyebrow::before {
@@ -40,7 +40,7 @@
     width: 6px;
     height: 6px;
     border-radius: var(--ds-radius-xs);
-    background-color: currentColor;
+    background-color: var(--eyebrow-dot-color, currentColor);
   }
 
   /*

@@ -13,6 +13,7 @@
         <h1
           v-if="eyebrow && eyebrowAsH1"
           class="subhero__eyebrow-heading"
+          v-bind="edit('eyebrow')"
         >
           <AtomEyebrow
             variant="inverse"
@@ -28,6 +29,7 @@
         -->
         <AtomEyebrow
           v-else-if="eyebrow"
+          v-bind="edit('eyebrow')"
           variant="inverse"
           class="subhero__eyebrow"
         >
@@ -50,6 +52,7 @@
           size="h1"
           weight="semibold"
           class="subhero__title"
+          v-bind="edit('title')"
         >
           {{ title }}
         </AtomHeading>
@@ -58,6 +61,7 @@
           v-if="desc"
           size="body-lg"
           class="subhero__desc"
+          v-bind="edit('desc')"
         >
           {{ desc }}
         </AtomText>
@@ -75,6 +79,10 @@
 import AtomEyebrow from '../../../../atoms/AtomEyebrow.vue';
 import AtomHeading from '../../../../atoms/AtomHeading.vue';
 import AtomText from '../../../../atoms/AtomText.vue';
+import { useEditTarget } from '../../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 withDefaults(
   defineProps<{

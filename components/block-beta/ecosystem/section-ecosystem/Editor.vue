@@ -3,10 +3,10 @@
     <h6 class="fw-bold small text-uppercase mb-1">Encabezado</h6>
 
     <label class="form-label">Título</label>
-    <textarea v-model="localData.title" class="form-control form-control-sm mb-2" rows="2"></textarea>
+    <textarea v-model="localData.title" data-edit-target="title" class="form-control form-control-sm mb-2" rows="2"></textarea>
 
     <label class="form-label">Descripción</label>
-    <textarea v-model="localData.desc" class="form-control form-control-sm mb-2" rows="3"></textarea>
+    <textarea v-model="localData.desc" data-edit-target="desc" class="form-control form-control-sm mb-2" rows="3"></textarea>
 
     <hr />
 
@@ -32,6 +32,7 @@
       :title="card.title"
       :index="index"
       :total="localData.features.length"
+      :edit-key="`features.${index}`"
       :open="isOpen('features', index)"
       remove-label="Quitar escuela"
       @toggle="toggle('features', index)"
@@ -48,7 +49,7 @@
     <hr />
 
     <!-- Franja -->
-    <h6 class="fw-bold small text-uppercase mb-1">Franja de facultades</h6>
+    <h6 class="fw-bold small text-uppercase mb-1" data-edit-target="bar">Franja de facultades</h6>
     <p class="ec-hint">
       Encabeza el grupo de la derecha. Siempre va en el rojo institucional.
     </p>
@@ -56,6 +57,7 @@
     <label class="form-label">Título</label>
     <input
       v-model="localData.bar.title"
+      data-edit-target="bar.title"
       type="text"
       class="form-control form-control-sm mb-2"
       placeholder="ESAN University"
@@ -64,6 +66,7 @@
     <label class="form-label">Descripción</label>
     <input
       v-model="localData.bar.desc"
+      data-edit-target="bar.desc"
       type="text"
       class="form-control form-control-sm mb-2"
       placeholder="Carreras de pregrado, postgrado y para gente que trabaja (DPA)"
@@ -72,6 +75,7 @@
     <label class="form-label">Destino</label>
     <input
       v-model="localData.bar.href"
+      data-edit-target="bar.href"
       type="text"
       class="form-control form-control-sm mb-2"
       placeholder="/ruta o https://"
@@ -101,6 +105,7 @@
       :title="card.title"
       :index="index"
       :total="localData.faculties.length"
+      :edit-key="`faculties.${index}`"
       :open="isOpen('faculties', index)"
       remove-label="Quitar facultad"
       @toggle="toggle('faculties', index)"

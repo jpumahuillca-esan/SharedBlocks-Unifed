@@ -29,7 +29,8 @@
         piden aquí porque los átomos los fijan en línea y la hoja no los alcanza.
       -->
       <MoleculeBanner
-        v-for="card in cards"
+        v-for="(card, i) in cards"
+        v-bind="edit(`cards.${i}`)"
         :key="card.id"
         variant="image"
         class="image-grid__card"
@@ -77,6 +78,10 @@ import MoleculeBanner from '../../../molecules/MoleculeBanner.vue';
 import CardSectionHeader from '../../events/_shared/CardSectionHeader.vue';
 import CardSectionFooter from '../../events/_shared/CardSectionFooter.vue';
 import CardSlider from '../../events/_shared/CardSlider.vue';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 /** Tarjetas por fila en escritorio. La hoja la lee de CardSlider. */
 const COLUMNS = 3;

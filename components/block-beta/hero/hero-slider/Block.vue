@@ -29,6 +29,7 @@
     -->
     <HeroSlide
       :key="active.id"
+      v-bind="edit(`slides.${current}`)"
       :eyebrow="active.eyebrow"
       :title="active.title"
       :desc="active.desc"
@@ -74,6 +75,10 @@ import {
   normalizeShowSeoHeading,
   type HeroSlideItem,
 } from '../_shared/types';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 const props = defineProps<{ data: any }>();
 

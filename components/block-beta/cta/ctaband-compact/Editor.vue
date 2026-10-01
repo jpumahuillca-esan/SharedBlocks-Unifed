@@ -7,10 +7,10 @@
     </p>
 
     <label class="form-label">Título</label>
-    <textarea v-model="localData.title" class="form-control form-control-sm mb-2" rows="2"></textarea>
+    <textarea v-model="localData.title" data-edit-target="title" class="form-control form-control-sm mb-2" rows="2"></textarea>
 
     <label class="form-label">Descripción</label>
-    <textarea v-model="localData.desc" class="form-control form-control-sm mb-3" rows="2"></textarea>
+    <textarea v-model="localData.desc" data-edit-target="desc" class="form-control form-control-sm mb-3" rows="2"></textarea>
 
     <hr />
 
@@ -20,6 +20,7 @@
     </p>
     <input
       v-model="localData.icon"
+      data-edit-target="icon"
       type="text"
       class="form-control form-control-sm mb-3"
       list="cta-compact-icons"
@@ -39,11 +40,12 @@
     </p>
 
     <label class="form-label">Texto del enlace</label>
-    <input v-model="localData.linkLabel" type="text" class="form-control form-control-sm mb-2" />
+    <input v-model="localData.linkLabel" data-edit-target="linkLabel" type="text" class="form-control form-control-sm mb-2" />
 
     <label class="form-label">Destino</label>
     <input
       v-model="localData.linkUrl"
+      data-edit-target="linkUrl"
       type="text"
       class="form-control form-control-sm"
       placeholder="/ruta o https://"

@@ -31,6 +31,7 @@
 
     <CardAccordionItem
       v-for="(card, index) in localData.cards"
+      :edit-key="`cards.${index}`"
       :key="card.id"
       :title="card.title"
       :index="index"
@@ -51,6 +52,7 @@
           <button
             type="button"
             class="btn btn-sm btn-outline-secondary flex-grow-1"
+            data-edit-target=".image"
             @click="$emit('select-image', { item: card, field: 'image' })"
           >
             <i class="las la-image me-1"></i>
@@ -73,6 +75,7 @@
         </p>
         <input
           v-model="card.imageAlt"
+          data-edit-target=".imageAlt"
           type="text"
           class="form-control form-control-sm mb-2"
           placeholder="Estudiantes conversando en el jardín del campus"
@@ -81,6 +84,7 @@
         <label class="form-label">Título</label>
         <input
           v-model="card.title"
+          data-edit-target=".title"
           type="text"
           class="form-control form-control-sm mb-2"
           placeholder="Vida universitaria"
@@ -90,6 +94,7 @@
         <p class="ig-hint">Una línea corta: en escritorio, más larga se parte en dos.</p>
         <textarea
           v-model="card.desc"
+          data-edit-target=".desc"
           class="form-control form-control-sm mb-2"
           rows="2"
           placeholder="Descripción de la categoría"
@@ -99,6 +104,7 @@
         <p class="ig-hint">Toda la tarjeta es el enlace. Vacío, no lleva a ningún sitio.</p>
         <input
           v-model="card.href"
+          data-edit-target=".href"
           type="text"
           class="form-control form-control-sm"
           placeholder="/ruta o https://"

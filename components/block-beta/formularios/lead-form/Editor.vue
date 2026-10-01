@@ -14,7 +14,8 @@
         <div class="d-flex gap-2">
           <select 
             class="form-select form-select-sm"
-            v-model="localForm.campaign_id" 
+            v-model="localForm.campaign_id"
+            data-edit-target="campaign_id"
             @change="handleCampaignChange"
             :disabled="loadingCampaigns"
           >
@@ -47,7 +48,8 @@
         <div class="d-flex gap-2">
           <select 
             class="form-select form-select-sm"
-            v-model="localForm.study_program_id" 
+            v-model="localForm.study_program_id"
+            data-edit-target="study_program_id"
             :disabled="loadingPrograms"
           >
             <option :value="null">-- General (Sin programa fijo / Auto-heredar de Campaña) --</option>
@@ -93,19 +95,19 @@
       <div class="row g-2 mb-3">
         <div class="col-12">
           <label class="small text-muted mb-1">Título Principal</label>
-          <input type="text" class="form-control form-control-sm" v-model="localForm.mainTitle" />
+          <input type="text" class="form-control form-control-sm" v-model="localForm.mainTitle" data-edit-target="mainTitle" />
         </div>
         <div class="col-12">
           <label class="small text-muted mb-1">Subtítulo Descriptivo</label>
-          <textarea class="form-control form-control-sm" rows="2" v-model="localForm.subTitle"></textarea>
+          <textarea class="form-control form-control-sm" rows="2" v-model="localForm.subTitle" data-edit-target="subTitle"></textarea>
         </div>
         <div class="col-6">
           <label class="small text-muted mb-1">Texto del Botón</label>
-          <input type="text" class="form-control form-control-sm" v-model="localForm.button_text" />
+          <input type="text" class="form-control form-control-sm" v-model="localForm.button_text" data-edit-target="button_text" />
         </div>
         <div class="col-6">
           <label class="small text-muted mb-1">ID Formulario Legacy</label>
-          <input type="text" class="form-control form-control-sm" v-model="localForm.cod_form_old" placeholder="Ej: 45" />
+          <input type="text" class="form-control form-control-sm" v-model="localForm.cod_form_old" data-edit-target="cod_form_old" placeholder="Ej: 45" />
         </div>
       </div>
     </div>

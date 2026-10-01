@@ -8,13 +8,13 @@
 
     <label class="form-label">Antetítulo</label>
     <p class="cta-hint">Línea corta sobre el título. Se muestra en mayúsculas.</p>
-    <input v-model="localData.eyebrow" type="text" class="form-control form-control-sm mb-2" />
+    <input v-model="localData.eyebrow" data-edit-target="eyebrow" type="text" class="form-control form-control-sm mb-2" />
 
     <label class="form-label">Título</label>
-    <textarea v-model="localData.title" class="form-control form-control-sm mb-2" rows="2"></textarea>
+    <textarea v-model="localData.title" data-edit-target="title" class="form-control form-control-sm mb-2" rows="2"></textarea>
 
     <label class="form-label">Descripción</label>
-    <textarea v-model="localData.desc" class="form-control form-control-sm mb-3" rows="3"></textarea>
+    <textarea v-model="localData.desc" data-edit-target="desc" class="form-control form-control-sm mb-3" rows="3"></textarea>
 
     <hr />
 

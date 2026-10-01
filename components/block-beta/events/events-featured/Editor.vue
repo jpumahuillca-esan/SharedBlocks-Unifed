@@ -26,6 +26,7 @@
 
     <CardAccordionItem
       v-for="(card, index) in localData.cards"
+      :edit-key="`cards.${index}`"
       :key="card.id"
       :title="card.title"
       :index="index"
@@ -42,10 +43,10 @@
           así que no hay nada que elegir.
         -->
         <label class="form-label">Título</label>
-        <textarea v-model="card.title" class="form-control form-control-sm mb-2" rows="2"></textarea>
+        <textarea v-model="card.title" data-edit-target=".title" class="form-control form-control-sm mb-2" rows="2"></textarea>
 
         <label class="form-label">Fecha del evento</label>
-        <input v-model="card.date" type="date" class="form-control form-control-sm" />
+        <input v-model="card.date" data-edit-target=".date" type="date" class="form-control form-control-sm" />
         <p class="ev-hint mt-1">
           <template v-if="preview(card.date)">
             En la tarjeta se verá
@@ -63,6 +64,7 @@
         <label class="form-label">Destino</label>
         <input
           v-model="card.href"
+          data-edit-target=".href"
           type="text"
           class="form-control form-control-sm mb-2"
           placeholder="/ruta o https://"
@@ -77,6 +79,7 @@
           <button
             type="button"
             class="btn btn-sm btn-outline-secondary flex-grow-1"
+            data-edit-target=".image"
             @click="$emit('select-image', { item: card, field: 'image' })"
           >
             <i class="las la-image me-1"></i>
@@ -94,9 +97,9 @@
         </div>
 
         <label class="form-label">Texto alternativo</label>
-        <input v-model="card.imageAlt" type="text" class="form-control form-control-sm mb-2" />
+        <input v-model="card.imageAlt" data-edit-target=".imageAlt" type="text" class="form-control form-control-sm mb-2" />
 
-        <BadgeListEditor :badges="card.badges" />
+        <BadgeListEditor :badges="card.badges" data-edit-target=".badges" />
       </div>
     </CardAccordionItem>
 

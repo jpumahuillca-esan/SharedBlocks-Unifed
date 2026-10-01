@@ -18,7 +18,7 @@
       el ancho en lugar de dejar un hueco a la derecha.
     -->
     <CardSlider v-if="awards.length" :count="awards.length" :columns="awards.length">
-      <div v-for="award in awards" :key="award.id" class="awards__item">
+      <div v-for="(award, i) in awards" :key="award.id" class="awards__item" v-bind="edit(`awards.${i}`)">
         <!--
           Sin ancho ni alto en el <img>: cada logo lo sube el usuario y no se
           conocen sus medidas. El hueco lo reserva la casilla, que tiene alto
@@ -27,6 +27,7 @@
         <img
           v-if="award.image"
           class="awards__logo"
+          v-bind="edit('.image')"
           :src="award.image"
           :alt="award.imageAlt"
           loading="lazy"
@@ -38,7 +39,7 @@
           dónde va el logo. Es puro adorno, por eso es un <span> oculto a los
           lectores de pantalla.
         -->
-        <span v-else class="awards__placeholder" aria-hidden="true"></span>
+        <span v-else class="awards__placeholder" aria-hidden="true" v-bind="edit('.image')"></span>
       </div>
     </CardSlider>
 
@@ -75,6 +76,10 @@ import { computed } from 'vue';
 import CardSectionHeader from '../../events/_shared/CardSectionHeader.vue';
 import CardSectionFooter from '../../events/_shared/CardSectionFooter.vue';
 import CardSlider from '../../events/_shared/CardSlider.vue';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 /** Tope de la maqueta. El editor aplica el mismo (ver Editor.vue). */
 const MAX_AWARDS = 4;

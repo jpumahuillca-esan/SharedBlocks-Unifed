@@ -1,13 +1,13 @@
 <template>
   <div class="hero__slide">
-    <div class="hero__media">
+    <div class="hero__media" v-bind="edit('.image')">
       <!-- Sin imagen no se emite <img>: un src vacío da un icono roto. -->
       <img v-if="image" :src="image" :alt="imageAlt || ''" :loading="eager ? 'eager' : 'lazy'" />
     </div>
 
     <div class="hero__inner">
       <div class="hero__content">
-        <AtomText v-if="eyebrow" size="body-compact" class="hero__eyebrow">
+        <AtomText v-if="eyebrow" size="body-compact" class="hero__eyebrow" v-bind="edit('.eyebrow')">
           {{ eyebrow }}
         </AtomText>
 
@@ -25,17 +25,18 @@
           size="h1"
           weight="bold"
           class="hero__title"
+          v-bind="edit('.title')"
         >
           {{ title }}
         </AtomHeading>
 
         <!-- Opcional, según la maqueta. -->
-        <AtomText v-if="desc" size="body-compact" class="hero__desc">
+        <AtomText v-if="desc" size="body-compact" class="hero__desc" v-bind="edit('.desc')">
           {{ desc }}
         </AtomText>
 
         <div v-if="primary.label || secondary.label" class="hero__actions">
-          <AtomButton v-if="primary.label" variant="primary" :href="primary.url || undefined">
+          <AtomButton v-if="primary.label" variant="primary" :href="primary.url || undefined" v-bind="edit('.primary.label')">
             {{ primary.label }}
           </AtomButton>
 
@@ -43,6 +44,7 @@
           <AtomButton
             v-if="secondary.label"
             variant="secondary"
+            v-bind="edit('.secondary.label')"
             negative
             :href="secondary.url || undefined"
           >
@@ -71,6 +73,10 @@ import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import AtomButton from '../../../atoms/AtomButton.vue';
 import type { HeroAction } from './types';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 withDefaults(
   defineProps<{
