@@ -60,44 +60,10 @@
     </div>
 
     <!-- COLOR -->
-    <label class="form-label">Color del panel</label>
-    <div class="sh-color-selector mb-3">
-      <button
-        type="button"
-        class="sh-color-current"
-        :aria-expanded="colorsOpen"
-        aria-controls="subhero-color-options"
-        @click="colorsOpen = !colorsOpen"
-      >
-        <span
-          class="sh-color-swatch"
-          :style="{ backgroundColor: `var(${selectedColor.token})` }"
-          aria-hidden="true"
-        ></span>
-        <span class="sh-color-current__label">{{ selectedColor.label }}</span>
-        <span class="sh-color-current__action">
-          Cambiar
-          <i class="las" :class="colorsOpen ? 'la-angle-up' : 'la-angle-down'"></i>
-        </span>
-      </button>
-
-      <div v-if="colorsOpen" id="subhero-color-options" class="sh-color-options">
-        <button
-          v-for="option in otherColorOptions"
-          :key="option.token"
-          type="button"
-          class="sh-color-option"
-          @click="selectColor(option.token)"
-        >
-          <span
-            class="sh-color-swatch"
-            :style="{ backgroundColor: `var(${option.token})` }"
-            aria-hidden="true"
-          ></span>
-          <span class="sh-color-option__label">{{ option.label }}</span>
-        </button>
-      </div>
-    </div>
+    <BrandColorPicker
+      v-model="localData.panelColorToken"
+      class="mb-3"
+    />
 
     <!-- IMAGEN -->
     <label class="form-label">Imagen</label>
@@ -203,11 +169,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-import {
-  SUBHERO_COLOR_OPTIONS,
-  resolvePanelColorToken
-} from './shared/config';
+import { ref, watch } from 'vue';
+import BrandColorPicker from '../../_shared/BrandColorPicker.vue';
+import { resolvePanelColorToken } from './shared/config';
 import { SUBHERO_CONTENT_RULES } from './shared/rule';
 
 const props = defineProps<{
@@ -226,10 +190,8 @@ const emit = defineEmits<{
 }>();
 
 const rules = SUBHERO_CONTENT_RULES;
-const colorOptions = SUBHERO_COLOR_OPTIONS;
 const IMAGE_ALT_MAX_LENGTH = 150;
 
-const colorsOpen = ref(false);
 const focusArea = ref<HTMLElement | null>(null);
 const draggingFocus = ref(false);
 
@@ -258,25 +220,6 @@ const build = (source: any) => {
 };
 
 const localData = ref(build(props.modelValue));
-
-const selectedColor = computed(() =>
-  colorOptions.find(
-    (option) =>
-      option.token === localData.value.panelColorToken
-  ) ?? colorOptions[0]
-);
-
-const otherColorOptions = computed(() =>
-  colorOptions.filter(
-    (option) =>
-      option.token !== localData.value.panelColorToken
-  )
-);
-
-const selectColor = (token: string) => {
-  localData.value.panelColorToken = token;
-  colorsOpen.value = false;
-};
 
 const selectImage = () => {
   emit('select-image', {
@@ -412,79 +355,6 @@ watch(
   font-weight: 500;
 }
 
-/* COLOR */
-.sh-color-selector {
-  position: relative;
-}
-
-.sh-color-current,
-.sh-color-option {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  min-width: 0;
-  border: 1px solid var(--bs-border-color);
-  border-radius: var(--bs-border-radius);
-  background: var(--bs-body-bg);
-  color: var(--bs-body-color);
-  text-align: left;
-  cursor: pointer;
-}
-
-.sh-color-current {
-  padding: 8px 10px;
-}
-
-.sh-color-current:hover,
-.sh-color-option:hover {
-  background: var(--bs-tertiary-bg);
-}
-
-.sh-color-swatch {
-  width: 24px;
-  height: 24px;
-  flex: 0 0 24px;
-  border: 1px solid var(--bs-border-color);
-  border-radius: var(--bs-border-radius-sm);
-}
-
-.sh-color-current__label,
-.sh-color-option__label {
-  min-width: 0;
-  flex: 1;
-  font-size: 12.5px;
-  font-weight: 600;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.sh-color-current__action {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  flex-shrink: 0;
-  font-size: 11.5px;
-  font-weight: 500;
-  color: var(--bs-secondary-color);
-}
-
-.sh-color-options {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
-  margin-top: 6px;
-  padding: 6px;
-  border: 1px solid var(--bs-border-color);
-  border-radius: var(--bs-border-radius);
-  background: var(--bs-tertiary-bg);
-}
-
-.sh-color-option {
-  padding: 7px 8px;
-}
-
 /* IMAGE */
 .sh-image-preview {
   display: flex;
@@ -580,9 +450,4 @@ watch(
   height: 8px;
 }
 
-@media (max-width: 340px) {
-  .sh-color-options {
-    grid-template-columns: 1fr;
-  }
-}
 </style>

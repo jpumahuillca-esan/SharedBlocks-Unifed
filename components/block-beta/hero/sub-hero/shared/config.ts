@@ -1,33 +1,15 @@
-export const SUBHERO_COLOR_OPTIONS = [
-  {
-    label: 'ESAN University',
-    token: '--ds-color-university'
-  },
-  {
-    label: 'ESAN Management',
-    token: '--ds-color-univ-management'
-  },
-  {
-    label: 'ESAN Economics',
-    token: '--ds-color-univ-economics'
-  },
-  {
-    label: 'ESAN Engineering',
-    token: '--ds-color-univ-engineering'
-  },
-  {
-    label: 'ESAN Law',
-    token: '--ds-color-univ-law'
-  },
-  {
-    label: 'ESAN Communications',
-    token: '--ds-color-univ-communications'
-  },
-  {
-    label: 'ESAN Psychology',
-    token: '--ds-color-univ-psychology'
-  }
-] as const;
+import {
+  BRAND_COLOR_GROUPS,
+  resolveBrandContentToken,
+} from '../../../_shared/brandColors';
+
+/**
+ * El editor usa la paleta institucional compartida. Se conserva esta exportaciÃ³n
+ * para los consumidores de SubHero que necesiten consultar sus tokens.
+ */
+export const SUBHERO_COLOR_OPTIONS = BRAND_COLOR_GROUPS.flatMap(
+  (group) => group.colors
+);
 
 export const DEFAULT_PANEL_COLOR_TOKEN = '--ds-color-university';
 
@@ -47,4 +29,8 @@ export function resolvePanelColorToken(data: any): string {
   }
 
   return DEFAULT_PANEL_COLOR_TOKEN;
+}
+
+export function resolvePanelContentToken(data: any): string {
+  return resolveBrandContentToken(resolvePanelColorToken(data));
 }

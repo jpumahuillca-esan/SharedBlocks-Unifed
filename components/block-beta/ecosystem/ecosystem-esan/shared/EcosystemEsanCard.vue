@@ -1,7 +1,11 @@
 <template>
-  <article
+  <component
+    :is="href ? 'a' : 'article'"
     class="ecosystem-esan-card"
+    :class="{ 'ecosystem-esan-card--without-description': !description }"
     :style="cardStyle"
+    :href="href || undefined"
+    :aria-label="href ? `Ir a ${title || 'la sección'}` : undefined"
   >
     <!-- ================================================================
          Imagen
@@ -34,41 +38,43 @@
          Content
          ================================================================ -->
 
-    <div class="ecosystem-esan-card__body">
-      <div class="ecosystem-esan-card__text">
+    <div
+      v-if="title || description || href"
+      class="ecosystem-esan-card__body"
+      :class="{ 'ecosystem-esan-card__body--without-link': !href }"
+    >
+      <div v-if="title || description" class="ecosystem-esan-card__text">
         <AtomHeading
-          v-if="item.title"
+          v-if="title"
           :level="3"
           size="h5"
           weight="semibold"
           class="ecosystem-esan-card__title"
         >
-          {{ item.title }}
+          {{ title }}
         </AtomHeading>
 
         <AtomText
-          v-if="item.desc"
+          v-if="description"
           size="body"
           class="ecosystem-esan-card__desc"
         >
-          {{ item.desc }}
+          {{ description }}
         </AtomText>
       </div>
 
-      <AtomButton
-        variant="surface"
-        icon
-        :href="item.href || undefined"
-        :aria-label="`Ir a ${item.title || 'la sección'}`"
-        class="ecosystem-esan-card__action"
+      <span
+        v-if="href"
+        aria-hidden="true"
+        class="ecosystem-esan-card__action btn btn--surface btn--icon"
       >
         <AtomIcon
           name="chevron-right"
           :size="16"
         />
-      </AtomButton>
+      </span>
     </div>
-  </article>
+  </component>
 </template>
 
 <script setup lang="ts">
@@ -79,7 +85,6 @@ import {
 
 import AtomHeading from '../../../../atoms/AtomHeading.vue';
 import AtomText from '../../../../atoms/AtomText.vue';
-import AtomButton from '../../../../atoms/AtomButton.vue';
 import AtomIcon from '../../../../atoms/AtomIcon.vue';
 
 import {
@@ -93,6 +98,10 @@ import type {
 const props = defineProps<{
   item: EcosystemEsanItem;
 }>();
+
+const title = computed(() => props.item.title?.trim() ?? '');
+const description = computed(() => props.item.desc?.trim() ?? '');
+const href = computed(() => props.item.href?.trim() ?? '');
 
 const cardStyle = computed<CSSProperties>(
   () =>

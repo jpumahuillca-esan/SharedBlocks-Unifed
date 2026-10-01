@@ -21,7 +21,10 @@
 import { computed } from 'vue';
 import SubHeroBackground from './shared/SubHeroBackground.vue';
 import SubHeroContent from './shared/SubHeroContent.vue';
-import { resolvePanelColorToken } from './shared/config';
+import {
+  resolvePanelColorToken,
+  resolvePanelContentToken,
+} from './shared/config';
 
 const props = defineProps<{ data: any }>();
 
@@ -35,8 +38,10 @@ const imageFocusX = computed(() => props.data?.imageFocusX ?? 50);
 const imageFocusY = computed(() => props.data?.imageFocusY ?? 50);
 
 const panelColorToken = computed(() => resolvePanelColorToken(props.data));
+const panelContentToken = computed(() => resolvePanelContentToken(props.data));
 
 const panelColorStyle = computed(() => ({
-  backgroundColor: `var(${panelColorToken.value})`
+  backgroundColor: `var(${panelColorToken.value})`,
+  '--subhero-text-color': `var(${panelContentToken.value})`,
 }));
 </script>
