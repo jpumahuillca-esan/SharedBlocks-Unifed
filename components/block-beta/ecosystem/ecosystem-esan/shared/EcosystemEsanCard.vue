@@ -68,7 +68,7 @@
       <!-- <span
         v-if="href"
         aria-hidden="true"
-        class="ecosystem-esan-card__action btn btn--surface btn--icon" -->
+        class="ecosystem-esan-card__action btn btn--surface btn--icon"> -->
       <AtomButton
         variant="surface"
         icon
