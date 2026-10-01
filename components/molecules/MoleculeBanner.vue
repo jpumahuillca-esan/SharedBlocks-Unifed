@@ -38,6 +38,7 @@ import AtomHeading from '../atoms/AtomHeading.vue';
 import AtomText from '../atoms/AtomText.vue';
 import AtomEyebrow from '../atoms/AtomEyebrow.vue';
 import AtomIcon from '../atoms/AtomIcon.vue';
+import AtomLink from '../atoms/AtomLink.vue';
 
 type BannerVariant = 'brand' | 'dark' | 'outline' | 'image' | 'image-split';
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
@@ -82,7 +83,7 @@ const eyebrowVariant = computed(() => (props.variant === 'outline' ? 'brand' : '
 </script>
 
 <template>
-  <component :is="isImageVariant ? (href ? 'a' : 'div') : 'div'" :href="isImageVariant ? (href || '#') : undefined" :class="classes">
+  <AtomLink :href="isImageVariant ? (href || undefined) : undefined" as="div" :class="classes">
     <template v-if="isImageVariant">
       <!-- Sin imagen no se dibuja el <img>: un src vacío deja el icono de
            imagen rota. Queda el fondo que le dé quien use el banner. -->
@@ -123,5 +124,5 @@ const eyebrowVariant = computed(() => (props.variant === 'outline' ? 'brand' : '
         <slot name="actions" />
       </div>
     </template>
-  </component>
+  </AtomLink>
 </template>

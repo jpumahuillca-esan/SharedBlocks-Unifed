@@ -33,13 +33,11 @@
 
       <!-- Rejilla de tarjetas -->
       <div v-if="cards.length" class="cards-r3__grid">
-        <component
-          :is="card.href ? 'a' : 'div'"
+        <AtomLink
           v-for="card in cards"
           :key="card.id"
           :href="card.href || undefined"
-          :target="card.target || undefined"
-          :rel="card.target === '_blank' ? 'noopener noreferrer' : undefined"
+          as="div"
           class="cards-r3__card"
         >
           <!-- Cifra o métrica destacada en rojo institucional -->
@@ -60,7 +58,7 @@
           >
             {{ card.label }}
           </AtomText>
-        </component>
+        </AtomLink>
       </div>
     </div>
   </section>
@@ -85,6 +83,7 @@ import { computed } from 'vue';
 import AtomEyebrow from '../../../atoms/AtomEyebrow.vue';
 import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
+import AtomLink from '../../../atoms/AtomLink.vue';
 import { buildCardsReasonVersion3Data, type CardReasonItem } from './types';
 
 const props = defineProps<{

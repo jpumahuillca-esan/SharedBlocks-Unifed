@@ -165,8 +165,14 @@
     }
 
     .topbar-v1 {
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
       justify-content: flex-start;
       padding-inline: var(--ds-space-4);
+      padding-block: var(--ds-spacing-xxs);
+      min-height: 36px;
+      height: auto;
     }
 
     .topbar-v1__group--end {
@@ -174,21 +180,43 @@
     }
 
     .topbar-v1__group--start {
-      gap: var(--ds-space-4);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      column-gap: var(--ds-space-3);
+      row-gap: var(--ds-spacing-xxs);
+      flex-shrink: 1;
+      min-width: 0;
+      max-width: 100%;
     }
 
     .topbar-v1__group--start > * {
       margin-right: 0;
       padding-right: 0;
       border-right: none;
+      font-size: var(--ds-text-body-sm, 13px);
     }
 
-    /* El menú mide 220px y, anclado a la izquierda del disparador, sobresalía
-       por la derecha: aun cerrado ocupa caja y ensanchaba la página. Alineado
-       al borde derecho del disparador cabe dentro del viewport. */
     .topbar-v1 .dropdown__menu {
-      left: auto;
-      right: 0;
+      left: 0;
+      right: auto;
+      min-width: 200px;
+      max-width: calc(100vw - 32px);
+    }
+  }
+
+  @include bp.container-down('sm') {
+    .topbar-v1 {
+      padding-inline: var(--ds-space-3, 12px);
+    }
+
+    .topbar-v1__group--start {
+      column-gap: var(--ds-space-2, 8px);
+    }
+
+    .topbar-v1__link,
+    .topbar-v1 .dropdown__trigger {
+      font-size: 12px;
     }
   }
 

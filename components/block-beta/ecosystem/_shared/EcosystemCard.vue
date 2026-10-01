@@ -16,7 +16,7 @@
           que la flecha. Sin destino queda como texto y nada es clicable.
         -->
         <AtomHeading :level="titleLevel" :size="sizes.title" weight="bold" class="ecosystem-card__title">
-          <a v-if="card.href" :href="card.href" class="ecosystem-card__link">{{ card.title }}</a>
+          <AtomLink v-if="card.href" :href="card.href" class="ecosystem-card__link">{{ card.title }}</AtomLink>
           <template v-else>{{ card.title }}</template>
         </AtomHeading>
 
@@ -51,6 +51,7 @@
 import { computed } from 'vue';
 import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
+import AtomLink from '../../../atoms/AtomLink.vue';
 import EcosystemArrow from './EcosystemArrow.vue';
 import type { EcosystemCardItem, EcosystemTitleLevel } from './types';
 

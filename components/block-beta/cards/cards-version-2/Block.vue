@@ -40,13 +40,11 @@
 
       <!-- Rejilla de tarjetas -->
       <div v-if="cards.length" class="cards-v2__grid">
-        <component
-          :is="card.href ? 'a' : 'div'"
+        <AtomLink
           v-for="card in cards"
           :key="card.id"
           :href="card.href || undefined"
-          :target="card.target || undefined"
-          :rel="card.target === '_blank' ? 'noopener noreferrer' : undefined"
+          as="div"
           class="cards-v2__card"
         >
           <!-- Ícono izquierdo en recuadro suave con AtomIcon -->
@@ -79,7 +77,7 @@
           <span class="cards-v2__arrow" aria-hidden="true">
             <AtomIcon name="chevron-right" :size="18" />
           </span>
-        </component>
+        </AtomLink>
       </div>
     </div>
   </section>
@@ -105,6 +103,7 @@ import AtomEyebrow from '../../../atoms/AtomEyebrow.vue';
 import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
+import AtomLink from '../../../atoms/AtomLink.vue';
 import { buildCardsVersion2Data, type CardVersion2Item } from './types';
 
 const props = defineProps<{

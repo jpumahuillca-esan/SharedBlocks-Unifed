@@ -607,6 +607,18 @@
     .mmb {
       --mmb-bar-height: 56px;
       --mmb-padding-x: var(--ds-space-4);
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    .mmb__bar {
+      display: flex;
+      align-items: center;
+      gap: var(--ds-space-3, 12px);
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
     }
 
     /* Aquí el canto derecho lo ocupa la hamburguesa, haya búsqueda o no. */
@@ -614,9 +626,19 @@
       padding-right: 0;
     }
 
+    .mmb__logo {
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 1;
+      min-width: 0;
+      max-width: calc(100% - 116px);
+    }
+
     /* En la maqueta el logo móvil mide unos tres cuartos del de escritorio. */
     .mmb__logo-image {
-      height: calc(var(--mmb-logo-height, 36px) * 0.78);
+      max-width: 100%;
+      height: min(calc(var(--mmb-logo-height, 36px) * 0.78), 38px);
+      object-fit: contain;
     }
 
     .mmb__nav,
@@ -625,12 +647,16 @@
     }
 
     .mmb__actions {
+      display: flex;
+      align-items: stretch;
       margin-left: auto;
+      flex-shrink: 0;
     }
 
     .mmb__search {
       background-color: transparent;
       color: var(--ds-color-text-primary);
+      width: 52px;
     }
 
     .mmb__search:hover {
@@ -646,6 +672,46 @@
       background-color: var(--ds-color-action-primary);
       color: var(--ds-color-text-inverse);
       cursor: pointer;
+      flex-shrink: 0;
+    }
+  }
+
+  @include bp.container-down('sm') {
+    .mmb {
+      --mmb-bar-height: 52px;
+      --mmb-padding-x: var(--ds-space-3, 12px);
+    }
+
+    .mmb__bar {
+      gap: var(--ds-space-2, 8px);
+    }
+
+    .mmb__logo {
+      max-width: calc(100% - 96px);
+    }
+
+    .mmb__logo-image {
+      height: min(calc(var(--mmb-logo-height, 36px) * 0.72), 32px);
+    }
+
+    .mmb__search {
+      width: 44px;
+    }
+
+    .mmb__burger {
+      width: 48px;
+    }
+
+    .mmb-drawer__bar {
+      height: 52px;
+    }
+
+    .mmb-drawer__search {
+      width: 44px;
+    }
+
+    .mmb-drawer__close {
+      width: 48px;
     }
   }
 }
