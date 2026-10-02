@@ -1,10 +1,10 @@
 <template>
-  <component
-    :is="href ? 'a' : 'article'"
+  <AtomLink
+    :href="href || undefined"
+    as="article"
     class="ecosystem-esan-card"
     :class="{ 'ecosystem-esan-card--without-description': !description }"
     :style="cardStyle"
-    :href="href || undefined"
     :aria-label="href ? `Ir a ${title || 'la sección'}` : undefined"
   >
     <!-- ================================================================
@@ -18,6 +18,9 @@
         :alt="item.imageAlt || ''"
         width="410"
         height="155"
+        :style="{
+          objectPosition: `${item.imageFocusX ?? 50}% ${item.imageFocusY ?? 50}%`
+        }"
         loading="lazy"
         decoding="async"
       />
@@ -65,26 +68,19 @@
         </AtomText>
       </div>
 
-      <!-- <span
+      <span
         v-if="href"
+        class="ecosystem-esan-card__action btn btn--surface btn--icon"
         aria-hidden="true"
-        class="ecosystem-esan-card__action btn btn--surface btn--icon"> -->
-      <AtomButton
-        variant="surface"
-        icon
-        :href="item.href || undefined"
-        :aria-label="`Ir a ${item.title || 'la sección'}`"
-        class="ecosystem-esan-card__action"
         v-bind="edit('.href')"
       >
         <AtomIcon
           name="chevron-right"
           :size="16"
         />
-      </AtomButton>
-      <!-- </span> -->
+      </span>
     </div>
-  </component>
+  </AtomLink>
 </template>
 
 <script setup lang="ts">
@@ -96,6 +92,7 @@ import {
 import AtomHeading from '../../../../atoms/AtomHeading.vue';
 import AtomText from '../../../../atoms/AtomText.vue';
 import AtomIcon from '../../../../atoms/AtomIcon.vue';
+import AtomLink from '../../../../atoms/AtomLink.vue';
 
 import {
   resolveBrandContentToken,

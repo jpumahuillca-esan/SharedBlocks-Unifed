@@ -27,6 +27,8 @@ export interface EcosystemEsanItem {
 
   image: string;
   imageAlt: string;
+  imageFocusX: number;
+  imageFocusY: number;
 
   href: string;
 
@@ -63,6 +65,16 @@ const normalizeLimitedString = (
   }
 
   return value.slice(0, maxLength);
+};
+
+const normalizeImageFocus = (value: unknown): number => {
+  const number = Number(value);
+
+  if (!Number.isFinite(number)) {
+    return 50;
+  }
+
+  return Math.min(100, Math.max(0, number));
 };
 
 /* ==========================================================================
@@ -147,6 +159,9 @@ export const normalizeEcosystemEsanItem = (
     raw?.imageAlt,
     ECOSYSTEM_ESAN_CONTENT_RULES.card.imageAlt.maxLength,
   ),
+
+  imageFocusX: normalizeImageFocus(raw?.imageFocusX),
+  imageFocusY: normalizeImageFocus(raw?.imageFocusY),
 
   href: normalizeLimitedString(
     raw?.href,

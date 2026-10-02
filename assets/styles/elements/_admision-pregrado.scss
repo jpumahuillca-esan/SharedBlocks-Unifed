@@ -1,0 +1,98 @@
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .card-section.admision-pregrado {
+    --card-section-padding-x: var(--ds-space-3);
+    --card-section-card-min: 308px;
+    gap: var(--ds-space-20);
+    padding-inline: var(--card-section-padding-x);
+  }
+
+  .card-section.admision-pregrado .card-section__grid {
+    gap: var(--ds-space-3);
+  }
+
+  .card-section.admision-pregrado .card-section__grid > .admision-pregrado__card.banner--image {
+    flex: 0 0 308px;
+    aspect-ratio: 1 / 1;
+  }
+
+  .admision-pregrado__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 259px;
+    align-items: center;
+    gap: var(--ds-spacing-xs);
+    min-height: 96px;
+  }
+
+  .admision-pregrado__heading {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--ds-spacing-xs);
+  }
+
+  .admision-pregrado__title {
+    color: var(--ds-color-text-primary);
+    line-height: var(--ds-line-height-125);
+    letter-spacing: -0.01em;
+  }
+
+  .admision-pregrado__rule {
+    width: 40px;
+    height: 2px;
+    flex: 0 0 auto;
+    background-color: var(--ds-color-surface-primary);
+  }
+
+  .admision-pregrado__desc {
+    color: var(--ds-color-text-secondary);
+    line-height: 1.4;
+  }
+
+  .admision-pregrado__cta.btn.btn--link {
+    width: 259px;
+    min-height: 48px;
+    flex: 0 0 259px;
+    justify-content: flex-start;
+    color: var(--ds-color-action-primary);
+    font-family: var(--ds-font-family-display);
+    font-size: var(--ds-text-body);
+    font-weight: var(--ds-weight-semibold);
+    line-height: var(--ds-line-height-100);
+  }
+
+  .admision-pregrado__slider .card-slider__dots {
+    width: max-content;
+    min-width: 64px;
+    min-height: 32px;
+    align-self: center;
+    justify-content: center;
+    padding-block: var(--ds-space-3);
+    box-sizing: border-box;
+    gap: 8px;
+  }
+
+  .admision-pregrado__card {
+    scroll-snap-align: start;
+  }
+
+  @include bp.container-down('md') {
+    .card-section.admision-pregrado {
+      gap: var(--ds-spacing-xl);
+    }
+
+    .admision-pregrado__header {
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+      gap: var(--ds-spacing-sm);
+    }
+
+    .admision-pregrado__cta.btn.btn--link {
+      width: auto;
+      min-height: 48px;
+      flex-basis: auto;
+    }
+  }
+}

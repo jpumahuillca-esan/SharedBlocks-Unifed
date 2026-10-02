@@ -192,15 +192,16 @@
           Imagen
         </label>
 
-        <div class="ees-image-preview mb-2">
-          <img
-            v-if="item.image"
-            :src="item.image"
-            alt=""
-          />
+        <EcosystemEsanImageFocus
+          v-if="item.image"
+          :image="item.image"
+          v-model:focus-x="item.imageFocusX"
+          v-model:focus-y="item.imageFocusY"
+          class="mb-2"
+        />
 
+        <div v-else class="ees-image-preview mb-2">
           <button
-            v-else
             type="button"
             class="ees-image-empty"
             data-edit-target=".image"
@@ -219,6 +220,12 @@
             </span>
           </button>
         </div>
+
+        <p class="ees-hint mb-2">
+          Referencia web: 410 × 155 px. Para pantallas de alta densidad, usa
+          820 × 310 px o más. En móvil se recorta en vertical; ajusta el punto
+          focal para mantener visible lo importante.
+        </p>
 
         <div
           v-if="item.image"
@@ -422,6 +429,7 @@ import {
 
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
 import BrandColorPicker from '../../_shared/BrandColorPicker.vue';
+import EcosystemEsanImageFocus from './shared/EcosystemEsanImageFocus.vue';
 
 import {
   newEcosystemCardId,
@@ -559,6 +567,8 @@ const addItem = () => {
 
       image: '',
       imageAlt: '',
+      imageFocusX: 50,
+      imageFocusY: 50,
 
       href: '',
 
@@ -651,6 +661,8 @@ const removeImage = (
 ) => {
   item.image = '';
   item.imageAlt = '';
+  item.imageFocusX = 50;
+  item.imageFocusY = 50;
 };
 
 /* ==========================================================================
