@@ -10,6 +10,7 @@
     class="hero"
     :style="heroStyle"
     aria-labelledby="hero-title"
+    v-bind="edit('backgroundHero')"
   >
     <div class="hero__overlay" />
 
@@ -17,6 +18,7 @@
       <h1
         id="hero-title"
         class="hero__title"
+        v-bind="edit('title')"
       >
         {{ data.title }}
       </h1>
@@ -24,6 +26,7 @@
       <p
         v-if="data.subtitle"
         class="hero__subtitle"
+        v-bind="edit('type')"
       >
         {{ data.subtitle }}
       </p>
@@ -39,6 +42,13 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useEditTarget } from '../../../../core/editFocus'
+
+/*
+ * Marcas para el enfoque de campos del editor de noticias (core/editFocus.ts).
+ * Las rutas son las del formulario de la noticia (NewsEditor).
+ */
+const edit = useEditTarget()
 
 const props = defineProps<{
   data: any

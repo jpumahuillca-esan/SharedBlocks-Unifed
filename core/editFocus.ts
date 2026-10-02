@@ -136,7 +136,8 @@ const findTarget = (panel: Element, path: string): HTMLElement | null => {
   return best;
 };
 
-const FIELD_SELECTOR = 'input:not([type="hidden"]), textarea, select';
+/* contenteditable: los editores de texto enriquecido (Quill) no son un <textarea>. */
+const FIELD_SELECTOR = 'input:not([type="hidden"]), textarea, select, [contenteditable="true"]';
 
 /**
  * Lleva el panel hasta el campo de `path`: lo desplaza suavemente al centro,
@@ -216,9 +217,16 @@ const highlight = (target: HTMLElement, panel: HTMLElement) => {
   // El foco, sin su propio salto: el desplazamiento suave ya lo hace. Sin
   // campo de texto (una imagen) va al primer botón ("Cambiar imagen"); sin
   // nada enfocable se suelta el anterior, para no dejarlo en otro campo.
+  //
+  // Solo cuenta lo VISIBLE: hay componentes que guardan controles ocultos (la
+  // barra de Quill esconde un <select> por cada desplegable), y enfocar uno
+  // oculto no hace nada.
+  const firstVisible = (selector: string) =>
+    Array.from(target.querySelectorAll<HTMLElement>(selector)).find((el) => el.getClientRects().length > 0) ?? null;
+
   const focusable = isField
     ? target
-    : target.querySelector<HTMLElement>(FIELD_SELECTOR) ?? target.querySelector<HTMLElement>('button:not(:disabled)');
+    : firstVisible(FIELD_SELECTOR) ?? firstVisible('button:not(:disabled)');
 
   if (focusable) {
     focusable.focus({ preventScroll: true });

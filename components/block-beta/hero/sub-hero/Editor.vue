@@ -66,6 +66,7 @@
     <!-- COLOR -->
     <BrandColorPicker
       v-model="localData.panelColorToken"
+      data-edit-target="panelColorToken"
       class="mb-3"
     />
 

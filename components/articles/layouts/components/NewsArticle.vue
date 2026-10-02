@@ -7,57 +7,67 @@
             <div class="article__title-line" />
         </header> -->
         
-        <img class="article__cover" :src="coverImage" :alt="title">
-        
+        <img class="article__cover" :src="coverImage" :alt="title" v-bind="edit('imageUrl2')">
+
         <div
           class="article__content"
+          v-bind="edit('content_paragraph_1')"
           v-html="introContent"
         />
-        
-        <div v-if="gallery && gallery.length > 0" class="article__gallery">
+
+        <div v-if="gallery && gallery.length > 0" class="article__gallery" v-bind="edit('gallery')">
             <img v-for="(image, index) in gallery" :key="index" :src="image" alt="Gallery image">
         </div>
-        
+
         <div
           class="article__content"
+          v-bind="edit('content_paragraph_2')"
           v-html="bodyContent"
         />
-        
-        <section v-if="agreements && agreements.length > 0" class="article__agreements">
-            <AtomHeading :level="2" class="agreements__title">
+
+        <section v-if="agreements && agreements.length > 0" class="article__agreements" v-bind="edit('agreements')">
+            <AtomHeading :level="2" class="agreements__title" v-bind="edit('agreementsTitle')">
                 {{ agreementsTitle }}
             </AtomHeading>
             <div class="agreements__line" />
-            <AtomText class="agreements__description">
+            <AtomText class="agreements__description" v-bind="edit('agreementsDescription')">
                 {{ agreementsDescription }}
             </AtomText>
-            
+
             <div class="agreements__grid">
-                <article 
-                    v-for="agreement in agreements" 
-                    :key="agreement.id" 
+                <article
+                    v-for="(agreement, i) in agreements"
+                    :key="agreement.id"
                     :class="['agreement-card', agreement.color === 'blue' ? 'agreement-card--blue' : 'agreement-card--red']"
+                    v-bind="edit(`agreements.${i}`)"
                 >
                     <div class="agreement-card__icon">
                         <i class="bi bi-search"></i>
                     </div>
-                    <AtomHeading :level="3" class="agreement-card__title">
+                    <AtomHeading :level="3" class="agreement-card__title" v-bind="edit('.title')">
                         {{ agreement.title }}
                     </AtomHeading>
-                    <AtomText class="agreement-card__text">
+                    <AtomText class="agreement-card__text" v-bind="edit('.text')">
                         {{ agreement.text }}
                     </AtomText>
                 </article>
             </div>
         </section>
 
-        <div class="article__content" v-html="richTextContent"></div>
+        <div class="article__content" v-bind="edit('richTextContent')" v-html="richTextContent"></div>
     </article>
 </template>
 
 <script setup lang="ts">
 import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/*
+ * Marcas para el enfoque de campos del editor de noticias (core/editFocus.ts).
+ * Las rutas son las del formulario de la noticia (NewsEditor).
+ */
+const edit = useEditTarget();
 
 type AgreementColor = 'red' | 'blue'
 interface Agreement {

@@ -25,7 +25,7 @@
         </div>
       </section>
       <section class="sidebar__info">
-        <div class="sidebar__card">
+        <div class="sidebar__card" v-bind="edit('date')">
           <div class="sidebar__card-icon sidebar__card-icon--red">
             <i class="bi bi-clock"></i>
           </div>
@@ -38,7 +38,7 @@
             </div>
           </div>
         </div>
-        <div class="sidebar__card">
+        <div class="sidebar__card" v-bind="edit('location')">
           <div class="sidebar__card-icon sidebar__card-icon--blue">
             <i class="bi bi-geo-alt"></i>
           </div>
@@ -51,7 +51,7 @@
             </div>
           </div>
         </div>
-        <div class="sidebar__card">
+        <div class="sidebar__card" v-bind="edit('host_institution')">
           <div class="sidebar__card-icon sidebar__card-icon--red">
             <i class="bi bi-diagram-3"></i>
           </div>
@@ -69,7 +69,7 @@
     <!-- <AtomText>{{ buttons }}</AtomText> -->
     <div v-if="buttons && buttons.length" class="sidebar__bottom">
       <a v-for="(button, index) in buttons" :key="index" :href="button.url" target="_blank" rel="noopener noreferrer"
-        class="sidebar__cta">
+        class="sidebar__cta" v-bind="edit(`buttons.${button._index ?? index}`)">
         <span>{{ button.text }}</span>
       </a>
     </div>
@@ -83,9 +83,18 @@
 
 <script setup lang="ts">
 import AtomText from '../../../atoms/AtomText.vue';
+import { useEditTarget } from '../../../../core/editFocus';
+
+/*
+ * Marcas para el enfoque de campos del editor de noticias (core/editFocus.ts).
+ * Las rutas son las del formulario de la noticia (NewsEditor).
+ */
+const edit = useEditTarget();
 interface CTAButton {
   text: string;
   url: string;
+  /** Posición en el formulario: la vista previa omite los botones vacíos. */
+  _index?: number;
 }
 
 defineProps<{
