@@ -33,12 +33,15 @@
             -->
             <MoleculeFormField
               :as="field.type === 'select' ? 'select' : field.type === 'textarea' ? 'textarea' : 'input'"
-              :type="field.type === 'select' || field.type === 'textarea' ? 'text' : field.type"
+              :type="resolveFieldType(field)"
               :id="'lead-' + (field.name || idx)"
               :label="field.label"
-              :placeholder="field.placeholder || (field.type === 'select' ? '-- Seleccionar --' : '')"
+              :placeholder="resolvePlaceholder(field)"
               :options="field.options || []"
               :required="field.required"
+              :maxlength="resolveMaxlength(field)"
+              :minlength="resolveMinlength(field)"
+              :inputmode="resolveInputmode(field)"
               v-model="formValues[field.name]"
               @update:model-value="sanitizeField(field.name, field.type)"
             />
@@ -124,6 +127,11 @@ const {
   aceptaCondiciones,
   aceptaPublicidad,
   sanitizeField,
+  resolveFieldType,
+  resolveMaxlength,
+  resolveMinlength,
+  resolveInputmode,
+  resolvePlaceholder,
   submit,
 } = useDynamicLeadForm(props);
 </script>

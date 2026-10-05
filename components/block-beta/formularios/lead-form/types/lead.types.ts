@@ -11,6 +11,9 @@ export interface DynamicFormField {
   type: FieldType;       // text, email, select, etc.
   placeholder?: string;
   required: boolean;
+  validation_rule?: string; // none, dni, doc_dynamic, ce, passport, phone_pe, only_letters, only_numbers, email, alphanumeric
+  max_length?: number | null; // Cantidad máxima de caracteres
+  min_length?: number | null; // Cantidad mínima de caracteres
   col_span?: number;     // 6 (mitad de fila) o 12 (fila completa)
   options?: FormFieldOption[]; // Opciones si es tipo 'select'
 }
@@ -18,6 +21,7 @@ export interface DynamicFormField {
 export interface FormConfig {
   academic_unit_id?: number | null;
   campaign_id: number | null;
+  external_campaign_id?: string | null;
   study_program_id?: number | null;
   mainTitle?: string;
   subTitle?: string;
@@ -43,6 +47,7 @@ export interface LeadAutoresponderDirective {
 export interface PublicLeadPayload {
   academic_unit_id?: number | null;
   campaign_id: number | null;
+  external_campaign_id?: string | null;
   study_program_id?: number | null;
   first_name: string;
   apellido_paterno?: string;

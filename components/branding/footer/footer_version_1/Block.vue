@@ -124,6 +124,16 @@
 
         <div v-if="copyright" class="footer-v1__bottom">
           <AtomText size="body-compact" class="footer-v1__copyright">{{ copyright }}</AtomText>
+          <div class="footer-v1__legal-links">
+            <button
+              type="button"
+              class="footer-v1__cookie-link"
+              data-open-cookie-settings
+              @click="openCookieSettings"
+            >
+              Preferencias de cookies
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -231,6 +241,12 @@ const claims = computed(() => ({
 }));
 
 const copyright = computed(() => text(props.config?.copyright));
+
+const openCookieSettings = () => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('esan:open-cookie-settings'));
+  }
+};
 
 /* -------------------------------------------------------------------------
    Acordeón

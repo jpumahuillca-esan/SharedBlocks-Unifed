@@ -246,6 +246,26 @@
     color: var(--ds-color-neutral-200);
   }
 
+  .footer-v1__legal-links {
+    margin-top: var(--ds-space-2, 8px);
+  }
+
+  .footer-v1__cookie-link {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--ds-color-neutral-300, #cbd5e1);
+    font-size: 0.78rem;
+    font-family: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #ffffff;
+    }
+  }
+
   /* -----------------------------------------------------------------------
      Tableta — por debajo de 1024px (o pie angosto).
 

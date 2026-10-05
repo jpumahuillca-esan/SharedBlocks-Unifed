@@ -21,12 +21,16 @@ import { computed } from 'vue';
 type InputType = 'text' | 'email' | 'tel' | 'password' | 'number' | 'date' | 'url' | 'search';
 
 const props = withDefaults(defineProps<{
-  modelValue?: string;
+  modelValue?: string | number;
   type?: InputType;
   id?: string;
   placeholder?: string;
   disabled?: boolean;
   required?: boolean;
+  maxlength?: number | string;
+  minlength?: number | string;
+  inputmode?: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url';
+  pattern?: string;
   /**
    * Fuerza un estado visual. "focus" no es el foco real del navegador:
    * existe para poder mostrar ese estado en la guía viva, donde nada
@@ -56,6 +60,10 @@ const classes = computed(() => [
     :placeholder="placeholder"
     :disabled="disabled"
     :required="required"
+    :maxlength="maxlength"
+    :minlength="minlength"
+    :inputmode="inputmode"
+    :pattern="pattern"
     :value="modelValue"
     @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
   />

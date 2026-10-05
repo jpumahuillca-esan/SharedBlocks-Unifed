@@ -67,6 +67,23 @@
         </small>
       </div>
 
+      <!-- ID Campaña Externa / CRM (Opcional / Sobrescritura) -->
+      <div class="p-3 rounded mb-3 border" style="background-color: var(--ds-color-background-light); border-color: var(--ds-color-border-subtle);">
+        <label class="small fw-bold d-block mb-1" style="color: var(--ds-color-text-primary);">
+          <i class="las la-plug text-primary me-1"></i> ID Campaña Externa / CRM (Opcional)
+        </label>
+        <input
+          type="text"
+          class="form-control form-control-sm font-monospace"
+          v-model="localForm.external_campaign_id"
+          data-edit-target="external_campaign_id"
+          placeholder="Ej: CMP-SF-2026-001 (Deja en blanco para heredar de Campaña)"
+        />
+        <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">
+          Permite asignar o sobrescribir el ID de campaña de CRM para este formulario específico. Si se deja en blanco, heredará automáticamente el ID externo de la campaña vinculada.
+        </small>
+      </div>
+
       <!-- Inspección de Campos Inyectados -->
       <div class="p-2 rounded mb-3 border" style="background-color: var(--ds-color-background-light);">
         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -84,6 +101,12 @@
               <code class="text-muted ms-1">({{ f.name }})</code>
             </div>
             <div class="d-flex align-items-center gap-1">
+              <span v-if="f.validation_rule && f.validation_rule !== 'none'" class="badge bg-info-subtle text-info border font-monospace">
+                {{ f.validation_rule === 'doc_dynamic' ? 'Doc Dinámico' : f.validation_rule }}
+              </span>
+              <span v-if="f.max_length" class="badge bg-light text-dark border font-monospace">
+                {{ f.max_length }} car.
+              </span>
               <span class="badge bg-light text-dark border">{{ f.type }}</span>
               <span v-if="f.required" class="badge bg-danger">Requerido</span>
             </div>
@@ -130,18 +153,42 @@ const studyPrograms = ref<any[]>([]);
 const loadingPrograms = ref(false);
 
 const DEFAULT_FIELDS: DynamicFormField[] = [
-  { name: 'first_name', label: 'Nombres', type: 'text', placeholder: 'Tus nombres', required: true, col_span: 6 },
-  { name: 'last_name', label: 'Apellido Paterno', type: 'text', placeholder: 'Apellido paterno', required: true, col_span: 6 },
-  //{ name: 'apellido_materno', label: 'Apellido Materno', type: 'text', placeholder: 'Apellido materno', required: true, col_span: 6 },
-  { name: 'email', label: 'Correo Electrónico', type: 'email', placeholder: 'correo@ejemplo.com', required: true, col_span: 6 },
-  { name: 'phone', label: 'Teléfono Celular', type: 'tel', placeholder: '999 999 999', required: true, col_span: 6 },
-  { name: 'document_number', label: 'N° Documento (DNI/CE)', type: 'text', placeholder: 'Documento', required: true, col_span: 6 },
+  {
+    name: 'document_type',
+    label: 'Tipo de Documento',
+    type: 'select',
+    placeholder: '-- Seleccionar Tipo --',
+    required: true,
+    validation_rule: 'none',
+    max_length: null,
+    col_span: 6,
+    options: [
+      { label: 'DNI', value: 'dni' },
+      { label: 'Carné de Extranjería (CE)', value: 'ce' },
+      { label: 'Pasaporte (PAS)', value: 'pas' },
+    ],
+  },
+  {
+    name: 'document_number',
+    label: 'N° Documento',
+    type: 'text',
+    placeholder: '8 dígitos para DNI',
+    required: true,
+    validation_rule: 'doc_dynamic',
+    max_length: 8,
+    col_span: 6,
+  },
+  { name: 'first_name', label: 'Nombres', type: 'text', placeholder: 'Tus nombres', required: true, validation_rule: 'only_letters', max_length: 100, col_span: 6 },
+  { name: 'last_name', label: 'Apellido Paterno', type: 'text', placeholder: 'Apellido paterno', required: true, validation_rule: 'only_letters', max_length: 100, col_span: 6 },
+  { name: 'email', label: 'Correo Electrónico', type: 'email', placeholder: 'correo@ejemplo.com', required: true, validation_rule: 'email', max_length: 150, col_span: 6 },
+  { name: 'phone', label: 'Teléfono Celular', type: 'tel', placeholder: '999 999 999', required: true, validation_rule: 'phone_pe', max_length: 9, col_span: 6 },
 ];
 
 const localForm = ref({
   // Guardamos la unidad académica directamente en el contenido del bloque
   academic_unit_id: props.modelValue?.academic_unit_id ?? authStore.academicUnitId ?? null,
   campaign_id: props.modelValue?.campaign_id ?? null,
+  external_campaign_id: props.modelValue?.external_campaign_id || '',
   study_program_id: props.modelValue?.study_program_id ? Number(props.modelValue.study_program_id) : null,
   mainTitle: props.modelValue?.mainTitle || '¡TRANSFORMA TU FUTURO! DA EL PRIMER PASO',
   subTitle: props.modelValue?.subTitle || 'Déjanos tus datos y un asesor resolverá todas tus consultas.',
@@ -179,6 +226,11 @@ const handleCampaignChange = () => {
   // 1. Sincroniza el academic_unit_id desde la campaña seleccionada
   localForm.value.academic_unit_id = camp.academic_unit_id;
 
+  // 2. Si la campaña tiene external_campaign_id y no se configuró uno manual en el bloque, lo sugiere
+  if (camp.external_campaign_id && !localForm.value.external_campaign_id) {
+    localForm.value.external_campaign_id = camp.external_campaign_id;
+  }
+
   // 2. Sincroniza o sugiere el programa de estudio de la campaña si está disponible
   if (camp.study_program_id && !localForm.value.study_program_id) {
     localForm.value.study_program_id = Number(camp.study_program_id);
@@ -198,6 +250,9 @@ const handleCampaignChange = () => {
       placeholder: f.placeholder || '',
       required: Boolean(f.required),
       col_span: f.col_span || 6,
+      validation_rule: f.validation_rule || (f.name === 'document_number' ? 'doc_dynamic' : f.name === 'phone' ? 'phone_pe' : (f.name === 'first_name' || f.name === 'last_name') ? 'only_letters' : f.type === 'email' ? 'email' : 'none'),
+      max_length: f.max_length != null ? Number(f.max_length) : (f.name === 'document_number' ? 8 : f.name === 'phone' ? 9 : null),
+      min_length: f.min_length != null ? Number(f.min_length) : null,
       options: f.options || []
     }));
   } else {

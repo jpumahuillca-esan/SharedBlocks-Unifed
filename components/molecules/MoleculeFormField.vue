@@ -61,6 +61,10 @@ const props = withDefaults(defineProps<{
   options?: FormSelectOption[];
   required?: boolean;
   disabled?: boolean;
+  maxlength?: number | string;
+  minlength?: number | string;
+  inputmode?: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url';
+  pattern?: string;
   /** Fuerza el estado dibujado del control (ver AtomFormInput). */
   state?: 'focus' | 'error' | 'success';
 }>(), {
@@ -140,6 +144,10 @@ const ariaLabel = computed(() => (props.variant === 'search' ? props.label : und
         :placeholder="placeholder"
         :required="required"
         :disabled="disabled"
+        :maxlength="maxlength"
+        :minlength="minlength"
+        :inputmode="inputmode"
+        :pattern="pattern"
         :state="state"
         :aria-label="ariaLabel"
         :model-value="modelValue"
