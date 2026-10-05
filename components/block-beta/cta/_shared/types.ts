@@ -5,11 +5,14 @@
  * las que traen un área de acciones comparten este contrato de botones, y la
  * compacta conserva su enlace único, que es como está definida en el original.
  */
+import { normalizeLinkTarget, type LinkTarget } from '../../../../helpers/linkTarget';
 
 /** Un botón del área de acciones. */
 export interface CtaAction {
     label: string;
     url: string;
+    /** `_blank` abre `url` en una pestaña nueva; vacío, en la misma página. */
+    target: LinkTarget;
 }
 
 /** Cuántos botones muestra el área de acciones. Cero la oculta por completo. */
@@ -74,4 +77,5 @@ export const normalizeButtonCount = (value: unknown): CtaButtonCount => {
 export const normalizeAction = (raw: any, fallbackLabel = ''): CtaAction => ({
     label: typeof raw?.label === 'string' ? raw.label : fallbackLabel,
     url: typeof raw?.url === 'string' ? raw.url : '',
+    target: normalizeLinkTarget(raw?.target),
 });

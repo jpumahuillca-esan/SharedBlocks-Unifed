@@ -8,51 +8,25 @@
       Encabezado
     </h6>
 
-    <label class="form-label">
-      Título
-    </label>
-
-    <textarea
+    <EditorTextarea
       v-model="localData.title"
       data-edit-target="title"
-      class="form-control form-control-sm mb-1"
-      rows="2"
+      class="mb-3"
+      label="Título"
+      :rows="2"
       :maxlength="rules.title.maxLength"
       placeholder="En ESAN University conviertes tu talento en oportunidades"
-    ></textarea>
+    />
 
-    <div class="ees-limit mb-3">
-      <span>
-        Máximo {{ rules.title.maxLength }} caracteres.
-      </span>
-
-      <span class="ees-limit__counter">
-        {{ localData.title.length }}/{{ rules.title.maxLength }}
-      </span>
-    </div>
-
-    <label class="form-label">
-      Descripción
-    </label>
-
-    <textarea
+    <EditorTextarea
       v-model="localData.desc"
       data-edit-target="desc"
-      class="form-control form-control-sm mb-1"
-      rows="3"
+      class="mb-3"
+      label="Descripción"
+      :rows="3"
       :maxlength="rules.desc.maxLength"
       placeholder="Encuentra la carrera que se adapte a tu vocación"
-    ></textarea>
-
-    <div class="ees-limit mb-3">
-      <span>
-        Máximo {{ rules.desc.maxLength }} caracteres.
-      </span>
-
-      <span class="ees-limit__counter">
-        {{ localData.desc.length }}/{{ rules.desc.maxLength }}
-      </span>
-    </div>
+    />
 
     <hr />
 
@@ -124,175 +98,74 @@
              Título del card
              ============================================================ -->
 
-        <label class="form-label">
-          Título
-        </label>
-
-        <input
+        <EditorText
           v-model="item.title"
           data-edit-target=".title"
-          type="text"
-          class="form-control form-control-sm mb-1"
+          class="mb-3"
+          label="Título"
           :maxlength="rules.card.title.maxLength"
           placeholder="ESAN Management"
         />
-
-        <div class="ees-limit mb-3">
-          <span>
-            Máximo {{ rules.card.title.maxLength }} caracteres.
-          </span>
-
-          <span class="ees-limit__counter">
-            {{ item.title.length }}/{{ rules.card.title.maxLength }}
-          </span>
-        </div>
 
         <!-- ============================================================
              Descripción del card
              ============================================================ -->
 
-        <label class="form-label">
-          Descripción
-        </label>
-
-        <textarea
+        <EditorTextarea
           v-model="item.desc"
           data-edit-target=".desc"
-          class="form-control form-control-sm mb-1"
-          rows="3"
+          class="mb-3"
+          label="Descripción"
+          :rows="3"
           :maxlength="rules.card.desc.maxLength"
           placeholder="Carreras de ciencias administrativas"
-        ></textarea>
-
-        <div class="ees-limit mb-3">
-          <span>
-            Máximo {{ rules.card.desc.maxLength }} caracteres.
-          </span>
-
-          <span class="ees-limit__counter">
-            {{ item.desc.length }}/{{ rules.card.desc.maxLength }}
-          </span>
-        </div>
+        />
 
         <!-- ============================================================
              Color institucional
              ============================================================ -->
 
-        <BrandColorPicker
+        <EditorBrandColor
           v-model="item.colorToken"
           data-edit-target=".colorToken"
           class="mb-3"
         />
 
         <!-- ============================================================
-             Imagen
+             Imagen, punto focal y texto alternativo
              ============================================================ -->
 
-        <label class="form-label">
-          Imagen
-        </label>
-
-        <EcosystemEsanImageFocus
-          v-if="item.image"
-          :image="item.image"
+        <EditorImage
+          v-model="item.image"
+          v-model:alt="item.imageAlt"
           v-model:focus-x="item.imageFocusX"
           v-model:focus-y="item.imageFocusY"
-          class="mb-2"
+          data-edit-target=".image"
+          alt-edit-target=".imageAlt"
+          class="mb-3"
+          variant="dropzone"
+          :height="110"
+          hint-position="bottom"
+          hint="Referencia web: 410 × 155 px. Para pantallas de alta densidad, usa 820 × 310 px o más. En móvil se recorta en vertical; ajusta el punto focal para mantener visible lo importante."
+          dropzone-text="Haz clic para elegir una imagen para este card."
+          alt-placeholder="Describe brevemente la imagen"
+          :alt-maxlength="rules.card.imageAlt.maxLength"
+          @select="selectImage(item)"
+          @remove="resetImageExtras(item)"
         />
-
-        <div v-else class="ees-image-preview mb-2">
-          <button
-            type="button"
-            class="ees-image-empty"
-            data-edit-target=".image"
-            @click="selectImage(item)"
-          >
-            <span class="ees-image-empty__icon">
-              <i class="las la-image"></i>
-            </span>
-
-            <strong>
-              Selecciona una imagen
-            </strong>
-
-            <span>
-              Haz clic para elegir una imagen para este card.
-            </span>
-          </button>
-        </div>
-
-        <p class="ees-hint mb-2">
-          Referencia web: 410 × 155 px. Para pantallas de alta densidad, usa
-          820 × 310 px o más. En móvil se recorta en vertical; ajusta el punto
-          focal para mantener visible lo importante.
-        </p>
-
-        <div
-          v-if="item.image"
-          class="d-flex gap-2 mb-2"
-        >
-          <button
-            type="button"
-            class="btn btn-sm btn-outline-secondary flex-grow-1"
-            data-edit-target=".image"
-            @click="selectImage(item)"
-          >
-            <i class="las la-image me-1"></i>
-            Cambiar imagen
-          </button>
-
-          <button
-            type="button"
-            class="btn btn-sm btn-outline-danger"
-            title="Quitar imagen"
-            @click="removeImage(item)"
-          >
-            <i class="las la-trash"></i>
-          </button>
-        </div>
-
-        <!-- ============================================================
-             Texto alternativo
-             ============================================================ -->
-
-        <label class="form-label">
-          Texto alternativo
-        </label>
-
-        <input
-          v-model="item.imageAlt"
-          data-edit-target=".imageAlt"
-          type="text"
-          class="form-control form-control-sm mb-1"
-          :maxlength="rules.card.imageAlt.maxLength"
-          placeholder="Describe brevemente la imagen"
-        />
-
-        <div class="ees-limit mb-3">
-          <span>
-            Máximo {{ rules.card.imageAlt.maxLength }} caracteres.
-          </span>
-
-          <span class="ees-limit__counter">
-            {{ item.imageAlt.length }}/{{ rules.card.imageAlt.maxLength }}
-          </span>
-        </div>
 
         <!-- ============================================================
              Destino del card
              ============================================================ -->
 
-        <label class="form-label">
-          Destino de la tarjeta
-        </label>
-
-        <input
+        <EditorUrl
           v-model="item.href"
+          v-model:target="item.target"
           data-edit-target=".href"
-          type="text"
-          class="form-control form-control-sm mb-3"
+          class="mb-3"
+          label="Destino de la tarjeta"
           :maxlength="rules.card.href.maxLength"
-          placeholder="/ruta o https://"
+          :counter="false"
         />
 
         <hr />
@@ -358,40 +231,22 @@
             </div>
           </div>
 
-          <label class="form-label">
-            Texto
-          </label>
-
-          <input
+          <EditorText
             v-model="link.label"
             data-edit-target=".label"
-            type="text"
-            class="form-control form-control-sm mb-1"
+            class="mb-3"
+            label="Texto"
             :maxlength="rules.link.label.maxLength"
             placeholder="Administración y Finanzas"
           />
 
-          <div class="ees-limit mb-3">
-            <span>
-              Máximo {{ rules.link.label.maxLength }} caracteres.
-            </span>
-
-            <span class="ees-limit__counter">
-              {{ link.label.length }}/{{ rules.link.label.maxLength }}
-            </span>
-          </div>
-
-          <label class="form-label">
-            Destino
-          </label>
-
-          <input
+          <EditorUrl
             v-model="link.href"
+            v-model:target="link.target"
             data-edit-target=".href"
-            type="text"
-            class="form-control form-control-sm"
+            label="Destino"
             :maxlength="rules.link.href.maxLength"
-            placeholder="/ruta o https://"
+            :counter="false"
           />
         </div>
 
@@ -428,8 +283,11 @@ import {
 } from 'vue';
 
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
-import BrandColorPicker from '../../_shared/BrandColorPicker.vue';
-import EcosystemEsanImageFocus from './shared/EcosystemEsanImageFocus.vue';
+import EditorBrandColor from '../../../editor-beta/EditorBrandColor/EditorBrandColor.vue';
+import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
+import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
+import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
+import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 
 import {
   newEcosystemCardId,
@@ -656,10 +514,13 @@ const selectImage = (
   );
 };
 
-const removeImage = (
+/*
+ * Al quitar la foto, EditorImage ya vacía `image`; aquí se limpia lo que
+ * dependía de ella: el texto alternativo y el punto focal.
+ */
+const resetImageExtras = (
   item: EcosystemEsanItem,
 ) => {
-  item.image = '';
   item.imageAlt = '';
   item.imageFocusX = 50;
   item.imageFocusY = 50;
@@ -678,6 +539,7 @@ const addLink = (
 
     label: '',
     href: '',
+    target: '',
   });
 };
 
@@ -777,126 +639,6 @@ watch(
 
   font-size: 11.5px;
   line-height: 1.45;
-}
-
-/* ==========================================================================
-   Límites de contenido
-   ========================================================================== */
-
-.ees-limit {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  width: 100%;
-
-  gap: 12px;
-
-  color: #6b7688;
-
-  font-size: 11.5px;
-  line-height: 1.45;
-}
-
-.ees-limit__counter {
-  flex: 0 0 auto;
-
-  color: #8591a2;
-
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  text-align: right;
-}
-
-/* ==========================================================================
-   Preview de imagen
-   ========================================================================== */
-
-.ees-image-preview {
-  width: 100%;
-  height: 110px;
-
-  overflow: hidden;
-
-  border: 1px dashed #c6cedb;
-  border-radius: 7px;
-
-  background: #f4f6fa;
-}
-
-.ees-image-preview img {
-  display: block;
-
-  width: 100%;
-  height: 100%;
-
-  object-fit: cover;
-}
-
-/*
- * El lienzo vacío existe solamente dentro
- * del área del preview de imagen.
- */
-.ees-image-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  gap: 4px;
-
-  width: 100%;
-  height: 100%;
-
-  padding: 12px;
-
-  border: 0;
-
-  background: transparent;
-  color: #6b7688;
-
-  text-align: center;
-
-  cursor: pointer;
-
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
-}
-
-.ees-image-empty:hover {
-  background: #edf1f6;
-}
-
-.ees-image-empty__icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 34px;
-  height: 34px;
-
-  margin-bottom: 2px;
-
-  border-radius: 7px;
-
-  background: #e3e8ef;
-
-  font-size: 19px;
-}
-
-.ees-image-empty strong {
-  color: #3e4755;
-
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.ees-image-empty > span:last-child {
-  max-width: 220px;
-
-  font-size: 10.5px;
-  line-height: 1.35;
 }
 
 /* ==========================================================================

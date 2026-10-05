@@ -13,6 +13,7 @@
         :subtitle="data.subtitle || ''"
         :link-label="data.linkLabel || ''"
         :link-url="data.linkUrl || ''"
+        :link-target="normalizeLinkTarget(data.linkTarget)"
       />
 
       <!--
@@ -37,8 +38,11 @@
           :author-role="card.role"
           :image="card.image"
           :image-alt="card.imageAlt"
+          :image-focus-x="card.imageFocusX"
+          :image-focus-y="card.imageFocusY"
           :video-url="card.videoUrl"
           :href="card.href"
+          :target="card.target"
           :cta-label="card.ctaLabel"
         />
       </div>
@@ -66,6 +70,8 @@ import { ref, computed } from 'vue';
 import MoleculeTestimonial from '../../../molecules/MoleculeTestimonial.vue';
 import StorySectionHeader from '../_shared/StorySectionHeader.vue';
 import { useDragScroll } from '../../../../composables/useDragScroll';
+import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 import { normalizeStoryCardCount, type StoryCardItem } from '../_shared/types';
 import { useEditTarget } from '../../../../core/editFocus';
 
@@ -92,8 +98,11 @@ const cards = computed<StoryCardItem[]>(() => {
     role: card?.role ?? '',
     image: card?.image ?? '',
     imageAlt: card?.imageAlt ?? '',
+    imageFocusX: normalizeImageFocus(card?.imageFocusX),
+    imageFocusY: normalizeImageFocus(card?.imageFocusY),
     videoUrl: card?.videoUrl ?? '',
     href: card?.href ?? '',
+    target: normalizeLinkTarget(card?.target),
     ctaLabel: card?.ctaLabel ?? '',
   })) as StoryCardItem[];
 });

@@ -139,6 +139,16 @@ const findTarget = (panel: Element, path: string): HTMLElement | null => {
 /* contenteditable: los editores de texto enriquecido (Quill) no son un <textarea>. */
 const FIELD_SELECTOR = 'input:not([type="hidden"]), textarea, select, [contenteditable="true"]';
 
+/*
+ * Para buscar el primer campo DENTRO de un grupo (una tarjeta abierta) se dejan
+ * fuera los deslizadores: el del punto focal de una imagen aparece antes que los
+ * campos de texto y, con él, pulsar la tarjeta en el lienzo enfocaba un slider.
+ * Si el objetivo ES el deslizador (`.imageFocusX`) sigue valiendo: eso lo decide
+ * FIELD_SELECTOR, no este.
+ */
+const GROUP_FIELD_SELECTOR =
+  'input:not([type="hidden"]):not([type="range"]), textarea, select, [contenteditable="true"]';
+
 /**
  * Lleva el panel hasta el campo de `path`: lo desplaza suavemente al centro,
  * lo resalta y le pone el foco.
@@ -226,7 +236,7 @@ const highlight = (target: HTMLElement, panel: HTMLElement) => {
 
   const focusable = isField
     ? target
-    : firstVisible(FIELD_SELECTOR) ?? firstVisible('button:not(:disabled)');
+    : firstVisible(GROUP_FIELD_SELECTOR) ?? firstVisible('button:not(:disabled)');
 
   if (focusable) {
     focusable.focus({ preventScroll: true });

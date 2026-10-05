@@ -1,6 +1,7 @@
 <template>
   <AtomLink
     :href="href || undefined"
+    :target="item.target"
     as="article"
     class="ecosystem-esan-card"
     :class="{ 'ecosystem-esan-card--without-description': !description }"
@@ -96,7 +97,7 @@ import AtomLink from '../../../../atoms/AtomLink.vue';
 
 import {
   resolveBrandContentToken,
-} from '../../../_shared/brandColors';
+} from '../../../../editor-beta/EditorBrandColor/brandColors';
 
 import type {
   EcosystemEsanItem,

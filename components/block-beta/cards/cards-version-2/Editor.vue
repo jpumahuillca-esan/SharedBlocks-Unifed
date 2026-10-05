@@ -21,43 +21,41 @@
       </select>
     </div>
 
-    <label class="form-label">Etiqueta superior (Eyebrow)</label>
-    <p class="cv2-hint">Texto corto en color institucional (ej. "+ PREGRADO").</p>
-    <input
+    <EditorText
       v-model="localData.eyebrow"
       data-edit-target="eyebrow"
-      type="text"
-      class="form-control form-control-sm mb-2"
+      class="mb-2"
+      label="Etiqueta superior (Eyebrow)"
+      hint='Texto corto en color institucional (ej. "+ PREGRADO").'
       placeholder="+ PREGRADO"
     />
 
     <!-- Selector único de color institucional para el Eyebrow (texto y punto) -->
     <div v-if="localData.eyebrow" class="mb-3">
-      <BrandColorPicker
+      <EditorBrandColor
         v-model="localData.eyebrowColorToken"
         data-edit-target="eyebrowColorToken"
         label="Color del antetítulo (texto y punto)"
       />
     </div>
 
-    <label class="form-label">Título principal</label>
-    <p class="cv2-hint">Título de la sección. Lleva siempre el guion rojo de acento debajo.</p>
-    <input
+    <EditorText
       v-model="localData.title"
       data-edit-target="title"
-      type="text"
-      class="form-control form-control-sm mb-2"
+      class="mb-2"
+      label="Título principal"
+      hint="Título de la sección. Lleva siempre el guion rojo de acento debajo."
       placeholder="Carreras universitarias en ciencias administrativas"
     />
 
-    <label class="form-label">Descripción de apoyo (opcional)</label>
-    <textarea
+    <EditorTextarea
       v-model="localData.desc"
       data-edit-target="desc"
-      class="form-control form-control-sm mb-3"
-      rows="2"
+      class="mb-3"
+      label="Descripción de apoyo (opcional)"
+      :rows="2"
       placeholder="Descripción o subtítulo opcional de la sección"
-    ></textarea>
+    />
 
     <hr class="my-3" />
 
@@ -108,51 +106,33 @@
         </div>
 
         <!-- Título de la tarjeta -->
-        <label class="form-label">Título de la tarjeta</label>
-        <input
+        <EditorText
           v-model="card.title"
           data-edit-target=".title"
-          type="text"
-          class="form-control form-control-sm mb-2"
+          class="mb-2"
+          label="Título de la tarjeta"
           placeholder="Ej: Administración y Finanzas"
         />
 
         <!-- Descripción corta opcional -->
-        <label class="form-label">Descripción corta (opcional)</label>
-        <p class="cv2-hint">Texto complementario visible bajo el título.</p>
-        <input
+        <EditorText
           v-model="card.desc"
           data-edit-target=".desc"
-          type="text"
-          class="form-control form-control-sm mb-2"
+          class="mb-2"
+          label="Descripción corta (opcional)"
+          hint="Texto complementario visible bajo el título."
           placeholder="Ej: Descripción corta"
         />
 
         <!-- Enlace de destino -->
-        <label class="form-label">Enlace de destino (URL)</label>
-        <input
+        <!-- El interruptor "Link interno / Página externa" reemplaza al antiguo "Abrir en nueva pestaña". -->
+        <EditorUrl
           v-model="card.href"
+          v-model:target="card.target"
           data-edit-target=".href"
-          type="text"
-          class="form-control form-control-sm mb-2"
+          label="Enlace de destino (URL)"
           placeholder="/carreras/administracion-y-finanzas"
         />
-
-        <!-- Abrir en nueva pestaña -->
-        <div class="form-check mt-2">
-          <input
-            :id="`target-${card.id}`"
-            v-model="card.target"
-            data-edit-target=".target"
-            type="checkbox"
-            class="form-check-input"
-            true-value="_blank"
-            false-value=""
-          />
-          <label :for="`target-${card.id}`" class="form-check-label small">
-            Abrir en nueva pestaña
-          </label>
-        </div>
       </div>
     </CardAccordionItem>
 
@@ -181,7 +161,10 @@
 import { ref, watch } from 'vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
-import BrandColorPicker from '../../_shared/BrandColorPicker.vue';
+import EditorBrandColor from '../../../editor-beta/EditorBrandColor/EditorBrandColor.vue';
+import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
+import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
+import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import { ICON_SUGGESTIONS } from '../../../../helpers/iconOptions';
 import { buildCard, buildCardsVersion2Data, type CardVersion2Item } from './types';
 

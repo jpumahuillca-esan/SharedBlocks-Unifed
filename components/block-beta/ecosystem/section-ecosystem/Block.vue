@@ -43,6 +43,7 @@
             :title="bar.title"
             :desc="bar.desc"
             :href="bar.href"
+            :target="bar.target"
           />
 
           <div v-if="faculties.length" class="ecosystem__faculties">
@@ -78,6 +79,7 @@ import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import EcosystemCard from '../_shared/EcosystemCard.vue';
 import EcosystemBar from '../_shared/EcosystemBar.vue';
+import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 import { useEditTarget } from '../../../../core/editFocus';
 import {
   DEFAULT_FACULTIES_TITLE_LEVEL,
@@ -110,5 +112,6 @@ const bar = computed(() => ({
   title: props.data?.bar?.title ?? '',
   desc: props.data?.bar?.desc ?? '',
   href: props.data?.bar?.href ?? '',
+  target: normalizeLinkTarget(props.data?.bar?.target),
 }));
 </script>

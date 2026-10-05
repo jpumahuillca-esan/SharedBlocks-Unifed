@@ -6,6 +6,7 @@
       variant="primary"
       :negative="primaryNegative"
       :href="primary.url || '#'"
+      :target="primary.target"
     >
       {{ primary.label }}
     </AtomButton>
@@ -17,6 +18,7 @@
       variant="secondary"
       :negative="negative"
       :href="secondary.url || '#'"
+      :target="secondary.target"
     >
       {{ secondary.label }}
     </AtomButton>

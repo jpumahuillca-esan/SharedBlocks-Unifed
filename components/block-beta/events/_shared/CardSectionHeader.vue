@@ -24,7 +24,7 @@
     </div>
 
     <!-- El "Button Link" del sistema; en pequeño, al tamaño del texto de apoyo. -->
-    <AtomButton v-if="linkLabel" variant="link" size="sm" class="card-section__link" :href="linkUrl || '#'" v-bind="edit('linkLabel')">
+    <AtomButton v-if="linkLabel" variant="link" size="sm" class="card-section__link" :href="linkUrl || '#'" :target="linkTarget" v-bind="edit('linkLabel')">
       {{ linkLabel }}
       <AtomIcon name="arrow-right" :size="16" />
     </AtomButton>
@@ -59,5 +59,7 @@ defineProps<{
   desc: string;
   linkLabel: string;
   linkUrl: string;
+  /** `_blank` abre el enlace en una pestaña nueva; vacío, en la misma página. */
+  linkTarget?: string;
 }>();
 </script>

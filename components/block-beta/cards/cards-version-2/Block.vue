@@ -49,6 +49,7 @@
           v-bind="edit(`cards.${i}`)"
           :key="card.id"
           :href="card.href || undefined"
+          :target="card.target"
           as="div"
           class="cards-v2__card"
         >

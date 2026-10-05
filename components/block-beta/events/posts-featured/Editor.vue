@@ -5,11 +5,13 @@
       :title="localData.title"
       :link-label="localData.linkLabel"
       :link-url="localData.linkUrl"
+      :link-target="localData.linkTarget"
       :card-count="localData.cardCount"
       @update:desc="localData.desc = $event"
       @update:title="localData.title = $event"
       @update:link-label="localData.linkLabel = $event"
       @update:link-url="localData.linkUrl = $event"
+      @update:link-target="localData.linkTarget = $event"
       @update:card-count="localData.cardCount = $event"
     />
 
@@ -38,46 +40,21 @@
       @remove="removeCard(index)"
     >
       <div>
-        <label class="form-label">Título</label>
-        <textarea v-model="card.title" data-edit-target=".title" class="form-control form-control-sm mb-2" rows="2"></textarea>
+        <EditorTextarea v-model="card.title" data-edit-target=".title" class="mb-2" label="Título" :rows="2" />
 
-        <label class="form-label">Imagen</label>
-        <div class="ps-image-preview mb-2">
-          <img v-if="card.image" :src="card.image" alt="" />
-          <span v-else class="text-muted small">Sin imagen</span>
-        </div>
-        <div class="d-flex gap-2 mb-2">
-          <button
-            type="button"
-            class="btn btn-sm btn-outline-secondary flex-grow-1"
-            data-edit-target=".image"
-            @click="$emit('select-image', { item: card, field: 'image' })"
-          >
-            <i class="las la-image me-1"></i>
-            {{ card.image ? 'Cambiar imagen' : 'Subir imagen' }}
-          </button>
-          <button
-            v-if="card.image"
-            type="button"
-            class="btn btn-sm btn-outline-danger"
-            title="Quitar imagen"
-            @click="card.image = ''"
-          >
-            <i class="las la-trash"></i>
-          </button>
-        </div>
-
-        <label class="form-label">Texto alternativo</label>
-        <input v-model="card.imageAlt" data-edit-target=".imageAlt" type="text" class="form-control form-control-sm mb-2" />
-
-        <label class="form-label">Destino</label>
-        <input
-          v-model="card.href"
-          data-edit-target=".href"
-          type="text"
-          class="form-control form-control-sm mb-2"
-          placeholder="/ruta o https://"
+        <EditorImage
+          v-model="card.image"
+          v-model:alt="card.imageAlt"
+          v-model:focus-x="card.imageFocusX"
+          v-model:focus-y="card.imageFocusY"
+          focus-ratio="16 / 9"
+          data-edit-target=".image"
+          alt-edit-target=".imageAlt"
+          class="mb-2"
+          @select="$emit('select-image', { item: card, field: 'image' })"
         />
+
+        <EditorUrl v-model="card.href" v-model:target="card.target" data-edit-target=".href" class="mb-2" label="Destino" />
 
         <label class="form-label">Fecha</label>
         <input v-model="card.date" data-edit-target=".date" type="date" class="form-control form-control-sm" />
@@ -93,12 +70,11 @@
           </template>
         </p>
 
-        <label class="form-label">Texto del enlace</label>
-        <input
+        <EditorText
           v-model="card.ctaLabel"
           data-edit-target=".ctaLabel"
-          type="text"
-          class="form-control form-control-sm mb-2"
+          class="mb-2"
+          label="Texto del enlace"
           placeholder="Leer artículo"
         />
 
@@ -120,8 +96,14 @@ import { ref, watch } from 'vue';
 import CardSectionHeaderEditor from '../_shared/CardSectionHeaderEditor.vue';
 import BadgeListEditor from '../_shared/BadgeListEditor.vue';
 import CardAccordionItem from '../_shared/CardAccordionItem.vue';
+import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
+import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
+import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
+import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import { newCardId, normalizeCardCount, type PostCardItem } from '../_shared/types';
 import { toDisplayDate } from '../_shared/date';
+import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 
 /** Vista previa de cómo quedará la fecha en la tarjeta. */
 const preview = (iso: string) => toDisplayDate(iso ?? '');
@@ -137,8 +119,11 @@ const buildCard = (source: any): PostCardItem => ({
   id: source?.id || newCardId(),
   image: source?.image ?? '',
   imageAlt: source?.imageAlt ?? '',
+  imageFocusX: normalizeImageFocus(source?.imageFocusX),
+  imageFocusY: normalizeImageFocus(source?.imageFocusY),
   title: source?.title ?? '',
   href: source?.href ?? '',
+  target: normalizeLinkTarget(source?.target),
   date: source?.date ?? '',
   ctaLabel: source?.ctaLabel ?? 'Leer artículo',
   badges: Array.isArray(source?.badges) ? [...source.badges] : [],
@@ -149,6 +134,7 @@ const build = (source: any) => ({
   title: source?.title ?? '',
   linkLabel: source?.linkLabel ?? '',
   linkUrl: source?.linkUrl ?? '',
+  linkTarget: normalizeLinkTarget(source?.linkTarget),
   cardCount: normalizeCardCount(source?.cardCount),
   cards: Array.isArray(source?.cards) ? source.cards.map(buildCard) : [],
 });
@@ -214,22 +200,5 @@ watch(
   font-size: 11.5px;
   line-height: 1.45;
   color: #6b7688;
-}
-
-.ps-image-preview {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 90px;
-  border: 1px dashed #c6cedb;
-  border-radius: 7px;
-  background: #f4f6fa;
-  overflow: hidden;
-}
-
-.ps-image-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 </style>

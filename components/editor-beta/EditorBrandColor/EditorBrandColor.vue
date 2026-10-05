@@ -113,6 +113,20 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * Selector de color institucional del panel de edición.
+ *
+ * Guarda el TOKEN (`--ds-color-…`), nunca el hex: si Diseño corrige un tono, las
+ * páginas ya publicadas lo siguen solas.
+ *
+ * Antes vivía en block-beta/_shared/ como BrandColorPicker. La paleta
+ * (brandColors.ts) vive aquí, junto al selector, y es TypeScript puro sin
+ * Vue: también la importan los bloques del sitio público (EcosystemEsanCard,
+ * ecosystem-esan/types, sub-hero/config) para resolver el token a su color.
+ *
+ * `class` y `data-edit-target` caen en la raíz: al pulsar el color en el
+ * lienzo se resalta el selector entero y el foco va al botón que lo abre.
+ */
 import {
   computed,
   ref,

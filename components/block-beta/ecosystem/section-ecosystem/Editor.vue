@@ -2,11 +2,9 @@
   <div class="ec-editor">
     <h6 class="fw-bold small text-uppercase mb-1">Encabezado</h6>
 
-    <label class="form-label">Título</label>
-    <textarea v-model="localData.title" data-edit-target="title" class="form-control form-control-sm mb-2" rows="2"></textarea>
+    <EditorTextarea v-model="localData.title" data-edit-target="title" class="mb-2" label="Título" :rows="2" />
 
-    <label class="form-label">Descripción</label>
-    <textarea v-model="localData.desc" data-edit-target="desc" class="form-control form-control-sm mb-2" rows="3"></textarea>
+    <EditorTextarea v-model="localData.desc" data-edit-target="desc" class="mb-2" label="Descripción" :rows="3" />
 
     <hr />
 
@@ -39,7 +37,7 @@
       @move="move('features', index, $event)"
       @remove="remove('features', index)"
     >
-      <EcosystemCardFields :card="card" @select-image="$emit('select-image', $event)" />
+      <EcosystemCardFields :card="card" image-ratio="12 / 5" @select-image="$emit('select-image', $event)" />
     </CardAccordionItem>
 
     <button type="button" class="btn btn-sm btn-outline-secondary w-100" @click="add('features')">
@@ -54,31 +52,28 @@
       Encabeza el grupo de la derecha. Siempre va en el rojo institucional.
     </p>
 
-    <label class="form-label">Título</label>
-    <input
+    <EditorText
       v-model="localData.bar.title"
       data-edit-target="bar.title"
-      type="text"
-      class="form-control form-control-sm mb-2"
+      class="mb-2"
+      label="Título"
       placeholder="ESAN University"
     />
 
-    <label class="form-label">Descripción</label>
-    <input
+    <EditorText
       v-model="localData.bar.desc"
       data-edit-target="bar.desc"
-      type="text"
-      class="form-control form-control-sm mb-2"
+      class="mb-2"
+      label="Descripción"
       placeholder="Carreras de pregrado, postgrado y para gente que trabaja (DPA)"
     />
 
-    <label class="form-label">Destino</label>
-    <input
+    <EditorUrl
       v-model="localData.bar.href"
+      v-model:target="localData.bar.target"
       data-edit-target="bar.href"
-      type="text"
-      class="form-control form-control-sm mb-2"
-      placeholder="/ruta o https://"
+      class="mb-2"
+      label="Destino"
     />
 
     <hr />
@@ -112,7 +107,7 @@
       @move="move('faculties', index, $event)"
       @remove="remove('faculties', index)"
     >
-      <EcosystemCardFields :card="card" @select-image="$emit('select-image', $event)" />
+      <EcosystemCardFields :card="card" image-ratio="16 / 9" @select-image="$emit('select-image', $event)" />
     </CardAccordionItem>
 
     <button type="button" class="btn btn-sm btn-danger w-100" @click="add('faculties')">
@@ -136,6 +131,10 @@ import { ref, watch } from 'vue';
  */
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
 import EcosystemCardFields from '../_shared/EcosystemCardFields.vue';
+import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
+import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
+import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
+import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 import {
   DEFAULT_FACULTIES_TITLE_LEVEL,
   DEFAULT_FEATURES_TITLE_LEVEL,
@@ -170,6 +169,7 @@ const build = (source: any) => ({
     title: source?.bar?.title ?? '',
     desc: source?.bar?.desc ?? '',
     href: source?.bar?.href ?? '',
+    target: normalizeLinkTarget(source?.bar?.target),
   },
   faculties: Array.isArray(source?.faculties) ? source.faculties.map(buildCard) : [],
   facultiesTitleLevel: normalizeEcosystemTitleLevel(source?.facultiesTitleLevel, DEFAULT_FACULTIES_TITLE_LEVEL),

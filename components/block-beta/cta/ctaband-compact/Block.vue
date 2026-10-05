@@ -10,7 +10,7 @@
     </div>
 
     <!-- El "Button Link" del sistema. -->
-    <AtomButton v-if="data.linkLabel" variant="link" class="ctaband__link" :href="data.linkUrl || '#'" v-bind="edit('linkLabel')">
+    <AtomButton v-if="data.linkLabel" variant="link" class="ctaband__link" :href="data.linkUrl || '#'" :target="normalizeLinkTarget(data.linkTarget)" v-bind="edit('linkLabel')">
       {{ data.linkLabel }}
       <AtomIcon name="arrow-right" :size="16" />
     </AtomButton>
@@ -30,6 +30,7 @@
  */
 import AtomButton from '../../../atoms/AtomButton.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
+import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 import { useEditTarget } from '../../../../core/editFocus';
 
 /* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */

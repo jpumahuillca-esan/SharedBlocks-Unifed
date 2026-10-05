@@ -2,39 +2,37 @@
   <div class="admision-pregrado-editor">
     <h6 class="fw-bold small text-uppercase mb-2">Encabezado</h6>
 
-    <label class="form-label">Título</label>
-    <input
+    <EditorText
       v-model="localData.title"
       data-edit-target="title"
-      type="text"
-      class="form-control form-control-sm mb-2"
+      class="mb-2"
+      label="Título"
       placeholder="Admisión de pregrado"
     />
 
-    <label class="form-label">Descripción</label>
-    <textarea
+    <EditorTextarea
       v-model="localData.desc"
       data-edit-target="desc"
-      class="form-control form-control-sm mb-3"
-      rows="2"
+      class="mb-3"
+      label="Descripción"
+      :rows="2"
       placeholder="Texto de apoyo para la sección"
-    ></textarea>
+    />
 
-    <label class="form-label">Texto del enlace de la sección</label>
-    <input
+    <EditorText
       v-model="localData.linkLabel"
       data-edit-target="linkLabel"
-      type="text"
-      class="form-control form-control-sm mb-2"
+      class="mb-2"
+      label="Texto del enlace de la sección"
       placeholder="Conoce más"
     />
 
-    <label class="form-label">Destino del enlace</label>
-    <input
+    <EditorUrl
       v-model="localData.linkUrl"
+      v-model:target="localData.linkTarget"
       data-edit-target="linkUrl"
-      type="text"
-      class="form-control form-control-sm mb-3"
+      class="mb-3"
+      label="Destino del enlace"
       placeholder="/admision/pregrado o https://"
     />
     <p class="ap-hint">
@@ -86,66 +84,44 @@
       @remove="removeCard(index)"
     >
       <div>
-        <label class="form-label">Imagen</label>
-        <div class="ap-image-preview mb-2">
-          <img v-if="card.image" :src="card.image" :alt="card.imageAlt" />
-          <span v-else class="text-muted small">Sin imagen</span>
-        </div>
-        <div class="d-flex gap-2 mb-2">
-          <button
-            type="button"
-            class="btn btn-sm btn-outline-secondary flex-grow-1"
-            data-edit-target=".image"
-            @click="emit('select-image', { item: card, field: 'image' })"
-          >
-            <i class="las la-image me-1"></i>
-            {{ card.image ? 'Cambiar imagen' : 'Seleccionar imagen' }}
-          </button>
-          <button
-            v-if="card.image"
-            type="button"
-            class="btn btn-sm btn-outline-danger"
-            title="Quitar imagen"
-            @click="card.image = ''"
-          >
-            <i class="las la-trash"></i>
-          </button>
-        </div>
-
-        <label class="form-label">Texto alternativo de la imagen</label>
-        <input
-          v-model="card.imageAlt"
-          data-edit-target=".imageAlt"
-          type="text"
-          class="form-control form-control-sm mb-2"
-          placeholder="Describe brevemente la imagen"
+        <EditorImage
+          v-model="card.image"
+          v-model:alt="card.imageAlt"
+          v-model:focus-x="card.imageFocusX"
+          v-model:focus-y="card.imageFocusY"
+          focus-ratio="16 / 10"
+          data-edit-target=".image"
+          alt-edit-target=".imageAlt"
+          class="mb-2"
+          ratio="16 / 10"
+          select-label="Seleccionar imagen"
+          alt-label="Texto alternativo de la imagen"
+          alt-placeholder="Describe brevemente la imagen"
+          @select="emit('select-image', { item: card, field: 'image' })"
         />
 
-        <label class="form-label">Título de la tarjeta</label>
-        <input
+        <EditorText
           v-model="card.title"
           data-edit-target=".title"
-          type="text"
-          class="form-control form-control-sm mb-2"
+          class="mb-2"
+          label="Título de la tarjeta"
           placeholder="Vida universitaria"
         />
 
-        <label class="form-label">Descripción</label>
-        <textarea
+        <EditorTextarea
           v-model="card.desc"
           data-edit-target=".desc"
-          class="form-control form-control-sm mb-2"
-          rows="2"
+          class="mb-2"
+          label="Descripción"
+          :rows="2"
           placeholder="Carreras de ciencias administrativas"
-        ></textarea>
+        />
 
-        <label class="form-label">Destino de la tarjeta</label>
-        <input
+        <EditorUrl
           v-model="card.href"
+          v-model:target="card.target"
           data-edit-target=".href"
-          type="text"
-          class="form-control form-control-sm"
-          placeholder="/ruta o https://"
+          label="Destino de la tarjeta"
         />
         <p class="ap-hint mt-1">Toda la tarjeta será el enlace. Si el destino queda vacío, no será clicable.</p>
       </div>
@@ -164,6 +140,10 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
+import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
+import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
+import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
+import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import {
   buildAdmissionCard,
   buildAdmissionPregradoData,
@@ -272,23 +252,6 @@ watch(
 
 .ap-count-option.is-selected .ap-count-chip {
   background: #e3173e;
-}
-
-.ap-image-preview {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  border: 1px dashed #c6cedb;
-  border-radius: 7px;
-  background: #f4f6fa;
-}
-
-.ap-image-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .ap-empty {

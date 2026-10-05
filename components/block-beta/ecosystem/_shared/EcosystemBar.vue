@@ -11,7 +11,7 @@
     </div>
 
     <!-- Sobre el rojo de la franja, la flecha va en blanco sólido. -->
-    <EcosystemArrow :href="href" :label="title" variant="white" v-bind="edit('.href')" />
+    <EcosystemArrow :href="href" :target="target" :label="title" variant="white" v-bind="edit('.href')" />
   </div>
 </template>
 
@@ -35,5 +35,7 @@ defineProps<{
   title: string;
   desc: string;
   href: string;
+  /** `_blank` abre `href` en una pestaña nueva; vacío, en la misma página. */
+  target?: string;
 }>();
 </script>

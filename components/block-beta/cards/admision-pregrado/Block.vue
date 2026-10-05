@@ -36,6 +36,7 @@
         size="md"
         class="admision-pregrado__cta"
         :href="data.linkUrl"
+        :target="data.linkTarget"
       >
         {{ data.linkLabel }}
         <AtomIcon name="arrow-right" :size="16" />
@@ -58,12 +59,15 @@
         class="admision-pregrado__card"
         :image="card.image"
         :image-alt="card.imageAlt"
+        :image-focus-x="card.imageFocusX"
+        :image-focus-y="card.imageFocusY"
         :title="card.title"
         :title-level="3"
         title-size="h5"
         :text="card.desc"
         text-size="body-compact"
         :href="card.href"
+        :target="card.target"
       />
     </CardSlider>
   </section>

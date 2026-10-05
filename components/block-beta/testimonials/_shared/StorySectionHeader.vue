@@ -33,6 +33,7 @@
       class="story-section__link"
       v-bind="edit('linkLabel')"
       :href="linkUrl || '#'"
+      :target="linkTarget"
     >
       {{ linkLabel }}
       <AtomIcon name="arrow-right" :size="16" />
@@ -70,5 +71,7 @@ defineProps<{
   subtitle: string;
   linkLabel: string;
   linkUrl: string;
+  /** `_blank` abre el enlace en una pestaña nueva; vacío, en la misma página. */
+  linkTarget?: string;
 }>();
 </script>

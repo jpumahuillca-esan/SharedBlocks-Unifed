@@ -5,6 +5,7 @@
       :title="data.title || ''"
       :link-label="data.linkLabel || ''"
       :link-url="data.linkUrl || ''"
+      :link-target="linkTarget"
     />
 
     <CardSlider :count="visibleCards.length" :columns="cardCount">
@@ -22,8 +23,11 @@
         :month="card.month"
         :title="card.title"
         :href="card.href"
+        :target="card.target"
         :image="card.image"
         :image-alt="card.imageAlt"
+        :image-focus-x="card.imageFocusX"
+        :image-focus-y="card.imageFocusY"
         :badges="card.badges"
       />
     </CardSlider>
@@ -31,6 +35,7 @@
     <CardSectionFooter
       :link-label="data.linkLabel || ''"
       :link-url="data.linkUrl || ''"
+      :link-target="linkTarget"
     />
   </section>
 </template>
@@ -52,6 +57,8 @@ import CardSectionFooter from '../_shared/CardSectionFooter.vue';
 import CardSlider from '../_shared/CardSlider.vue';
 import { normalizeCardCount, type EventCardItem } from '../_shared/types';
 import { toEventDateParts } from '../_shared/date';
+import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 import { useEditTarget } from '../../../../core/editFocus';
 
 const props = defineProps<{ data: any }>();
@@ -60,6 +67,9 @@ const props = defineProps<{ data: any }>();
 const edit = useEditTarget();
 
 const cardCount = computed(() => normalizeCardCount(props.data?.cardCount));
+
+/** Cómo se abre el enlace "ver todos" del encabezado y del pie. */
+const linkTarget = computed(() => normalizeLinkTarget(props.data?.linkTarget));
 
 const visibleCards = computed<EventCardItem[]>(() => {
   const raw = Array.isArray(props.data?.cards) ? props.data.cards : [];
@@ -80,8 +90,11 @@ const visibleCards = computed<EventCardItem[]>(() => {
     month: fromCalendar?.month ?? card?.month ?? '',
     title: card?.title ?? '',
     href: card?.href ?? '',
+    target: normalizeLinkTarget(card?.target),
     image: card?.image ?? '',
     imageAlt: card?.imageAlt ?? '',
+    imageFocusX: normalizeImageFocus(card?.imageFocusX),
+    imageFocusY: normalizeImageFocus(card?.imageFocusY),
     tag: card?.tag ?? '',
     badges: Array.isArray(card?.badges)
       ? card.badges.filter((b: any) => typeof b === 'string' && b.trim())

@@ -43,18 +43,16 @@
           <span class="action-dot is-primary"></span>
           <strong>Botón principal</strong>
         </div>
-        <input
+        <EditorText
           v-model="primary.label"
           data-edit-target="primary.label"
-          type="text"
-          class="form-control form-control-sm mb-2"
+          class="mb-2"
           placeholder="Texto del botón"
         />
-        <input
+        <EditorUrl
           v-model="primary.url"
+          v-model:target="primary.target"
           data-edit-target="primary.url"
-          type="text"
-          class="form-control form-control-sm"
           placeholder="Destino: /ruta o https://"
         />
       </div>
@@ -64,18 +62,16 @@
           <span class="action-dot is-secondary"></span>
           <strong>Botón secundario</strong>
         </div>
-        <input
+        <EditorText
           v-model="secondary.label"
           data-edit-target="secondary.label"
-          type="text"
-          class="form-control form-control-sm mb-2"
+          class="mb-2"
           placeholder="Texto del botón"
         />
-        <input
+        <EditorUrl
           v-model="secondary.url"
+          v-model:target="secondary.target"
           data-edit-target="secondary.url"
-          type="text"
-          class="form-control form-control-sm"
           placeholder="Destino: /ruta o https://"
         />
       </div>
@@ -94,6 +90,8 @@
  * Cambiar la cantidad no borra lo escrito: el bloque simplemente deja de
  * dibujar lo que sobra, así que se puede volver atrás sin perder el texto.
  */
+import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
+import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import type { CtaAction, CtaButtonCount } from './types';
 
 defineProps<{

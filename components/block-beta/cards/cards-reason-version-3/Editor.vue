@@ -6,33 +6,31 @@
       El encabezado se centra sobre las tarjetas. Deja un campo vacío si deseas ocultarlo.
     </p>
 
-    <label class="form-label">Etiqueta superior (Eyebrow - opcional)</label>
-    <input
+    <EditorText
       v-model="localData.eyebrow"
       data-edit-target="eyebrow"
-      type="text"
-      class="form-control form-control-sm mb-2"
+      class="mb-2"
+      label="Etiqueta superior (Eyebrow - opcional)"
       placeholder="Ej: ¿POR QUÉ ESAN?"
     />
 
-    <label class="form-label">Título principal</label>
-    <p class="cr3-hint">Título de la sección. Lleva siempre el guion rojo de acento debajo.</p>
-    <input
+    <EditorText
       v-model="localData.title"
       data-edit-target="title"
-      type="text"
-      class="form-control form-control-sm mb-2"
+      class="mb-2"
+      label="Título principal"
+      hint="Título de la sección. Lleva siempre el guion rojo de acento debajo."
       placeholder="¿Por qué elegir a ESAN?"
     />
 
-    <label class="form-label">Descripción de apoyo (opcional)</label>
-    <textarea
+    <EditorTextarea
       v-model="localData.desc"
       data-edit-target="desc"
-      class="form-control form-control-sm mb-3"
-      rows="2"
+      class="mb-3"
+      label="Descripción de apoyo (opcional)"
+      :rows="2"
       placeholder="Descripción o subtítulo complementario"
-    ></textarea>
+    />
 
     <hr class="my-3" />
 
@@ -70,51 +68,34 @@
     >
       <div>
         <!-- Cifra o número destacado -->
-        <label class="form-label">Cifra o indicador destacado</label>
-        <p class="cr3-hint">Aparece en rojo y con tamaño grande (ej: 1º, 3º, 11, +130, 95%).</p>
-        <input
+        <EditorText
           v-model="card.number"
           data-edit-target=".number"
-          type="text"
-          class="form-control form-control-sm mb-2"
+          class="mb-2"
+          label="Cifra o indicador destacado"
+          hint="Aparece en rojo y con tamaño grande (ej: 1º, 3º, 11, +130, 95%)."
           placeholder="Ej: 1º"
         />
 
         <!-- Texto explicativo -->
-        <label class="form-label">Texto explicativo / Razón</label>
-        <textarea
+        <EditorTextarea
           v-model="card.label"
           data-edit-target=".label"
-          class="form-control form-control-sm mb-2"
-          rows="2"
+          class="mb-2"
+          label="Texto explicativo / Razón"
+          :rows="2"
           placeholder="Ej: Ranking Merco Empresas 2025 - Sector Educación"
-        ></textarea>
-
-        <!-- Enlace de destino -->
-        <label class="form-label">Enlace de destino (opcional)</label>
-        <input
-          v-model="card.href"
-          data-edit-target=".href"
-          type="text"
-          class="form-control form-control-sm mb-2"
-          placeholder="/reconocimientos o https://"
         />
 
-        <!-- Abrir en nueva pestaña -->
-        <div class="form-check mt-2">
-          <input
-            :id="`target-r3-${card.id}`"
-            v-model="card.target"
-            data-edit-target=".target"
-            type="checkbox"
-            class="form-check-input"
-            true-value="_blank"
-            false-value=""
-          />
-          <label :for="`target-r3-${card.id}`" class="form-check-label small">
-            Abrir en nueva pestaña
-          </label>
-        </div>
+        <!-- Enlace de destino -->
+        <!-- El interruptor "Link interno / Página externa" reemplaza al antiguo "Abrir en nueva pestaña". -->
+        <EditorUrl
+          v-model="card.href"
+          v-model:target="card.target"
+          data-edit-target=".href"
+          label="Enlace de destino (opcional)"
+          placeholder="/reconocimientos o https://"
+        />
       </div>
     </CardAccordionItem>
 
@@ -142,6 +123,9 @@
  */
 import { ref, watch } from 'vue';
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
+import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
+import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
+import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import { buildReasonCard, buildCardsReasonVersion3Data, type CardReasonItem } from './types';
 
 const props = defineProps<{

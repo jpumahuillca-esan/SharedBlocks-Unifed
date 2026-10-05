@@ -2,7 +2,13 @@
   <div class="hero__slide">
     <div class="hero__media" v-bind="edit('.image')">
       <!-- Sin imagen no se emite <img>: un src vacío da un icono roto. -->
-      <img v-if="image" :src="image" :alt="imageAlt || ''" :loading="eager ? 'eager' : 'lazy'" />
+      <img
+        v-if="image"
+        :src="image"
+        :alt="imageAlt || ''"
+        :style="imageFocusStyle(imageFocusX, imageFocusY)"
+        :loading="eager ? 'eager' : 'lazy'"
+      />
     </div>
 
     <div class="hero__inner">
@@ -36,7 +42,7 @@
         </AtomText>
 
         <div v-if="primary.label || secondary.label" class="hero__actions">
-          <AtomButton v-if="primary.label" variant="primary" :href="primary.url || undefined" v-bind="edit('.primary.label')">
+          <AtomButton v-if="primary.label" variant="primary" :href="primary.url || undefined" :target="primary.target" v-bind="edit('.primary.label')">
             {{ primary.label }}
           </AtomButton>
 
@@ -47,6 +53,7 @@
             v-bind="edit('.secondary.label')"
             negative
             :href="secondary.url || undefined"
+            :target="secondary.target"
           >
             {{ secondary.label }}
           </AtomButton>
@@ -73,6 +80,7 @@ import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import AtomButton from '../../../atoms/AtomButton.vue';
 import type { HeroAction } from './types';
+import { imageFocusStyle } from '../../../../helpers/imageFocus';
 import { useEditTarget } from '../../../../core/editFocus';
 
 /* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
@@ -85,6 +93,9 @@ withDefaults(
     desc: string;
     image: string;
     imageAlt: string;
+    /** Punto focal de la foto (0-100). Sin ellos la foto no lleva `object-position`. */
+    imageFocusX?: number;
+    imageFocusY?: number;
     primary: HeroAction;
     secondary: HeroAction;
     /** La primera se carga de inmediato: está a la vista al abrir la página. */

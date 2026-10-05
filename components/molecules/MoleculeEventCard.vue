@@ -31,6 +31,7 @@ import AtomIcon from '../atoms/AtomIcon.vue';
 import AtomButton from '../atoms/AtomButton.vue';
 import AtomBadge, { type BadgeVariant } from '../atoms/AtomBadge.vue';
 import AtomLink from '../atoms/AtomLink.vue';
+import { imageFocusStyle } from '../../helpers/imageFocus';
 
 /** Una etiqueta suelta, o con su variante propia si se quiere otro color. */
 export type EventCardBadge = string | { label: string; variant?: BadgeVariant };
@@ -47,6 +48,8 @@ const props = withDefaults(defineProps<{
   month?: string;
   title?: string;
   href?: string;
+  /** `_blank` abre `href` en una pestaña nueva. Sin él, en la misma página. */
+  target?: string;
   /** Solo "standard". */
   time?: string;
   /** Solo "standard". */
@@ -56,6 +59,9 @@ const props = withDefaults(defineProps<{
   /** Solo "media". */
   image?: string;
   imageAlt?: string;
+  /** Punto focal de la foto (0-100). Sin ellos la foto no lleva `object-position`. */
+  imageFocusX?: number;
+  imageFocusY?: number;
   /** Solo "media": etiqueta sobre el cuerpo, ej. "Conferencia informativa". */
   tag?: string;
   /**
@@ -104,7 +110,13 @@ const resolvedBadges = computed(() =>
     <template v-if="variant === 'media'">
       <div class="event-card__media">
         <!-- Sin imagen no se emite <img>: un src vacío da un icono roto. -->
-        <img v-if="image" :src="image" :alt="imageAlt || ''" loading="lazy" />
+        <img
+          v-if="image"
+          :src="image"
+          :alt="imageAlt || ''"
+          :style="imageFocusStyle(imageFocusX, imageFocusY)"
+          loading="lazy"
+        />
         <div class="event-card__date-badge">
           <p class="event-card__date-badge-day">{{ day }}</p>
           <p class="event-card__date-badge-month">{{ month }}</p>
@@ -132,7 +144,7 @@ const resolvedBadges = computed(() =>
           la maqueta el título de este formato va al tamaño del texto corrido.
         -->
         <AtomHeading v-if="title" :level="3" size="body" class="event-card__title">
-          <AtomLink v-if="href" :href="href">{{ title }}</AtomLink>
+          <AtomLink v-if="href" :href="href" :target="target">{{ title }}</AtomLink>
           <template v-else>{{ title }}</template>
         </AtomHeading>
       </div>
@@ -145,7 +157,7 @@ const resolvedBadges = computed(() =>
       </div>
       <div class="event-card__body">
         <AtomHeading v-if="title" :level="3" size="h6" class="event-card__title">
-          <AtomLink v-if="href" :href="href">{{ title }}</AtomLink>
+          <AtomLink v-if="href" :href="href" :target="target">{{ title }}</AtomLink>
           <template v-else>{{ title }}</template>
         </AtomHeading>
         <div v-if="time || location" class="event-card__meta">

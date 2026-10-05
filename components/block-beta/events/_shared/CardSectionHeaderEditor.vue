@@ -8,26 +8,24 @@
 
     <!-- Solo si la sección lo pide, igual que las columnas más abajo. -->
     <template v-if="eyebrow !== undefined">
-      <label class="form-label">Etiqueta superior</label>
-      <p class="cs-hint">Texto corto sobre el título. Se muestra en mayúsculas.</p>
-      <input
-        :value="eyebrow"
+      <EditorText
+        :model-value="eyebrow"
         data-edit-target="eyebrow"
-        type="text"
-        class="form-control form-control-sm mb-2"
+        class="mb-2"
+        label="Etiqueta superior"
+        hint="Texto corto sobre el título. Se muestra en mayúsculas."
         placeholder="Comunidad y vida ESAN"
-        @input="$emit('update:eyebrow', ($event.target as HTMLInputElement).value)"
+        @update:model-value="$emit('update:eyebrow', $event)"
       />
     </template>
 
-    <label class="form-label">Título de la sección</label>
-    <p class="cs-hint">Lleva siempre el guion rojo debajo.</p>
-    <input
-      :value="title"
+    <EditorText
+      :model-value="title"
       data-edit-target="title"
-      type="text"
-      class="form-control form-control-sm mb-2"
-      @input="$emit('update:title', ($event.target as HTMLInputElement).value)"
+      class="mb-2"
+      label="Título de la sección"
+      hint="Lleva siempre el guion rojo debajo."
+      @update:model-value="$emit('update:title', $event)"
     />
 
     <!-- Descripción — opcional -->
@@ -45,14 +43,13 @@
         </button>
       </div>
 
-      <textarea
+      <EditorTextarea
         v-if="showDesc"
-        :value="desc"
-        class="form-control form-control-sm"
-        rows="2"
+        :model-value="desc"
+        :rows="2"
         placeholder="Descubre todos los eventos de los que puedes ser parte."
-        @input="$emit('update:desc', ($event.target as HTMLTextAreaElement).value)"
-      ></textarea>
+        @update:model-value="$emit('update:desc', $event)"
+      />
       <button
         v-else
         type="button"
@@ -63,24 +60,22 @@
       </button>
     </div>
 
-    <label class="form-label">Texto del enlace</label>
-    <input
-      :value="linkLabel"
+    <EditorText
+      :model-value="linkLabel"
       data-edit-target="linkLabel"
-      type="text"
-      class="form-control form-control-sm mb-2"
+      class="mb-2"
+      label="Texto del enlace"
       placeholder="Ver todos"
-      @input="$emit('update:linkLabel', ($event.target as HTMLInputElement).value)"
+      @update:model-value="$emit('update:linkLabel', $event)"
     />
 
-    <label class="form-label">Destino del enlace</label>
-    <input
-      :value="linkUrl"
+    <EditorUrl
+      :model-value="linkUrl"
+      :target="linkTarget"
       data-edit-target="linkUrl"
-      type="text"
-      class="form-control form-control-sm"
-      placeholder="/ruta o https://"
-      @input="$emit('update:linkUrl', ($event.target as HTMLInputElement).value)"
+      label="Destino del enlace"
+      @update:model-value="$emit('update:linkUrl', $event)"
+      @update:target="$emit('update:linkTarget', $event)"
     />
 
     <!--
@@ -125,6 +120,9 @@
  * campos sueltos y no objetos.
  */
 import { ref, computed } from 'vue';
+import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
+import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
+import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import type { CardCount } from './types';
 
 const props = defineProps<{
@@ -134,6 +132,8 @@ const props = defineProps<{
   desc: string;
   linkLabel: string;
   linkUrl: string;
+  /** `_blank` abre el enlace en una pestaña nueva; vacío, en la misma página. */
+  linkTarget?: string;
   /** Opcional: sin él, el panel no ofrece elegir columnas. */
   cardCount?: CardCount;
 }>();
@@ -144,6 +144,7 @@ const emit = defineEmits<{
   (e: 'update:desc', value: string): void;
   (e: 'update:linkLabel', value: string): void;
   (e: 'update:linkUrl', value: string): void;
+  (e: 'update:linkTarget', value: string): void;
   (e: 'update:cardCount', value: CardCount): void;
 }>();
 

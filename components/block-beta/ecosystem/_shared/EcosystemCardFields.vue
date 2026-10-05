@@ -1,11 +1,15 @@
 <template>
   <div>
-    <label class="form-label">Título</label>
-    <input v-model="card.title" data-edit-target=".title" type="text" class="form-control form-control-sm mb-2" />
+    <EditorText v-model="card.title" data-edit-target=".title" class="mb-2" label="Título" />
 
-    <label class="form-label">Descripción</label>
-    <p class="ecf-hint">Opcional. Vacía, no se muestra.</p>
-    <textarea v-model="card.desc" data-edit-target=".desc" class="form-control form-control-sm mb-2" rows="2"></textarea>
+    <EditorTextarea
+      v-model="card.desc"
+      data-edit-target=".desc"
+      class="mb-2"
+      label="Descripción"
+      hint="Opcional. Vacía, no se muestra."
+      :rows="2"
+    />
 
     <label class="form-label">Color</label>
     <p class="ecf-hint">
@@ -32,45 +36,20 @@
       ></button>
     </div>
 
-    <!-- Vista previa y botones juntos: es lo que se resalta al pulsar la foto en el lienzo. -->
-    <div data-edit-target=".image">
-    <label class="form-label">Imagen</label>
-    <div class="ecf-image-preview mb-2">
-      <img v-if="card.image" :src="card.image" alt="" />
-      <span v-else class="text-muted small">Sin imagen</span>
-    </div>
-    <div class="d-flex gap-2 mb-2">
-      <button
-        type="button"
-        class="btn btn-sm btn-outline-secondary flex-grow-1"
-        @click="$emit('select-image', { item: card, field: 'image' })"
-      >
-        <i class="las la-image me-1"></i>
-        {{ card.image ? 'Cambiar imagen' : 'Subir imagen' }}
-      </button>
-      <button
-        v-if="card.image"
-        type="button"
-        class="btn btn-sm btn-outline-danger"
-        title="Quitar imagen"
-        @click="card.image = ''"
-      >
-        <i class="las la-trash"></i>
-      </button>
-    </div>
-    </div>
-
-    <label class="form-label">Texto alternativo</label>
-    <input v-model="card.imageAlt" data-edit-target=".imageAlt" type="text" class="form-control form-control-sm mb-2" />
-
-    <label class="form-label">Destino</label>
-    <input
-      v-model="card.href"
-      data-edit-target=".href"
-      type="text"
-      class="form-control form-control-sm"
-      placeholder="/ruta o https://"
+    <!-- Al pulsar la foto en el lienzo se resalta y enfoca el botón de elegir imagen. -->
+    <EditorImage
+      v-model="card.image"
+      v-model:alt="card.imageAlt"
+      v-model:focus-x="card.imageFocusX"
+      v-model:focus-y="card.imageFocusY"
+      :focus-ratio="imageRatio"
+      data-edit-target=".image"
+      alt-edit-target=".imageAlt"
+      class="mb-2"
+      @select="$emit('select-image', { item: card, field: 'image' })"
     />
+
+    <EditorUrl v-model="card.href" v-model:target="card.target" data-edit-target=".href" label="Destino" />
   </div>
 </template>
 
@@ -84,9 +63,20 @@
  * La tarjeta llega por referencia y se edita en sitio: es el mismo objeto de la
  * lista del editor, que es quien avisa del cambio hacia arriba.
  */
+import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
+import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
+import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
+import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import { ECOSYSTEM_COLORS, type EcosystemCardItem } from './types';
 
-defineProps<{ card: EcosystemCardItem }>();
+defineProps<{
+  card: EcosystemCardItem;
+  /**
+   * Proporción de la caja de la foto en el bloque (`12 / 5` las escuelas grandes,
+   * `16 / 9` las facultades): la vista previa del punto focal la usa.
+   */
+  imageRatio?: string;
+}>();
 
 defineEmits(['select-image']);
 </script>
@@ -122,22 +112,5 @@ defineEmits(['select-image']);
 
 .ecf-swatch.is-active {
   border-color: #1f2733;
-}
-
-.ecf-image-preview {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 90px;
-  border: 1px dashed #c6cedb;
-  border-radius: 7px;
-  background: #f4f6fa;
-  overflow: hidden;
-}
-
-.ecf-image-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 </style>

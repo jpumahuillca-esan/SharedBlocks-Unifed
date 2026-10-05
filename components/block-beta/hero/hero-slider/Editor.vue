@@ -69,11 +69,9 @@
           </div>
 
           <template v-if="isOpen(slide, 'eyebrow')">
-            <input
+            <EditorText
               v-model="slide.eyebrow"
               data-edit-target=".eyebrow"
-              type="text"
-              class="form-control form-control-sm"
               placeholder="Admisión 2026 - Examen virtual en plataforma"
             />
           </template>
@@ -87,8 +85,7 @@
           </button>
         </div>
 
-        <label class="form-label">Título</label>
-        <textarea v-model="slide.title" data-edit-target=".title" class="form-control form-control-sm mb-2" rows="2"></textarea>
+        <EditorTextarea v-model="slide.title" data-edit-target=".title" class="mb-2" label="Título" :rows="2" />
 
         <!-- Descripción — opcional -->
         <div class="hs-optional">
@@ -105,13 +102,12 @@
             </button>
           </div>
 
-          <textarea
+          <EditorTextarea
             v-if="isOpen(slide, 'desc')"
             v-model="slide.desc"
             data-edit-target=".desc"
-            class="form-control form-control-sm"
-            rows="3"
-          ></textarea>
+            :rows="3"
+          />
           <button
             v-else
             type="button"
@@ -122,53 +118,35 @@
           </button>
         </div>
 
-        <label class="form-label">Imagen de fondo</label>
-        <div class="hs-image-preview mb-2">
-          <img v-if="slide.image" :src="slide.image" alt="" />
-          <span v-else class="text-muted small">Sin imagen</span>
-        </div>
-        <div class="d-flex gap-2 mb-2">
-          <button
-            type="button"
-            class="btn btn-sm btn-outline-secondary flex-grow-1"
-            data-edit-target=".image"
-            @click="$emit('select-image', { item: slide, field: 'image' })"
-          >
-            <i class="las la-image me-1"></i>
-            {{ slide.image ? 'Cambiar imagen' : 'Subir imagen' }}
-          </button>
-          <button
-            v-if="slide.image"
-            type="button"
-            class="btn btn-sm btn-outline-danger"
-            title="Quitar imagen"
-            @click="slide.image = ''"
-          >
-            <i class="las la-trash"></i>
-          </button>
-        </div>
-
-        <label class="form-label">Texto alternativo</label>
-        <input v-model="slide.imageAlt" data-edit-target=".imageAlt" type="text" class="form-control form-control-sm mb-3" />
+        <EditorImage
+          v-model="slide.image"
+          v-model:alt="slide.imageAlt"
+          v-model:focus-x="slide.imageFocusX"
+          v-model:focus-y="slide.imageFocusY"
+          focus-ratio="18 / 7"
+          data-edit-target=".image"
+          alt-edit-target=".imageAlt"
+          class="mb-3"
+          label="Imagen de fondo"
+          @select="$emit('select-image', { item: slide, field: 'image' })"
+        />
 
         <hr />
 
         <h6 class="fw-bold small text-uppercase mb-1">Botón principal</h6>
-        <label class="form-label">Texto</label>
-        <input
+        <EditorText
           v-model="slide.primary.label"
           data-edit-target=".primary.label"
-          type="text"
-          class="form-control form-control-sm mb-2"
+          class="mb-2"
+          label="Texto"
           placeholder="Habla con un asesor"
         />
-        <label class="form-label">Destino</label>
-        <input
+        <EditorUrl
           v-model="slide.primary.url"
+          v-model:target="slide.primary.target"
           data-edit-target=".primary.url"
-          type="text"
-          class="form-control form-control-sm mb-3"
-          placeholder="/ruta o https://"
+          class="mb-3"
+          label="Destino"
         />
 
         <!-- Botón secundario — opcional -->
@@ -187,21 +165,18 @@
           </div>
 
           <template v-if="isOpen(slide, 'secondary')">
-            <label class="form-label">Texto</label>
-            <input
+            <EditorText
               v-model="slide.secondary.label"
               data-edit-target=".secondary.label"
-              type="text"
-              class="form-control form-control-sm mb-2"
+              class="mb-2"
+              label="Texto"
               placeholder="Postula ahora"
             />
-            <label class="form-label">Destino</label>
-            <input
+            <EditorUrl
               v-model="slide.secondary.url"
+              v-model:target="slide.secondary.target"
               data-edit-target=".secondary.url"
-              type="text"
-              class="form-control form-control-sm"
-              placeholder="/ruta o https://"
+              label="Destino"
             />
           </template>
           <button
@@ -234,6 +209,11 @@ import { ref, watch } from 'vue';
  * reutiliza así: conviene subirlo a block-beta/_shared/.
  */
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
+import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
+import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
+import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
+import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import {
   newHeroSlideId,
   normalizeHeroAction,
@@ -255,6 +235,8 @@ const buildSlide = (source: any): HeroSlideItem => ({
   desc: source?.desc ?? '',
   image: source?.image ?? '',
   imageAlt: source?.imageAlt ?? '',
+  imageFocusX: normalizeImageFocus(source?.imageFocusX),
+  imageFocusY: normalizeImageFocus(source?.imageFocusY),
   primary: normalizeHeroAction(source?.primary),
   secondary: normalizeHeroAction(source?.secondary),
 });
@@ -456,22 +438,5 @@ watch(
 .hs-optional__drop:hover {
   background: #dc3545;
   color: #fff;
-}
-
-.hs-image-preview {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 90px;
-  border: 1px dashed #c6cedb;
-  border-radius: 7px;
-  background: #f4f6fa;
-  overflow: hidden;
-}
-
-.hs-image-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 </style>

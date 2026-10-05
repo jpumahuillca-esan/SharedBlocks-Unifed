@@ -35,6 +35,8 @@
       :desc="active.desc"
       :image="active.image"
       :image-alt="active.imageAlt"
+      :image-focus-x="active.imageFocusX"
+      :image-focus-y="active.imageFocusY"
       :primary="active.primary"
       :secondary="active.secondary"
       :eager="current === 0"
@@ -75,6 +77,7 @@ import {
   normalizeShowSeoHeading,
   type HeroSlideItem,
 } from '../_shared/types';
+import { normalizeImageFocus } from '../../../../helpers/imageFocus';
 import { useEditTarget } from '../../../../core/editFocus';
 
 /* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
@@ -94,6 +97,8 @@ const slides = computed<HeroSlideItem[]>(() => {
     desc: slide?.desc ?? '',
     image: slide?.image ?? '',
     imageAlt: slide?.imageAlt ?? '',
+    imageFocusX: normalizeImageFocus(slide?.imageFocusX),
+    imageFocusY: normalizeImageFocus(slide?.imageFocusY),
     primary: normalizeHeroAction(slide?.primary),
     secondary: normalizeHeroAction(slide?.secondary),
   })) as HeroSlideItem[];

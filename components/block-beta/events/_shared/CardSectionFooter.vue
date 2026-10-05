@@ -1,6 +1,6 @@
 <template>
   <div v-if="linkLabel" class="card-section__footer">
-    <AtomButton variant="link" size="sm" class="card-section__link" :href="linkUrl || '#'" v-bind="edit('linkLabel')">
+    <AtomButton variant="link" size="sm" class="card-section__link" :href="linkUrl || '#'" :target="linkTarget" v-bind="edit('linkLabel')">
       {{ linkLabel }}
       <AtomIcon name="arrow-right" :size="16" />
     </AtomButton>
@@ -28,5 +28,7 @@ const edit = useEditTarget();
 defineProps<{
   linkLabel: string;
   linkUrl: string;
+  /** `_blank` abre el enlace en una pestaña nueva; vacío, en la misma página. */
+  linkTarget?: string;
 }>();
 </script>

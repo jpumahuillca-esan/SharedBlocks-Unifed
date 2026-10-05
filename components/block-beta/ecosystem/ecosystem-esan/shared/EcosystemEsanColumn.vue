@@ -23,6 +23,7 @@
             link.href ||
             undefined
           "
+          :target="link.target"
           class="ecosystem-esan__link"
         >
           <span>

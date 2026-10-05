@@ -39,6 +39,7 @@ import AtomText from '../atoms/AtomText.vue';
 import AtomEyebrow from '../atoms/AtomEyebrow.vue';
 import AtomIcon from '../atoms/AtomIcon.vue';
 import AtomLink from '../atoms/AtomLink.vue';
+import { imageFocusStyle } from '../../helpers/imageFocus';
 
 type BannerVariant = 'brand' | 'dark' | 'outline' | 'image' | 'image-split';
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
@@ -63,7 +64,12 @@ const props = withDefaults(defineProps<{
   /** Solo variantes "image"/"image-split". */
   image?: string;
   imageAlt?: string;
+  /** Punto focal de la foto (0-100). Sin ellos la foto no lleva `object-position`. */
+  imageFocusX?: number;
+  imageFocusY?: number;
   href?: string;
+  /** `_blank` abre `href` en una pestaña nueva. Sin él, en la misma página. */
+  target?: string;
 }>(), {
   variant: 'brand',
   titleLevel: 4,
@@ -83,12 +89,18 @@ const eyebrowVariant = computed(() => (props.variant === 'outline' ? 'brand' : '
 </script>
 
 <template>
-  <AtomLink :href="isImageVariant ? (href || undefined) : undefined" as="div" :class="classes">
+  <AtomLink :href="isImageVariant ? (href || undefined) : undefined" :target="target" as="div" :class="classes">
     <template v-if="isImageVariant">
       <!-- Sin imagen no se dibuja el <img>: un src vacío deja el icono de
            imagen rota. Queda el fondo que le dé quien use el banner. -->
       <div class="banner__media">
-        <img v-if="image" :src="image" :alt="imageAlt || ''" loading="lazy" />
+        <img
+          v-if="image"
+          :src="image"
+          :alt="imageAlt || ''"
+          :style="imageFocusStyle(imageFocusX, imageFocusY)"
+          loading="lazy"
+        />
       </div>
       <div class="banner__body">
         <div class="banner__content">

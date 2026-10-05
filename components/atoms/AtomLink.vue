@@ -9,12 +9,18 @@
  * - Fallback: Etiqueta <a> nativa.
  */
 import { computed, resolveComponent } from 'vue';
+import { linkTargetAttrs } from '../../helpers/linkTarget';
 
 const props = withDefaults(defineProps<{
   href?: string;
   to?: string;
   disabled?: boolean;
   as?: string;
+  /**
+   * `_blank` abre el destino en una pestaña nueva (y añade el `rel` de
+   * seguridad). Sin él, se abre en la misma página. Solo aplica si hay destino.
+   */
+  target?: string;
 }>(), {
   as: 'div',
 });
@@ -45,13 +51,16 @@ const linkProps = computed(() => {
     return {};
   }
 
+  // Pestaña nueva: `target` y `rel` viajan igual en el ancla nativa y en los componentes de ruta.
+  const extra = linkTargetAttrs(props.target);
+
   // Si es un ancla HTML nativa, solo pasamos href
   if (linkTag.value === 'a') {
-    return { href: targetUrl.value };
+    return { href: targetUrl.value, ...extra };
   }
 
   // Si es NuxtLink o RouterLink, pasamos solo 'to' (NuxtLink maneja enlaces externos e internos)
-  return { to: targetUrl.value };
+  return { to: targetUrl.value, ...extra };
 });
 </script>
 

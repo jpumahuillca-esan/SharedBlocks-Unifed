@@ -5,11 +5,14 @@
  * que el editor guarda y que el bloque reparte. El aspecto lo ponen los átomos
  * y la hoja assets/styles/elements/_hero.scss.
  */
+import { normalizeLinkTarget, type LinkTarget } from '../../../../helpers/linkTarget';
 
 /** Un botón del área de acciones de una diapositiva. */
 export interface HeroAction {
     label: string;
     url: string;
+    /** `_blank` abre `url` en una pestaña nueva; vacío, en la misma página. */
+    target: LinkTarget;
 }
 
 /**
@@ -28,6 +31,9 @@ export interface HeroSlideItem {
     desc: string;
     image: string;
     imageAlt: string;
+    /** Punto focal de la foto, en %. 50 y 50 es el centro (ver helpers/imageFocus.ts). */
+    imageFocusX: number;
+    imageFocusY: number;
     primary: HeroAction;
     /** Opcional. */
     secondary: HeroAction;
@@ -58,6 +64,7 @@ export const normalizeShowSeoHeading = (value: unknown): boolean => value !== fa
 export const normalizeHeroAction = (raw: any): HeroAction => ({
     label: typeof raw?.label === 'string' ? raw.label : '',
     url: typeof raw?.url === 'string' ? raw.url : '',
+    target: normalizeLinkTarget(raw?.target),
 });
 
 /** Identificador local para las diapositivas que se agregan desde el editor. */

@@ -1,7 +1,7 @@
 import {
   BRAND_COLOR_GROUPS,
   resolveBrandContentToken,
-} from '../../../_shared/brandColors';
+} from '../../../../editor-beta/EditorBrandColor/brandColors';
 
 /**
  * El editor usa la paleta institucional compartida. Se conserva esta exportaciÃ³n

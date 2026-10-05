@@ -37,6 +37,8 @@ import AtomIcon from '../atoms/AtomIcon.vue';
 import AtomButton from '../atoms/AtomButton.vue';
 import AtomLink from '../atoms/AtomLink.vue';
 import { toVideoSource } from '../../helpers/video';
+import { imageFocusStyle } from '../../helpers/imageFocus';
+import { linkTargetAttrs } from '../../helpers/linkTarget';
 
 const props = withDefaults(defineProps<{
   variant?: 'standard' | 'video';
@@ -50,8 +52,13 @@ const props = withDefaults(defineProps<{
   /** Solo "video". */
   image?: string;
   imageAlt?: string;
+  /** Punto focal de la foto (0-100). Sin ellos la foto no lleva `object-position`. */
+  imageFocusX?: number;
+  imageFocusY?: number;
   ctaLabel?: string;
   href?: string;
+  /** `_blank` abre `href` en una pestaña nueva. Sin él, en la misma página. */
+  target?: string;
   /**
    * Solo "video". YouTube, Vimeo o un archivo .mp4/.webm.
    *
@@ -145,7 +152,13 @@ watch(
     <template v-else>
       <div class="testimonial-card__media">
         <!-- Sin imagen no se emite <img>: un src vacío da un icono roto. -->
-        <img v-if="image" :src="image" :alt="imageAlt || authorName" loading="lazy" />
+        <img
+          v-if="image"
+          :src="image"
+          :alt="imageAlt || authorName"
+          :style="imageFocusStyle(imageFocusX, imageFocusY)"
+          loading="lazy"
+        />
       </div>
 
       <!--
@@ -185,6 +198,7 @@ watch(
         v-else
         class="testimonial-card__play"
         :href="href || undefined"
+        v-bind="href ? linkTargetAttrs(target) : undefined"
         :aria-label="href ? playLabel : undefined"
         :aria-hidden="href ? undefined : 'true'"
       >
@@ -201,12 +215,12 @@ watch(
           conservan su comportamiento (el play reproduce, no navega).
         -->
         <p class="testimonial-card__author-name">
-          <AtomLink v-if="href" :href="href" class="testimonial-card__link">{{ authorName }}</AtomLink>
+          <AtomLink v-if="href" :href="href" :target="target" class="testimonial-card__link">{{ authorName }}</AtomLink>
           <template v-else>{{ authorName }}</template>
         </p>
         <span class="testimonial-card__accent"></span>
         <p v-if="authorRole" class="testimonial-card__author-role">{{ authorRole }}</p>
-        <AtomButton variant="link" class="testimonial-card__cta" :href="href || '#'">
+        <AtomButton variant="link" class="testimonial-card__cta" :href="href || '#'" :target="target">
           {{ ctaLabel }}
           <AtomIcon name="arrow-right" :size="16" />
         </AtomButton>

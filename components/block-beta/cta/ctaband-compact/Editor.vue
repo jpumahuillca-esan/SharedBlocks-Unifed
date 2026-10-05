@@ -6,11 +6,9 @@
       no a todo el ancho de la página.
     </p>
 
-    <label class="form-label">Título</label>
-    <textarea v-model="localData.title" data-edit-target="title" class="form-control form-control-sm mb-2" rows="2"></textarea>
+    <EditorTextarea v-model="localData.title" data-edit-target="title" class="mb-2" label="Título" :rows="2" />
 
-    <label class="form-label">Descripción</label>
-    <textarea v-model="localData.desc" data-edit-target="desc" class="form-control form-control-sm mb-3" rows="2"></textarea>
+    <EditorTextarea v-model="localData.desc" data-edit-target="desc" class="mb-3" label="Descripción" :rows="2" />
 
     <hr />
 
@@ -18,11 +16,10 @@
     <p class="cta-hint">
       Se dibuja en un círculo a la izquierda. Déjalo vacío para quitarlo.
     </p>
-    <input
+    <EditorText
       v-model="localData.icon"
       data-edit-target="icon"
-      type="text"
-      class="form-control form-control-sm mb-3"
+      class="mb-3"
       list="cta-compact-icons"
       placeholder="help-circle"
     />
@@ -39,16 +36,13 @@
       no se dibuja.
     </p>
 
-    <label class="form-label">Texto del enlace</label>
-    <input v-model="localData.linkLabel" data-edit-target="linkLabel" type="text" class="form-control form-control-sm mb-2" />
+    <EditorText v-model="localData.linkLabel" data-edit-target="linkLabel" class="mb-2" label="Texto del enlace" />
 
-    <label class="form-label">Destino</label>
-    <input
+    <EditorUrl
       v-model="localData.linkUrl"
+      v-model:target="localData.linkTarget"
       data-edit-target="linkUrl"
-      type="text"
-      class="form-control form-control-sm"
-      placeholder="/ruta o https://"
+      label="Destino"
     />
   </div>
 </template>
@@ -58,7 +52,11 @@
  * Editor del CTA Band compacto.
  */
 import { ref, watch } from 'vue';
+import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
+import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
+import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import { ICON_SUGGESTIONS } from '../_shared/iconOptions';
+import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 
 const props = defineProps<{
   modelValue: any;
@@ -73,6 +71,7 @@ const build = (source: any) => ({
   desc: source?.desc ?? '',
   linkLabel: source?.linkLabel ?? '',
   linkUrl: source?.linkUrl ?? '',
+  linkTarget: normalizeLinkTarget(source?.linkTarget),
 });
 
 const localData = ref(build(props.modelValue));

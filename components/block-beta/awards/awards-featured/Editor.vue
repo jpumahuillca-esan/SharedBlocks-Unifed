@@ -6,10 +6,12 @@
       :title="localData.title"
       :link-label="localData.linkLabel"
       :link-url="localData.linkUrl"
+      :link-target="localData.linkTarget"
       @update:desc="localData.desc = $event"
       @update:title="localData.title = $event"
       @update:link-label="localData.linkLabel = $event"
       @update:link-url="localData.linkUrl = $event"
+      @update:link-target="localData.linkTarget = $event"
     />
 
     <hr />
@@ -38,43 +40,18 @@
       @remove="removeAward(index)"
     >
       <div>
-        <label class="form-label">Logo</label>
-        <div class="aw-image-preview mb-2">
-          <img v-if="award.image" :src="award.image" alt="" />
-          <span v-else class="text-muted small">Sin imagen</span>
-        </div>
-        <div class="d-flex gap-2 mb-2">
-          <button
-            type="button"
-            class="btn btn-sm btn-outline-secondary flex-grow-1"
-            data-edit-target=".image"
-            @click="$emit('select-image', { item: award, field: 'image' })"
-          >
-            <i class="las la-image me-1"></i>
-            {{ award.image ? 'Cambiar imagen' : 'Subir imagen' }}
-          </button>
-          <button
-            v-if="award.image"
-            type="button"
-            class="btn btn-sm btn-outline-danger"
-            title="Quitar imagen"
-            @click="award.image = ''"
-          >
-            <i class="las la-trash"></i>
-          </button>
-        </div>
-
-        <label class="form-label">Texto alternativo</label>
-        <p class="aw-hint">
-          El nombre del reconocimiento, tal como se lee en el logo. Lo usan los
-          buscadores y los lectores de pantalla.
-        </p>
-        <input
-          v-model="award.imageAlt"
-          data-edit-target=".imageAlt"
-          type="text"
-          class="form-control form-control-sm"
-          placeholder="N.º 1 en QS Executive MBA Rankings 2026"
+        <!-- `contain`: un logo recortado deja de leerse. -->
+        <EditorImage
+          v-model="award.image"
+          v-model:alt="award.imageAlt"
+          data-edit-target=".image"
+          alt-edit-target=".imageAlt"
+          label="Logo"
+          fit="contain"
+          alt-hint="El nombre del reconocimiento, tal como se lee en el logo. Lo usan los buscadores y los lectores de pantalla."
+          alt-hint-position="top"
+          alt-placeholder="N.º 1 en QS Executive MBA Rankings 2026"
+          @select="$emit('select-image', { item: award, field: 'image' })"
         />
       </div>
     </CardAccordionItem>
@@ -101,6 +78,8 @@
 import { ref, computed, watch } from 'vue';
 import CardSectionHeaderEditor from '../../events/_shared/CardSectionHeaderEditor.vue';
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
+import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
+import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 
 /** Tope de la maqueta. El bloque aplica el mismo (ver Block.vue). */
 const MAX_AWARDS = 4;
@@ -131,6 +110,7 @@ const build = (source: any) => ({
   desc: source?.desc ?? '',
   linkLabel: source?.linkLabel ?? '',
   linkUrl: source?.linkUrl ?? '',
+  linkTarget: normalizeLinkTarget(source?.linkTarget),
   awards: Array.isArray(source?.awards)
     ? source.awards.slice(0, MAX_AWARDS).map(buildAward)
     : [],
@@ -208,25 +188,5 @@ watch(
   font-size: 11.5px;
   line-height: 1.45;
   color: #6b7688;
-}
-
-.aw-image-preview {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 90px;
-  padding: 8px;
-  border: 1px dashed #c6cedb;
-  border-radius: 7px;
-  background: #fff;
-  overflow: hidden;
-}
-
-/* `contain` y no `cover`, a diferencia de la vista previa de eventos: una foto
-   aguanta el recorte, pero un logo recortado deja de leerse. */
-.aw-image-preview img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
 }
 </style>

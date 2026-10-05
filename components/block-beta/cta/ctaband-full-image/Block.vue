@@ -6,6 +6,7 @@
       v-bind="edit('image')"
       :src="data.image"
       :alt="data.imageAlt || ''"
+      :style="imageFocusStyle(data.imageFocusX, data.imageFocusY)"
       loading="lazy"
     />
 
@@ -40,6 +41,7 @@
 import { computed } from 'vue';
 import CtaActions from '../_shared/CtaActions.vue';
 import { normalizeAction, normalizeButtonCount } from '../_shared/types';
+import { imageFocusStyle } from '../../../../helpers/imageFocus';
 import { useEditTarget } from '../../../../core/editFocus';
 
 /* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
