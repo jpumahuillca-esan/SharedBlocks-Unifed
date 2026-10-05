@@ -6,15 +6,17 @@
       cualquier campo que no quieras mostrar.
     </p>
 
-    <label class="form-label">Antetítulo</label>
-    <p class="cta-hint">Línea corta sobre el título. Se muestra en mayúsculas.</p>
-    <input v-model="localData.eyebrow" data-edit-target="eyebrow" type="text" class="form-control form-control-sm mb-2" />
+    <EditorText
+      v-model="localData.eyebrow"
+      data-edit-target="eyebrow"
+      class="mb-2"
+      label="Antetítulo"
+      hint="Línea corta sobre el título. Se muestra en mayúsculas."
+    />
 
-    <label class="form-label">Título</label>
-    <textarea v-model="localData.title" data-edit-target="title" class="form-control form-control-sm mb-2" rows="2"></textarea>
+    <EditorTextarea v-model="localData.title" data-edit-target="title" class="mb-2" label="Título" :rows="2" />
 
-    <label class="form-label">Descripción</label>
-    <textarea v-model="localData.desc" data-edit-target="desc" class="form-control form-control-sm mb-3" rows="3"></textarea>
+    <EditorTextarea v-model="localData.desc" data-edit-target="desc" class="mb-3" label="Descripción" :rows="3" />
 
     <hr />
 
@@ -32,6 +34,8 @@
  * Editor del CTA Band sólido de marca.
  */
 import { ref, watch } from 'vue';
+import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
+import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
 import CtaActionsEditor from '../_shared/CtaActionsEditor.vue';
 import { normalizeAction, normalizeButtonCount } from '../_shared/types';
 

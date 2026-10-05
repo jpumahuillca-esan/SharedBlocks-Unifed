@@ -10,6 +10,7 @@
       :title="data.title || ''"
       :link-label="data.linkLabel || ''"
       :link-url="data.linkUrl || ''"
+      :link-target="normalizeLinkTarget(data.linkTarget)"
     />
 
     <!--
@@ -46,6 +47,7 @@
     <CardSectionFooter
       :link-label="data.linkLabel || ''"
       :link-url="data.linkUrl || ''"
+      :link-target="normalizeLinkTarget(data.linkTarget)"
     />
   </section>
 </template>
@@ -76,6 +78,7 @@ import { computed } from 'vue';
 import CardSectionHeader from '../../events/_shared/CardSectionHeader.vue';
 import CardSectionFooter from '../../events/_shared/CardSectionFooter.vue';
 import CardSlider from '../../events/_shared/CardSlider.vue';
+import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 import { useEditTarget } from '../../../../core/editFocus';
 
 /* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */

@@ -5,6 +5,7 @@
       :title="data.title || ''"
       :link-label="data.linkLabel || ''"
       :link-url="data.linkUrl || ''"
+      :link-target="linkTarget"
     />
 
     <CardSlider :count="visibleCards.length" :columns="cardCount">
@@ -16,10 +17,13 @@
         variant="news"
         :image="card.image"
         :image-alt="card.imageAlt"
+        :image-focus-x="card.imageFocusX"
+        :image-focus-y="card.imageFocusY"
         :date="card.date"
         :title="card.title"
         :cta-label="card.ctaLabel || undefined"
         :href="card.href"
+        :target="card.target"
         :badges="card.badges"
       />
     </CardSlider>
@@ -27,6 +31,7 @@
     <CardSectionFooter
       :link-label="data.linkLabel || ''"
       :link-url="data.linkUrl || ''"
+      :link-target="linkTarget"
     />
   </section>
 </template>
@@ -45,6 +50,8 @@ import CardSectionFooter from '../_shared/CardSectionFooter.vue';
 import CardSlider from '../_shared/CardSlider.vue';
 import { normalizeCardCount, type PostCardItem } from '../_shared/types';
 import { toDisplayDate } from '../_shared/date';
+import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 import { useEditTarget } from '../../../../core/editFocus';
 
 /* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
@@ -53,6 +60,9 @@ const edit = useEditTarget();
 const props = defineProps<{ data: any }>();
 
 const cardCount = computed(() => normalizeCardCount(props.data?.cardCount));
+
+/** Cómo se abre el enlace "ver todos" del encabezado y del pie. */
+const linkTarget = computed(() => normalizeLinkTarget(props.data?.linkTarget));
 
 const visibleCards = computed<PostCardItem[]>(() => {
   const raw = Array.isArray(props.data?.cards) ? props.data.cards : [];
@@ -63,8 +73,11 @@ const visibleCards = computed<PostCardItem[]>(() => {
     id: card?.id || `post-${i}`,
     image: card?.image ?? '',
     imageAlt: card?.imageAlt ?? '',
+    imageFocusX: normalizeImageFocus(card?.imageFocusX),
+    imageFocusY: normalizeImageFocus(card?.imageFocusY),
     title: card?.title ?? '',
     href: card?.href ?? '',
+    target: normalizeLinkTarget(card?.target),
     /*
      * Una fecha ISO del calendario se presenta como día/mes/año. Cualquier otra
      * cosa se pasa tal cual: es contenido escrito a mano antes del calendario.

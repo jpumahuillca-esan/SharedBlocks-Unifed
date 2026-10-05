@@ -1,11 +1,16 @@
 import {
   DEFAULT_BRAND_COLOR_TOKEN,
   normalizeBrandColorToken,
-} from '../../../_shared/brandColors';
+} from '../../../../editor-beta/EditorBrandColor/brandColors';
 
 import {
   ECOSYSTEM_ESAN_CONTENT_RULES,
 } from './rules';
+
+import {
+  normalizeLinkTarget,
+  type LinkTarget,
+} from '../../../../../helpers/linkTarget';
 
 /* ==========================================================================
    Tipos
@@ -17,6 +22,8 @@ export interface EcosystemEsanLink {
   id: string;
   label: string;
   href: string;
+  /** `_blank` abre `href` en una pestaña nueva; vacío, en la misma página. */
+  target: LinkTarget;
 }
 
 export interface EcosystemEsanItem {
@@ -31,6 +38,9 @@ export interface EcosystemEsanItem {
   imageFocusY: number;
 
   href: string;
+
+  /** `_blank` abre `href` en una pestaña nueva; vacío, en la misma página. */
+  target: LinkTarget;
 
   /**
    * Token institucional.
@@ -132,6 +142,8 @@ export const normalizeEcosystemEsanLink = (
     raw?.href,
     ECOSYSTEM_ESAN_CONTENT_RULES.link.href.maxLength,
   ),
+
+  target: normalizeLinkTarget(raw?.target),
 });
 
 export const normalizeEcosystemEsanItem = (
@@ -167,6 +179,8 @@ export const normalizeEcosystemEsanItem = (
     raw?.href,
     ECOSYSTEM_ESAN_CONTENT_RULES.card.href.maxLength,
   ),
+
+  target: normalizeLinkTarget(raw?.target),
 
   colorToken: normalizeBrandColorToken(
     raw?.colorToken ?? DEFAULT_BRAND_COLOR_TOKEN,

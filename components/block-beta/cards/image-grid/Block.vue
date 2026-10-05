@@ -12,6 +12,7 @@
       :desc="data.desc || ''"
       :link-label="data.linkLabel || ''"
       :link-url="data.linkUrl || ''"
+      :link-target="normalizeLinkTarget(data.linkTarget)"
     />
 
     <!--
@@ -36,18 +37,22 @@
         class="image-grid__card"
         :image="card.image"
         :image-alt="card.imageAlt"
+        :image-focus-x="card.imageFocusX"
+        :image-focus-y="card.imageFocusY"
         :title="card.title"
         :title-level="3"
         title-size="h5"
         :text="card.desc"
         text-size="body-compact"
         :href="card.href"
+        :target="card.target"
       />
     </CardSlider>
 
     <CardSectionFooter
       :link-label="data.linkLabel || ''"
       :link-url="data.linkUrl || ''"
+      :link-target="normalizeLinkTarget(data.linkTarget)"
     />
   </section>
 </template>
@@ -78,6 +83,8 @@ import MoleculeBanner from '../../../molecules/MoleculeBanner.vue';
 import CardSectionHeader from '../../events/_shared/CardSectionHeader.vue';
 import CardSectionFooter from '../../events/_shared/CardSectionFooter.vue';
 import CardSlider from '../../events/_shared/CardSlider.vue';
+import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import { normalizeLinkTarget, type LinkTarget } from '../../../../helpers/linkTarget';
 import { useEditTarget } from '../../../../core/editFocus';
 
 /* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
@@ -90,9 +97,12 @@ interface ImageGridCard {
   id: string;
   image: string;
   imageAlt: string;
+  imageFocusX: number;
+  imageFocusY: number;
   title: string;
   desc: string;
   href: string;
+  target: LinkTarget;
 }
 
 const props = defineProps<{ data: any }>();
@@ -105,9 +115,12 @@ const cards = computed<ImageGridCard[]>(() => {
     // Una ruta con solo espacios cuenta como vacía: si no, saldría una foto rota.
     image: typeof card?.image === 'string' ? card.image.trim() : '',
     imageAlt: card?.imageAlt ?? '',
+    imageFocusX: normalizeImageFocus(card?.imageFocusX),
+    imageFocusY: normalizeImageFocus(card?.imageFocusY),
     title: card?.title ?? '',
     desc: card?.desc ?? '',
     href: card?.href ?? '',
+    target: normalizeLinkTarget(card?.target),
   }));
 });
 </script>

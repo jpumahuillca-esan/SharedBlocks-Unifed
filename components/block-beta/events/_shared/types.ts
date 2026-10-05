@@ -4,6 +4,7 @@
  * Misma idea que en los CTA: el encabezado y el número de columnas son comunes,
  * y cada sección añade el tipo de tarjeta que le corresponde.
  */
+import type { LinkTarget } from '../../../../helpers/linkTarget';
 
 /** Cuántas tarjetas se muestran en la fila. */
 export type CardCount = 2 | 3 | 4;
@@ -40,8 +41,13 @@ export interface EventCardItem {
     month: string;
     title: string;
     href: string;
+    /** `_blank` abre `href` en una pestaña nueva; vacío, en la misma página. */
+    target: LinkTarget;
     image: string;
     imageAlt: string;
+    /** Punto focal de la foto, en %. 50 y 50 es el centro (ver helpers/imageFocus.ts). */
+    imageFocusX: number;
+    imageFocusY: number;
     /** Etiqueta única, heredada. Se conserva por compatibilidad. */
     tag: string;
     /** Etiquetas, tantas como se quieran. Tienen prioridad sobre `tag`. */
@@ -60,8 +66,13 @@ export interface PostCardItem {
     id: string;
     image: string;
     imageAlt: string;
+    /** Punto focal de la foto, en %. 50 y 50 es el centro (ver helpers/imageFocus.ts). */
+    imageFocusX: number;
+    imageFocusY: number;
     title: string;
     href: string;
+    /** `_blank` abre `href` en una pestaña nueva; vacío, en la misma página. */
+    target: LinkTarget;
     /** Etiquetas sobre la imagen, tantas como se quieran. */
     badges: string[];
     date: string;

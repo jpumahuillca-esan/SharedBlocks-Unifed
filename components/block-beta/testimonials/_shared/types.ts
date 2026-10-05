@@ -12,6 +12,7 @@
  * lo que el diseño llama "historias". La tarjeta que lo pinta conserva su
  * nombre de sistema, testimonial-card.
  */
+import type { LinkTarget } from '../../../../helpers/linkTarget';
 
 /** Cuántas tarjetas se ven a la vez en la fila. */
 export type StoryCardCount = 2 | 3 | 4;
@@ -46,10 +47,15 @@ export interface StoryCardItem {
     role: string;
     image: string;
     imageAlt: string;
+    /** Punto focal de la foto, en %. 50 y 50 es el centro (ver helpers/imageFocus.ts). */
+    imageFocusX: number;
+    imageFocusY: number;
     /** YouTube, Vimeo o un archivo de video directo. Vacío = sin video. */
     videoUrl: string;
     /** Destino de "Ver historia". */
     href: string;
+    /** `_blank` abre `href` en una pestaña nueva; vacío, en la misma página. */
+    target: LinkTarget;
     ctaLabel: string;
 }
 

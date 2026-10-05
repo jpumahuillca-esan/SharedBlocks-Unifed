@@ -101,6 +101,7 @@
           class="mapamundi__action"
           v-bind="edit('button.label')"
           :href="button.url || '#'"
+          :target="button.target"
         >
           {{ button.label }}
           <AtomIcon name="arrow-right" :size="16" />
@@ -138,6 +139,7 @@ import AtomPictogram from '../../../atoms/AtomPictogram.vue';
 import mapamundiUrl from '../../../../assets/images/mapamundi.svg';
 import logoUniversityUrl from '../../../../assets/images/logos/logo-esan-university-light.svg';
 import logoBusinessUrl from '../../../../assets/images/logos/logo-esan-business-light.svg';
+import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 import { useEditTarget } from '../../../../core/editFocus';
 
 /* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
@@ -187,5 +189,6 @@ const cards = computed(() => [
 const button = computed(() => ({
   label: props.data?.button?.label ?? '',
   url: props.data?.button?.url ?? '',
+  target: normalizeLinkTarget(props.data?.button?.target),
 }));
 </script>

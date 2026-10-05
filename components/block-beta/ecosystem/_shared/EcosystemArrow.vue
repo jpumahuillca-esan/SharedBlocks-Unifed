@@ -10,6 +10,7 @@
     icon
     class="ecosystem-arrow"
     :href="href || undefined"
+    :target="target"
     v-bind="decorative ? { 'aria-hidden': 'true', tabindex: -1 } : { 'aria-label': `Ir a ${label}` }"
   >
     <AtomIcon name="chevron-right" :size="16" />
@@ -39,6 +40,8 @@ import AtomIcon from '../../../atoms/AtomIcon.vue';
 withDefaults(
   defineProps<{
     href: string;
+    /** `_blank` abre `href` en una pestaña nueva; vacío, en la misma página. */
+    target?: string;
     /** Va al aria-label: la flecha es solo un ícono y no dice a dónde lleva. */
     label: string;
     variant?: 'surface' | 'white';

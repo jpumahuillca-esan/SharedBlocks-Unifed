@@ -5,7 +5,13 @@
   >
     <div class="ecosystem-card__media" v-bind="edit('.image')">
       <!-- Sin imagen no se emite <img>: un src vacío da un icono roto. -->
-      <img v-if="card.image" :src="card.image" :alt="card.imageAlt || ''" loading="lazy" />
+      <img
+        v-if="card.image"
+        :src="card.image"
+        :alt="card.imageAlt || ''"
+        :style="imageFocusStyle(card.imageFocusX, card.imageFocusY)"
+        loading="lazy"
+      />
     </div>
 
     <div class="ecosystem-card__body">
@@ -16,7 +22,7 @@
           que la flecha. Sin destino queda como texto y nada es clicable.
         -->
         <AtomHeading :level="titleLevel" :size="sizes.title" weight="bold" class="ecosystem-card__title" v-bind="edit('.title')">
-          <AtomLink v-if="card.href" :href="card.href" class="ecosystem-card__link">{{ card.title }}</AtomLink>
+          <AtomLink v-if="card.href" :href="card.href" :target="card.target" class="ecosystem-card__link">{{ card.title }}</AtomLink>
           <template v-else>{{ card.title }}</template>
         </AtomHeading>
 
@@ -30,7 +36,7 @@
         orden de tabulación y de los lectores de pantalla para que la tarjeta sea
         una sola parada y no se anuncie dos veces. Sigue siendo un <a> pulsable.
       -->
-      <EcosystemArrow :href="card.href" :label="card.title" :decorative="!!card.href" v-bind="edit('.href')" />
+      <EcosystemArrow :href="card.href" :target="card.target" :label="card.title" :decorative="!!card.href" v-bind="edit('.href')" />
     </div>
   </article>
 </template>
@@ -53,6 +59,7 @@ import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import AtomLink from '../../../atoms/AtomLink.vue';
 import EcosystemArrow from './EcosystemArrow.vue';
+import { imageFocusStyle } from '../../../../helpers/imageFocus';
 import type { EcosystemCardItem, EcosystemTitleLevel } from './types';
 import { useEditTarget } from '../../../../core/editFocus';
 

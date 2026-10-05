@@ -5,6 +5,8 @@
  * que el editor guarda y que el bloque reparte. El aspecto lo ponen los átomos
  * y la hoja assets/styles/elements/_ecosystem.scss.
  */
+import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import { normalizeLinkTarget, type LinkTarget } from '../../../../helpers/linkTarget';
 
 /**
  * Colores de tarjeta.
@@ -94,7 +96,12 @@ export interface EcosystemCardItem {
     desc: string;
     image: string;
     imageAlt: string;
+    /** Punto focal de la foto, en %. 50 y 50 es el centro (ver helpers/imageFocus.ts). */
+    imageFocusX: number;
+    imageFocusY: number;
     href: string;
+    /** `_blank` abre `href` en una pestaña nueva; vacío, en la misma página. */
+    target: LinkTarget;
     color: EcosystemColor;
 }
 
@@ -134,6 +141,9 @@ export const normalizeEcosystemCard = (raw: any, index = 0): EcosystemCardItem =
     desc: raw?.desc ?? '',
     image: raw?.image ?? '',
     imageAlt: raw?.imageAlt ?? '',
+    imageFocusX: normalizeImageFocus(raw?.imageFocusX),
+    imageFocusY: normalizeImageFocus(raw?.imageFocusY),
     href: raw?.href ?? '',
+    target: normalizeLinkTarget(raw?.target),
     color: normalizeEcosystemColor(raw?.color),
 });

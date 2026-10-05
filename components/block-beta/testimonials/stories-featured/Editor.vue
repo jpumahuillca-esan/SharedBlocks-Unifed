@@ -2,30 +2,32 @@
   <div class="st-editor">
     <h6 class="fw-bold small text-uppercase mb-1">Encabezado</h6>
 
-    <label class="form-label">Título</label>
-    <textarea v-model="localData.title" data-edit-target="title" class="form-control form-control-sm mb-2" rows="2"></textarea>
+    <EditorTextarea v-model="localData.title" data-edit-target="title" class="mb-2" label="Título" :rows="2" />
 
-    <label class="form-label">Línea de apoyo</label>
-    <p class="st-hint">Texto corto bajo el título. Déjalo vacío para ocultarlo.</p>
-    <textarea v-model="localData.subtitle" data-edit-target="subtitle" class="form-control form-control-sm mb-2" rows="2"></textarea>
+    <EditorTextarea
+      v-model="localData.subtitle"
+      data-edit-target="subtitle"
+      class="mb-2"
+      label="Línea de apoyo"
+      hint="Texto corto bajo el título. Déjalo vacío para ocultarlo."
+      :rows="2"
+    />
 
-    <label class="form-label">Texto del enlace</label>
-    <p class="st-hint">Vacío oculta el enlace del encabezado.</p>
-    <input
+    <EditorText
       v-model="localData.linkLabel"
       data-edit-target="linkLabel"
-      type="text"
-      class="form-control form-control-sm mb-2"
+      class="mb-2"
+      label="Texto del enlace"
+      hint="Vacío oculta el enlace del encabezado."
       placeholder="Conoce más historias"
     />
 
-    <label class="form-label">Destino del enlace</label>
-    <input
+    <EditorUrl
       v-model="localData.linkUrl"
+      v-model:target="localData.linkTarget"
       data-edit-target="linkUrl"
-      type="text"
-      class="form-control form-control-sm mb-2"
-      placeholder="/ruta o https://"
+      class="mb-2"
+      label="Destino del enlace"
     />
 
     <label class="form-label">Tarjetas visibles a la vez</label>
@@ -64,70 +66,54 @@
       @remove="removeCard(index)"
     >
       <div>
-        <label class="form-label">Nombre</label>
-        <p class="st-hint">Se muestra sobre la foto.</p>
-        <input v-model="card.name" data-edit-target=".name" type="text" class="form-control form-control-sm mb-2" />
+        <EditorText
+          v-model="card.name"
+          data-edit-target=".name"
+          class="mb-2"
+          label="Nombre"
+          hint="Se muestra sobre la foto."
+        />
 
-        <label class="form-label">Cargo o programa</label>
-        <textarea v-model="card.role" data-edit-target=".role" class="form-control form-control-sm mb-2" rows="2"></textarea>
+        <EditorTextarea v-model="card.role" data-edit-target=".role" class="mb-2" label="Cargo o programa" :rows="2" />
 
-        <label class="form-label">Foto</label>
-        <p class="st-hint">Se recorta en vertical (3:4). Elige una imagen alta.</p>
-        <div class="st-image-preview mb-2">
-          <img v-if="card.image" :src="card.image" alt="" />
-          <span v-else class="text-muted small">Sin imagen</span>
-        </div>
-        <div class="d-flex gap-2 mb-2">
-          <button
-            type="button"
-            class="btn btn-sm btn-outline-secondary flex-grow-1"
-            data-edit-target=".image"
-            @click="$emit('select-image', { item: card, field: 'image' })"
-          >
-            <i class="las la-image me-1"></i>
-            {{ card.image ? 'Cambiar foto' : 'Subir foto' }}
-          </button>
-          <button
-            v-if="card.image"
-            type="button"
-            class="btn btn-sm btn-outline-danger"
-            title="Quitar foto"
-            @click="card.image = ''"
-          >
-            <i class="las la-trash"></i>
-          </button>
-        </div>
+        <EditorImage
+          v-model="card.image"
+          v-model:alt="card.imageAlt"
+          v-model:focus-x="card.imageFocusX"
+          v-model:focus-y="card.imageFocusY"
+          focus-ratio="3 / 4"
+          data-edit-target=".image"
+          alt-edit-target=".imageAlt"
+          class="mb-2"
+          label="Foto"
+          noun="foto"
+          hint="Se recorta en vertical (3:4). Elige una imagen alta."
+          @select="$emit('select-image', { item: card, field: 'image' })"
+        />
 
-        <label class="form-label">Texto alternativo</label>
-        <input v-model="card.imageAlt" data-edit-target=".imageAlt" type="text" class="form-control form-control-sm mb-2" />
-
-        <label class="form-label">Video</label>
-        <input
+        <EditorUrl
           v-model="card.videoUrl"
           data-edit-target=".videoUrl"
-          type="text"
-          class="form-control form-control-sm"
+          class="mb-2"
+          label="Video"
           placeholder="https://www.youtube.com/watch?v=..."
+          :hint="videoHint(card.videoUrl)"
+          hint-position="bottom"
+          :hint-tone="videoWarning(card.videoUrl) ? 'warn' : 'default'"
         />
-        <p class="st-hint mt-1" :class="{ 'st-hint--warn': videoWarning(card.videoUrl) }">
-          {{ videoHint(card.videoUrl) }}
-        </p>
 
-        <label class="form-label">Destino de la historia</label>
-        <input
+        <EditorUrl
           v-model="card.href"
+          v-model:target="card.target"
           data-edit-target=".href"
-          type="text"
-          class="form-control form-control-sm mb-2"
-          placeholder="/ruta o https://"
+          class="mb-2"
+          label="Destino de la historia"
         />
 
-        <label class="form-label">Texto del enlace</label>
-        <input
+        <EditorText
           v-model="card.ctaLabel"
           data-edit-target=".ctaLabel"
-          type="text"
-          class="form-control form-control-sm"
+          label="Texto del enlace"
           placeholder="Ver historia"
         />
       </div>
@@ -151,7 +137,13 @@ import { ref, watch } from 'vue';
  * familia lo necesite, conviene subirlo a block-beta/_shared/.
  */
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
+import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
+import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
+import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
+import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import { toVideoSource } from '../../../../helpers/video';
+import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 import {
   newStoryId,
   normalizeStoryCardCount,
@@ -171,8 +163,11 @@ const buildCard = (source: any): StoryCardItem => ({
   role: source?.role ?? '',
   image: source?.image ?? '',
   imageAlt: source?.imageAlt ?? '',
+  imageFocusX: normalizeImageFocus(source?.imageFocusX),
+  imageFocusY: normalizeImageFocus(source?.imageFocusY),
   videoUrl: source?.videoUrl ?? '',
   href: source?.href ?? '',
+  target: normalizeLinkTarget(source?.target),
   ctaLabel: source?.ctaLabel ?? 'Ver historia',
 });
 
@@ -181,6 +176,7 @@ const build = (source: any) => ({
   subtitle: source?.subtitle ?? '',
   linkLabel: source?.linkLabel ?? '',
   linkUrl: source?.linkUrl ?? '',
+  linkTarget: normalizeLinkTarget(source?.linkTarget),
   cardCount: normalizeStoryCardCount(source?.cardCount),
   cards: Array.isArray(source?.cards) ? source.cards.map(buildCard) : [],
 });
@@ -261,26 +257,5 @@ watch(
   font-size: 11.5px;
   line-height: 1.45;
   color: #6b7688;
-}
-
-.st-hint--warn {
-  color: #b02a37;
-}
-
-.st-image-preview {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 90px;
-  border: 1px dashed #c6cedb;
-  border-radius: 7px;
-  background: #f4f6fa;
-  overflow: hidden;
-}
-
-.st-image-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 </style>

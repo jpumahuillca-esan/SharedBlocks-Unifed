@@ -24,9 +24,13 @@
       @remove="removeItem(index)"
     >
       <div>
-        <label class="form-label">Texto del filtro</label>
-        <p class="vc-hint">Va dentro de la pastilla, arriba de la tarjeta.</p>
-        <input v-model="item.tabLabel" data-edit-target=".tabLabel" type="text" class="form-control form-control-sm mb-2" />
+        <EditorText
+          v-model="item.tabLabel"
+          data-edit-target=".tabLabel"
+          class="mb-2"
+          label="Texto del filtro"
+          hint="Va dentro de la pastilla, arriba de la tarjeta."
+        />
 
         <label class="form-label">Ícono del filtro</label>
         <div class="d-flex align-items-center gap-2 mb-2">
@@ -48,15 +52,17 @@
 
         <hr class="my-2" />
 
-        <label class="form-label">Etiqueta superior</label>
-        <p class="vc-hint">Texto corto en rojo sobre el título. Vacío la oculta.</p>
-        <input v-model="item.eyebrow" data-edit-target=".eyebrow" type="text" class="form-control form-control-sm mb-2" />
+        <EditorText
+          v-model="item.eyebrow"
+          data-edit-target=".eyebrow"
+          class="mb-2"
+          label="Etiqueta superior"
+          hint="Texto corto en rojo sobre el título. Vacío la oculta."
+        />
 
-        <label class="form-label">Título</label>
-        <textarea v-model="item.title" data-edit-target=".title" class="form-control form-control-sm mb-2" rows="2"></textarea>
+        <EditorTextarea v-model="item.title" data-edit-target=".title" class="mb-2" label="Título" :rows="2" />
 
-        <label class="form-label">Texto de apoyo</label>
-        <textarea v-model="item.desc" data-edit-target=".desc" class="form-control form-control-sm mb-2" rows="3"></textarea>
+        <EditorTextarea v-model="item.desc" data-edit-target=".desc" class="mb-2" label="Texto de apoyo" :rows="3" />
 
         <BadgeListEditor
           :badges="item.bullets"
@@ -67,76 +73,55 @@
           empty-text="Sin viñetas."
         />
 
-        <label class="form-label mt-2">Texto del enlace</label>
-        <p class="vc-hint">Vacío oculta el enlace del pie.</p>
-        <input
+        <EditorText
           v-model="item.linkLabel"
           data-edit-target=".linkLabel"
-          type="text"
-          class="form-control form-control-sm mb-2"
+          class="mt-2 mb-2"
+          label="Texto del enlace"
+          hint="Vacío oculta el enlace del pie."
           placeholder="Explora nuestros programas"
         />
 
-        <label class="form-label">Destino del enlace</label>
-        <input
+        <EditorUrl
           v-model="item.linkUrl"
+          v-model:target="item.linkTarget"
           data-edit-target=".linkUrl"
-          type="text"
-          class="form-control form-control-sm mb-2"
-          placeholder="/ruta o https://"
+          class="mb-2"
+          label="Destino del enlace"
         />
 
         <hr class="my-2" />
 
-        <label class="form-label">Imagen del video</label>
-        <p class="vc-hint">Es la miniatura que se ve antes de reproducir.</p>
-        <div class="vc-image-preview mb-2">
-          <img v-if="item.image" :src="item.image" alt="" />
-          <span v-else class="text-muted small">Sin imagen</span>
-        </div>
-        <div class="d-flex gap-2 mb-2">
-          <button
-            type="button"
-            class="btn btn-sm btn-outline-secondary flex-grow-1"
-            data-edit-target=".image"
-            @click="$emit('select-image', { item, field: 'image' })"
-          >
-            <i class="las la-image me-1"></i>
-            {{ item.image ? 'Cambiar imagen' : 'Subir imagen' }}
-          </button>
-          <button
-            v-if="item.image"
-            type="button"
-            class="btn btn-sm btn-outline-danger"
-            title="Quitar imagen"
-            @click="item.image = ''"
-          >
-            <i class="las la-trash"></i>
-          </button>
-        </div>
+        <EditorImage
+          v-model="item.image"
+          v-model:alt="item.imageAlt"
+          v-model:focus-x="item.imageFocusX"
+          v-model:focus-y="item.imageFocusY"
+          focus-ratio="16 / 9"
+          data-edit-target=".image"
+          alt-edit-target=".imageAlt"
+          class="mb-2"
+          label="Imagen del video"
+          hint="Es la miniatura que se ve antes de reproducir."
+          @select="$emit('select-image', { item, field: 'image' })"
+        />
 
-        <label class="form-label">Texto alternativo</label>
-        <input v-model="item.imageAlt" data-edit-target=".imageAlt" type="text" class="form-control form-control-sm mb-2" />
-
-        <label class="form-label">Video</label>
-        <input
+        <EditorUrl
           v-model="item.videoUrl"
           data-edit-target=".videoUrl"
-          type="text"
-          class="form-control form-control-sm"
+          class="mb-2"
+          label="Video"
           placeholder="https://www.youtube.com/watch?v=..."
+          :hint="videoHint(item.videoUrl)"
+          hint-position="bottom"
+          :hint-tone="videoWarning(item.videoUrl) ? 'warn' : 'default'"
         />
-        <p class="vc-hint mt-1" :class="{ 'vc-hint--warn': videoWarning(item.videoUrl) }">
-          {{ videoHint(item.videoUrl) }}
-        </p>
 
-        <label class="form-label">Duración</label>
-        <p class="vc-hint">Se muestra arriba del video, ej. 02:15. Vacío la oculta.</p>
-        <input
+        <EditorText
           v-model="item.duration"
           data-edit-target=".duration"
-          type="text"
-          class="form-control form-control-sm"
+          label="Duración"
+          hint="Se muestra arriba del video, ej. 02:15. Vacío la oculta."
           placeholder="02:15"
         />
       </div>
@@ -164,9 +149,15 @@ import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
  * necesitan las viñetas. Se le pasan los rótulos propios en vez de clonarlo.
  */
 import BadgeListEditor from '../../events/_shared/BadgeListEditor.vue';
+import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
+import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
+import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
+import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 import { ICON_SUGGESTIONS } from '../../../../helpers/iconOptions';
 import { toVideoSource } from '../../../../helpers/video';
+import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 
 const props = defineProps<{
   modelValue: any;
@@ -187,8 +178,11 @@ const buildItem = (source: any) => ({
   bullets: Array.isArray(source?.bullets) ? source.bullets.map((b: any) => String(b ?? '')) : [],
   linkLabel: source?.linkLabel ?? '',
   linkUrl: source?.linkUrl ?? '',
+  linkTarget: normalizeLinkTarget(source?.linkTarget),
   image: source?.image ?? '',
   imageAlt: source?.imageAlt ?? '',
+  imageFocusX: normalizeImageFocus(source?.imageFocusX),
+  imageFocusY: normalizeImageFocus(source?.imageFocusY),
   videoUrl: source?.videoUrl ?? '',
   duration: source?.duration ?? '',
 });
@@ -275,10 +269,6 @@ watch(
   color: #6b7688;
 }
 
-.vc-hint--warn {
-  color: #b02a37;
-}
-
 .vc-icon-preview {
   display: inline-flex;
   align-items: center;
@@ -295,22 +285,5 @@ watch(
 .vc-icon-preview.is-empty {
   border-style: dashed;
   background: #f4f6fa;
-}
-
-.vc-image-preview {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 90px;
-  border: 1px dashed #c6cedb;
-  border-radius: 7px;
-  background: #f4f6fa;
-  overflow: hidden;
-}
-
-.vc-image-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 </style>

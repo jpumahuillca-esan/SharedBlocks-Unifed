@@ -65,6 +65,7 @@
             class="values-cards__link"
             v-bind="edit('.linkLabel')"
             :href="active.linkUrl || '#'"
+            :target="active.linkTarget"
           >
             {{ active.linkLabel }}
             <AtomIcon name="arrow-right" :size="16" />
@@ -90,9 +91,12 @@
             variant="featured"
             :image="active.image"
             :image-alt="active.imageAlt"
+            :image-focus-x="active.imageFocusX"
+            :image-focus-y="active.imageFocusY"
             :duration="active.duration"
             :video-url="active.videoUrl"
             :href="active.linkUrl"
+            :target="active.linkTarget"
             :aria-label="playLabel"
           />
         </div>
@@ -123,6 +127,8 @@ import AtomButton from '../../../atoms/AtomButton.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 import MoleculeTabs, { type TabItem } from '../../../molecules/MoleculeTabs.vue';
 import MoleculeVideoPreview from '../../../molecules/MoleculeVideoPreview.vue';
+import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import { normalizeLinkTarget, type LinkTarget } from '../../../../helpers/linkTarget';
 import { useEditTarget } from '../../../../core/editFocus';
 
 /* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
@@ -139,8 +145,11 @@ interface ValueItem {
   bullets: string[];
   linkLabel: string;
   linkUrl: string;
+  linkTarget: LinkTarget;
   image: string;
   imageAlt: string;
+  imageFocusX: number;
+  imageFocusY: number;
   videoUrl: string;
   duration: string;
 }
@@ -164,8 +173,11 @@ const items = computed<ValueItem[]>(() => {
       .filter((bullet: string) => bullet.trim()),
     linkLabel: item?.linkLabel ?? '',
     linkUrl: item?.linkUrl ?? '',
+    linkTarget: normalizeLinkTarget(item?.linkTarget),
     image: item?.image ?? '',
     imageAlt: item?.imageAlt ?? '',
+    imageFocusX: normalizeImageFocus(item?.imageFocusX),
+    imageFocusY: normalizeImageFocus(item?.imageFocusY),
     videoUrl: item?.videoUrl ?? '',
     duration: item?.duration ?? '',
   }));

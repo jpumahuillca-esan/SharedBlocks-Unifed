@@ -94,20 +94,16 @@
       <!-- Controles de Textos y Títulos -->
       <div class="row g-2 mb-3">
         <div class="col-12">
-          <label class="small text-muted mb-1">Título Principal</label>
-          <input type="text" class="form-control form-control-sm" v-model="localForm.mainTitle" data-edit-target="mainTitle" />
+          <EditorText v-model="localForm.mainTitle" data-edit-target="mainTitle" label="Título Principal" label-class="small text-muted mb-1" />
         </div>
         <div class="col-12">
-          <label class="small text-muted mb-1">Subtítulo Descriptivo</label>
-          <textarea class="form-control form-control-sm" rows="2" v-model="localForm.subTitle" data-edit-target="subTitle"></textarea>
+          <EditorTextarea v-model="localForm.subTitle" data-edit-target="subTitle" label="Subtítulo Descriptivo" label-class="small text-muted mb-1" :rows="2" />
         </div>
         <div class="col-6">
-          <label class="small text-muted mb-1">Texto del Botón</label>
-          <input type="text" class="form-control form-control-sm" v-model="localForm.button_text" data-edit-target="button_text" />
+          <EditorText v-model="localForm.button_text" data-edit-target="button_text" label="Texto del Botón" label-class="small text-muted mb-1" />
         </div>
         <div class="col-6">
-          <label class="small text-muted mb-1">ID Formulario Legacy</label>
-          <input type="text" class="form-control form-control-sm" v-model="localForm.cod_form_old" data-edit-target="cod_form_old" placeholder="Ej: 45" />
+          <EditorText v-model="localForm.cod_form_old" data-edit-target="cod_form_old" label="ID Formulario Legacy" label-class="small text-muted mb-1" placeholder="Ej: 45" />
         </div>
       </div>
     </div>
@@ -118,6 +114,8 @@
 import { ref, computed, watch, onMounted } from 'vue';
 import HttpClient from '@/helpers/http-client';
 import { useAuthStore } from '@/stores/auth';
+import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
+import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
 import type { DynamicFormField } from './types/lead.types';
 
 const props = defineProps<{ modelValue: any }>();
@@ -138,22 +136,42 @@ const DEFAULT_FIELDS: DynamicFormField[] = [
   { name: 'document_number', label: 'N° Documento (DNI/CE)', type: 'text', placeholder: 'Documento', required: true, col_span: 6 },
 ];
 
-const localForm = ref({
+const build = (source: any) => ({
   // Guardamos la unidad académica directamente en el contenido del bloque
-  academic_unit_id: props.modelValue?.academic_unit_id ?? authStore.academicUnitId ?? null,
-  campaign_id: props.modelValue?.campaign_id ?? null,
-  study_program_id: props.modelValue?.study_program_id ? Number(props.modelValue.study_program_id) : null,
-  mainTitle: props.modelValue?.mainTitle || '¡TRANSFORMA TU FUTURO! DA EL PRIMER PASO',
-  subTitle: props.modelValue?.subTitle || 'Déjanos tus datos y un asesor resolverá todas tus consultas.',
-  button_text: props.modelValue?.button_text || 'Enviar Solicitud',
-  condition: props.modelValue?.condition || 'https://www.ue.edu.pe/pregrado/politica-de-privacidad',
-  success_title: props.modelValue?.success_title || '¡Solicitud recibida!',
-  success_message: props.modelValue?.success_message || 'Un asesor se pondrá en contacto muy pronto.',
-  cod_form_old: props.modelValue?.cod_form_old || '',
-  fields: Array.isArray(props.modelValue?.fields) && props.modelValue.fields.length > 0 
-    ? [...props.modelValue.fields] 
+  academic_unit_id: source?.academic_unit_id ?? authStore.academicUnitId ?? null,
+  campaign_id: source?.campaign_id ?? null,
+  study_program_id: source?.study_program_id ? Number(source.study_program_id) : null,
+  mainTitle: source?.mainTitle || '¡TRANSFORMA TU FUTURO! DA EL PRIMER PASO',
+  subTitle: source?.subTitle || 'Déjanos tus datos y un asesor resolverá todas tus consultas.',
+  button_text: source?.button_text || 'Enviar Solicitud',
+  condition: source?.condition || 'https://www.ue.edu.pe/pregrado/politica-de-privacidad',
+  success_title: source?.success_title || '¡Solicitud recibida!',
+  success_message: source?.success_message || 'Un asesor se pondrá en contacto muy pronto.',
+  cod_form_old: source?.cod_form_old || '',
+  fields: Array.isArray(source?.fields) && source.fields.length > 0
+    ? [...source.fields]
     : [...DEFAULT_FIELDS]
 });
+
+const localForm = ref(build(props.modelValue));
+
+/*
+ * Contenido que llega desde fuera: deshacer/rehacer del constructor, una
+ * plantilla o una revisión. Sin esto el panel se quedaba con lo que mostraba y,
+ * peor, la siguiente edición volvía a emitir ese estado viejo encima del
+ * restaurado. Mismo patrón (y misma guardia contra el bucle) que el resto de
+ * editores.
+ */
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    if (!newVal) return;
+    const next = build(newVal);
+    if (JSON.stringify(next) === JSON.stringify(localForm.value)) return;
+    localForm.value = next;
+  },
+  { deep: true },
+);
 
 watch(localForm, (val) => emit('update:modelValue', { ...val }), { deep: true });
 

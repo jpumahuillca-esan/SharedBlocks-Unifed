@@ -2,18 +2,16 @@
   <div class="mm-editor">
     <h6 class="fw-bold small text-uppercase mb-1">Encabezado</h6>
 
-    <label class="form-label">Etiqueta superior</label>
-    <p class="mm-hint">Texto corto en rojo sobre el título. Vacío la oculta.</p>
-    <input
+    <EditorText
       v-model="localData.eyebrow"
       data-edit-target="eyebrow"
-      type="text"
-      class="form-control form-control-sm mb-2"
+      class="mb-2"
+      label="Etiqueta superior"
+      hint="Texto corto en rojo sobre el título. Vacío la oculta."
       placeholder="ESAN Global Experience"
     />
 
-    <label class="form-label">Título</label>
-    <textarea v-model="localData.title" data-edit-target="title" class="form-control form-control-sm mb-2" rows="2"></textarea>
+    <EditorTextarea v-model="localData.title" data-edit-target="title" class="mb-2" label="Título" :rows="2" />
 
     <p class="mm-hint">
       <i class="las la-globe-americas me-1"></i>
@@ -65,9 +63,15 @@
             </select>
           </div>
 
-          <label class="form-label">Texto</label>
-          <textarea v-model="item.text" data-edit-target=".text" class="form-control form-control-sm" rows="2"></textarea>
-          <p class="mm-hint mt-1">Un ítem sin texto no se muestra.</p>
+          <EditorTextarea
+            v-model="item.text"
+            data-edit-target=".text"
+            class="mb-2"
+            label="Texto"
+            :rows="2"
+            hint="Un ítem sin texto no se muestra."
+            hint-position="bottom"
+          />
         </div>
       </CardAccordionItem>
 
@@ -80,23 +84,20 @@
 
     <h6 class="fw-bold small text-uppercase mb-1">Botón</h6>
 
-    <label class="form-label">Texto del botón</label>
-    <p class="mm-hint">Vacío oculta el botón.</p>
-    <input
+    <EditorText
       v-model="localData.button.label"
       data-edit-target="button.label"
-      type="text"
-      class="form-control form-control-sm mb-2"
+      class="mb-2"
+      label="Texto del botón"
+      hint="Vacío oculta el botón."
       placeholder="Descubre ESAN Internacional"
     />
 
-    <label class="form-label">Destino del botón</label>
-    <input
+    <EditorUrl
       v-model="localData.button.url"
+      v-model:target="localData.button.target"
       data-edit-target="button.url"
-      type="text"
-      class="form-control form-control-sm"
-      placeholder="/ruta o https://"
+      label="Destino del botón"
     />
   </div>
 </template>
@@ -115,6 +116,10 @@ import { ref, watch } from 'vue';
  * en un cambio aparte que toque los tres editores a la vez.
  */
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
+import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
+import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
+import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
+import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 import { PICTOGRAM_OPTIONS, getPictogramSvg } from '../../../../helpers/pictograms';
 
 type SideKey = 'left' | 'right';
@@ -156,6 +161,7 @@ const build = (source: any) => ({
   button: {
     label: source?.button?.label ?? '',
     url: source?.button?.url ?? '',
+    target: normalizeLinkTarget(source?.button?.target),
   },
 });
 

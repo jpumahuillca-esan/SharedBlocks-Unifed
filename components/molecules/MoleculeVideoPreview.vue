@@ -32,17 +32,24 @@ import { ref, computed, watch } from 'vue';
 import AtomIcon from '../atoms/AtomIcon.vue';
 import AtomEyebrow from '../atoms/AtomEyebrow.vue';
 import { toVideoSource } from '../../helpers/video';
+import { imageFocusStyle } from '../../helpers/imageFocus';
+import { linkTargetAttrs } from '../../helpers/linkTarget';
 
 const props = withDefaults(defineProps<{
   variant?: 'simple' | 'featured';
   image?: string;
   imageAlt?: string;
+  /** Punto focal de la foto (0-100). Sin ellos la foto no lleva `object-position`. */
+  imageFocusX?: number;
+  imageFocusY?: number;
   duration?: string;
   /** Solo "featured". */
   eyebrow?: string;
   /** Solo "featured". */
   title?: string;
   href?: string;
+  /** `_blank` abre `href` en una pestaña nueva. Sin él, en la misma página. */
+  target?: string;
   ariaLabel?: string;
   /**
    * YouTube, Vimeo o un archivo .mp4/.webm.
@@ -127,7 +134,13 @@ watch(
     </div>
 
     <template v-else>
-      <img v-if="image" :src="image" :alt="imageAlt || ''" loading="lazy" />
+      <img
+        v-if="image"
+        :src="image"
+        :alt="imageAlt || ''"
+        :style="imageFocusStyle(imageFocusX, imageFocusY)"
+        loading="lazy"
+      />
       <span v-if="variant === 'featured' && duration" class="video-preview__duration">{{ duration }}</span>
 
       <!--
@@ -158,9 +171,15 @@ watch(
   </div>
 
   <!-- Sin video: el marcado del kit, intacto. -->
-  <a v-else :class="classes" :href="href || '#'" :aria-label="ariaLabel">
+  <a v-else :class="classes" :href="href || '#'" v-bind="href ? linkTargetAttrs(target) : undefined" :aria-label="ariaLabel">
     <!-- Sin imagen no se emite <img>: un src vacío da un icono roto. -->
-    <img v-if="image" :src="image" :alt="imageAlt || ''" loading="lazy" />
+    <img
+      v-if="image"
+      :src="image"
+      :alt="imageAlt || ''"
+      :style="imageFocusStyle(imageFocusX, imageFocusY)"
+      loading="lazy"
+    />
     <span v-if="variant === 'featured' && duration" class="video-preview__duration">{{ duration }}</span>
     <span class="video-preview__play">
       <span class="video-preview__play-btn">

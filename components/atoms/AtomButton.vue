@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, resolveComponent } from 'vue';
+import { linkTargetAttrs } from '../../helpers/linkTarget';
 
 /**
  * Variantes del Figma de arcis-2 (ver la cabecera de _buttons.scss):
@@ -19,6 +20,11 @@ const props = withDefaults(defineProps<{
   disabled?: boolean;
   href?: string;
   to?: string;
+  /**
+   * `_blank` abre el destino en una pestaña nueva (y añade el `rel` de
+   * seguridad). Sin él, se abre en la misma página. Solo aplica si hay destino.
+   */
+  target?: string;
 }>(), {
   variant: 'primary',
   size: 'md',
@@ -50,13 +56,16 @@ const linkProps = computed(() => {
     return {};
   }
 
+  // Pestaña nueva: `target` y `rel` viajan igual en el ancla nativa y en los componentes de ruta.
+  const extra = linkTargetAttrs(props.target);
+
   // Si es un ancla HTML nativa, solo pasamos href
   if (linkTag.value === 'a') {
-    return { href: targetUrl.value };
+    return { href: targetUrl.value, ...extra };
   }
 
   // Si es NuxtLink o RouterLink, pasamos solo 'to' (NuxtLink maneja enlaces externos e internos)
-  return { to: targetUrl.value };
+  return { to: targetUrl.value, ...extra };
 });
 
 const classes = computed(() => [
