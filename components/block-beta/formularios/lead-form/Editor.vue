@@ -186,6 +186,7 @@ const build = (source: any) => ({
   // Guardamos la unidad académica directamente en el contenido del bloque
   academic_unit_id: props.modelValue?.academic_unit_id ?? authStore.academicUnitId ?? null,
   campaign_id: props.modelValue?.campaign_id ?? null,
+  external_campaign_id: props.modelValue?.external_campaign_id ?? null,
   study_program_id: props.modelValue?.study_program_id ? Number(props.modelValue.study_program_id) : null,
   mainTitle: props.modelValue?.mainTitle || '¡TRANSFORMA TU FUTURO! DA EL PRIMER PASO',
   subTitle: props.modelValue?.subTitle || 'Déjanos tus datos y un asesor resolverá todas tus consultas.',
