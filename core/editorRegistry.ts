@@ -20,6 +20,7 @@ export const EDITOR_REGISTRY: Record<string, any> = {
     CardsAdmisionPregrado: defineAsyncComponent(() => import('../components/block-beta/cards/admision-pregrado/Editor.vue')),
     CardsVersion2: defineAsyncComponent(() => import('../components/block-beta/cards/cards-version-2/Editor.vue')),
     CardsReasonVersion3: defineAsyncComponent(() => import('../components/block-beta/cards/cards-reason-version-3/Editor.vue')),
+    CardsPillars: defineAsyncComponent(() => import('../components/block-beta/cards/cards-pillars/Editor.vue')),
 
     HeroLeadForm: defineAsyncComponent(() => import('../components/block-beta/formularios/lead-form/Editor.vue'))
     

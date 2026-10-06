@@ -7,17 +7,24 @@
     -->
     <div v-if="eyebrow || title || desc" class="card-section__heading">
       <!-- Opcional. Cuando está, es el titular de la sección (h2). -->
-      <AtomEyebrow v-if="eyebrow" as="h2" v-bind="edit('eyebrow')">{{ eyebrow }}</AtomEyebrow>
+      <AtomEyebrow v-if="eyebrow" :as="eyebrowAs || 'h2'" v-bind="edit('eyebrow')">{{ eyebrow }}</AtomEyebrow>
 
       <!--
         Un solo h2 por encabezado: si la etiqueta ya lo es, el título queda en
         <p>; sin etiqueta, el título es el h2. El aspecto es el mismo en los dos
         casos (ver .card-section__title en _card-section.scss).
       -->
-      <component :is="eyebrow ? 'p' : 'h2'" v-if="title" class="card-section__title" v-bind="edit('title')">{{ title }}</component>
+      <component
+        :is="titleAs || (eyebrow ? 'p' : 'h2')"
+        v-if="title"
+        class="card-section__title"
+        v-bind="edit('title')"
+      >
+        <slot name="title">{{ title }}</slot>
+      </component>
 
       <!-- Guion rojo bajo el título. Adorno: acompaña siempre al título. -->
-      <span v-if="title" class="card-section__rule" aria-hidden="true"></span>
+      <span v-if="showRule && title" class="card-section__rule" aria-hidden="true"></span>
 
       <!-- Opcional. -->
       <AtomText v-if="desc" size="body-compact" class="card-section__desc" v-bind="edit('desc')">{{ desc }}</AtomText>
@@ -39,8 +46,7 @@
  * Lo comparten las dos secciones. Cada parte desaparece si se deja vacía, así
  * que el encabezado completo se puede quitar sin tocar nada más.
  *
- * La etiqueta superior es opcional y solo la pasa quien la necesita
- * (`cards/image-grid`): las secciones de `events` y `awards` no la llevan.
+ * La etiqueta superior es opcional: la usan `cards/image-grid` y `awards`.
  */
 import AtomEyebrow from '../../../atoms/AtomEyebrow.vue';
 import AtomText from '../../../atoms/AtomText.vue';
@@ -51,9 +57,12 @@ import { useEditTarget } from '../../../../core/editFocus';
 /* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
 const edit = useEditTarget();
 
-defineProps<{
+withDefaults(defineProps<{
   /** Opcional: etiqueta corta sobre el título. */
   eyebrow?: string;
+  eyebrowAs?: string;
+  titleAs?: string;
+  showRule?: boolean;
   title: string;
   /** Opcional. */
   desc: string;
@@ -61,5 +70,7 @@ defineProps<{
   linkUrl: string;
   /** `_blank` abre el enlace en una pestaña nueva; vacío, en la misma página. */
   linkTarget?: string;
-}>();
+}>(), {
+  showRule: true,
+});
 </script>

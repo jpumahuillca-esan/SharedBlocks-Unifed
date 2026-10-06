@@ -12,21 +12,24 @@
         :model-value="eyebrow"
         data-edit-target="eyebrow"
         class="mb-2"
-        label="Etiqueta superior"
-        hint="Texto corto sobre el título. Se muestra en mayúsculas."
+        :label="eyebrowLabel || 'Etiqueta superior'"
+        :hint="eyebrowHint || 'Texto corto sobre el título. Se muestra en mayúsculas.'"
         placeholder="Comunidad y vida ESAN"
         @update:model-value="$emit('update:eyebrow', $event)"
       />
     </template>
 
-    <EditorText
-      :model-value="title"
-      data-edit-target="title"
-      class="mb-2"
-      label="Título de la sección"
-      hint="Lleva siempre el guion rojo debajo."
-      @update:model-value="$emit('update:title', $event)"
-    />
+    <slot name="title">
+      <EditorText
+        :model-value="title"
+        data-edit-target="title"
+        class="mb-2"
+        label="Título de la sección"
+        hint="Lleva siempre el guion rojo debajo."
+        @update:model-value="$emit('update:title', $event)"
+      />
+
+    </slot>
 
     <!-- Descripción — opcional -->
     <div class="cs-optional" data-edit-target="desc">
@@ -128,6 +131,8 @@ import type { CardCount } from './types';
 const props = defineProps<{
   /** Opcional: sin él, el panel no ofrece la etiqueta superior. */
   eyebrow?: string;
+  eyebrowLabel?: string;
+  eyebrowHint?: string;
   title: string;
   desc: string;
   linkLabel: string;

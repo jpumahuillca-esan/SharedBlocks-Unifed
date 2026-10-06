@@ -582,7 +582,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         isBoxed: true,
         component: defineAsyncComponent(() => import('../components/block-beta/awards/awards-featured/Block.vue')),
         initialData: {
-            title: 'Reconocimiento que genera confianza',
+            eyebrow: 'CIFRAS QUE RESPALDAN',
+            title: '<p>Indicadores de <span style="color: #E3173E;">excelencia ESAN</span></p>',
             desc: 'El prestigio se construye con resultados, reconocimiento internacional y el impacto de nuestros egresados.',
             linkLabel: 'Ver más reconocimientos',
             linkUrl: '',
@@ -712,6 +713,25 @@ export const BLOCK_REGISTRY: Record<string, any> = {
                 { id: 'cr3-2', number: '3º', label: 'Preferencia Carreras Universitarias 2025*', href: '' },
                 { id: 'cr3-3', number: '11', label: 'Dobles Grados Internacionales', href: '' },
                 { id: 'cr3-4', number: '+130', label: 'Convenios internacionales', href: '' },
+            ],
+        },
+    },
+
+    CardsPillars: {
+        label: 'Tarjetas de pilares',
+        icon: 'las la-th-large',
+        group: 'Cards',
+        beta: true,
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/cards/cards-pillars/Block.vue')),
+        initialData: {
+            title: 'Nuestros pilares',
+            cards: [
+                { id: 'pillar-1', icon: 'graduation-cap', title: 'Enfoque de negocios y emprendimientos sostenibles' },
+                { id: 'pillar-2', icon: 'graduation-cap', title: 'Experiencia internacional' },
+                { id: 'pillar-3', icon: 'graduation-cap', title: 'Conexión empresarial' },
+                { id: 'pillar-4', icon: 'graduation-cap', title: 'Innovación y cultura digital' },
+                { id: 'pillar-5', icon: 'graduation-cap', title: 'Lifelong skills & Lifelong learning' },
             ],
         },
     },

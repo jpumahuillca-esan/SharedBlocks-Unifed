@@ -2,17 +2,35 @@
   <div class="awards-editor">
     <!-- Sin `card-count`: la fila muestra todos sus logos, no hay columnas que elegir. -->
     <CardSectionHeaderEditor
+      :eyebrow="localData.eyebrow"
+      eyebrow-label="Antetítulo"
+      eyebrow-hint="Se muestra con un guion largo al inicio."
       :desc="localData.desc"
       :title="localData.title"
       :link-label="localData.linkLabel"
       :link-url="localData.linkUrl"
       :link-target="localData.linkTarget"
+      @update:eyebrow="localData.eyebrow = $event"
       @update:desc="localData.desc = $event"
       @update:title="localData.title = $event"
       @update:link-label="localData.linkLabel = $event"
       @update:link-url="localData.linkUrl = $event"
       @update:link-target="localData.linkTarget = $event"
-    />
+    >
+      <template #title>
+        <div class="awards-title-editor mb-2" data-edit-target="title">
+          <label class="form-label">Título de la sección</label>
+          <QuillEditor
+            v-model:content="localData.title"
+            content-type="html"
+            theme="snow"
+            :toolbar="titleToolbar"
+            placeholder="Indicadores de excelencia ESAN"
+          />
+          <small class="text-muted">Selecciona una parte del título y elige su color.</small>
+        </div>
+      </template>
+    </CardSectionHeaderEditor>
 
     <hr />
 
@@ -80,9 +98,12 @@ import CardSectionHeaderEditor from '../../events/_shared/CardSectionHeaderEdito
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
 import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
 import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
+import { QuillEditor } from '@vueup/vue-quill';
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
 /** Tope de la maqueta. El bloque aplica el mismo (ver Block.vue). */
 const MAX_AWARDS = 4;
+const titleToolbar = [[{ color: ['#E3173E', '#4F5A6C', '#000000', false] }]];
 
 interface AwardItem {
   id: string;
@@ -106,6 +127,7 @@ const buildAward = (source: any): AwardItem => ({
 });
 
 const build = (source: any) => ({
+  eyebrow: source?.eyebrow ?? '',
   title: source?.title ?? '',
   desc: source?.desc ?? '',
   linkLabel: source?.linkLabel ?? '',
@@ -183,6 +205,20 @@ watch(
 </script>
 
 <style scoped>
+.awards-title-editor :deep(.ql-toolbar.ql-snow) {
+  border-radius: 4px 4px 0 0;
+}
+
+.awards-title-editor :deep(.ql-container.ql-snow) {
+  min-height: 74px;
+  border-radius: 0 0 4px 4px;
+}
+
+.awards-title-editor :deep(.ql-editor) {
+  min-height: 74px;
+  font-family: var(--ds-font-family-base);
+}
+
 .aw-hint {
   margin: 0 0 8px;
   font-size: 11.5px;

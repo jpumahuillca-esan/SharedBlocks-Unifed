@@ -1,0 +1,121 @@
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .cards-pillars-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-4);
+    width: 100%;
+    padding-block: var(--ds-spacing-xxl);
+    border-radius: var(--ds-radius-sm);
+    box-sizing: border-box;
+  }
+
+  .cards-pillars__container {
+    display: flex;
+    width: 100%;
+    max-width: var(--ds-container-max);
+    margin-inline: auto;
+    padding-inline: var(--ds-spacing-md);
+    flex-direction: column;
+    gap: var(--ds-space-6);
+    box-sizing: border-box;
+  }
+
+  .cards-pillars__header {
+    display: flex;
+    min-height: 64px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ds-space-3);
+    text-align: center;
+  }
+
+  .cards-pillars__title {
+    color: var(--ds-color-text-primary);
+    line-height: var(--ds-line-height-125);
+    letter-spacing: -0.01em;
+    text-align: center;
+  }
+
+  .cards-pillars__rule {
+    width: 40px;
+    height: 2px;
+    flex: 0 0 auto;
+    background-color: var(--ds-color-surface-primary);
+  }
+
+  .cards-pillars__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--cards-pillars-columns, 5), minmax(0, 1fr));
+    gap: var(--ds-space-6);
+    width: 100%;
+  }
+
+  .cards-pillars__card.card.card--default {
+    min-height: 181px;
+    border: 1px solid var(--ds-color-neutral-300);
+    border-radius: var(--ds-radius-sm);
+    background-color: var(--ds-color-background-default);
+    box-shadow: var(--ds-shadow-sm);
+    text-decoration: none;
+    color: var(--ds-color-text-primary);
+  }
+
+  .cards-pillars__card .card__body {
+    align-items: flex-start;
+    gap: var(--ds-space-4);
+    padding: var(--ds-space-5);
+  }
+
+  .cards-pillars__icon {
+    display: inline-flex;
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    font-size: 48px;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    color: var(--ds-color-action-primary);
+  }
+
+  .cards-pillars__card-title {
+    color: var(--ds-color-text-primary);
+    line-height: var(--ds-line-height-125);
+    letter-spacing: var(--ds-letter-spacing-0);
+  }
+
+  @include bp.container-down('md') {
+    .cards-pillars__container {
+      padding-inline: var(--ds-space-6);
+    }
+
+  }
+
+  @include bp.container-down('lg') {
+    .cards-pillars__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @include bp.container-down('sm') {
+    .cards-pillars__container {
+      padding-inline: var(--ds-space-4);
+    }
+
+    .cards-pillars__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .cards-pillars__card.card.card--default {
+      height: 160px;
+      min-height: 160px;
+    }
+
+    .cards-pillars__card .card__body {
+      padding: var(--ds-space-4);
+    }
+  }
+}
