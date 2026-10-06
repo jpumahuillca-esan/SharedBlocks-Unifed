@@ -16,22 +16,39 @@
             <i class="las la-compass"></i> Páginas recomendadas de ESAN:
           </span>
           <div class="suggested-pages-list">
-            <a
+            <div
               v-for="(page, pIdx) in msg.suggestedPages"
               :key="pIdx"
-              :href="page.url"
-              class="page-suggestion-item"
-              @click.prevent="$emit('navigate-page', page.url)"
+              class="page-suggestion-card"
             >
-              <div class="page-item-icon">
-                <i :class="page.icon || 'las la-file-alt'"></i>
+              <a
+                :href="page.url"
+                class="page-suggestion-item"
+                @click.prevent="$emit('navigate-page', page.url)"
+              >
+                <div class="page-item-icon">
+                  <i :class="page.icon || 'las la-file-alt'"></i>
+                </div>
+                <div class="page-item-content">
+                  <span class="page-item-title">{{ page.title }}</span>
+                  <small v-if="page.description" class="page-item-desc">{{ page.description }}</small>
+                </div>
+                <i class="las la-arrow-right page-item-arrow"></i>
+              </a>
+
+              <!-- Botón de Brochure descargable si está presente -->
+              <div v-if="page.brochureUrl" class="brochure-bar">
+                <a
+                  :href="page.brochureUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="brochure-badge-link"
+                  title="Descargar Brochure Oficial"
+                >
+                  <i class="las la-file-pdf text-danger"></i> Folleto Oficial (PDF)
+                </a>
               </div>
-              <div class="page-item-content">
-                <span class="page-item-title">{{ page.title }}</span>
-                <small v-if="page.description" class="page-item-desc">{{ page.description }}</small>
-              </div>
-              <i class="las la-arrow-right page-item-arrow"></i>
-            </a>
+            </div>
           </div>
         </div>
       </div>
@@ -164,25 +181,62 @@ defineExpose({
   gap: 6px;
 }
 
+.page-suggestion-card {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid #fecdd3;
+  border-left: 3px solid #e31140;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.page-suggestion-card:hover {
+  background: #fff1f2;
+  border-color: #fda4af;
+  transform: translateX(2px);
+}
+
 .page-suggestion-item {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 8px 10px;
-  background: #ffffff;
-  border: 1px solid #fecdd3;
-  border-left: 3px solid #e31140;
-  border-radius: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
   color: #1e293b;
   text-decoration: none;
-  transition: all 0.2s ease;
 }
 
-.page-suggestion-item:hover {
-  background: #fff1f2;
-  border-color: #fda4af;
-  transform: translateX(2px);
-  color: #1e293b;
+.brochure-bar {
+  padding: 3px 10px 6px;
+  background: rgba(254, 205, 211, 0.2);
+  border-top: 1px dotted #fecdd3;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.brochure-badge-link {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #b91c1c;
+  background: #ffffff;
+  border: 1px solid #fca5a5;
+  border-radius: 4px;
+  padding: 2px 7px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.brochure-badge-link:hover {
+  background: #e31140;
+  color: #ffffff;
+  border-color: #e31140;
 }
 
 .page-item-icon {
