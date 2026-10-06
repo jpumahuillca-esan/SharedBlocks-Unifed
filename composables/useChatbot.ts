@@ -6,6 +6,8 @@ export interface SuggestedPageItem {
   description?: string;
   category?: string;
   icon?: string;
+  brochureUrl?: string;
+  modality?: string;
 }
 
 export interface ChatMessageItem {
@@ -15,7 +17,10 @@ export interface ChatMessageItem {
 }
 
 export interface LeadFormData {
-  fullName: string;
+  firstName: string;
+  lastName: string;
+  documentType: 'dni' | 'ce' | 'passport';
+  documentNumber: string;
   email: string;
   phone: string;
   program: string;
@@ -59,7 +64,10 @@ export function useChatbot() {
   const leadError = ref('');
 
   const leadForm = reactive<LeadFormData>({
-    fullName: '',
+    firstName: '',
+    lastName: '',
+    documentType: 'dni',
+    documentNumber: '',
     email: '',
     phone: '',
     program: '',
@@ -150,8 +158,20 @@ export function useChatbot() {
     academicUnitId?: number | string;
   }) => {
     leadError.value = '';
-    if (!leadForm.fullName.trim()) {
-      leadError.value = 'Por favor ingresa tu nombre completo.';
+    if (!leadForm.firstName.trim()) {
+      leadError.value = 'Por favor ingresa tus nombres.';
+      return false;
+    }
+    if (!leadForm.lastName.trim()) {
+      leadError.value = 'Por favor ingresa tus apellidos.';
+      return false;
+    }
+    if (!leadForm.documentNumber.trim()) {
+      leadError.value = 'Por favor ingresa tu número de documento de identidad.';
+      return false;
+    }
+    if (leadForm.documentType === 'dni' && !/^\d{8}$/.test(leadForm.documentNumber.trim())) {
+      leadError.value = 'El DNI debe contener exactamente 8 dígitos numéricos.';
       return false;
     }
     if (!leadForm.email.trim() || !leadForm.email.includes('@')) {
@@ -165,15 +185,14 @@ export function useChatbot() {
 
     isSubmittingLead.value = true;
 
-    const names = leadForm.fullName.trim().split(' ');
-    const firstName = names[0] || 'Interesado';
-    const lastName = names.slice(1).join(' ') || '-';
     const programInterest = leadForm.program.trim() || 'Información General';
 
     const payload = {
       academic_unit_id: options?.academicUnitId || 1,
-      first_name: firstName,
-      last_name: lastName,
+      first_name: leadForm.firstName.trim(),
+      last_name: leadForm.lastName.trim(),
+      document_type: leadForm.documentType,
+      document_number: leadForm.documentNumber.trim(),
       email: leadForm.email.trim(),
       phone: leadForm.phone.trim(),
       payload: {
@@ -196,11 +215,14 @@ export function useChatbot() {
       }
 
       showLeadForm.value = false;
-      const registeredName = leadForm.fullName;
+      const registeredName = `${leadForm.firstName} ${leadForm.lastName}`;
       const registeredEmail = leadForm.email;
       const registeredPhone = leadForm.phone;
 
-      leadForm.fullName = '';
+      leadForm.firstName = '';
+      leadForm.lastName = '';
+      leadForm.documentType = 'dni';
+      leadForm.documentNumber = '';
       leadForm.email = '';
       leadForm.phone = '';
       leadForm.program = '';

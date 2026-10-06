@@ -11,15 +11,51 @@
     </div>
 
     <form class="lead-form-body" @submit.prevent="$emit('submit')">
-      <div class="form-group mb-2">
-        <label class="form-label fs-11 fw-semibold text-dark mb-1">Nombre y Apellido *</label>
-        <input
-          v-model="leadForm.fullName"
-          type="text"
-          class="form-control form-control-sm custom-lead-input"
-          placeholder="Ej: Juan Pérez"
-          required
-        />
+      <!-- Nombres y Apellidos en dos columnas -->
+      <div class="row g-2 mb-2">
+        <div class="col-6">
+          <label class="form-label fs-11 fw-semibold text-dark mb-1">Nombres *</label>
+          <input
+            v-model="leadForm.firstName"
+            type="text"
+            class="form-control form-control-sm custom-lead-input"
+            placeholder="Ej: Juan"
+            required
+          />
+        </div>
+        <div class="col-6">
+          <label class="form-label fs-11 fw-semibold text-dark mb-1">Apellidos *</label>
+          <input
+            v-model="leadForm.lastName"
+            type="text"
+            class="form-control form-control-sm custom-lead-input"
+            placeholder="Ej: Pérez"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- Documento de Identidad -->
+      <div class="row g-2 mb-2">
+        <div class="col-5">
+          <label class="form-label fs-11 fw-semibold text-dark mb-1">Tipo Doc. *</label>
+          <select v-model="leadForm.documentType" class="form-select form-select-sm custom-lead-input">
+            <option value="dni">DNI</option>
+            <option value="ce">C.E.</option>
+            <option value="passport">Pasaporte</option>
+          </select>
+        </div>
+        <div class="col-7">
+          <label class="form-label fs-11 fw-semibold text-dark mb-1">N° de Documento *</label>
+          <input
+            v-model="leadForm.documentNumber"
+            type="text"
+            class="form-control form-control-sm custom-lead-input"
+            :maxlength="leadForm.documentType === 'dni' ? 8 : 20"
+            :placeholder="leadForm.documentType === 'dni' ? '8 dígitos' : 'N° documento'"
+            required
+          />
+        </div>
       </div>
 
       <div class="form-group mb-2">
@@ -46,13 +82,13 @@
 
       <div class="form-group mb-2">
         <label class="form-label fs-11 fw-semibold text-dark mb-1">
-          Programa o Carrera de interés <span class="text-muted fw-normal">(Opcional)</span>
+          Programa o Facultad de interés <span class="text-muted fw-normal">(Opcional)</span>
         </label>
         <input
           v-model="leadForm.program"
           type="text"
           class="form-control form-control-sm custom-lead-input"
-          placeholder="Ej: Ingeniería, Admisión o Información General"
+          placeholder="Ej: Pregrado, MBA, DPA o Información General"
         />
       </div>
 
@@ -64,7 +100,7 @@
           v-model="leadForm.notes"
           rows="2"
           class="form-control form-control-sm custom-lead-input"
-          placeholder="¿Tienes alguna consulta específica?"
+          placeholder="¿Deseas información o el brochure de algún programa?"
         ></textarea>
       </div>
 
