@@ -25,6 +25,21 @@
 
 .arcis-scope {
 
+  .card-section.awards .card-section__heading > .eyebrow {
+    display: block;
+    font-family: var(--ds-font-family-base);
+    font-size: var(--ds-text-body-sm, var(--ds-font-size-12));
+    font-weight: var(--ds-weight-semibold);
+    line-height: var(--ds-line-height-100);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ds-color-text-secondary);
+  }
+
+  .card-section.awards .card-section__heading > .eyebrow::before {
+    display: none;
+  }
+
   .card-section.awards {
     /*
      * Alto de la casilla de cada logo, medido sobre la maqueta. Los logos los

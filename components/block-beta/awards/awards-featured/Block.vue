@@ -6,12 +6,19 @@
   -->
   <section class="card-section awards">
     <CardSectionHeader
+      :eyebrow="data.eyebrow ? `— ${data.eyebrow}` : ''"
+      eyebrow-as="span"
+      title-as="h2"
       :desc="data.desc || ''"
-      :title="data.title || ''"
+      :title="titleContent.text"
       :link-label="data.linkLabel || ''"
       :link-url="data.linkUrl || ''"
       :link-target="normalizeLinkTarget(data.linkTarget)"
-    />
+    >
+      <template #title>
+        <span v-html="titleContent.html"></span>
+      </template>
+    </CardSectionHeader>
 
     <!--
       Las columnas son tantas como reconocimientos: con cuatro, cada logo se
@@ -80,6 +87,63 @@ import CardSectionFooter from '../../events/_shared/CardSectionFooter.vue';
 import CardSlider from '../../events/_shared/CardSlider.vue';
 import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 import { useEditTarget } from '../../../../core/editFocus';
+const sanitizeTitleHtml = (value: unknown): { html: string; text: string } => {
+  if (typeof value !== 'string' || !value) return { html: '', text: '' };
+
+  if (typeof DOMParser === 'undefined') {
+    const text = value.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+    const html = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return { html, text };
+  }
+
+  const parsed = new DOMParser().parseFromString(value, 'text/html');
+  const output = document.createElement('span');
+  const allowedTags = new Set(['SPAN', 'STRONG', 'B', 'EM', 'I', 'U', 'S']);
+  const blockedTags = new Set(['SCRIPT', 'STYLE', 'IFRAME', 'OBJECT', 'SVG', 'MATH', 'TEMPLATE']);
+
+  const copyNode = (source: Node, target: HTMLElement): void => {
+    if (source.nodeType === Node.TEXT_NODE) {
+      target.appendChild(document.createTextNode(source.textContent || ''));
+      return;
+    }
+
+    if (!(source instanceof HTMLElement)) return;
+    const tag = source.tagName;
+    if (blockedTags.has(tag)) return;
+
+    if (tag === 'BR') {
+      target.appendChild(document.createElement('br'));
+      return;
+    }
+
+    if (tag === 'P' || tag === 'DIV') {
+      if (target.childNodes.length) target.appendChild(document.createElement('br'));
+      source.childNodes.forEach((child) => copyNode(child, target));
+      return;
+    }
+
+    if (allowedTags.has(tag)) {
+      const clean = document.createElement(tag.toLowerCase());
+      if (tag === 'SPAN') {
+        const color = source.style.color.trim();
+        if (color && typeof CSS !== 'undefined' && CSS.supports('color', color)) {
+          clean.style.color = color;
+        }
+      }
+      source.childNodes.forEach((child) => copyNode(child, clean));
+      target.appendChild(clean);
+      return;
+    }
+
+    source.childNodes.forEach((child) => copyNode(child, target));
+  };
+
+  parsed.body.childNodes.forEach((node) => copyNode(node, output));
+  return {
+    html: output.innerHTML.replace(/(?:<br>)+$/, ''),
+    text: (output.textContent || '').replace(/\s+/g, ' ').trim(),
+  };
+};
 
 /* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
 const edit = useEditTarget();
@@ -94,6 +158,8 @@ interface AwardItem {
 }
 
 const props = defineProps<{ data: any }>();
+
+const titleContent = computed(() => sanitizeTitleHtml(props.data?.title));
 
 const awards = computed<AwardItem[]>(() => {
   const raw = Array.isArray(props.data?.awards) ? props.data.awards : [];
