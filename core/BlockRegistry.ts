@@ -755,6 +755,28 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         },
     },
 
+    CtaBanner: {
+        label: 'CTA Banner con imagen',
+        icon: 'las la-image',
+        group: 'CtaBrands',
+        beta: true,
+        isBoxed: true,
+        component: defineAsyncComponent(() => import('../components/block-beta/cta/cta-banner/Block.vue')),
+        initialData: {
+            title: 'Expande tus habilidades con Extended Learning',
+            desc: 'Aprende con programas prácticos, diseñados para impulsar tu camino y adaptarse a tus objetivos.',
+            buttonLabel: 'Inscríbete ahora',
+            buttonNegative: false,
+            buttonUrl: '',
+            buttonTarget: '',
+            panelColorToken: '--ds-color-univ-management',
+            image: '',
+            imageAlt: '',
+            imageFocusX: 50,
+            imageFocusY: 50,
+        },
+    },
+
     CtaBandFullImage: {
         label: 'CTA con imagen de fondo',
         icon: 'las la-images',

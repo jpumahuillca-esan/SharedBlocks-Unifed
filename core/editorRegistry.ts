@@ -5,6 +5,7 @@ export const EDITOR_REGISTRY: Record<string, any> = {
     EventsFeatured: defineAsyncComponent(() => import('../components/block-beta/events/events-featured/Editor.vue')),
     PostsFeatured: defineAsyncComponent(() => import('../components/block-beta/events/posts-featured/Editor.vue')),
     CtaBandImage: defineAsyncComponent(() => import('../components/block-beta/cta/ctaband-image/Editor.vue')),
+    CtaBanner: defineAsyncComponent(() => import('../components/block-beta/cta/cta-banner/Editor.vue')),
     CtaBandFullImage: defineAsyncComponent(() => import('../components/block-beta/cta/ctaband-full-image/Editor.vue')),
     CtaBandSolid: defineAsyncComponent(() => import('../components/block-beta/cta/ctaband-solid/Editor.vue')),
     CtaBandCompact: defineAsyncComponent(() => import('../components/block-beta/cta/ctaband-compact/Editor.vue')),
