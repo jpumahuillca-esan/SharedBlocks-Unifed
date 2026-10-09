@@ -65,7 +65,7 @@
   }
 
   .cards-v2__title {
-    font-family: inherit;
+    font-family: var(--ds-font-family-display);
     font-size: clamp(1.5rem, 2.3vw, 2.15rem);
     font-weight: 700;
     color: var(--ds-color-text-primary, #0f172a);

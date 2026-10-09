@@ -148,10 +148,13 @@
    *
    * El título es un AtomHeading, y su estilo con ámbito
    * (`.atom-heading[data-v-…]`) fija la fuente de titulares con la MISMA
-   * especificidad que tendría una regla de una sola clase. Empataban, ganaba
-   * el átomo por cargarse después, y la tarjeta salía en Bricolage aunque el
-   * kit la declara en la fuente de texto. Con un nivel más de clase, esta
-   * hoja manda.
+   * especificidad que tendría una regla de una sola clase. Empataban y ganaba
+   * el átomo por cargarse después: la familia dependía del orden de carga y no
+   * de esta hoja. Con un nivel más de clase, esta hoja manda.
+   *
+   * La familia es la de titulares (Bricolage): es un título. El kit de Figma
+   * la declara en la fuente de texto, pero en este proyecto los títulos van en
+   * Bricolage y solo los rótulos y el texto corrido en Inter.
    *
    * El tamaño no se declara acá: AtomHeading lo fija en línea, así que una
    * regla de hoja no tendría efecto. Se decide con la prop `size` en
@@ -159,7 +162,7 @@
    */
   .event-card--arcis .event-card__title {
     margin: 0;
-    font-family: var(--ds-font-family-base);
+    font-family: var(--ds-font-family-display);
     font-weight: var(--ds-weight-semibold);
   }
 

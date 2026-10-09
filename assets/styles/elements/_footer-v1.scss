@@ -87,7 +87,15 @@
     min-width: 0;
   }
 
-  .footer-v1__contact-title {
+  /*
+   * `.footer-v1__contact .footer-v1__contact-title` y no la clase a secas: es un
+   * AtomText, y su estilo con ámbito (`.atom-text[data-v-…]`) fija la fuente de
+   * texto con la misma especificidad que una clase anidada en .arcis-scope.
+   * Empatan y gana el átomo por cargarse después. Con un nivel más, manda esta
+   * hoja. Es un título, así que va en la fuente de titulares (Bricolage).
+   */
+  .footer-v1__contact .footer-v1__contact-title {
+    font-family: var(--ds-font-family-display);
     font-weight: var(--ds-weight-semibold);
     color: var(--ds-color-text-inverse);
   }
@@ -150,6 +158,8 @@
     justify-content: space-between;
     gap: var(--ds-spacing-xxs);
     margin-bottom: var(--ds-spacing-xxs);
+    /* Es un <p> (o un <a> en acordeón), no un h1-h6: sin esto heredaría Inter. */
+    font-family: var(--ds-font-family-display);
     font-size: var(--ds-text-body);
     font-weight: var(--ds-weight-semibold);
     color: var(--ds-color-text-inverse);
