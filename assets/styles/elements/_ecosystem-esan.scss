@@ -203,6 +203,11 @@
     border-radius:
       var(--ds-radius-sm);
 
+    border-bottom:
+      var(--ds-size-4)
+      solid
+      var(--ecosystem-esan-card-color);
+
     background-color:
       var(--ecosystem-esan-card-color);
   }
@@ -384,11 +389,16 @@
     0
     0;
 
-  background-color:
+  border:
+    var(--ds-border-width-sm)
+    solid
     var(--ecosystem-esan-card-color);
 
+  background-color:
+    var(--ds-color-background-default);
+
   color:
-    var(--ecosystem-esan-card-content);
+    var(--ds-color-text-primary);
 }
 
   .ecosystem-esan-card__text {
@@ -420,7 +430,7 @@
     margin: 0;
 
     color:
-      var(--ecosystem-esan-card-content);
+      var(--ds-color-text-primary);
 
     font-family:
       var(--ds-font-family-display);
@@ -441,7 +451,7 @@
     margin: 0;
 
     color:
-      var(--ecosystem-esan-card-content);
+      var(--ds-color-text-secondary);
 
     font-family:
       var(--ds-font-family-base);
@@ -467,6 +477,12 @@
 
     align-self:
       flex-end;
+
+    background-color:
+      var(--ecosystem-esan-card-color);
+
+    color:
+      var(--ecosystem-esan-card-content);
   }
 
   /* ==========================================================================
@@ -511,6 +527,7 @@
         min-height: 0;
         margin: 0;
         padding: var(--ds-space-3);
+        border: 0;
         border-radius: 0;
         background-color: var(--ds-color-background-default);
         color: var(--ds-color-text-primary);
