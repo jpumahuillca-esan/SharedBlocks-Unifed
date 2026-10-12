@@ -7,8 +7,8 @@
 import MoleculeBreadcrumb from '../molecules/MoleculeBreadcrumb.vue';
 
 const items = [
-  { label: 'Inicio', href: '#' },
-  { label: 'Posgrado', href: '#' },
+  { label: 'Inicio', href: '/' },
+  { label: 'Posgrado', href: '/posgrado/' },
   { label: 'MBA Part-Time' },
 ];
 </script>

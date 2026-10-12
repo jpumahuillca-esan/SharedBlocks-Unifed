@@ -28,6 +28,25 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         },
     },
 
+    Breadcrumb: {
+        label: 'Ruta de navegación (Breadcrumb)',
+        icon: 'las la-angle-double-right',
+        group: 'Navigation',
+        beta: true,
+        isBoxed: true,
+        component: defineAsyncComponent(() => import('../components/block-beta/navigation/breadcrumb/Block.vue')),
+        initialData: {
+            mode: 'dynamic',
+            academic_unit_id: null,
+            includeCurrentPage: true,
+            currentPage: '',
+            isBoxed: true,
+            items: [
+                { label: 'Inicio', href: '/' },
+            ],
+        },
+    },
+
     EventsFeatured: {
         label: 'Eventos destacados',
         icon: 'las la-calendar',
@@ -863,7 +882,7 @@ const betaBaseGroups = [
     { id: 'Awards', label: 'Awards', color: 'outline-dark', icon: 'las la-award' },
     // 'Cards' no coincide con ningún id de baseGroups: no se cuela en el catálogo clásico.
     { id: 'Cards', label: 'Cards', color: 'outline-success', icon: 'las la-th-large' },
-    
+    { id: 'Navigation', label: 'Navegación', color: 'outline-primary', icon: 'las la-compass' },
 ];
 
 /** Claves de los bloques marcados como beta, sin agrupar. */

@@ -253,9 +253,47 @@ export function useDynamicLeadForm(props: DynamicLeadFormProps) {
 
     const externalCampaignId = formValues.external_campaign_id || cfg.value.external_campaign_id || null;
 
+    // 7. Tracking y Parámetros UTM (URL query string o SessionStorage)
+    let urlParams: URLSearchParams | null = null;
+    if (typeof window !== 'undefined' && window.location.search) {
+      try {
+        urlParams = new URLSearchParams(window.location.search);
+      } catch (_) {}
+    }
+
+    let storedUtm: any = null;
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+      try {
+        const raw = sessionStorage.getItem('esan_marketing_utm');
+        if (raw) storedUtm = JSON.parse(raw);
+      } catch (_) {}
+    }
+
+    const utmSource =
+      urlParams?.get('utm_source') || storedUtm?.utm_source || formValues.utm_source || null;
+    const utmMedium =
+      urlParams?.get('utm_medium') || storedUtm?.utm_medium || formValues.utm_medium || null;
+    const utmCampaign =
+      urlParams?.get('utm_campaign') || storedUtm?.utm_campaign || formValues.utm_campaign || null;
+    const utmTerm =
+      urlParams?.get('utm_term') || storedUtm?.utm_term || null;
+    const utmContent =
+      urlParams?.get('utm_content') || storedUtm?.utm_content || null;
+
+    const marketingMetadata = {
+      utm_source: utmSource,
+      utm_medium: utmMedium,
+      utm_campaign: utmCampaign,
+      utm_term: utmTerm,
+      utm_content: utmContent,
+      referrer_url: typeof window !== 'undefined' ? window.location.href : null,
+      provenance: utmSource === 'chatbot' ? 'Redireccionado por EsanBot' : 'Navegación Web',
+      referred_by: utmSource === 'chatbot' ? 'esanbot' : null
+    };
+
     return {
       academic_unit_id: cfg.value.academic_unit_id,
-      campaign_id: cfg.value.campaign_id,
+      campaign_id: cfg.value.campaign_id || null,
       external_campaign_id: externalCampaignId,
       study_program_id: studyProgramId,
       first_name: firstName,
@@ -266,8 +304,15 @@ export function useDynamicLeadForm(props: DynamicLeadFormProps) {
       phone,
       slug_carrera: currentSlug,
       recaptcha_token: recaptchaToken,
+      utm_source: utmSource,
+      utm_medium: utmMedium,
+      utm_campaign: utmCampaign,
+      marketing_metadata: marketingMetadata,
       payload: {
         ...formValues,
+        utm_source: utmSource,
+        utm_medium: utmMedium,
+        utm_campaign: utmCampaign,
         external_campaign_id: externalCampaignId,
         study_program_id: studyProgramId,
         programa_origen: props.careerName || '',
@@ -275,6 +320,8 @@ export function useDynamicLeadForm(props: DynamicLeadFormProps) {
         acepta_publicidad: aceptaPublicidad.value,
         url_slug: currentSlug,
         cod_form_old: cfg.value.cod_form_old,
+        provenance: marketingMetadata.provenance,
+        referred_by: marketingMetadata.referred_by
       },
     };
   };

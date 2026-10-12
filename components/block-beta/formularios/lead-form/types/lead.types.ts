@@ -47,8 +47,12 @@ export interface LeadAutoresponderDirective {
 export interface PublicLeadPayload {
   academic_unit_id?: number | null;
   campaign_id: number | null;
+  campaign_slug?: string | null;
   external_campaign_id?: string | null;
   study_program_id?: number | null;
+  utm_source?: string | null;
+  utm_medium?: string | null;
+  utm_campaign?: string | null;
   first_name: string;
   apellido_paterno?: string;
   apellido_materno?: string;

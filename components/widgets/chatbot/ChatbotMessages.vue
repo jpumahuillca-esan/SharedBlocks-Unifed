@@ -22,7 +22,7 @@
               class="page-suggestion-card"
             >
               <a
-                :href="page.url"
+                :href="appendChatbotUtm(page.url)"
                 class="page-suggestion-item"
                 @click.prevent="$emit('navigate-page', page.url)"
               >
@@ -83,7 +83,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { formatMessage, type ChatMessageItem } from '../../../composables/useChatbot';
+import { formatMessage, appendChatbotUtm, type ChatMessageItem } from '../../../composables/useChatbot';
 
 defineProps<{
   messages: ChatMessageItem[];

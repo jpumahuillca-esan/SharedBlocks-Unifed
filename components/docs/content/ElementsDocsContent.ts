@@ -513,10 +513,10 @@ export const ELEMENTS_DOCS: Record<string, ElementDoc> = {
 <MoleculeCookieBanner variant="light" @consent="onConsent" />`,
   },
   Breadcrumb: {
-    description: 'MoleculeBreadcrumb: ruta de navegación jerárquica — el último ítem del array nunca es un link (se renderiza como texto actual, con aria-current="page"), se infiere automáticamente de su posición, no hace falta indicarlo aparte.',
+    description: 'MoleculeBreadcrumb: ruta de navegación jerárquica con marcado Schema.org (BreadcrumbList) para SEO y navegación SPA reactiva — el último ítem del array nunca es un link (se renderiza como texto actual, con aria-current="page"), se infiere automáticamente de su posición, no hace falta indicarlo aparte.',
     code: `<MoleculeBreadcrumb :items="[
-  { label: 'Inicio', href: '#' },
-  { label: 'Posgrado', href: '#' },
+  { label: 'Inicio', href: '/' },
+  { label: 'Posgrado', href: '/posgrado/' },
   { label: 'MBA Part-Time' },
 ]" />`,
   },
