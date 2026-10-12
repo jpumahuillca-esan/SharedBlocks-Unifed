@@ -32,7 +32,7 @@
      * lo compensa con margen negativo para poder sangrar hasta el borde, y
      * ambos valores tienen que coincidir.
      */
-    --story-section-padding-x: var(--ds-spacing-md);
+    --story-section-padding-x: var(--ds-container-padding-x);
 
     /*
      * Ancho mínimo de una tarjeta. Es la pieza clave del comportamiento que
@@ -274,10 +274,6 @@
      normal. Solo se ajustan los márgenes y baja el enlace del encabezado.
      ----------------------------------------------------------------------- */
   @include bp.container-down('md') {
-
-    .story-section {
-      --story-section-padding-x: var(--ds-space-6);
-    }
 
     .story-section__inner {
       gap: var(--ds-space-6);

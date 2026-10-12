@@ -5,6 +5,46 @@
         <i class="las la-sliders-h fs-18"></i> Configuración del Bloque de Captación
       </h6>
 
+      <!--
+        Solo con el formulario en una columna FLOTANTE de la sección. En
+        escritorio flota sobre el contenido; en móvil entra en el flujo como un
+        bloque más, y aquí se decide debajo de cuál de los bloques de la sección.
+      -->
+      <div
+        v-if="placement"
+        class="p-3 rounded mb-3 border"
+        style="background-color: var(--ds-color-background-light); border-color: var(--ds-color-border-subtle);"
+        data-edit-target="mobile_placement"
+      >
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <i class="las la-thumbtack text-primary"></i>
+          <span class="small fw-bold" style="color: var(--ds-color-text-primary);">
+            Anclado como flotante a la {{ placement.side === 'start' ? 'izquierda' : 'derecha' }}
+          </span>
+        </div>
+
+        <label class="small fw-bold d-block mb-1" for="lead-mobile-after" style="color: var(--ds-color-text-primary);">
+          En móvil, mostrar debajo de
+        </label>
+        <select
+          id="lead-mobile-after"
+          class="form-select form-select-sm"
+          :value="mobileAfterValue"
+          @change="onMobileAfterChange"
+        >
+          <option :value="MOBILE_AFTER_START">Al inicio, antes de todos los bloques</option>
+          <option v-for="anchor in placement.anchors" :key="anchor.id" :value="anchor.id">
+            {{ anchor.label }}
+          </option>
+          <option value="">Al final, después de todos los bloques</option>
+        </select>
+
+        <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">
+          En escritorio y tableta el formulario flota sobre el contenido y acompaña al scroll. En
+          móvil (menos de 768px) pasa a modo bloque y se coloca en el punto que elijas.
+        </small>
+      </div>
+
       <!-- Selector de Campaña Dinámica -->
       <div class="p-3 rounded mb-3 border" style="background-color: var(--ds-color-background-light); border-color: var(--ds-color-border-subtle);">
         <label class="small fw-bold d-block mb-1" style="color: var(--ds-color-text-primary);">
@@ -134,15 +174,40 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, inject, watch, onMounted } from 'vue';
 import HttpClient from '@/helpers/http-client';
 import { useAuthStore } from '@/stores/auth';
+import { BLOCK_PLACEMENT_KEY } from '../../../../core/blockPlacement';
+import { MOBILE_AFTER_START } from '../../../../core/sectionTypes';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
 import type { DynamicFormField } from './types/lead.types';
 
 const props = defineProps<{ modelValue: any }>();
 const emit = defineEmits(['update:modelValue']);
+
+/*
+ * Colocación del bloque en la sección (core/blockPlacement.ts): solo existe si
+ * el formulario está en una columna flotante. Sin inspector no hay contexto.
+ */
+const placementRef = inject(BLOCK_PLACEMENT_KEY, null);
+const placement = computed(() => placementRef?.value ?? null);
+
+/**
+ * Un bloque elegido que ya no existe (se borró o se movió de columna) cuenta
+ * como "al final", que es lo que hace el sitio; así el select nunca queda
+ * mostrando una opción que no está en la lista.
+ */
+const mobileAfterValue = computed(() => {
+  const current = placement.value?.mobileAfterBlockId ?? '';
+  if (current === MOBILE_AFTER_START) return current;
+  return placement.value?.anchors.some((a) => a.id === current) ? current : '';
+});
+
+const onMobileAfterChange = (event: Event) => {
+  const value = (event.target as HTMLSelectElement).value;
+  placement.value?.setMobileAfter(value || null);
+};
 
 const authStore = useAuthStore();
 const campaigns = ref<any[]>([]);

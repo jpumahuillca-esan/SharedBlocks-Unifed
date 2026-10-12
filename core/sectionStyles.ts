@@ -9,6 +9,8 @@
 import {
     BOXED_MAX_WIDTH,
     GRID_UNITS,
+    MOBILE_AFTER_START,
+    type ColumnPlacement,
     type SectionBehavior,
     type SectionSettings,
     type SectionVerticalAlign,
@@ -103,17 +105,36 @@ export const resolveSectionStyle = (
  * Estilos de la grilla de columnas. Es la grilla la que impone el ancho a cada
  * bloque, que es el corazón del cambio de paradigma.
  */
-export const resolveColumnsStyle = (settings: SectionSettingsLike = {}): StyleMap => {
+export const resolveColumnsStyle = (
+    settings: SectionSettingsLike = {},
+    columns: FloatAwareColumn[] = [],
+): StyleMap => {
     const { width = 'full', gapPx = 24, verticalAlign = 'stretch', heightMode = 'auto' } = settings;
 
-    const style: StyleMap = {
-        display: 'grid',
-        gridTemplateColumns: `repeat(${GRID_UNITS}, minmax(0, 1fr))`,
-        gap: px(gapPx),
-        alignItems: ALIGN_TO_FLEX[verticalAlign] ?? 'stretch',
-        width: '100%',
-        boxSizing: 'border-box',
-    };
+    /*
+     * Con una columna flotante la grilla la define la hoja sectionLayout.scss,
+     * no el estilo en línea: en pantallas chicas es una sola columna, y un
+     * estilo en línea no se puede deshacer desde una consulta de medios. Aquí
+     * solo quedan los valores que sí son del usuario, como variables.
+     */
+    const style: StyleMap = hasFloatingColumn(columns)
+        ? {
+            '--ps-gap': px(gapPx),
+            '--ps-align': ALIGN_TO_FLEX[verticalAlign] ?? 'stretch',
+            // Ancho (de 12) de la flotante: con él las columnas normales saben
+            // cuánto hueco reservarle (ver sectionLayout.scss).
+            '--ps-float-span': String(floatSpan(columns)),
+            width: '100%',
+            boxSizing: 'border-box',
+        }
+        : {
+            display: 'grid',
+            gridTemplateColumns: `repeat(${GRID_UNITS}, minmax(0, 1fr))`,
+            gap: px(gapPx),
+            alignItems: ALIGN_TO_FLEX[verticalAlign] ?? 'stretch',
+            width: '100%',
+            boxSizing: 'border-box',
+        };
 
     if (width === 'boxed') {
         style.maxWidth = px(BOXED_MAX_WIDTH);
@@ -128,6 +149,143 @@ export const resolveColumnsStyle = (settings: SectionSettingsLike = {}): StyleMa
     }
 
     return style;
+};
+
+/* -------------------------------------------------------------------------- */
+/* Columnas flotantes                                                          */
+/* -------------------------------------------------------------------------- */
+
+/** Lo mínimo de una columna para saber si flota y a dónde van sus bloques. */
+export interface FloatAwareColumn {
+    span?: number;
+    offsetPx?: number;
+    placement?: ColumnPlacement;
+    mobileAfterBlockId?: string | null;
+    blocks?: Array<{ id: string }>;
+}
+
+export const isFloatingColumn = (column: FloatAwareColumn): boolean =>
+    column.placement === 'float-end' || column.placement === 'float-start';
+
+export const hasFloatingColumn = (columns: FloatAwareColumn[]): boolean =>
+    columns.some(isFloatingColumn);
+
+/** Ancho (de 12) de la columna flotante; si hubiera una por lado, el mayor. */
+const floatSpan = (columns: FloatAwareColumn[]): number =>
+    Math.min(
+        GRID_UNITS,
+        Math.max(1, ...columns.filter(isFloatingColumn).map((c) => Math.round(Number(c.span) || 4))),
+    );
+
+/**
+ * Clases de la grilla de una sección. Vacías si no hay columna flotante: las
+ * secciones de siempre no cambian en nada.
+ *
+ * `ps-columns--reserve-end|start` dicen de qué lado hay que dejar hueco al
+ * contenido para que no choque con la flotante.
+ */
+export const resolveColumnsClass = (
+    settings: SectionSettingsLike = {},
+    columns: FloatAwareColumn[] = [],
+): string[] => {
+    if (!hasFloatingColumn(columns)) return [];
+
+    return [
+        'ps-columns',
+        'ps-columns--float',
+        ...(settings.width === 'boxed' ? ['ps-columns--boxed'] : []),
+        ...(columns.some((c) => c.placement === 'float-end') ? ['ps-columns--reserve-end'] : []),
+        ...(columns.some((c) => c.placement === 'float-start') ? ['ps-columns--reserve-start'] : []),
+    ];
+};
+
+/**
+ * Clases de cada columna; vacías si la sección no tiene columna flotante.
+ *
+ * `ps-col--full` marca la columna normal que ocupa todo el ancho: es la única
+ * que reserva hueco. Con varias normales lado a lado, el cálculo del hueco
+ * (que parte del ancho de la sección) no sería cierto para ninguna.
+ */
+export const resolveColumnClass = (column: FloatAwareColumn, floatingSection: boolean): string[] => {
+    if (!floatingSection) return [];
+    if (isFloatingColumn(column)) {
+        return ['ps-col', 'ps-col--float', column.placement === 'float-start' ? 'ps-col--float-start' : 'ps-col--float-end'];
+    }
+    return ['ps-col', 'ps-col--flow', ...((column.span ?? 0) >= GRID_UNITS ? ['ps-col--full'] : [])];
+};
+
+/**
+ * Estilos de todas las columnas de una sección, en el mismo orden.
+ *
+ * Una sección con columna flotante coloca sus columnas con clases y variables
+ * (ver sectionLayout.scss); las demás siguen con `resolveColumnStyle` tal cual.
+ * Las columnas normales de una sección con flotante se acomodan una tras otra
+ * en la primera fila de la grilla, y la flotante se pone encima.
+ */
+export const resolveColumnStyles = (
+    columns: Array<FloatAwareColumn & { span: number; behavior?: SectionBehavior }>,
+    settings: SectionSettingsLike = {},
+): StyleMap[] => {
+    if (!hasFloatingColumn(columns)) {
+        return columns.map((column) => resolveColumnStyle(column, settings));
+    }
+
+    let start = 1;
+
+    return columns.map((column) => {
+        const span = Math.min(GRID_UNITS, Math.max(1, Math.round(Number(column.span) || GRID_UNITS)));
+
+        if (isFloatingColumn(column)) {
+            return {
+                '--col-span': String(span),
+                '--float-top': px(Number(column.offsetPx) || 0),
+                minWidth: '0',
+                boxSizing: 'border-box',
+            };
+        }
+
+        const style: StyleMap = {
+            '--col-start': String(start),
+            '--col-span': String(span),
+            minWidth: '0',
+            boxSizing: 'border-box',
+        };
+        start += span;
+        return style;
+    });
+};
+
+/**
+ * Orden visual de cada bloque cuando la sección se apila en una sola columna
+ * (móvil), por id de bloque.
+ *
+ * Los bloques de las columnas normales llevan números pares y los de la columna
+ * flotante, el impar que cae justo después del bloque elegido: así el formulario
+ * entra en el flujo sin duplicarse en el HTML. Sin elección (o con un bloque que
+ * ya no existe) va al final; `MOBILE_AFTER_START`, antes de todo.
+ */
+export const resolveBlockOrders = (columns: FloatAwareColumn[]): Record<string, number> => {
+    const orders: Record<string, number> = {};
+    const flow = columns.filter((c) => !isFloatingColumn(c)).flatMap((c) => c.blocks ?? []);
+
+    flow.forEach((block, i) => {
+        orders[block.id] = i * 2;
+    });
+
+    columns.filter(isFloatingColumn).forEach((column) => {
+        const anchor = column.mobileAfterBlockId;
+        const anchorIndex = anchor === MOBILE_AFTER_START
+            ? -1
+            : flow.findIndex((block) => block.id === anchor);
+        // Sin ancla válida: debajo del último bloque.
+        const rank = anchor === MOBILE_AFTER_START || anchorIndex >= 0 ? anchorIndex : flow.length - 1;
+
+        (column.blocks ?? []).forEach((block) => {
+            orders[block.id] = rank * 2 + 1;
+        });
+    });
+
+    return orders;
 };
 
 /** Lo mínimo que hace falta saber de una columna para darle estilo. */

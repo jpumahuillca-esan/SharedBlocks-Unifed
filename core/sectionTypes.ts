@@ -24,11 +24,39 @@ export type SectionBehavior = 'static' | 'sticky' | 'fixed';
 /** Alineación vertical del contenido dentro de la sección. */
 export type SectionVerticalAlign = 'start' | 'center' | 'end' | 'stretch';
 
+/**
+ * Cómo se coloca una columna dentro de la sección.
+ *
+ * - `flow`: ocupa su tramo de la grilla, como siempre.
+ * - `float-end` / `float-start`: sale de la grilla y flota SOBRE el contenido de
+ *   las demás columnas, pegada al lado derecho o izquierdo, y acompaña al scroll
+ *   mientras dure la sección. Es el patrón del formulario sobre el hero: el
+ *   contenido llega a todo el ancho y el formulario queda flotando encima.
+ *   Flota desde tableta (768px) hacia arriba; en móvil la columna entra en el
+ *   flujo (ver `mobileAfterBlockId`).
+ */
+export type ColumnPlacement = 'flow' | 'float-end' | 'float-start';
+
+/** Valor de `mobileAfterBlockId` para colocar la columna flotante antes de todo. */
+export const MOBILE_AFTER_START = '__start__';
+
 export interface SectionColumn {
     id: string;
-    /** Porción de la grilla de 12 que ocupa esta columna. */
+    /**
+     * Porción de la grilla de 12 que ocupa esta columna. En una columna
+     * flotante es su ancho (de 12), no un tramo de la grilla.
+     */
     span: number;
     blocks: BlockItem[];
+    /** Por defecto `flow`. Una columna flotante siempre va anclada (sticky). */
+    placement?: ColumnPlacement;
+    /**
+     * Solo para columnas flotantes: en móvil sus bloques pasan a ser un bloque
+     * más y se colocan DEBAJO del bloque con este id (de las columnas normales
+     * de la misma sección). `MOBILE_AFTER_START` los pone antes de todo; vacío o
+     * un id que ya no existe, al final.
+     */
+    mobileAfterBlockId?: string | null;
     /**
      * Comportamiento propio de la columna al hacer scroll.
      *
@@ -71,7 +99,7 @@ export interface SectionItem {
 export const GRID_UNITS = 12;
 
 /** Ancho máximo del contenido centrado. */
-export const BOXED_MAX_WIDTH = 1100;
+export const BOXED_MAX_WIDTH = 1280;
 
 export const DEFAULT_SECTION_SETTINGS: SectionSettings = {
     width: 'full',

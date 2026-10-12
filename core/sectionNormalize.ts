@@ -11,7 +11,9 @@ import { BLOCK_REGISTRY } from './BlockRegistry';
 import {
     DEFAULT_SECTION_SETTINGS,
     GRID_UNITS,
+    MOBILE_AFTER_START,
     type BlockItem,
+    type ColumnPlacement,
     type SectionBehavior,
     type SectionColumn,
     type SectionHeightMode,
@@ -43,6 +45,8 @@ export const createColumn = (span: number = GRID_UNITS, blocks: BlockItem[] = []
     // base tienen exactamente la misma forma.
     behavior: 'static',
     offsetPx: 0,
+    placement: 'flow',
+    mobileAfterBlockId: null,
 });
 
 export const createSection = (
@@ -81,6 +85,7 @@ const ALLOWED_WIDTHS: SectionWidth[] = ['full', 'boxed'];
 const ALLOWED_HEIGHT_MODES: SectionHeightMode[] = ['auto', 'fixed', 'screen'];
 const ALLOWED_BEHAVIORS: SectionBehavior[] = ['static', 'sticky', 'fixed'];
 const ALLOWED_ALIGNS: SectionVerticalAlign[] = ['start', 'center', 'end', 'stretch'];
+const ALLOWED_PLACEMENTS: ColumnPlacement[] = ['flow', 'float-end', 'float-start'];
 
 const pickEnum = <T extends string>(value: unknown, allowed: T[], fallback: T): T =>
     allowed.includes(value as T) ? (value as T) : fallback;
@@ -126,7 +131,9 @@ const sanitizeColumn = (raw: unknown): SectionColumn => {
         ? input.blocks.map(sanitizeBlock).filter((b): b is BlockItem => b !== null)
         : [];
 
-    const behavior = pickEnum(input.behavior, ALLOWED_BEHAVIORS, 'static');
+    const placement = pickEnum(input.placement, ALLOWED_PLACEMENTS, 'flow');
+    // Una columna flotante siempre acompaña al scroll: sin anclaje no flota.
+    const behavior = placement === 'flow' ? pickEnum(input.behavior, ALLOWED_BEHAVIORS, 'static') : 'sticky';
 
     return {
         id: typeof input.id === 'string' && input.id ? input.id : createId(),
@@ -135,7 +142,57 @@ const sanitizeColumn = (raw: unknown): SectionColumn => {
         behavior,
         // El desplazamiento solo tiene sentido si la columna está anclada.
         offsetPx: behavior === 'static' ? 0 : pickNumber(input.offsetPx, 0, 0, 2000),
+        placement,
+        mobileAfterBlockId:
+            placement !== 'flow' && typeof input.mobileAfterBlockId === 'string' && input.mobileAfterBlockId
+                ? input.mobileAfterBlockId
+                : null,
     };
+};
+
+/**
+ * Invariantes de las columnas flotantes, que dependen de las demás columnas:
+ *
+ * - Tiene que quedar al menos una columna normal: si todas flotaran no habría
+ *   contenido sobre el que flotar, y la sección se vería rota.
+ * - Una sola columna flotante por lado; la sobrante vuelve a ser normal.
+ * - `mobileAfterBlockId` solo puede apuntar a un bloque de las columnas
+ *   normales. Si el bloque se borró o se movió, vuelve a "al final" en lugar de
+ *   dejar una referencia que ya no lleva a ninguna parte.
+ */
+const reconcileFloatingColumns = (columns: SectionColumn[]): SectionColumn[] => {
+    const seenSides = new Set<ColumnPlacement>();
+
+    // Una flotante que vuelve a la grilla deja también de estar anclada: el
+    // anclaje venía implícito en flotar, no era una decisión del usuario.
+    const demote = (column: SectionColumn): SectionColumn => ({
+        ...column,
+        placement: 'flow',
+        behavior: 'static',
+        offsetPx: 0,
+        mobileAfterBlockId: null,
+    });
+
+    const fixed = columns.map((column) => {
+        if (column.placement === 'flow') return column;
+        if (seenSides.has(column.placement!)) return demote(column);
+        seenSides.add(column.placement!);
+        return column;
+    });
+
+    if (fixed.every((column) => column.placement !== 'flow')) {
+        return fixed.map(demote);
+    }
+
+    const flowBlockIds = new Set(
+        fixed.filter((c) => c.placement === 'flow').flatMap((c) => c.blocks.map((b) => b.id)),
+    );
+
+    return fixed.map((column) => {
+        const anchor = column.mobileAfterBlockId;
+        if (!anchor || anchor === MOBILE_AFTER_START || flowBlockIds.has(anchor)) return column;
+        return { ...column, mobileAfterBlockId: null };
+    });
 };
 
 const sanitizeSection = (raw: unknown): SectionItem => {
@@ -143,7 +200,7 @@ const sanitizeSection = (raw: unknown): SectionItem => {
     const rawColumns = Array.isArray(input.columns) ? input.columns.map(sanitizeColumn) : [];
 
     // Una sección sin columnas quedaría inservible: garantizamos al menos una.
-    const columns = rawColumns.length ? rawColumns : [createColumn()];
+    const columns = reconcileFloatingColumns(rawColumns.length ? rawColumns : [createColumn()]);
     const settings = sanitizeSettings(input.settings);
 
     /*

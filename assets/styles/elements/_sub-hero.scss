@@ -68,6 +68,7 @@
     height: auto;
     min-height: 360px;
     margin-inline: auto;
+    padding-inline: var(--ds-container-padding-x);
     box-sizing: border-box;
   }
 
@@ -152,12 +153,7 @@
     }
   }
 
-  /* < 1280px */
-  @include bp.container-down('xl') {
-    .subhero__inner {
-      padding-inline: var(--ds-spacing-md);
-    }
-  }
+
 
   /* < 1024px
      Empezamos transición hacia tablet */
@@ -268,7 +264,7 @@
       max-width: 100%;
       height: auto;
       min-height: 162px;
-      padding: var(--ds-spacing-md);
+      padding: var(--subhero-padding-y) var(--ds-container-padding-x);
       box-sizing: border-box;
     }
 

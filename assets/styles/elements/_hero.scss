@@ -26,7 +26,7 @@
      * Margen lateral. En variable porque los controles lo usan para alinearse
      * con el contenido en lugar de pegarse al borde de la pantalla.
      */
-    --hero-padding-x: var(--ds-spacing-md);
+    --hero-padding-x: var(--ds-container-padding-x);
 
     /*
      * Alto mínimo.
@@ -244,8 +244,6 @@
   @include bp.container-down('sm') {
 
     .hero {
-      --hero-padding-x: var(--ds-space-6);
-
       /*
        * Desnivel del borde superior del panel de color.
        *

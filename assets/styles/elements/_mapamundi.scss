@@ -26,7 +26,7 @@
 .arcis-scope {
 
   .mapamundi {
-    --mapamundi-padding-x: var(--ds-spacing-md);
+    --mapamundi-padding-x: var(--ds-container-padding-x);
 
     /* Ancho de cada tarjeta en escritorio, medido sobre la maqueta. */
     --mapamundi-card-width: 255px;
@@ -298,10 +298,6 @@
      Una columna: el mapa, las dos tarjetas una debajo de la otra y el botón.
      ----------------------------------------------------------------------- */
   @include bp.container-down('sm') {
-
-    .mapamundi {
-      --mapamundi-padding-x: var(--ds-space-6);
-    }
 
     /*
      * Tipografía de la etiqueta en teléfono: 18px, bold y 3.6px de espaciado,

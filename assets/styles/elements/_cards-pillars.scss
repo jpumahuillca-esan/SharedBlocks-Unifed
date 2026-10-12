@@ -16,7 +16,7 @@
     width: 100%;
     max-width: var(--ds-container-max);
     margin-inline: auto;
-    padding-inline: var(--ds-spacing-md);
+    padding-inline: var(--ds-container-padding-x);
     flex-direction: column;
     gap: var(--ds-space-6);
     box-sizing: border-box;
@@ -87,12 +87,6 @@
     letter-spacing: var(--ds-letter-spacing-0);
   }
 
-  @include bp.container-down('md') {
-    .cards-pillars__container {
-      padding-inline: var(--ds-space-6);
-    }
-
-  }
 
   @include bp.container-down('lg') {
     .cards-pillars__grid {
@@ -101,9 +95,6 @@
   }
 
   @include bp.container-down('sm') {
-    .cards-pillars__container {
-      padding-inline: var(--ds-space-4);
-    }
 
     .cards-pillars__grid {
       grid-template-columns: minmax(0, 1fr);

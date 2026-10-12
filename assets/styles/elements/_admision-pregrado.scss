@@ -2,7 +2,7 @@
 
 .arcis-scope {
   .card-section.admision-pregrado {
-    --card-section-padding-x: var(--ds-space-3);
+    --card-section-padding-x: var(--ds-container-padding-x);
     --card-section-card-min: 308px;
     gap: var(--ds-space-20);
     padding-inline: var(--card-section-padding-x);

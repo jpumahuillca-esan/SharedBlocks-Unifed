@@ -25,7 +25,7 @@
      * tarjetas lo compensa con margen negativo para poder sangrar hasta el
      * borde, y ambos valores tienen que coincidir.
      */
-    --card-section-padding-x: var(--ds-spacing-md);
+    --card-section-padding-x: var(--ds-container-padding-x, var(--ds-spacing-md));
 
     display: flex;
     flex-direction: column;
@@ -209,10 +209,6 @@
    * desplazamiento horizontal ya es el comportamiento normal del carril.
    */
   @include bp.container-down('md') {
-    .card-section {
-      --card-section-padding-x: var(--ds-space-6);
-    }
-
     .card-section__header {
       flex-direction: column;
       align-items: flex-start;
