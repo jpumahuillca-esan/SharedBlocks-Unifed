@@ -33,8 +33,11 @@ const props = withDefaults(defineProps<{
    * se alinea con la primera línea en vez de centrarse contra el párrafo.
    */
   multiline?: boolean;
+  /** `sm`: caja de 16px y texto pequeño (cláusulas legales de un formulario compacto). */
+  size?: 'md' | 'sm';
 }>(), {
   type: 'checkbox',
+  size: 'md',
 });
 
 const emit = defineEmits<{
@@ -45,6 +48,7 @@ const classes = computed(() => [
   'form-check',
   'form-check--arcis',
   props.multiline ? 'form-check--multiline' : null,
+  props.size === 'sm' ? 'form-check--sm' : null,
 ]);
 
 const isChecked = computed(() =>

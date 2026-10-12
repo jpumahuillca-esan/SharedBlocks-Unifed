@@ -107,11 +107,26 @@ $ps-bleeding-containers: (
 @mixin ps-float-desktop($root) {
   #{$root}.ps-columns--float {
     --ps-pad: var(--ds-container-padding-x, 32px);
-    --ps-max: var(--ds-container-max, 1280px);
+    /*
+     * --ps-max (ancho máximo del contenido, 1600px) y --ps-form-basis (el ancho
+     * sobre el que se calcula el del formulario, 1280px) vienen en línea desde
+     * resolveColumnsStyle (core/sectionStyles.ts), que es donde viven las
+     * constantes. Los bloques de esta sección reciben ese mismo máximo.
+     */
+    --ds-container-max: var(--ps-max, 1280px);
 
     grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: var(--ps-gap, 24px);
     align-items: var(--ps-align, stretch);
+  }
+
+  /*
+   * En el lienzo del editor cada bloque lleva su propio `.arcis-scope`, que
+   * vuelve a declarar --ds-container-max (1280px) y taparía el valor heredado;
+   * en el sitio ese envoltorio es ANCESTRO de la grilla y no estorba.
+   */
+  #{$root}.ps-columns--float .arcis-scope {
+    --ds-container-max: var(--ps-max, 1280px);
   }
 
   /* Centrada con tope, la grilla ya es el contenedor: no hay margen extra. */
@@ -133,10 +148,11 @@ $ps-bleeding-containers: (
 
   /*
    * La flotante ocupa TODA la fila y se hace chica con `width`: así queda
-   * encima de las normales, que también están en la fila 1. El ancho sale del
-   * contenedor del sitio (tope de 1280px menos el relleno), no de la ventana,
-   * para que el formulario quede alineado con el contenido del hero aunque el
-   * hero llegue de borde a borde.
+   * encima de las normales, que también están en la fila 1. Se alinea al borde
+   * del contenedor (tope de 1600px, --ps-max), no al de la ventana, para que el
+   * formulario quede alineado con el contenido del hero aunque el hero llegue
+   * de borde a borde. Su ancho, en cambio, se calcula sobre 1280px
+   * (--ps-form-basis): no crece con el contenedor.
    *
    * `top` es la distancia al borde de la pantalla una vez pegada, y el mismo
    * valor la separa del borde superior de la sección al empezar, para que no
@@ -149,7 +165,7 @@ $ps-bleeding-containers: (
     top: var(--float-top, 0px);
     z-index: 10;
     margin-top: var(--float-top, 0px);
-    width: calc((min(100%, var(--ps-max)) - 2 * var(--ps-pad)) * (var(--col-span, 4) + var(--ps-span-extra, 0)) / 12);
+    width: calc((min(100%, var(--ps-form-basis, 1280px)) - 2 * var(--ps-pad)) * (var(--col-span, 4) + var(--ps-span-extra, 0)) / 12);
   }
 
   #{$root}.ps-columns--float > .ps-col--float-end {
@@ -191,7 +207,7 @@ $ps-bleeding-containers: (
    * sección y no fuera.
    */
   #{$root}.ps-columns--float {
-    --ps-float-w: calc((min(100cqw, var(--ps-max)) - 2 * var(--ps-pad)) * (var(--ps-float-span, 4) + var(--ps-span-extra, 0)) / 12);
+    --ps-float-w: calc((min(100cqw, var(--ps-form-basis, 1280px)) - 2 * var(--ps-pad)) * (var(--ps-float-span, 4) + var(--ps-span-extra, 0)) / 12);
     --ps-reserve: calc(var(--ps-float-w) + var(--ps-gap, 24px));
   }
 

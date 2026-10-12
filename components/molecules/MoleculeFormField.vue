@@ -9,7 +9,7 @@
  * del ".form-group" de webunificada, que siempre aparece como label +
  * control + texto de ayuda juntos, nunca sueltos.
  *
- * Tres formas, las tres de la lámina de formularios del Figma:
+ * Cuatro formas, las tres primeras de la lámina de formularios del Figma:
  *
  * - stacked (por defecto): etiqueta encima del campo. Es el "Form group"
  *   de la lámina; con `required`, la etiqueta lleva su asterisco rojo.
@@ -20,6 +20,13 @@
  * - search: el buscador, con la lupa a la izquierda. No dibuja etiqueta;
  *   si se le pasa `label`, va al campo como aria-label para que el
  *   lector de pantalla sepa qué se busca.
+ * - placeholder: formulario compacto (el de captación de leads). No dibuja
+ *   etiqueta: su texto, con el asterisco si es obligatorio, se lee DENTRO
+ *   del campo ("Nombres y Apellidos*"). Un `placeholder` explícito manda
+ *   sobre la etiqueta (por ejemplo "DNI de 8 dígitos"). En el dropdown es
+ *   el texto de la opción vacía. La etiqueta sigue yendo al campo como
+ *   aria-label: el placeholder desaparece al escribir y no es un nombre
+ *   accesible fiable.
  *
  * El estado de error (".form-group.has-error", ver _forms.scss) se
  * activa con `error`, y el de éxito con `success`: como boolean solo
@@ -35,7 +42,7 @@ import AtomIcon from '../atoms/AtomIcon.vue';
 
 type FieldKind = 'input' | 'textarea' | 'select';
 type InputType = 'text' | 'email' | 'tel' | 'password' | 'number' | 'date' | 'url' | 'search';
-type FieldVariant = 'stacked' | 'floating' | 'search';
+type FieldVariant = 'stacked' | 'floating' | 'search' | 'placeholder';
 
 const props = withDefaults(defineProps<{
   as?: FieldKind;
@@ -122,8 +129,20 @@ const fieldClasses = computed(() => [
 
 const resolvedType = computed<InputType>(() => (props.variant === 'search' ? 'search' : props.type));
 
-/** En el buscador la etiqueta no se dibuja: viaja como nombre accesible. */
-const ariaLabel = computed(() => (props.variant === 'search' ? props.label : undefined));
+/** En el buscador y en la forma "placeholder" la etiqueta no se dibuja: viaja como nombre accesible. */
+const ariaLabel = computed(() =>
+  props.variant === 'search' || props.variant === 'placeholder' ? props.label : undefined,
+);
+
+/**
+ * El texto que se lee dentro del campo. En la forma "placeholder" es la
+ * etiqueta (o el placeholder explícito) más el asterisco de obligatorio.
+ */
+const shownPlaceholder = computed(() => {
+  if (props.variant !== 'placeholder') return props.placeholder;
+  const text = props.placeholder || props.label || '';
+  return text && props.required ? `${text}*` : text;
+});
 </script>
 
 <template>
@@ -141,7 +160,7 @@ const ariaLabel = computed(() => (props.variant === 'search' ? props.label : und
         v-if="as === 'input'"
         :type="resolvedType"
         :id="id"
-        :placeholder="placeholder"
+        :placeholder="shownPlaceholder"
         :required="required"
         :disabled="disabled"
         :maxlength="maxlength"
@@ -156,7 +175,7 @@ const ariaLabel = computed(() => (props.variant === 'search' ? props.label : und
       <AtomFormTextarea
         v-else-if="as === 'textarea'"
         :id="id"
-        :placeholder="placeholder"
+        :placeholder="shownPlaceholder"
         :required="required"
         :disabled="disabled"
         :state="state"
@@ -168,7 +187,7 @@ const ariaLabel = computed(() => (props.variant === 'search' ? props.label : und
         v-else-if="as === 'select'"
         :id="id"
         :options="options"
-        :placeholder="placeholder"
+        :placeholder="shownPlaceholder"
         :required="required"
         :disabled="disabled"
         :state="state"

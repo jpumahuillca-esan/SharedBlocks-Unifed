@@ -8,6 +8,7 @@
 
 import {
     BOXED_MAX_WIDTH,
+    FLOAT_CONTAINER_MAX,
     GRID_UNITS,
     MOBILE_AFTER_START,
     type ColumnPlacement,
@@ -117,13 +118,21 @@ export const resolveColumnsStyle = (
      * estilo en línea no se puede deshacer desde una consulta de medios. Aquí
      * solo quedan los valores que sí son del usuario, como variables.
      */
-    const style: StyleMap = hasFloatingColumn(columns)
+    const floating = hasFloatingColumn(columns);
+
+    const style: StyleMap = floating
         ? {
             '--ps-gap': px(gapPx),
             '--ps-align': ALIGN_TO_FLEX[verticalAlign] ?? 'stretch',
             // Ancho (de 12) de la flotante: con él las columnas normales saben
             // cuánto hueco reservarle (ver sectionLayout.scss).
             '--ps-float-span': String(floatSpan(columns)),
+            // Ancho máximo del contenido en esta sección: el del contenedor al que
+            // se alinea el formulario y el que reciben los bloques.
+            '--ps-max': px(FLOAT_CONTAINER_MAX),
+            // El formulario NO crece con el contenedor: su ancho se calcula sobre
+            // el contenedor normal, o a 1600px mediría ~500px.
+            '--ps-form-basis': px(BOXED_MAX_WIDTH),
             width: '100%',
             boxSizing: 'border-box',
         }
@@ -137,7 +146,7 @@ export const resolveColumnsStyle = (
         };
 
     if (width === 'boxed') {
-        style.maxWidth = px(BOXED_MAX_WIDTH);
+        style.maxWidth = px(floating ? FLOAT_CONTAINER_MAX : BOXED_MAX_WIDTH);
         style.marginLeft = 'auto';
         style.marginRight = 'auto';
     }

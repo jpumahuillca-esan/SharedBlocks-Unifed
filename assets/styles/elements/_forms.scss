@@ -358,6 +358,31 @@
     margin-top: var(--ds-size-2);
   }
 
+  /*
+   * Tamaño pequeño: caja de 16px y texto de cuerpo chico. Es el de las
+   * cláusulas legales de un formulario compacto, donde el texto largo a
+   * tamaño normal pesaba más que los propios campos. La caja se centra sobre
+   * la primera línea: (20 de interlineado − 16 de caja) / 2.
+   */
+  .form-check.form-check--arcis.form-check--sm {
+    gap: var(--ds-space-3);
+    font-size: var(--ds-text-body-sm);
+    line-height: 1.4;
+  }
+
+  .form-check.form-check--arcis.form-check--sm input {
+    width: var(--ds-size-16);
+    height: var(--ds-size-16);
+  }
+
+  .form-check.form-check--arcis.form-check--sm.form-check--multiline input {
+    margin-top: var(--ds-size-2);
+  }
+
+  .form-check.form-check--arcis.form-check--sm input[type='checkbox']:checked {
+    background-size: 12px 12px;
+  }
+
   .form-check.form-check--arcis input:hover {
     border-color: var(--ds-color-border-strong);
   }

@@ -69,10 +69,24 @@ export function useDynamicLeadForm(props: DynamicLeadFormProps) {
   // Almacén reactivo de datos capturados
   const formValues = reactive<Record<string, any>>({});
 
+  /** Los nombres con los que una campaña puede llamar al selector de tipo de documento. */
+  const DOC_TYPE_FIELD_NAMES = ['document_type', 'type_document', 'tipo_documento'];
+
   const initValues = () => {
     activeFields.value.forEach((field) => {
       if (!(field.name in formValues)) {
-        formValues[field.name] = field.type === 'select' && field.options?.length ? field.options[0].value : '';
+        /*
+         * Un selector arranca SIN elegir: su texto se lee como placeholder
+         * ("Modalidad*") y quien llena el formulario decide. Antes arrancaba en
+         * la primera opción y, si no lo tocaba, esa opción viajaba como si la
+         * hubiera elegido. La excepción es el tipo de documento: su primera
+         * opción (DNI) es el valor por defecto del que dependen la validación y
+         * el largo del número.
+         */
+        formValues[field.name] =
+          field.type === 'select' && field.options?.length && DOC_TYPE_FIELD_NAMES.includes(field.name)
+            ? field.options[0].value
+            : '';
       }
     });
   };
@@ -144,6 +158,27 @@ export function useDynamicLeadForm(props: DynamicLeadFormProps) {
       return field.placeholder || 'N° Documento';
     }
     return field.placeholder || '';
+  };
+
+  /**
+   * Texto que se lee DENTRO del campo (el formulario no dibuja etiquetas
+   * encima). Es la etiqueta del campo, salvo en el número de documento: ahí
+   * manda el nombre del tipo elegido ("DNI", "RUC"…), que es justo la parte
+   * dinámica. Es corto a propósito: este campo suele ir a media fila y un texto
+   * como "DNI de 8 dígitos" se cortaba; el largo exacto ya lo impone el
+   * `maxlength` y lo valida el envío. Devuelve `undefined` para que el campo use
+   * su etiqueta.
+   */
+  const resolveShownPlaceholder = (field: DynamicFormField): string | undefined => {
+    const isDocField = field.name === 'document_number' || field.validation_rule === 'doc_dynamic';
+    if (!isDocField) return undefined;
+
+    const dt = getDocType();
+    if (dt === 'dni') return 'DNI';
+    if (dt === 'ruc') return 'RUC';
+    if (dt === 'ce') return 'Carné de extranjería';
+    if (dt === 'pas' || dt === 'passport') return 'Pasaporte';
+    return undefined;
   };
 
   const sanitizeField = (name: string, type: string) => {
@@ -439,6 +474,7 @@ export function useDynamicLeadForm(props: DynamicLeadFormProps) {
     resolveMinlength,
     resolveInputmode,
     resolvePlaceholder,
+    resolveShownPlaceholder,
     submit,
   };
 }

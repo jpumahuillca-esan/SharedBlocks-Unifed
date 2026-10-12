@@ -101,6 +101,14 @@ export const GRID_UNITS = 12;
 /** Ancho máximo del contenido centrado. */
 export const BOXED_MAX_WIDTH = 1280;
 
+/**
+ * Ancho máximo del contenido en una sección con columna flotante. Es mayor que
+ * el normal (BOXED_MAX_WIDTH): al flotar un formulario sobre el hero, el
+ * contenido necesita más sitio, sobre todo en pantallas anchas, donde con
+ * 1280px quedaba un bloque estrecho con el formulario encima.
+ */
+export const FLOAT_CONTAINER_MAX = 1600;
+
 export const DEFAULT_SECTION_SETTINGS: SectionSettings = {
     width: 'full',
     heightMode: 'auto',

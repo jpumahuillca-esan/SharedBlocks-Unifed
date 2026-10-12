@@ -1,7 +1,7 @@
 <template>
   <div class="lead-form">
     <div class="lead-form__header">
-      <AtomHeading :level="3" size="h3" class="lead-form__title" v-bind="edit('mainTitle')">{{ cfg.mainTitle }}</AtomHeading>
+      <AtomHeading :level="3" size="h5" class="lead-form__title" v-bind="edit('mainTitle')">{{ cfg.mainTitle }}</AtomHeading>
       <AtomText v-if="cfg.subTitle" size="body-compact" class="lead-form__subtitle" v-bind="edit('subTitle')">{{ cfg.subTitle }}</AtomText>
     </div>
 
@@ -21,22 +21,34 @@
         autocomplete="off"
       />
 
-      <div class="row g-3" v-bind="edit('campaign_id')">
+      <!--
+        Grilla propia de dos columnas y no la de Bootstrap: `.arcis-scope * {
+        margin: 0; padding: 0 }` (base.scss) borra los gutters de `.row` según el
+        orden en que se carguen las hojas, y el formulario se veía distinto en el
+        admin y en el sitio. Además la grilla de Bootstrap decide por el ancho de
+        la VENTANA, y este formulario vive en tarjetas angostas (flotando, en una
+        columna) donde dos campos cortos (DNI / Teléfono) deben ir lado a lado.
+      -->
+      <div class="lead-form__fields" v-bind="edit('campaign_id')">
         <!-- Render dinámico total del esquema configurado en la campaña -->
         <template v-for="(field, idx) in activeFields" :key="field.name || idx">
-          <div :class="field.col_span === 12 ? 'col-12' : 'col-12 col-md-6'">
+          <div :class="['lead-form__field', field.col_span === 12 ? 'lead-form__field--full' : null]">
             <!--
-              Cada campo es un MoleculeFormField: él pone la etiqueta (con el
-              asterisco rojo si es obligatorio), el control que toque según el
-              tipo y el hueco del texto de ayuda. Antes esto era markup propio
-              con clases .arcis-* que repetían el sistema de diseño a mano.
+              Cada campo es un MoleculeFormField: él pone el control que toque
+              según el tipo. Variante "placeholder": no hay etiqueta encima, el
+              nombre del campo (con su asterisco si es obligatorio) se lee dentro
+              del campo y, en los selectores, es el texto de la opción vacía. La
+              etiqueta viaja como aria-label, así que el lector de pantalla sigue
+              sabiendo qué es cada campo. Los campos son dinámicos: lo que cambia
+              es la presentación, no el contrato (nombre, tipo, requerido, ancho).
             -->
             <MoleculeFormField
+              variant="placeholder"
               :as="field.type === 'select' ? 'select' : field.type === 'textarea' ? 'textarea' : 'input'"
               :type="resolveFieldType(field)"
               :id="'lead-' + (field.name || idx)"
               :label="field.label"
-              :placeholder="resolvePlaceholder(field)"
+              :placeholder="resolveShownPlaceholder(field)"
               :options="field.options || []"
               :required="field.required"
               :maxlength="resolveMaxlength(field)"
@@ -49,8 +61,8 @@
         </template>
 
         <!-- Checkboxes legales -->
-        <div class="col-12 mt-3 lead-form__legal">
-          <AtomFormCheck id="legal_cond" v-model="aceptaCondiciones" multiline required>
+        <div class="lead-form__row lead-form__legal">
+          <AtomFormCheck id="legal_cond" v-model="aceptaCondiciones" multiline size="sm" required>
             <span>
               Acepto las
               <!--
@@ -61,7 +73,7 @@
             </span>
           </AtomFormCheck>
 
-          <AtomFormCheck id="legal_pub" v-model="aceptaPublicidad" multiline>
+          <AtomFormCheck id="legal_pub" v-model="aceptaPublicidad" multiline size="sm">
             <span>
               Autorizo el envío de información sobre programas académicos y actividades
               institucionales de ESAN.
@@ -70,9 +82,10 @@
         </div>
 
         <!-- Botón de envío -->
-        <div class="col-12 mt-4">
+        <div class="lead-form__row lead-form__actions">
           <AtomButton
             variant="primary"
+            size="sm"
             class="lead-form__submit"
             v-bind="edit('button_text')"
             :disabled="isSubmitting"
@@ -86,7 +99,7 @@
           Atribución que Google exige cuando su distintivo no se muestra.
           El sitio lo oculta para que no abra una franja vacía a la derecha.
         -->
-        <div class="col-12 mt-3">
+        <div class="lead-form__row">
           <AtomText size="body-sm" color="secondary" class="lead-form__recaptcha">
             Este sitio está protegido por reCAPTCHA y se aplican la
             <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" class="lead-form__link">Política de Privacidad</a>
@@ -131,7 +144,7 @@ const {
   resolveMaxlength,
   resolveMinlength,
   resolveInputmode,
-  resolvePlaceholder,
+  resolveShownPlaceholder,
   submit,
 } = useDynamicLeadForm(props);
 </script>
@@ -148,7 +161,8 @@ const {
   color: var(--ds-color-text-secondary);
   background: var(--ds-color-background-default);
   border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
-  border-radius: var(--ds-radius-md);
+  /* Esquinas casi rectas, como el diseño: 4px y no los 16px de --ds-radius-md. */
+  border-radius: var(--ds-radius-xs);
   padding-block: var(--ds-spacing-md);
   padding-inline: var(--ds-container-padding-x);
   box-shadow: var(--ds-shadow-md);
@@ -178,15 +192,56 @@ const {
   max-width: none;
 }
 
+/*
+ * Campos compactos: sin etiqueta encima, el texto va dentro del campo, así que
+ * se baja a 14px y el relleno vertical a 8px (unos 36px de alto). A tamaño
+ * normal (16px, 46px de alto) el formulario quedaba largo y pesado para una
+ * tarjeta que flota sobre el contenido. Con las esquinas pasa igual: 4px.
+ */
+.lead-form :deep(.form-input),
+.lead-form :deep(.form-select.form-select--arcis) {
+  padding-block: var(--ds-space-2);
+  font-size: var(--ds-text-body-compact);
+  /* Igual que la tarjeta: 4px, no los 8px de --ds-radius-sm. */
+  border-radius: var(--ds-radius-xs);
+}
+
+/*
+ * Dos columnas siempre. Un campo de media fila (col_span 6, que es lo que trae
+ * la configuración por defecto) ocupa una; uno de fila completa (col_span 12),
+ * las dos. Sin etiquetas encima, el hueco entre campos es corto y parejo.
+ */
+.lead-form__fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ds-space-3);
+}
+
+.lead-form__field {
+  min-width: 0;
+}
+
+.lead-form__field--full,
+.lead-form__row {
+  grid-column: 1 / -1;
+}
+
 .lead-form__legal {
   display: flex;
   flex-direction: column;
-  gap: var(--ds-spacing-xxs);
+  gap: var(--ds-space-2);
+  /* Un respiro entre los campos y las cláusulas. */
+  margin-top: var(--ds-space-1);
   font-size: var(--ds-text-body-sm);
 }
 
+.lead-form__actions {
+  margin-top: var(--ds-space-1);
+}
+
+/* En la cláusula legal el enlace lleva el color del texto, subrayado (así se ve en el diseño). */
 .lead-form__link {
-  color: var(--ds-color-text-brand);
+  color: inherit;
   text-decoration: underline;
 }
 
