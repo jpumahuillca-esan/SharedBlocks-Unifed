@@ -6,8 +6,11 @@
  * Solo vista previa, no se usa en bloques reales.
  */
 import AtomSocialIcon from '../atoms/AtomSocialIcon.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 
 const networks = ['facebook', 'instagram', 'linkedin', 'youtube', 'x'] as const;
+const socialIconMarker = (network: string, inverse = false) =>
+  `<AtomSocialIcon network="${network}"${inverse ? ' inverse' : ''} />`;
 </script>
 
 <template>
@@ -15,14 +18,28 @@ const networks = ['facebook', 'instagram', 'linkedin', 'youtube', 'x'] as const;
     <div class="preview-group">
       <span class="preview-group__label">Sobre fondo claro</span>
       <div class="preview-row-wrap">
-        <AtomSocialIcon v-for="network in networks" :key="network" :network="network" />
+        <PreviewCodeSample
+          v-for="network in networks"
+          :key="network"
+          :marker="socialIconMarker(network)"
+          :label="`Ícono de ${network}`"
+        >
+          <AtomSocialIcon :network="network" />
+        </PreviewCodeSample>
       </div>
     </div>
 
     <div class="preview-group preview-group--dark">
       <span class="preview-group__label">Sobre fondo oscuro (footer)</span>
       <div class="preview-row-wrap">
-        <AtomSocialIcon v-for="network in networks" :key="network" :network="network" inverse />
+        <PreviewCodeSample
+          v-for="network in networks"
+          :key="network"
+          :marker="socialIconMarker(network, true)"
+          :label="`Ícono de ${network} para fondo oscuro`"
+        >
+          <AtomSocialIcon :network="network" inverse />
+        </PreviewCodeSample>
       </div>
     </div>
   </div>

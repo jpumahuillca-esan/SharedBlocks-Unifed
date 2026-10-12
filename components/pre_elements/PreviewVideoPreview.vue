@@ -7,6 +7,7 @@
  */
 import MoleculeVideoPreview from '../molecules/MoleculeVideoPreview.vue';
 import MoleculeVideoList, { type VideoListItem } from '../molecules/MoleculeVideoList.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 
 const img1 = 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop';
 const img2 = 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800&auto=format&fit=crop';
@@ -35,17 +36,20 @@ const listItems: VideoListItem[] = [
     <div class="preview-group">
       <span class="preview-group__label">Simple</span>
       <div class="preview-cap-480">
+        <PreviewCodeSample marker="<MoleculeVideoPreview" label="Video simple" :occurrence="0" block>
         <MoleculeVideoPreview
           :image="img1"
           duration="02:14"
           aria-label="Reproducir video: Conoce el campus ESAN"
         />
+        </PreviewCodeSample>
       </div>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Con contenido (glass)</span>
       <div class="preview-cap-480">
+        <PreviewCodeSample marker="<MoleculeVideoPreview" label="Video destacado" :occurrence="1" block>
         <MoleculeVideoPreview
           variant="featured"
           :image="img2"
@@ -54,13 +58,16 @@ const listItems: VideoListItem[] = [
           title="Testimonios: la vida en el campus ESAN"
           aria-label="Reproducir video: Testimonios, vida en el campus ESAN"
         />
+        </PreviewCodeSample>
       </div>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Lista horizontal</span>
       <div class="preview-cap-520">
-        <MoleculeVideoList :items="listItems" />
+        <PreviewCodeSample marker="<MoleculeVideoList" label="Lista de videos" block>
+          <MoleculeVideoList :items="listItems" />
+        </PreviewCodeSample>
       </div>
     </div>
   </div>

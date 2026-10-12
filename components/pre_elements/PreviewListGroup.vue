@@ -5,6 +5,7 @@
  * (activo) / Pagos. Solo vista previa, no se usa en bloques reales.
  */
 import MoleculeListGroup, { type ListGroupItem } from '../molecules/MoleculeListGroup.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 
 const items: ListGroupItem[] = [
   { label: 'Datos personales', icon: 'user' },
@@ -18,7 +19,9 @@ const items: ListGroupItem[] = [
     <div class="preview-group">
       <span class="preview-group__label">Menú de trámite</span>
       <div class="preview-column-wrap">
-        <MoleculeListGroup :items="items" />
+        <PreviewCodeSample marker='<MoleculeListGroup :items="[' label="Menú de trámite" block>
+          <MoleculeListGroup :items="items" />
+        </PreviewCodeSample>
       </div>
     </div>
   </div>

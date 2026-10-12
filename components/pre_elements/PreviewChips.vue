@@ -6,8 +6,11 @@
  */
 import { ref } from 'vue';
 import MoleculeChip from '../molecules/MoleculeChip.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 
 const activeFilter = ref('todos');
+const filterMarker = (value: string) => `<MoleculeChip :active="filtro === '${value}'"`;
+const removableMarker = (label: string) => `remove-label="Quitar filtro ${label}"`;
 
 const filters = [
   { value: 'todos', label: 'Todos' },
@@ -28,29 +31,35 @@ const removeFilter = (label: string) => {
     <div class="preview-group">
       <span class="preview-group__label">Filtro</span>
       <div class="preview-row-wrap">
-        <MoleculeChip
+        <PreviewCodeSample
           v-for="filter in filters"
           :key="filter.value"
-          :active="activeFilter === filter.value"
-          @click="activeFilter = filter.value"
+          :marker="filterMarker(filter.value)"
+          :label="`Filtro ${filter.label}`"
         >
-          {{ filter.label }}
-        </MoleculeChip>
+          <MoleculeChip
+            :active="activeFilter === filter.value"
+            @click="activeFilter = filter.value"
+          >{{ filter.label }}</MoleculeChip>
+        </PreviewCodeSample>
       </div>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Removible</span>
       <div class="preview-row-wrap">
-        <MoleculeChip
+        <PreviewCodeSample
           v-for="label in appliedFilters"
           :key="label"
-          removable
-          :remove-label="`Quitar filtro ${label}`"
-          @remove="removeFilter(label)"
+          :marker="removableMarker(label)"
+          :label="`Filtro removible ${label}`"
         >
-          {{ label }}
-        </MoleculeChip>
+          <MoleculeChip
+            removable
+            :remove-label="`Quitar filtro ${label}`"
+            @remove="removeFilter(label)"
+          >{{ label }}</MoleculeChip>
+        </PreviewCodeSample>
         <span v-if="!appliedFilters.length" class="preview-empty">Sin filtros aplicados</span>
       </div>
     </div>

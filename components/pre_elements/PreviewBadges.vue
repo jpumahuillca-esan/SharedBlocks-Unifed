@@ -6,6 +6,7 @@
  */
 import AtomBadge from '../atoms/AtomBadge.vue';
 import AtomEyebrow from '../atoms/AtomEyebrow.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 
 const badgeVariants = [
   { variant: 'brand', label: 'Nuevo' },
@@ -17,6 +18,9 @@ const badgeVariants = [
   { variant: 'warning', label: 'Últimas vacantes' },
   { variant: 'error', label: 'Cerrado' },
 ] as const;
+
+const badgeMarker = (variant: string, fixed = false) =>
+  fixed ? `<AtomBadge variant="${variant}" fixed>` : `<AtomBadge variant="${variant}">`;
 
 /* En el Figma, la fila de esquinas rectas muestra la sólida y las de feedback. */
 const fixedVariants = [
@@ -33,17 +37,26 @@ const fixedVariants = [
     <div class="preview-group">
       <span class="preview-group__label">Eyebrow</span>
       <div class="preview-row-wrap">
-        <AtomEyebrow variant="brand">Maestrías</AtomEyebrow>
-        <AtomEyebrow variant="neutral">Actualidad ESAN</AtomEyebrow>
+        <PreviewCodeSample marker='<AtomEyebrow variant="brand">' label="Eyebrow de marca">
+          <AtomEyebrow variant="brand">Maestrías</AtomEyebrow>
+        </PreviewCodeSample>
+        <PreviewCodeSample marker='<AtomEyebrow variant="neutral">' label="Eyebrow neutro">
+          <AtomEyebrow variant="neutral">Actualidad ESAN</AtomEyebrow>
+        </PreviewCodeSample>
       </div>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Badge</span>
       <div class="preview-row-wrap">
-        <AtomBadge v-for="item in badgeVariants" :key="item.variant" :variant="item.variant">
-          {{ item.label }}
-        </AtomBadge>
+        <PreviewCodeSample
+          v-for="item in badgeVariants"
+          :key="item.variant"
+          :marker="badgeMarker(item.variant)"
+          :label="`Badge ${item.variant}`"
+        >
+          <AtomBadge :variant="item.variant">{{ item.label }}</AtomBadge>
+        </PreviewCodeSample>
       </div>
     </div>
 
@@ -51,9 +64,14 @@ const fixedVariants = [
     <div class="preview-group">
       <span class="preview-group__label">Badge fixed (esquina inferior derecha redondeada)</span>
       <div class="preview-row-wrap">
-        <AtomBadge v-for="item in fixedVariants" :key="item.variant" :variant="item.variant" fixed>
-          {{ item.label }}
-        </AtomBadge>
+        <PreviewCodeSample
+          v-for="item in fixedVariants"
+          :key="item.variant"
+          :marker="badgeMarker(item.variant, true)"
+          :label="`Badge fijo ${item.variant}`"
+        >
+          <AtomBadge :variant="item.variant" fixed>{{ item.label }}</AtomBadge>
+        </PreviewCodeSample>
       </div>
     </div>
   </div>

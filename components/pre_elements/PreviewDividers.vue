@@ -5,27 +5,36 @@
  * en bloques reales.
  */
 import AtomDivider from '../atoms/AtomDivider.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 </script>
 
 <template>
   <div class="preview-stack">
     <div class="preview-group">
       <span class="preview-group__label">Horizontal</span>
-      <AtomDivider variant="horizontal" />
+      <PreviewCodeSample marker='<AtomDivider variant="horizontal" />' label="Separador horizontal">
+        <AtomDivider variant="horizontal" />
+      </PreviewCodeSample>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Con etiqueta</span>
-      <AtomDivider variant="label">o continúa con</AtomDivider>
+      <PreviewCodeSample marker='<AtomDivider variant="label">' label="Separador con etiqueta" block>
+        <AtomDivider variant="label">o continúa con</AtomDivider>
+      </PreviewCodeSample>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Vertical</span>
       <div class="preview-vertical-row">
         <span>Pregrado</span>
-        <AtomDivider variant="vertical" />
+        <PreviewCodeSample marker='<AtomDivider variant="vertical" />' label="Separador vertical" :occurrence="0">
+          <AtomDivider variant="vertical" />
+        </PreviewCodeSample>
         <span>Posgrado</span>
-        <AtomDivider variant="vertical" />
+        <PreviewCodeSample marker='<AtomDivider variant="vertical" />' label="Separador vertical" :occurrence="1">
+          <AtomDivider variant="vertical" />
+        </PreviewCodeSample>
         <span>Educación Ejecutiva</span>
       </div>
     </div>

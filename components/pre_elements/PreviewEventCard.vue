@@ -12,6 +12,7 @@
  * Solo vista previa, no se usa en bloques reales.
  */
 import MoleculeEventCard from '../molecules/MoleculeEventCard.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 
 const eventImage = 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=600&auto=format&fit=crop';
 </script>
@@ -21,6 +22,7 @@ const eventImage = 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2
     <div class="preview-group">
       <span class="preview-group__label">Sin imagen · en fila</span>
       <div class="preview-column-wrap">
+        <PreviewCodeSample marker="<MoleculeEventCard" label="Evento sin imagen en fila" :occurrence="0" block>
         <MoleculeEventCard
           day="14"
           month="Ago"
@@ -29,12 +31,14 @@ const eventImage = 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2
           location="Campus Surco"
           cta-label="Inscribirme"
         />
+        </PreviewCodeSample>
       </div>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Sin imagen · apilada (poco ancho)</span>
       <div class="preview-column-wrap preview-column-wrap--narrow">
+        <PreviewCodeSample marker="<MoleculeEventCard" label="Evento sin imagen apilado" :occurrence="1" block>
         <MoleculeEventCard
           layout="stacked"
           day="14"
@@ -44,12 +48,14 @@ const eventImage = 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2
           location="Campus Surco"
           cta-label="Inscribirme"
         />
+        </PreviewCodeSample>
       </div>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Con imagen · vertical</span>
       <div class="preview-demo-grid">
+        <PreviewCodeSample marker="<MoleculeEventCard" label="Evento con imagen vertical" :occurrence="2" block>
         <MoleculeEventCard
           variant="media"
           :image="eventImage"
@@ -59,12 +65,14 @@ const eventImage = 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2
           title="Inicia tu Maestría con el PADE Internacional en Gestión del Talento Humano de ESAN"
           class="preview-media-card"
         />
+        </PreviewCodeSample>
       </div>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Con imagen · con la foto al costado</span>
       <div class="preview-column-wrap">
+        <PreviewCodeSample marker="<MoleculeEventCard" label="Evento con imagen lateral" :occurrence="3" block>
         <MoleculeEventCard
           variant="media"
           layout="row"
@@ -74,6 +82,7 @@ const eventImage = 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2
           :badges="['Texto', 'Texto']"
           title="Inicia tu Maestría con el PADE Internacional en Gestión del Talento Humano de ESAN"
         />
+        </PreviewCodeSample>
       </div>
     </div>
   </div>

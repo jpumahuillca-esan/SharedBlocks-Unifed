@@ -10,6 +10,7 @@
  * escaparse por encima de la UI real del editor.
  */
 import MoleculeScrollTop from '../molecules/MoleculeScrollTop.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 </script>
 
 <template>
@@ -17,7 +18,9 @@ import MoleculeScrollTop from '../molecules/MoleculeScrollTop.vue';
     <div class="preview-group">
       <span class="preview-group__label">Botón flotante (siempre visible en esta vista previa)</span>
       <div class="preview-stage">
-        <MoleculeScrollTop preview />
+        <PreviewCodeSample marker="<MoleculeScrollTop />" label="Botón para volver arriba" block>
+          <MoleculeScrollTop preview />
+        </PreviewCodeSample>
       </div>
     </div>
   </div>

@@ -6,6 +6,7 @@
  * se usa en bloques reales.
  */
 import MoleculePostCard from '../molecules/MoleculePostCard.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 
 const img1 = 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=600&auto=format&fit=crop';
 const img2 = 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=600&auto=format&fit=crop';
@@ -19,6 +20,7 @@ const img3 = 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&
       <!-- Igual que .demo-grid en webunificada: auto-fit + 1fr reparte
            varios ítems en columnas de ~260px+ cada una. -->
       <div class="preview-demo-grid">
+        <PreviewCodeSample marker="<MoleculePostCard" label="Artículo de liderazgo" :occurrence="0" block>
         <MoleculePostCard
           :image="img1"
           eyebrow="Liderazgo"
@@ -27,6 +29,8 @@ const img3 = 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&
           published-date="18 jul 2026"
           reading-time="6 min de lectura"
         />
+        </PreviewCodeSample>
+        <PreviewCodeSample marker="<MoleculePostCard" label="Artículo de finanzas" :occurrence="1" block>
         <MoleculePostCard
           :image="img2"
           eyebrow="Finanzas"
@@ -35,12 +39,14 @@ const img3 = 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&
           published-date="10 jul 2026"
           reading-time="8 min de lectura"
         />
+        </PreviewCodeSample>
       </div>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Noticia (etiqueta sobre imagen)</span>
       <div class="preview-demo-grid">
+        <PreviewCodeSample marker="<MoleculePostCard" label="Tarjeta de noticia" :occurrence="2" block>
         <MoleculePostCard
           variant="news"
           :image="img3"
@@ -49,6 +55,7 @@ const img3 = 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&
           title="ESAN acompaña logro de escolar peruano premiado en mundial de robótica en Estados Unidos"
           class="preview-news-card"
         />
+        </PreviewCodeSample>
       </div>
     </div>
   </div>

@@ -5,6 +5,7 @@
  * en bloques reales.
  */
 import MoleculeStepper, { type StepperStep } from '../molecules/MoleculeStepper.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 
 const steps: StepperStep[] = [
   { label: 'Datos personales', status: 'complete' },
@@ -18,7 +19,9 @@ const steps: StepperStep[] = [
   <div class="preview-stack">
     <div class="preview-group">
       <span class="preview-group__label">Proceso de admisión</span>
-      <MoleculeStepper :steps="steps" />
+      <PreviewCodeSample marker='<MoleculeStepper :steps="[' label="Indicador de pasos" block>
+        <MoleculeStepper :steps="steps" />
+      </PreviewCodeSample>
     </div>
   </div>
 </template>

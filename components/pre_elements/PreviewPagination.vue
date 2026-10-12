@@ -7,6 +7,7 @@
  */
 import { ref } from 'vue';
 import MoleculePagination from '../molecules/MoleculePagination.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 
 const currentPage = ref(1);
 </script>
@@ -15,7 +16,9 @@ const currentPage = ref(1);
   <div class="preview-stack">
     <div class="preview-group">
       <span class="preview-group__label">Navegación de páginas</span>
-      <MoleculePagination :current-page="currentPage" :total-pages="8" @change="currentPage = $event" />
+      <PreviewCodeSample marker="<MoleculePagination" label="Paginación" block>
+        <MoleculePagination :current-page="currentPage" :total-pages="8" @change="currentPage = $event" />
+      </PreviewCodeSample>
     </div>
   </div>
 </template>

@@ -7,6 +7,7 @@
 import AtomSpinner from '../atoms/AtomSpinner.vue';
 import AtomDotsLoader from '../atoms/AtomDotsLoader.vue';
 import AtomButton from '../atoms/AtomButton.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 </script>
 
 <template>
@@ -14,20 +15,30 @@ import AtomButton from '../atoms/AtomButton.vue';
     <div class="preview-group">
       <span class="preview-group__label">Spinner</span>
       <div class="preview-row-wrap">
-        <AtomSpinner size="sm" />
-        <AtomSpinner />
-        <AtomSpinner size="lg" />
+        <PreviewCodeSample marker='<AtomSpinner size="sm" />' label="Spinner pequeño">
+          <AtomSpinner size="sm" />
+        </PreviewCodeSample>
+        <PreviewCodeSample marker="<AtomSpinner />" label="Spinner mediano">
+          <AtomSpinner />
+        </PreviewCodeSample>
+        <PreviewCodeSample marker='<AtomSpinner size="lg" />' label="Spinner grande">
+          <AtomSpinner size="lg" />
+        </PreviewCodeSample>
       </div>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Dots &amp; botón en carga</span>
       <div class="preview-row-wrap">
-        <AtomDotsLoader />
+        <PreviewCodeSample marker="<AtomDotsLoader />" label="Loader de puntos">
+          <AtomDotsLoader />
+        </PreviewCodeSample>
+        <PreviewCodeSample marker='<AtomButton variant="primary" disabled>' label="Botón en estado de carga">
         <AtomButton variant="primary" disabled>
           <AtomSpinner size="sm" inverse />
           Enviando…
         </AtomButton>
+        </PreviewCodeSample>
       </div>
     </div>
   </div>

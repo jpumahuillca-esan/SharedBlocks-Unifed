@@ -5,6 +5,7 @@
  * Solo vista previa, no se usa en bloques reales.
  */
 import MoleculeCookieBanner from '../molecules/MoleculeCookieBanner.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 </script>
 
 <template>
@@ -12,14 +13,18 @@ import MoleculeCookieBanner from '../molecules/MoleculeCookieBanner.vue';
     <div class="preview-group">
       <span class="preview-group__label">Oscuro</span>
       <div class="preview-stage">
-        <MoleculeCookieBanner preview />
+        <PreviewCodeSample marker='<MoleculeCookieBanner @consent="onConsent" />' label="Aviso de cookies oscuro" block>
+          <MoleculeCookieBanner preview />
+        </PreviewCodeSample>
       </div>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Claro</span>
       <div class="preview-stage">
-        <MoleculeCookieBanner preview variant="light" />
+        <PreviewCodeSample marker='<MoleculeCookieBanner variant="light"' label="Aviso de cookies claro" block>
+          <MoleculeCookieBanner preview variant="light" />
+        </PreviewCodeSample>
       </div>
     </div>
   </div>

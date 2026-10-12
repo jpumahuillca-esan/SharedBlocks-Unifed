@@ -8,6 +8,7 @@
 import MoleculeBanner from '../molecules/MoleculeBanner.vue';
 import AtomButton from '../atoms/AtomButton.vue';
 import AtomIcon from '../atoms/AtomIcon.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 
 const img1 = 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=800&auto=format&fit=crop';
 const img2 = 'https://images.unsplash.com/photo-1481487196290-c152efe083f5?q=80&w=800&auto=format&fit=crop';
@@ -19,6 +20,7 @@ const img3 = 'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&
     <div class="preview-group">
       <span class="preview-group__label">Estándar</span>
       <div class="preview-column-wrap">
+        <PreviewCodeSample marker='variant="brand"' label="Banner de marca" block>
         <MoleculeBanner
           variant="brand"
           eyebrow="Admisión 2026-I"
@@ -29,7 +31,9 @@ const img3 = 'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&
             <AtomButton variant="terciary">Postula ahora</AtomButton>
           </template>
         </MoleculeBanner>
+        </PreviewCodeSample>
 
+        <PreviewCodeSample marker='variant="outline"' label="Banner con contorno" block>
         <MoleculeBanner
           variant="outline"
           icon="file-down"
@@ -43,12 +47,14 @@ const img3 = 'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&
             </AtomButton>
           </template>
         </MoleculeBanner>
+        </PreviewCodeSample>
       </div>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Con imagen</span>
       <div class="preview-image-grid">
+        <PreviewCodeSample marker='variant="image"' label="Banner con imagen" :occurrence="0" block>
         <MoleculeBanner
           variant="image"
           :image="img1"
@@ -56,6 +62,8 @@ const img3 = 'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&
           title="Vida universitaria"
           text="Carreras de ciencias administrativas"
         />
+        </PreviewCodeSample>
+        <PreviewCodeSample marker='variant="image-split"' label="Banner con imagen dividida" block>
         <MoleculeBanner
           variant="image-split"
           :image="img2"
@@ -63,6 +71,8 @@ const img3 = 'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&
           title="ESAN Graduate School of Business"
           text="MBAs, Maestrías, Doctorados y programas especializados"
         />
+        </PreviewCodeSample>
+        <PreviewCodeSample marker='variant="image"' label="Banner con imagen y antetítulo" :occurrence="1" block>
         <MoleculeBanner
           variant="image"
           :image="img3"
@@ -71,6 +81,7 @@ const img3 = 'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&
           title="Management"
           text="Carreras de ciencias administrativas"
         />
+        </PreviewCodeSample>
       </div>
     </div>
   </div>

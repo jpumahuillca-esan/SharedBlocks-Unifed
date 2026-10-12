@@ -6,6 +6,7 @@
  * previa, no se usa en bloques reales.
  */
 import MoleculeDropdown, { type DropdownItem } from '../molecules/MoleculeDropdown.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 
 const items: DropdownItem[] = [
   { label: 'MBA', icon: 'graduation-cap' },
@@ -21,7 +22,9 @@ const items: DropdownItem[] = [
     <div class="preview-group">
       <span class="preview-group__label">Click para abrir</span>
       <div class="preview-stage">
-        <MoleculeDropdown label="Programas" :items="items" />
+        <PreviewCodeSample marker="<MoleculeDropdown" label="Menú de programas" block>
+          <MoleculeDropdown label="Programas" :items="items" />
+        </PreviewCodeSample>
       </div>
     </div>
   </div>

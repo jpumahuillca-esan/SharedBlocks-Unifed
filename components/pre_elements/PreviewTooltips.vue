@@ -11,6 +11,7 @@
  */
 import AtomTooltip from '../atoms/AtomTooltip.vue';
 import AtomIcon from '../atoms/AtomIcon.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 </script>
 
 <template>
@@ -18,17 +19,23 @@ import AtomIcon from '../atoms/AtomIcon.vue';
     <div class="preview-group">
       <span class="preview-group__label">Pasa el mouse o navega con Tab</span>
       <div class="preview-row-wrap">
+        <PreviewCodeSample marker='<AtomTooltip as="button" text="Copiar enlace"' label="Tooltip sobre botón">
         <AtomTooltip as="button" text="Copiar enlace" class="btn btn--secondary btn--icon" aria-label="Copiar enlace">
           <AtomIcon name="link" :size="16" />
         </AtomTooltip>
+        </PreviewCodeSample>
 
+        <PreviewCodeSample marker='<AtomTooltip text=' label="Tooltip superior" :occurrence="0">
         <AtomTooltip text="Programa acreditado internacionalmente" class="preview-tooltip-text">
           MBA Part-Time
         </AtomTooltip>
+        </PreviewCodeSample>
 
+        <PreviewCodeSample marker='<AtomTooltip text=' label="Tooltip inferior" :occurrence="1">
         <AtomTooltip text="18 meses, modalidad híbrida" position="bottom" class="preview-tooltip-text">
           Duración del programa
         </AtomTooltip>
+        </PreviewCodeSample>
       </div>
     </div>
   </div>

@@ -6,6 +6,7 @@
  * Figma. Solo vista previa, no se usa en bloques reales.
  */
 import MoleculeCollapse from '../molecules/MoleculeCollapse.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 </script>
 
 <template>
@@ -13,26 +14,34 @@ import MoleculeCollapse from '../molecules/MoleculeCollapse.vue';
     <div class="preview-group">
       <span class="preview-group__label">Claro</span>
       <div class="preview-column-wrap">
+        <PreviewCodeSample marker='<MoleculeCollapse title=' label="Panel de documentos" :occurrence="0" block>
         <MoleculeCollapse title="¿Qué documentos necesito para postular?">
           Copia de DNI, grado de bachiller o título profesional, CV documentado y dos cartas de recomendación.
         </MoleculeCollapse>
+        </PreviewCodeSample>
+        <PreviewCodeSample marker='<MoleculeCollapse title=' label="Panel abierto de financiamiento" :occurrence="1" block>
         <MoleculeCollapse title="¿Hay financiamiento disponible?" default-open>
           Sí, contamos con líneas de financiamiento propio y convenios con entidades bancarias. También puedes
           acceder al programa de becas por mérito académico.
         </MoleculeCollapse>
+        </PreviewCodeSample>
       </div>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Sobre fondo oscuro</span>
       <div class="preview-column-wrap preview-column-wrap--dark">
+        <PreviewCodeSample marker='<MoleculeCollapse title=' label="Panel inverso de documentos" :occurrence="2" block>
         <MoleculeCollapse title="¿Qué documentos necesito para postular?" inverse>
           Copia de DNI, grado de bachiller o título profesional, CV documentado y dos cartas de recomendación.
         </MoleculeCollapse>
+        </PreviewCodeSample>
+        <PreviewCodeSample marker='<MoleculeCollapse title=' label="Panel inverso abierto de financiamiento" :occurrence="3" block>
         <MoleculeCollapse title="¿Hay financiamiento disponible?" inverse default-open>
           Sí, contamos con líneas de financiamiento propio y convenios con entidades bancarias. También puedes
           acceder al programa de becas por mérito académico.
         </MoleculeCollapse>
+        </PreviewCodeSample>
       </div>
     </div>
   </div>

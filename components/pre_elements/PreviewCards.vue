@@ -12,6 +12,7 @@ import MoleculeCard from '../molecules/MoleculeCard.vue';
 import AtomEyebrow from '../atoms/AtomEyebrow.vue';
 import AtomButton from '../atoms/AtomButton.vue';
 import AtomIcon from '../atoms/AtomIcon.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 
 const placeholderImage = 'https://placehold.co/600x450?text=Imagen';
 </script>
@@ -21,6 +22,7 @@ const placeholderImage = 'https://placehold.co/600x450?text=Imagen';
     <div class="preview-group">
       <span class="preview-group__label">Card</span>
       <div class="preview-demo-grid">
+        <PreviewCodeSample marker='variant="default"' label="Tarjeta estándar de innovación" :occurrence="0" block>
         <MoleculeCard
           variant="default"
           :image="placeholderImage"
@@ -37,6 +39,8 @@ const placeholderImage = 'https://placehold.co/600x450?text=Imagen';
             </AtomButton>
           </template>
         </MoleculeCard>
+        </PreviewCodeSample>
+        <PreviewCodeSample marker='variant="default"' label="Tarjeta estándar de convenios" :occurrence="1" block>
         <MoleculeCard
           variant="default"
           :image="placeholderImage"
@@ -53,36 +57,44 @@ const placeholderImage = 'https://placehold.co/600x450?text=Imagen';
             </AtomButton>
           </template>
         </MoleculeCard>
+        </PreviewCodeSample>
       </div>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Card servicio (numeración de proceso)</span>
       <div class="preview-demo-grid">
+        <PreviewCodeSample marker='variant="service"' label="Tarjeta de proceso: postula" :occurrence="0" block>
         <MoleculeCard
           variant="service"
           number="01"
           title="Postula"
           text="Completa el formulario de admisión y adjunta tu documentación académica."
         />
+        </PreviewCodeSample>
+        <PreviewCodeSample marker='variant="service"' label="Tarjeta de proceso: evaluación" :occurrence="1" block>
         <MoleculeCard
           variant="service"
           number="02"
           title="Evaluación"
           text="Rinde la entrevista y la evaluación de admisión con el comité académico."
         />
+        </PreviewCodeSample>
+        <PreviewCodeSample marker='variant="service"' label="Tarjeta de proceso: matrícula" :occurrence="2" block>
         <MoleculeCard
           variant="service"
           number="03"
           title="Matrícula"
           text="Confirma tu vacante y realiza el proceso de matrícula en línea."
         />
+        </PreviewCodeSample>
       </div>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Card con imagen</span>
       <div class="preview-demo-grid">
+        <PreviewCodeSample marker='variant="image"' label="Tarjeta con imagen" block>
         <MoleculeCard
           variant="image"
           :image="placeholderImage"
@@ -93,6 +105,7 @@ const placeholderImage = 'https://placehold.co/600x450?text=Imagen';
             <AtomEyebrow>MBA</AtomEyebrow>
           </template>
         </MoleculeCard>
+        </PreviewCodeSample>
       </div>
     </div>
   </div>

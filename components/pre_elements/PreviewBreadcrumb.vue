@@ -5,6 +5,7 @@
  * Part-Time. Solo vista previa, no se usa en bloques reales.
  */
 import MoleculeBreadcrumb from '../molecules/MoleculeBreadcrumb.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 
 const items = [
   { label: 'Inicio', href: '#' },
@@ -17,7 +18,9 @@ const items = [
   <div class="preview-stack">
     <div class="preview-group">
       <span class="preview-group__label">Ruta de navegación</span>
-      <MoleculeBreadcrumb :items="items" />
+      <PreviewCodeSample marker="<MoleculeBreadcrumb" label="Ruta de navegación" block>
+        <MoleculeBreadcrumb :items="items" />
+      </PreviewCodeSample>
     </div>
   </div>
 </template>

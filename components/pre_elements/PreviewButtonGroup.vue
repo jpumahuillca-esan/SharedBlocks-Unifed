@@ -7,6 +7,7 @@
  */
 import { ref } from 'vue';
 import MoleculeButtonGroup from '../molecules/MoleculeButtonGroup.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 
 const nivel = ref('pregrado');
 const nivelItems = [
@@ -26,20 +27,24 @@ const vistaItems = [
   <div class="preview-stack">
     <div class="preview-group">
       <span class="preview-group__label">Texto</span>
+      <PreviewCodeSample marker="<MoleculeButtonGroup" label="Grupo de botones con texto" :occurrence="0" block>
       <MoleculeButtonGroup
         :items="nivelItems"
         v-model="nivel"
         aria-label="Nivel académico"
       />
+      </PreviewCodeSample>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Solo ícono</span>
+      <PreviewCodeSample marker="<MoleculeButtonGroup" label="Grupo de botones con íconos" :occurrence="1" block>
       <MoleculeButtonGroup
         :items="vistaItems"
         v-model="vista"
         aria-label="Tipo de vista"
       />
+      </PreviewCodeSample>
     </div>
   </div>
 </template>

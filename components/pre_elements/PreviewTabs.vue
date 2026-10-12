@@ -9,6 +9,7 @@
  */
 import { ref } from 'vue';
 import MoleculeTabs, { type TabItem } from '../molecules/MoleculeTabs.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 
 const pestanas: TabItem[] = [
   { id: 'general', label: 'Información general' },
@@ -36,31 +37,37 @@ const etiqueta = (lista: TabItem[], id: string) => lista.find((tab) => tab.id ==
   <div class="preview-stack">
     <div class="preview-group">
       <span class="preview-group__label">Subrayado (horizontal)</span>
-      <MoleculeTabs v-model="horizontal" :items="pestanas" aria-label="Secciones del programa" />
+      <PreviewCodeSample marker="<MoleculeTabs" label="Pestañas subrayadas" :occurrence="0" block>
+        <MoleculeTabs v-model="horizontal" :items="pestanas" aria-label="Secciones del programa" />
+      </PreviewCodeSample>
       <p class="preview-panel">Panel de «{{ etiqueta(pestanas, horizontal) }}».</p>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Vertical</span>
       <div class="preview-row">
+        <PreviewCodeSample marker='<MoleculeTabs v-model="activo" variant="vertical"' label="Pestañas verticales" block>
         <MoleculeTabs
           v-model="vertical"
           variant="vertical"
           :items="pestanas"
           aria-label="Secciones del programa"
         />
+        </PreviewCodeSample>
         <p class="preview-panel">Panel de «{{ etiqueta(pestanas, vertical) }}».</p>
       </div>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Cards (con ícono)</span>
+      <PreviewCodeSample marker="<MoleculeTabs" label="Pestañas tipo tarjeta" :occurrence="2" block>
       <MoleculeTabs
         v-model="cards"
         variant="cards"
         :items="conIcono"
         aria-label="Pilares de la propuesta de valor"
       />
+      </PreviewCodeSample>
       <p class="preview-panel">Panel de «{{ etiqueta(conIcono, cards) }}».</p>
     </div>
   </div>

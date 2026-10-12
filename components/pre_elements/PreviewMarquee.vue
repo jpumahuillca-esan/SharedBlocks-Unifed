@@ -5,6 +5,7 @@
  * rojo. Solo vista previa, no se usa en bloques reales.
  */
 import MoleculeMarquee, { type MarqueeItem } from '../molecules/MoleculeMarquee.vue';
+import PreviewCodeSample from '../docs/PreviewCodeSample.vue';
 
 const items: MarqueeItem[] = [
   { label: 'Acreditación internacional', icon: 'award' },
@@ -18,17 +19,23 @@ const items: MarqueeItem[] = [
   <div class="preview-stack">
     <div class="preview-group">
       <span class="preview-group__label">Claro</span>
-      <MoleculeMarquee :items="items" />
+      <PreviewCodeSample marker='<MoleculeMarquee :items="[' label="Franja clara de contenido" block>
+        <MoleculeMarquee :items="items" />
+      </PreviewCodeSample>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Oscuro</span>
-      <MoleculeMarquee :items="items" variant="dark" />
+      <PreviewCodeSample marker='<MoleculeMarquee :items="items" variant="dark" />' label="Franja oscura" block>
+        <MoleculeMarquee :items="items" variant="dark" />
+      </PreviewCodeSample>
     </div>
 
     <div class="preview-group">
       <span class="preview-group__label">Rojo</span>
-      <MoleculeMarquee :items="items" variant="brand" />
+      <PreviewCodeSample marker='<MoleculeMarquee :items="items" variant="brand" />' label="Franja de marca" block>
+        <MoleculeMarquee :items="items" variant="brand" />
+      </PreviewCodeSample>
     </div>
   </div>
 </template>

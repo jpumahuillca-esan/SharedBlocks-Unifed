@@ -19,15 +19,43 @@
  * ilegibles. Solo el cromo alrededor (título, descripción, borde) sigue
  * las variables --docs-* definidas en DocsPage.vue.
  */
+import { nextTick, provide, ref } from 'vue';
 import CodeBlock from './CodeBlock.vue';
+import { docsCodeNavigationKey } from './DocsCodeNavigation';
 
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
   id: string;
   title: string;
   description?: string;
   /** Si no se pasa, no se muestra el bloque de código (ej. Foundations). */
   code?: string;
 }>(), {});
+
+const highlightedCodeLine = ref<number>();
+const codeBlockRoot = ref<HTMLElement | null>(null);
+
+const goToCodeMarker = async (marker: string, occurrence = 0) => {
+  if (!props.code) return;
+
+  let codeIndex = -1;
+  let searchFrom = 0;
+  for (let currentOccurrence = 0; currentOccurrence <= occurrence; currentOccurrence += 1) {
+    codeIndex = props.code.indexOf(marker, searchFrom);
+    if (codeIndex < 0) return;
+    searchFrom = codeIndex + marker.length;
+  }
+
+  const line = props.code.slice(0, codeIndex).split(/\r?\n/).length;
+  highlightedCodeLine.value = line;
+  await nextTick();
+  codeBlockRoot.value?.querySelector('.docs-code-block__line.is-highlighted')?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center',
+    inline: 'nearest',
+  });
+};
+
+provide(docsCodeNavigationKey, { goToCodeMarker });
 </script>
 
 <template>
@@ -39,7 +67,9 @@ withDefaults(defineProps<{
       <slot name="preview" />
     </div>
 
-    <CodeBlock v-if="code" :code="code" />
+    <div v-if="code" ref="codeBlockRoot">
+      <CodeBlock :code="code" :highlight-line="highlightedCodeLine" />
+    </div>
   </section>
 </template>
 

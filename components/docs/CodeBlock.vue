@@ -12,16 +12,19 @@
  * (Tailwind, shadcn), para que el código resalte igual sobre cualquier
  * fondo de página.
  */
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = withDefaults(defineProps<{
   code: string;
   lang?: string;
+  /** Línea opcional que se destaca para enlazar un campo con su uso. */
+  highlightLine?: number;
 }>(), {
   lang: 'vue-html',
 });
 
 const copied = ref(false);
+const lines = computed(() => props.code.split(/\r?\n/));
 
 const copy = async () => {
   try {
@@ -35,14 +38,14 @@ const copy = async () => {
 </script>
 
 <template>
-  <div class="docs-code-block">
+  <div class="docs-code-block" :class="{ 'has-highlight': props.highlightLine !== undefined }">
     <div class="docs-code-block__bar">
       <span class="docs-code-block__lang">{{ lang }}</span>
       <button type="button" class="docs-code-block__copy" @click="copy">
         {{ copied ? 'Copiado' : 'Copiar' }}
       </button>
     </div>
-    <pre class="docs-code-block__pre"><code>{{ code }}</code></pre>
+    <pre class="docs-code-block__pre"><code v-if="props.highlightLine === undefined">{{ code }}</code><code v-else><span v-for="(line, index) in lines" :key="index" class="docs-code-block__line" :class="{ 'is-highlighted': props.highlightLine === index + 1 }" :data-line="index + 1">{{ line || ' ' }}</span></code></pre>
   </div>
 </template>
 
@@ -94,5 +97,30 @@ const copy = async () => {
   line-height: 1.6;
   color: #e4e5e7;
   white-space: pre;
+}
+.docs-code-block__line {
+  display: block;
+  min-height: 1.6em;
+  padding: 0 10px;
+  margin: 0 -10px;
+}
+.docs-code-block.has-highlight .docs-code-block__pre code {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+}
+.docs-code-block.has-highlight .docs-code-block__line::before {
+  display: inline-block;
+  width: 24px;
+  margin-right: 12px;
+  color: #747981;
+  text-align: right;
+  content: attr(data-line);
+  user-select: none;
+}
+.docs-code-block__line.is-highlighted {
+  border-left: 3px solid #e3173e;
+  background: rgba(227, 23, 62, 0.16);
+  color: #ffffff;
 }
 </style>

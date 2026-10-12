@@ -26,10 +26,20 @@ import { FOUNDATIONS_REGISTRY } from './content/FoundationsRegistry';
 import { ELEMENTS_REGISTRY } from '../pre_elements/ElementsRegistry';
 import { ELEMENTS_DOCS } from './content/ElementsDocsContent';
 import DocsSection from './DocsSection.vue';
+import EditorDocsPage from './EditorDocsPage.vue';
 
 const STORAGE_KEY = 'arcis-docs-theme';
 
 const theme = ref<'light' | 'dark'>('light');
+const activeDocumentation = ref<'design-system' | 'editor-beta'>('design-system');
+
+const EDITOR_DOCS_NAV = [
+  { id: 'editor-beta-purpose', label: 'Qué es y para qué sirve' },
+  { id: 'editor-beta-playground', label: 'Pruébalo en vivo' },
+  { id: 'editor-beta-consumption', label: 'Cómo se consume' },
+  { id: 'editor-beta-fields', label: 'Campos disponibles' },
+  { id: 'editor-beta-canvas-focus', label: 'Edición desde el lienzo' },
+];
 
 onMounted(() => {
   let stored: string | null = null;
@@ -61,6 +71,10 @@ const toggleTheme = () => {
 const scrollTo = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
+
+const changeDocumentation = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 </script>
 
 <template>
@@ -68,7 +82,9 @@ const scrollTo = (id: string) => {
     <aside class="docs-page__sidebar">
       <div class="docs-page__brand">
         <span class="docs-page__brand-mark">ARCIS</span>
-        <span class="docs-page__brand-sub">Design System</span>
+        <span class="docs-page__brand-sub">
+          {{ activeDocumentation === 'design-system' ? 'Design System' : 'Editor beta' }}
+        </span>
         <button
           type="button"
           class="docs-page__theme-toggle"
@@ -79,28 +95,56 @@ const scrollTo = (id: string) => {
         </button>
       </div>
 
-      <nav class="docs-page__nav">
-        <div class="docs-page__nav-group">
-          <span class="docs-page__nav-title">Foundations</span>
-          <button
-            v-for="(item, key) in FOUNDATIONS_REGISTRY"
-            :key="`f-${key}`"
-            type="button"
-            class="docs-page__nav-link"
-            @click="scrollTo(`foundation-${key}`)"
-          >
-            {{ item.label }}
-          </button>
-        </div>
+      <div class="docs-page__selector">
+        <label class="docs-page__selector-label" for="docs-mode">Documentación</label>
+        <select
+          id="docs-mode"
+          v-model="activeDocumentation"
+          class="docs-page__selector-control"
+          @change="changeDocumentation"
+        >
+          <option value="design-system">Design System</option>
+          <option value="editor-beta">Editor beta (Admin)</option>
+        </select>
+      </div>
 
-        <div class="docs-page__nav-group">
-          <span class="docs-page__nav-title">Elements</span>
+      <nav class="docs-page__nav">
+        <template v-if="activeDocumentation === 'design-system'">
+          <div class="docs-page__nav-group">
+            <span class="docs-page__nav-title">Foundations</span>
+            <button
+              v-for="(item, key) in FOUNDATIONS_REGISTRY"
+              :key="`f-${key}`"
+              type="button"
+              class="docs-page__nav-link"
+              @click="scrollTo(`foundation-${key}`)"
+            >
+              {{ item.label }}
+            </button>
+          </div>
+
+          <div class="docs-page__nav-group">
+            <span class="docs-page__nav-title">Elements</span>
+            <button
+              v-for="(item, key) in ELEMENTS_REGISTRY"
+              :key="`e-${key}`"
+              type="button"
+              class="docs-page__nav-link"
+              @click="scrollTo(`element-${key}`)"
+            >
+              {{ item.label }}
+            </button>
+          </div>
+        </template>
+
+        <div v-else class="docs-page__nav-group">
+          <span class="docs-page__nav-title">Editor beta</span>
           <button
-            v-for="(item, key) in ELEMENTS_REGISTRY"
-            :key="`e-${key}`"
+            v-for="item in EDITOR_DOCS_NAV"
+            :key="item.id"
             type="button"
             class="docs-page__nav-link"
-            @click="scrollTo(`element-${key}`)"
+            @click="scrollTo(item.id)"
           >
             {{ item.label }}
           </button>
@@ -108,7 +152,7 @@ const scrollTo = (id: string) => {
       </nav>
     </aside>
 
-    <main class="docs-page__main">
+    <main v-if="activeDocumentation === 'design-system'" class="docs-page__main">
       <header class="docs-page__header">
         <h1 class="docs-page__header-title">ARCIS Design System</h1>
         <p class="docs-page__header-text">
@@ -147,6 +191,10 @@ const scrollTo = (id: string) => {
           </template>
         </DocsSection>
       </section>
+    </main>
+
+    <main v-else class="docs-page__main">
+      <EditorDocsPage />
     </main>
   </div>
 </template>
@@ -214,6 +262,29 @@ const scrollTo = (id: string) => {
   flex: 1;
   font-size: 11px;
   color: var(--docs-text-subtle);
+}
+.docs-page__selector {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 8px 20px;
+}
+.docs-page__selector-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--docs-text-faint);
+}
+.docs-page__selector-control {
+  width: 100%;
+  padding: 7px 8px;
+  border: 1px solid var(--docs-border);
+  border-radius: 6px;
+  background: var(--docs-bg);
+  color: var(--docs-text);
+  font: inherit;
+  font-size: 12px;
 }
 .docs-page__theme-toggle {
   flex-shrink: 0;
