@@ -41,3 +41,16 @@
     --ds-text-label: var(--ds-font-size-16);
   }
 }
+
+@container (max-width: 1023.98px) {
+  .arcis-scope > * {
+    --ds-container-padding-x: 20px;
+  }
+}
+
+@container (max-width: 767.98px) {
+  .arcis-scope > * {
+    --ds-container-padding-x: 16px;
+  }
+}
+

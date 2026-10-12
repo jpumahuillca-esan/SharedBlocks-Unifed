@@ -23,8 +23,8 @@ export const EDITOR_REGISTRY: Record<string, any> = {
     CardsReasonVersion3: defineAsyncComponent(() => import('../components/block-beta/cards/cards-reason-version-3/Editor.vue')),
     CardsPillars: defineAsyncComponent(() => import('../components/block-beta/cards/cards-pillars/Editor.vue')),
 
-    HeroLeadForm: defineAsyncComponent(() => import('../components/block-beta/formularios/lead-form/Editor.vue'))
-    
+    HeroLeadForm: defineAsyncComponent(() => import('../components/block-beta/formularios/lead-form/Editor.vue')),
+    Breadcrumb: defineAsyncComponent(() => import('../components/block-beta/navigation/breadcrumb/Editor.vue')),
 };
 
 export const resolveEditor = (type: string) => EDITOR_REGISTRY[type] || null;   

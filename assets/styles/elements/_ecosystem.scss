@@ -15,7 +15,8 @@
    gobierno. Cada modificador solo traduce un nombre a su token.
 
    Tres composiciones, una por tamaño:
-     escritorio  dos columnas; facultades en rejilla de 3, panel de color
+     escritorio  dos columnas; facultades en rejilla de 3, panel blanco con
+                 borde de color
      tableta     una columna; facultades en rejilla de 2, tarjeta horizontal
      teléfono    una columna; todo apilado, tarjeta horizontal
 
@@ -28,7 +29,7 @@
 .arcis-scope {
 
   .ecosystem {
-    --ecosystem-padding-x: var(--ds-spacing-md);
+    --ecosystem-padding-x: var(--ds-container-padding-x);
 
     /* Hueco entre los dos grupos grandes de la sección. */
     --ecosystem-gap: var(--ds-space-6);
@@ -427,6 +428,59 @@
     aspect-ratio: var(--ecosystem-faculty-ratio);
   }
 
+  /*
+   * Las facultades son tarjetas blancas, no paneles de color (referencia del
+   * equipo): la foto va arriba y el panel de texto, blanco, lleva el color de la
+   * escuela como borde —más grueso abajo— y en la flecha. Es lo único que la
+   * sigue identificando con su escuela, igual que en tableta.
+   *
+   * El borde va en el PANEL y no en la tarjeta: así la foto llega hasta el borde
+   * de la tarjeta y el filete arranca justo donde empieza el panel. Por eso la
+   * tarjeta pierde su fondo de color: sus esquinas, detrás del panel redondeado,
+   * tienen que dejar ver la foto.
+   *
+   * Estas reglas van DESPUÉS de las de texto oscuro de amarillo, turquesa y
+   * naranja (misma especificidad, gana la última): aquí el texto es oscuro en
+   * las seis, porque el fondo es blanco.
+   */
+  .ecosystem-card--faculty {
+    background-color: transparent;
+    color: var(--ds-color-text-primary);
+  }
+
+  .ecosystem-card--faculty .ecosystem-card__body {
+    background-color: var(--ds-color-background-default);
+    border: var(--ds-border-width-sm) solid var(--ecosystem-color);
+    border-bottom-width: var(--ds-space-1);
+  }
+
+  .ecosystem-card--faculty .ecosystem-card__title {
+    color: var(--ds-color-text-primary);
+  }
+
+  .ecosystem-card--faculty .ecosystem-card__desc {
+    color: var(--ds-color-text-secondary);
+  }
+
+  /*
+   * Sobre blanco, el blanco translúcido de btn--surface desaparece: la flecha
+   * toma el color de la escuela.
+   *
+   * Con `.btn` en el selector para superar a .btn.btn--surface sin depender
+   * de que esta hoja se cargue después de _buttons.scss.
+   */
+  .ecosystem-card--faculty .ecosystem-arrow.btn {
+    background-color: var(--ecosystem-color);
+    color: var(--ds-color-text-inverse);
+  }
+
+  .ecosystem-card--faculty .ecosystem-arrow.btn:hover,
+  .ecosystem-card--faculty .ecosystem-arrow.btn:focus-visible {
+    /* Sin una escala oscura por color, se apoya en la opacidad. */
+    background-color: var(--ecosystem-color);
+    opacity: 0.85;
+  }
+
   /* -----------------------------------------------------------------------
      Flecha
 
@@ -529,20 +583,10 @@
       grid-auto-rows: auto;
     }
 
-    /* La tarjeta de facultad se tumba: foto a la izquierda, texto en blanco. */
+    /* La tarjeta de facultad se tumba: foto a la izquierda, texto a la derecha. */
     .ecosystem-card--faculty {
       flex-direction: row;
       align-items: stretch;
-      background-color: var(--ds-color-background-default);
-      color: var(--ds-color-text-primary);
-      border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
-
-      /*
-       * Filete del color de la escuela en el borde inferior, como en el Figma.
-       * Tumbada sobre blanco, la tarjeta pierde su panel de color; este filete
-       * y la flecha son lo que la sigue identificando con su escuela.
-       */
-      border-bottom: var(--ds-space-1) solid var(--ecosystem-color);
     }
 
     .ecosystem-card--faculty .ecosystem-card__media {
@@ -569,40 +613,10 @@
        */
       margin-top: 0;
       margin-left: calc(-1 * var(--ds-radius-sm));
-      background-color: var(--ds-color-background-default);
     }
 
     .ecosystem-card--faculty .ecosystem-arrow.btn {
       margin-top: auto;
-    }
-
-
-    .ecosystem-card--faculty .ecosystem-card__title {
-      color: var(--ds-color-text-primary);
-    }
-
-    .ecosystem-card--faculty .ecosystem-card__desc {
-      color: var(--ds-color-text-secondary);
-    }
-
-    /*
-     * Sobre blanco, el blanco translúcido de btn--surface desaparece: la flecha
-     * toma el color de la escuela, que es lo único que queda de él en esta
-     * composición.
-     *
-     * Con `.btn` en el selector para superar a .btn.btn--surface sin depender
-     * de que esta hoja se cargue después de _buttons.scss.
-     */
-    .ecosystem-card--faculty .ecosystem-arrow.btn {
-      background-color: var(--ecosystem-color);
-      color: var(--ds-color-text-inverse);
-    }
-
-    .ecosystem-card--faculty .ecosystem-arrow.btn:hover,
-    .ecosystem-card--faculty .ecosystem-arrow.btn:focus-visible {
-      /* Sin una escala oscura por color, se apoya en la opacidad. */
-      background-color: var(--ecosystem-color);
-      opacity: 0.85;
     }
   }
 
@@ -615,7 +629,6 @@
   @include bp.container-down('sm') {
 
     .ecosystem {
-      --ecosystem-padding-x: var(--ds-space-6);
       --ecosystem-gap: var(--ds-space-4);
     }
 

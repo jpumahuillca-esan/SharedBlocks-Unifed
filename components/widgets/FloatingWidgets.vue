@@ -36,17 +36,13 @@
       <!-- Ventana de Diálogo Flotante del Chatbot -->
       <ChatbotDialog
         :is-open="isChatOpen"
-        v-model:show-lead-form="showLeadForm"
         v-model="inputQuery"
         :messages="chatMessages"
         :is-typing="isTyping"
         :suggestions="suggestions"
-        :lead-form="leadForm"
-        :is-submitting-lead="isSubmittingLead"
-        :lead-error="leadError"
+        :placeholder="inputPlaceholder"
         @close="isChatOpen = false"
         @send-message="handleSendMessage"
-        @submit-lead="handleSubmitLead"
         @navigate-page="navigateToPage"
       />
     </div>
@@ -59,7 +55,7 @@ import FloatingWhatsApp from './FloatingWhatsApp.vue';
 import FloatingScrollTop from './FloatingScrollTop.vue';
 import ChatbotTrigger from './chatbot/ChatbotTrigger.vue';
 import ChatbotDialog from './chatbot/ChatbotDialog.vue';
-import { useChatbot } from '../../composables/useChatbot';
+import { useChatbot, appendChatbotUtm } from '../../composables/useChatbot';
 
 const props = withDefaults(
   defineProps<{
@@ -72,7 +68,7 @@ const props = withDefaults(
     config: null,
     academicUnitId: 1,
     chatbotApiUrl: '',
-    leadEndpoint: '/api/leads'
+    leadEndpoint: ''
   }
 );
 
@@ -80,14 +76,10 @@ const {
   isChatOpen,
   isTyping,
   inputQuery,
-  showLeadForm,
-  isSubmittingLead,
-  leadError,
-  leadForm,
+  inputPlaceholder,
   chatMessages,
   suggestions,
-  sendMessage,
-  submitLead
+  sendMessage
 } = useChatbot();
 
 const isScrolled = ref(false);
@@ -103,7 +95,10 @@ const isScrollTopActive = computed(() => {
 });
 
 const isChatbotActive = computed(() => {
-  return Boolean(props.config?.chatbot?.enabled);
+  if (props.config?.chatbot?.enabled !== undefined) {
+    return Boolean(props.config.chatbot.enabled);
+  }
+  return true;
 });
 
 const chatbotPositionClass = computed(() => {
@@ -154,10 +149,25 @@ const scrollToTop = () => {
 
 const navigateToPage = (url: string) => {
   if (typeof window === 'undefined' || !url) return;
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    window.open(url, '_blank', 'noopener,noreferrer');
+  const cb = props.config?.chatbot;
+  const trackedUrl = appendChatbotUtm(url, {
+    source: cb?.utm_source || 'chatbot',
+    medium: cb?.utm_medium || 'referral',
+    campaign: cb?.utm_campaign || cb?.campaign_slug || 'esanbot'
+  });
+
+  if (trackedUrl.startsWith('http://') || trackedUrl.startsWith('https://')) {
+    window.open(trackedUrl, '_blank', 'noopener,noreferrer');
   } else {
-    const cleanUrl = url.startsWith('/') ? url : `/${url}`;
+    const cleanUrl = trackedUrl.startsWith('/') ? trackedUrl : `/${trackedUrl}`;
+    try {
+      if (typeof navigateTo === 'function') {
+        navigateTo(cleanUrl);
+        return;
+      }
+    } catch {
+      // Fallback a redirección estándar si navigateTo no está disponible
+    }
     window.location.href = cleanUrl;
   }
 };
@@ -174,20 +184,32 @@ const resolvedChatbotApiUrl = computed(() => {
     const nuxtConfigUrl = (window as any)?.__NUXT__?.config?.public?.chatbotApiUrl;
     if (nuxtConfigUrl) return nuxtConfigUrl;
   }
-  return 'http://127.0.0.1:5000/api/v1/chat';
+  return 'http://127.0.0.1:5005/api/v1/chat';
+});
+
+const resolvedLaravelApiUrl = computed(() => {
+  if (typeof window !== 'undefined') {
+    const nuxtConfigUrl = (window as any)?.__NUXT__?.config?.public?.laravelApiUrl;
+    if (nuxtConfigUrl) return nuxtConfigUrl;
+  }
+  return 'http://127.0.0.1:8000';
 });
 
 const handleSendMessage = (query?: string) => {
   if (query) {
     inputQuery.value = query;
   }
-  sendMessage(resolvedChatbotApiUrl.value);
-};
+  const cb = props.config?.chatbot;
+  const resolvedLeadEndpoint =
+    props.leadEndpoint || `${resolvedLaravelApiUrl.value}/api/public/leads`;
 
-const handleSubmitLead = () => {
-  submitLead({
-    endpoint: props.leadEndpoint,
-    academicUnitId: props.academicUnitId
+  sendMessage(resolvedChatbotApiUrl.value, {
+    endpoint: resolvedLeadEndpoint,
+    academicUnitId: props.academicUnitId || 1,
+    campaignSlug: cb?.campaign_slug || 'esanbot',
+    utmSource: cb?.utm_source || 'chatbot',
+    utmMedium: cb?.utm_medium || 'chat_conversacional',
+    utmCampaign: cb?.utm_campaign || 'esanbot'
   });
 };
 
@@ -230,6 +252,25 @@ onMounted(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     injectChatbotScript();
+
+    // Capturar y persistir atribución UTM de campañas (ej: referidos del Chatbot)
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const utmSource = params.get('utm_source');
+      if (utmSource) {
+        sessionStorage.setItem(
+          'esan_marketing_utm',
+          JSON.stringify({
+            utm_source: utmSource,
+            utm_medium: params.get('utm_medium') || 'referral',
+            utm_campaign: params.get('utm_campaign') || 'esanbot',
+            utm_term: params.get('utm_term') || '',
+            utm_content: params.get('utm_content') || '',
+            timestamp: Date.now()
+          })
+        );
+      }
+    } catch (_) {}
   }
 });
 

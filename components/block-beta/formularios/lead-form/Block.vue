@@ -149,7 +149,8 @@ const {
   background: var(--ds-color-background-default);
   border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
   border-radius: var(--ds-radius-md);
-  padding: var(--ds-spacing-md);
+  padding-block: var(--ds-spacing-md);
+  padding-inline: var(--ds-container-padding-x);
   box-shadow: var(--ds-shadow-md);
   /*
    * Ritmo vertical común a todos los bloques (ver

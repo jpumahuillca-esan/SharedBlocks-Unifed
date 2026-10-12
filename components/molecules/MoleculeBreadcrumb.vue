@@ -17,6 +17,7 @@
  * posición en el array.
  */
 import AtomIcon from '../atoms/AtomIcon.vue';
+import AtomLink from '../atoms/AtomLink.vue';
 
 export interface BreadcrumbItem {
   label: string;
@@ -31,11 +32,46 @@ withDefaults(defineProps<{
 </script>
 
 <template>
-  <nav class="breadcrumb breadcrumb--arcis" aria-label="Breadcrumb">
-    <span v-for="(item, index) in items" :key="index" class="breadcrumb__item">
-      <AtomIcon v-if="index > 0" name="chevron-right" :size="14" />
-      <a v-if="index < items.length - 1" class="breadcrumb__link" :href="item.href || '#'">{{ item.label }}</a>
-      <span v-else class="breadcrumb__current" aria-current="page">{{ item.label }}</span>
+  <nav
+    class="breadcrumb breadcrumb--arcis"
+    aria-label="Breadcrumb"
+    itemscope
+    itemtype="https://schema.org/BreadcrumbList"
+  >
+    <span
+      v-for="(item, index) in items"
+      :key="index"
+      class="breadcrumb__item"
+      itemprop="itemListElement"
+      itemscope
+      itemtype="https://schema.org/ListItem"
+    >
+      <AtomIcon v-if="index > 0" name="chevron-right" :size="14" aria-hidden="true" />
+      
+      <!-- Enlace intermedio con SEO y navegación SPA reactiva (sin recargar página) -->
+      <AtomLink
+        v-if="index < items.length - 1 && item.href"
+        class="breadcrumb__link"
+        :href="item.href"
+        itemprop="item"
+      >
+        <span itemprop="name">{{ item.label }}</span>
+      </AtomLink>
+
+      <!-- Último ítem o nivel sin enlace: página actual -->
+      <template v-else>
+        <span
+          class="breadcrumb__current"
+          aria-current="page"
+          itemprop="name"
+        >
+          {{ item.label }}
+        </span>
+        <meta v-if="item.href" itemprop="item" :content="item.href" />
+      </template>
+
+      <!-- Posición obligatoria para Google BreadcrumbList -->
+      <meta itemprop="position" :content="String(index + 1)" />
     </span>
   </nav>
 </template>

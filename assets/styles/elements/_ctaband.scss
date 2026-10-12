@@ -50,7 +50,8 @@
     width: 100%;
     max-width: var(--ds-container-max);
     margin-inline: auto;
-    padding: var(--ds-spacing-xl);
+    padding-block: var(--ds-spacing-xl);
+    padding-inline: var(--ds-container-padding-x);
     box-sizing: border-box;
   }
 
@@ -236,7 +237,7 @@
      * agrandaría en lugar de separarla de sus vecinos.
      */
     margin-block: var(--ds-spacing-xxl);
-    padding: var(--ds-space-6) var(--ds-spacing-md);
+    padding: var(--ds-space-6) var(--ds-container-padding-x);
     box-sizing: border-box;
     background-color: var(--ds-color-background-light);
     border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
@@ -293,7 +294,8 @@
   @include bp.container-down('md') {
 
     .ctaband__inner {
-      padding: var(--ds-spacing-lg) var(--ds-space-6);
+      padding-block: var(--ds-spacing-lg);
+      padding-inline: var(--ds-container-padding-x);
     }
 
     .ctaband--image {

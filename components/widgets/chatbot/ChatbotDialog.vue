@@ -1,7 +1,7 @@
 <template>
   <transition name="chat-window-anim">
     <div v-if="isOpen" class="chatbot-dialog shadow-2xl">
-      <!-- Cabecera del Chat con Identidad ESAN -->
+      <!-- Cabecera del Chat con Identidad Institucional ESAN -->
       <div class="chatbot-header d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center gap-2">
           <div class="chat-avatar position-relative">
@@ -16,19 +16,7 @@
           </div>
         </div>
 
-        <div class="chat-header-actions d-flex align-items-center gap-1">
-          <!-- Botón para alternar formulario de información / leads -->
-          <button
-            type="button"
-            class="chat-btn-mode"
-            :class="{ 'btn-mode-active': showLeadForm }"
-            @click="$emit('update:showLeadForm', !showLeadForm)"
-            :title="showLeadForm ? 'Volver a la conversación' : 'Dejar datos para recibir información'"
-          >
-            <i :class="showLeadForm ? 'las la-comments' : 'las la-envelope'"></i>
-            <span class="fs-11 fw-semibold">{{ showLeadForm ? 'Chat' : 'Recibir Info' }}</span>
-          </button>
-
+        <div class="chat-header-actions d-flex align-items-center">
           <button
             type="button"
             class="chat-btn-header"
@@ -41,9 +29,8 @@
         </div>
       </div>
 
-      <!-- MODO 1: CUERPO DE CONVERSACIÓN / CHAT -->
+      <!-- CUERPO DE CONVERSACIÓN / CHAT CONTINUO -->
       <ChatbotMessages
-        v-if="!showLeadForm"
         ref="messagesView"
         :messages="messages"
         :is-typing="isTyping"
@@ -52,19 +39,8 @@
         @navigate-page="$emit('navigate-page', $event)"
       />
 
-      <!-- MODO 2: FORMULARIO DE CAPTURA DE LEADS -->
-      <ChatbotLeadForm
-        v-else
-        :lead-form="leadForm"
-        :is-submitting="isSubmittingLead"
-        :error="leadError"
-        @submit="$emit('submit-lead')"
-        @back-to-chat="$emit('update:showLeadForm', false)"
-      />
-
-      <!-- Barra de Entrada y Envío (Solo en modo Chat) -->
+      <!-- Barra de Entrada y Envío -->
       <form
-        v-if="!showLeadForm"
         class="chatbot-footer d-flex align-items-center gap-2"
         @submit.prevent="onFormSubmit"
       >
@@ -72,7 +48,7 @@
           v-model="internalQuery"
           type="text"
           class="chat-input"
-          placeholder="Escribe tu consulta o pide una página..."
+          :placeholder="placeholder || 'Escribe tu consulta o pide una página...'"
           :disabled="isTyping"
           ref="inputField"
         />
@@ -93,27 +69,21 @@
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue';
 import ChatbotMessages from './ChatbotMessages.vue';
-import ChatbotLeadForm from './ChatbotLeadForm.vue';
-import type { ChatMessageItem, LeadFormData } from '../../../composables/useChatbot';
+import type { ChatMessageItem } from '../../../composables/useChatbot';
 
 const props = defineProps<{
   isOpen: boolean;
-  showLeadForm: boolean;
   messages: ChatMessageItem[];
   isTyping: boolean;
   suggestions: string[];
-  leadForm: LeadFormData;
-  isSubmittingLead: boolean;
-  leadError?: string;
+  placeholder?: string;
   modelValue?: string;
 }>();
 
 const emit = defineEmits<{
   (e: 'close'): void;
-  (e: 'update:showLeadForm', val: boolean): void;
   (e: 'update:modelValue', val: string): void;
   (e: 'send-message', query?: string): void;
-  (e: 'submit-lead'): void;
   (e: 'navigate-page', url: string): void;
 }>();
 
@@ -158,8 +128,8 @@ watch(
 
 watch(
   () => props.isOpen,
-  (open) => {
-    if (open) {
+  (val) => {
+    if (val) {
       scrollToBottom();
       nextTick(() => {
         inputField.value?.focus();
@@ -169,154 +139,172 @@ watch(
 );
 
 const onFormSubmit = () => {
-  if (!internalQuery.value.trim() || props.isTyping) return;
-  emit('send-message', internalQuery.value.trim());
+  const q = internalQuery.value.trim();
+  if (!q || props.isTyping) return;
+  emit('send-message', q);
+  internalQuery.value = '';
 };
 
-const onSuggestionSelected = (sug: string) => {
-  if (sug.toLowerCase().includes('recibir información') || sug.toLowerCase().includes('formulario de contacto')) {
-    emit('update:showLeadForm', true);
-    return;
-  }
-  emit('send-message', sug);
+const onSuggestionSelected = (suggestionText: string) => {
+  emit('send-message', suggestionText);
 };
-
-defineExpose({
-  scrollToBottom
-});
 </script>
 
 <style scoped>
 .chatbot-dialog {
-  width: 370px;
-  height: 520px;
+  position: absolute;
+  bottom: calc(100% + 14px);
+  right: 0;
+  width: 400px;
+  max-width: calc(100vw - 32px);
+  height: 570px;
+  max-height: calc(100vh - 120px);
   background: #ffffff;
-  border-radius: 16px;
+  border-radius: 18px;
+  box-shadow: 0 16px 40px -8px rgba(15, 23, 42, 0.28), 0 0 1px 1px rgba(15, 23, 42, 0.08);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  z-index: 1050;
+  border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 .chatbot-header {
-  background: linear-gradient(135deg, #e31140 0%, #c20b32 100%);
-  padding: 12px 14px;
+  background: linear-gradient(135deg, #a61c1c 0%, #7d1212 100%);
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
+}
+
+.chat-avatar {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .avatar-circle {
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .online-dot {
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
   background: #10b981;
+  border: 2px solid #a61c1c;
   border-radius: 50%;
-  border: 1.5px solid #e31140;
-}
-
-.chat-btn-mode {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  color: #ffffff;
-  padding: 3px 8px;
-  border-radius: 12px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  transition: all 0.2s ease;
-}
-
-.chat-btn-mode:hover {
-  background: rgba(255, 255, 255, 0.32);
-}
-
-.chat-btn-mode.btn-mode-active {
-  background: #ffffff;
-  color: #e31140;
-  border-color: #ffffff;
 }
 
 .chat-btn-header {
-  background: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   border: none;
-  color: rgba(255, 255, 255, 0.8);
-  cursor: pointer;
-  padding: 4px;
-}
-
-.chat-btn-header:hover {
+  background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
-}
-
-.chatbot-footer {
-  padding: 10px 14px;
-  background: #ffffff;
-  border-top: 1px solid #e2e8f0;
-}
-
-.chat-input {
-  flex: 1;
-  border: 1px solid #cbd5e1;
-  border-radius: 20px;
-  padding: 8px 14px;
-  font-size: 0.82rem;
-  outline: none;
-}
-
-.chat-input:focus {
-  border-color: #e31140;
-}
-
-.chat-send-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: #e31140;
-  color: #ffffff;
-  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
+}
+
+.chat-btn-header:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+.chatbot-footer {
+  padding: 12px 14px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+
+.chat-input {
+  flex: 1;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  color: #1e293b;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.chat-input:focus {
+  border-color: #a61c1c;
+  box-shadow: 0 0 0 3px rgba(166, 28, 28, 0.12);
+}
+
+.chat-input::placeholder {
+  color: #94a3b8;
+  font-size: 12.5px;
+}
+
+.chat-send-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: none;
+  background: #a61c1c;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.chat-send-btn:hover:not(:disabled) {
+  background: #8b1414;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(166, 28, 28, 0.3);
 }
 
 .chat-send-btn:disabled {
-  background: #cbd5e1;
+  background: #e2e8f0;
+  color: #94a3b8;
   cursor: not-allowed;
 }
 
-.chat-send-btn:not(:disabled):hover {
-  background: #c20b32;
-}
-
+/* Animaciones */
 .chat-window-anim-enter-active,
 .chat-window-anim-leave-active {
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .chat-window-anim-enter-from,
 .chat-window-anim-leave-to {
   opacity: 0;
-  transform: translateY(16px) scale(0.95);
+  transform: translateY(18px) scale(0.96);
 }
 
 @media (max-width: 576px) {
   .chatbot-dialog {
-    width: calc(100vw - 32px);
-    height: 75vh;
+    position: fixed;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
   }
 }
 </style>

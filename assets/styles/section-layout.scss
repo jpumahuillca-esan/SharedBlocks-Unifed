@@ -1,0 +1,251 @@
+/* =========================================================================
+   SECCIONES CON COLUMNA FLOTANTE
+
+   Una columna con `placement: float-end | float-start` (core/sectionTypes.ts)
+   sale de la grilla y flota SOBRE el contenido de la columna vecina: el
+   contenido llega a todo el ancho y, por ejemplo, un formulario queda
+   flotando encima del hero y de los bloques que siguen, acompañando al scroll.
+
+   Tres composiciones:
+     escritorio  grilla de 12; las columnas normales en la fila 1 y la
+                 flotante encima, pegada a un lado y `sticky`
+     tableta     (768 a 1023px) igual, pero con la flotante más ancha: con
+                 el ancho de escritorio el formulario quedaría de ~240px
+     móvil       (< 768px) modo bloque: una sola columna; las columnas
+                 dejan de existir (`display: contents`) y cada bloque se
+                 coloca con `order` (ver resolveBlockOrders en
+                 core/sectionStyles.ts)
+
+   POR QUÉ ESTO VIVE AQUÍ Y NO EN ESTILOS EN LÍNEA: un estilo en línea no se
+   puede deshacer desde una consulta de medios. Por eso, en una sección con
+   columna flotante, el estilo en línea solo trae variables (--col-span,
+   --col-start, --float-top, --ps-gap, --ps-align) y la disposición es de esta
+   hoja.
+
+   `sticky` y no `fixed` a propósito: la columna se queda pegada mientras dura
+   la sección y se va con ella. Con `fixed` seguiría en pantalla después y
+   quedaría atrapada por el container-type de .arcis-scope (ver base.scss).
+   Si algún ancestro tuviera overflow distinto de visible, el sticky dejaría de
+   funcionar.
+
+   No está bajo .arcis-scope: la usan las secciones, que en el editor están
+   fuera de él (solo cada bloque lo lleva). Todas las clases llevan el prefijo
+   `ps-` para no chocar con nada.
+   ========================================================================= */
+
+/* Desde el `md` del sistema (tableta) flota; por debajo, modo bloque (ver breakpoints.scss). */
+$ps-float-breakpoint: 768px;
+
+/* Debajo de este ancho (escritorio) la flotante gana `$ps-tablet-extra-span` unidades de 12. */
+$ps-tablet-max: 1023.98px;
+$ps-tablet-extra-span: 2;
+
+/*
+ * Contenedores de contenido de los bloques: los elementos que centran el
+ * contenido con `max-width: var(--ds-container-max)` y llevan el relleno
+ * lateral del sistema (`--ds-container-padding-x`). Los fondos a sangre quedan
+ * fuera (van en la raíz del bloque), así que solo se estrecha el contenido.
+ *
+ * ES UNA LISTA A MANO: un bloque nuevo cuyo contenedor siga ese patrón tiene que
+ * añadirse aquí, o su contenido pasará por debajo del formulario flotante.
+ *
+ * Va el elemento que lleva el `max-width` centrado, no uno intermedio:
+ * ecosystem-esan pone el relleno en su raíz y centra su `__inner` aparte; el
+ * borde derecho del contenido es el del `__inner`, así que el hueco va ahí.
+ */
+$ps-block-containers: (
+  '.cards-pillars__container',
+  '.cards-r3__container',
+  '.cards-v2__container',
+  '.ctaband__inner',
+  '.ctaband--compact',
+  '.ecosystem__inner',
+  '.ecosystem-esan__inner',
+  '.hero__inner',
+  '.hero__controls',
+  '.mapamundi__inner',
+  '.subhero__inner'
+);
+
+/*
+ * Contenedores cuyas FILAS CON SCROLL sangran el relleno lateral hacia el borde
+ * (`margin-inline: calc(-1 * <relleno>)`, para que las tarjetas salgan de la
+ * columna de contenido). Su carril llega hasta el borde del relleno, así que con
+ * el mismo hueco que los demás quedaría pegado al formulario y recortado contra
+ * su borde: a estos se les suma ese relleno.
+ */
+$ps-bleeding-containers: (
+  '.card-section',
+  '.story-section__inner',
+  '.values-cards__inner'
+);
+
+@function ps-block-containers-selector($prefix, $list: $ps-block-containers) {
+  $out: ();
+  @each $container in $list {
+    $out: append($out, '#{$prefix} #{$container}', comma);
+  }
+  @return $out;
+}
+
+/* Móvil (modo bloque): todo en una columna, los bloques ordenados por `order`. */
+.ps-columns.ps-columns--float {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 0;
+}
+
+.ps-columns.ps-columns--float > .ps-col {
+  display: contents;
+}
+
+/*
+ * Escritorio y tableta. Es un mixin porque el lienzo del editor lo necesita SIEMPRE,
+ * aunque la ventana sea angosta: allí se edita la versión de escritorio. Se
+ * emite dos veces, una por consulta de medios y otra bajo `.ps-columns--editor`.
+ */
+@mixin ps-float-desktop($root) {
+  #{$root}.ps-columns--float {
+    --ps-pad: var(--ds-container-padding-x, 32px);
+    --ps-max: var(--ds-container-max, 1280px);
+
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--ps-gap, 24px);
+    align-items: var(--ps-align, stretch);
+  }
+
+  /* Centrada con tope, la grilla ya es el contenedor: no hay margen extra. */
+  #{$root}.ps-columns--float.ps-columns--boxed {
+    --ps-pad: 0px;
+  }
+
+  #{$root}.ps-columns--float > .ps-col {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    grid-row: 1;
+  }
+
+  /* Las normales, una tras otra: cada una con su tramo. */
+  #{$root}.ps-columns--float > .ps-col--flow {
+    grid-column: var(--col-start, 1) / span var(--col-span, 12);
+  }
+
+  /*
+   * La flotante ocupa TODA la fila y se hace chica con `width`: así queda
+   * encima de las normales, que también están en la fila 1. El ancho sale del
+   * contenedor del sitio (tope de 1280px menos el relleno), no de la ventana,
+   * para que el formulario quede alineado con el contenido del hero aunque el
+   * hero llegue de borde a borde.
+   *
+   * `top` es la distancia al borde de la pantalla una vez pegada, y el mismo
+   * valor la separa del borde superior de la sección al empezar, para que no
+   * dé un salto al pegarse.
+   */
+  #{$root}.ps-columns--float > .ps-col--float {
+    grid-column: 1 / -1;
+    align-self: start;
+    position: sticky;
+    top: var(--float-top, 0px);
+    z-index: 10;
+    margin-top: var(--float-top, 0px);
+    width: calc((min(100%, var(--ps-max)) - 2 * var(--ps-pad)) * (var(--col-span, 4) + var(--ps-span-extra, 0)) / 12);
+  }
+
+  #{$root}.ps-columns--float > .ps-col--float-end {
+    justify-self: end;
+    margin-inline-end: calc(max(0px, (100% - var(--ps-max)) / 2) + var(--ps-pad));
+  }
+
+  #{$root}.ps-columns--float > .ps-col--float-start {
+    justify-self: start;
+    margin-inline-start: calc(max(0px, (100% - var(--ps-max)) / 2) + var(--ps-pad));
+  }
+
+  /*
+   * Flotando, el formulario ya no necesita el margen vertical de bloque
+   * (--ds-spacing-xxl): lo separaría del borde y descuadraría el `top`. En
+   * móvil, ya en el flujo, lo conserva.
+   */
+  #{$root}.ps-columns--float > .ps-col--float .lead-form {
+    margin-block: 0;
+  }
+
+  /*
+   * HUECO PARA LA FLOTANTE. El contenido de las columnas normales se estrecha
+   * del lado donde flota el formulario, para que no pase por debajo de él.
+   *
+   * El hueco es el ancho de la flotante más la separación de la sección (el
+   * "gap" que se ve entre el contenido y el formulario). Los contenedores con
+   * filas que sangran su relleno lateral suman además ese relleno (ver
+   * `$ps-bleeding-containers`); si no, su carril llegaría hasta el borde del
+   * formulario y las tarjetas quedarían recortadas contra él.
+   *
+   * Va como relleno de los contenedores del contenido y no de la columna, para
+   * que los fondos a sangre del bloque (un hero con foto, una franja de color)
+   * sigan llegando de borde a borde y el formulario flote sobre ellos.
+   *
+   * `100cqw` es el ancho del `.arcis-scope` que envuelve a cada bloque, que en
+   * una columna normal de 12 es el de la sección. Se evalúa en el contenedor del
+   * bloque, no aquí: el lienzo del editor tiene los `.arcis-scope` dentro de la
+   * sección y no fuera.
+   */
+  #{$root}.ps-columns--float {
+    --ps-float-w: calc((min(100cqw, var(--ps-max)) - 2 * var(--ps-pad)) * (var(--ps-float-span, 4) + var(--ps-span-extra, 0)) / 12);
+    --ps-reserve: calc(var(--ps-float-w) + var(--ps-gap, 24px));
+  }
+
+  #{ps-block-containers-selector('#{$root}.ps-columns--reserve-end > .ps-col--full')} {
+    padding-inline-end: calc(var(--ds-container-padding-x, 32px) + var(--ps-reserve));
+  }
+
+  #{ps-block-containers-selector('#{$root}.ps-columns--reserve-start > .ps-col--full')} {
+    padding-inline-start: calc(var(--ds-container-padding-x, 32px) + var(--ps-reserve));
+  }
+
+  /*
+   * .cta-banner-section lleva el relleno en la RAÍZ y centra su caja aparte (la
+   * caja mide hasta 1280px, el relleno va por fuera): no basta con sumar relleno,
+   * porque la raíz ocupa toda la pantalla y la caja quedaría desalineada y mal
+   * medida. Se le da el margen de centrado que la caja tendría (`--ps-offset`) a
+   * los dos lados, y el hueco del lado del formulario.
+   */
+  #{$root}.ps-columns--float {
+    --ps-offset: max(0px, calc((100cqw - var(--ps-max)) / 2));
+  }
+
+  #{$root}.ps-columns--reserve-end > .ps-col--full .cta-banner-section {
+    padding-inline: calc(var(--ds-container-padding-x, 32px) + var(--ps-offset))
+      calc(var(--ds-container-padding-x, 32px) + var(--ps-offset) + var(--ps-reserve));
+  }
+
+  #{$root}.ps-columns--reserve-start > .ps-col--full .cta-banner-section {
+    padding-inline: calc(var(--ds-container-padding-x, 32px) + var(--ps-offset) + var(--ps-reserve))
+      calc(var(--ds-container-padding-x, 32px) + var(--ps-offset));
+  }
+
+  #{ps-block-containers-selector('#{$root}.ps-columns--reserve-end > .ps-col--full', $ps-bleeding-containers)} {
+    padding-inline-end: calc(2 * var(--ds-container-padding-x, 32px) + var(--ps-reserve));
+  }
+
+  #{ps-block-containers-selector('#{$root}.ps-columns--reserve-start > .ps-col--full', $ps-bleeding-containers)} {
+    padding-inline-start: calc(2 * var(--ds-container-padding-x, 32px) + var(--ps-reserve));
+  }
+}
+
+@media (min-width: $ps-float-breakpoint) {
+  @include ps-float-desktop('.ps-columns');
+}
+
+/*
+ * Tableta: sigue flotando, pero con más ancho. Con el de escritorio (4 de 12) el
+ * formulario mediría ~240px a 768px, y sus campos a dos columnas quedarían
+ * ilegibles. El hueco del contenido usa la misma variable, así que se ajusta solo.
+ */
+@media (min-width: $ps-float-breakpoint) and (max-width: $ps-tablet-max) {
+  .ps-columns.ps-columns--float {
+    --ps-span-extra: #{$ps-tablet-extra-span};
+  }
+}
+
+@include ps-float-desktop('.ps-columns--editor');

@@ -10,25 +10,54 @@
       class="page-section"
       :style="sectionStyle(section)"
     >
-      <div class="page-section__columns" :style="columnsStyle(section)">
+      <div
+        class="page-section__columns"
+        :class="columnsClass(section)"
+        :style="columnsStyle(section)"
+      >
         <div
-          v-for="column in section.columns"
+          v-for="(column, columnIndex) in section.columns"
           :key="column.id"
           class="page-section__column"
-          :style="columnStyle(column, section)"
+          :class="columnClass(column, section)"
+          :style="columnStyles(section)[columnIndex]"
         >
           <template v-for="block in column.blocks" :key="block.id">
-            <component
-              v-if="resolveBlock(block.type)"
-              :is="resolveBlock(block.type)"
-              :id="'sec-' + block.id"
-              :data="block.content"
-            />
+            <!--
+              En una sección con columna flotante cada bloque va en su propio
+              envoltorio con `order`: en móvil las columnas desaparecen y es lo
+              que coloca el formulario debajo del bloque elegido.
+            -->
+            <div
+              v-if="isFloating(section)"
+              class="page-section__block"
+              :style="{ order: blockOrders(section)[block.id] }"
+            >
+              <component
+                v-if="resolveBlock(block.type)"
+                :is="resolveBlock(block.type)"
+                :id="'sec-' + block.id"
+                :data="block.content"
+              />
 
-            <!-- Un bloque sin registrar no debe tumbar la página -->
-            <div v-else-if="showUnknown" class="page-section__unknown">
-              Bloque no registrado: <strong>{{ block.type }}</strong>
+              <div v-else-if="showUnknown" class="page-section__unknown">
+                Bloque no registrado: <strong>{{ block.type }}</strong>
+              </div>
             </div>
+
+            <template v-else>
+              <component
+                v-if="resolveBlock(block.type)"
+                :is="resolveBlock(block.type)"
+                :id="'sec-' + block.id"
+                :data="block.content"
+              />
+
+              <!-- Un bloque sin registrar no debe tumbar la página -->
+              <div v-else-if="showUnknown" class="page-section__unknown">
+                Bloque no registrado: <strong>{{ block.type }}</strong>
+              </div>
+            </template>
           </template>
         </div>
       </div>
@@ -41,11 +70,17 @@ import { computed } from 'vue';
 import { resolveBlock } from '../../core/BlockRegistry';
 import { normalizeToSections } from '../../core/sectionNormalize';
 import {
-  resolveSectionStyle,
+  hasFloatingColumn,
+  resolveBlockOrders,
+  resolveColumnClass,
+  resolveColumnStyles,
+  resolveColumnsClass,
   resolveColumnsStyle,
-  resolveColumnStyle,
+  resolveSectionStyle,
 } from '../../core/sectionStyles';
 import type { SectionColumn, SectionItem } from '../../core/sectionTypes';
+// Disposición de las secciones con columna flotante (escritorio / móvil).
+import '../../assets/styles/section-layout.scss';
 
 const props = withDefaults(
   defineProps<{
@@ -63,10 +98,30 @@ const props = withDefaults(
 const sections = computed<SectionItem[]>(() => normalizeToSections(props.content));
 
 const sectionStyle = (section: SectionItem) => resolveSectionStyle(section.settings, 'live');
-const columnsStyle = (section: SectionItem) => resolveColumnsStyle(section.settings);
-// Se pasa la columna completa: puede traer anclaje propio al hacer scroll.
-const columnStyle = (column: SectionColumn, section: SectionItem) =>
-  resolveColumnStyle(column, section.settings);
+const columnsStyle = (section: SectionItem) => resolveColumnsStyle(section.settings, section.columns);
+const columnsClass = (section: SectionItem) => resolveColumnsClass(section.settings, section.columns);
+
+/*
+ * Se resuelven todas las columnas a la vez: con una columna flotante, la
+ * posición de cada normal depende de las que tiene delante. Se guardan por
+ * sección para no recalcular en cada columna.
+ */
+const columnStylesBySection = computed(() =>
+  Object.fromEntries(
+    sections.value.map((section) => [section.id, resolveColumnStyles(section.columns, section.settings)]),
+  ),
+);
+const columnStyles = (section: SectionItem) => columnStylesBySection.value[section.id] ?? [];
+
+const isFloating = (section: SectionItem) => hasFloatingColumn(section.columns);
+const columnClass = (column: SectionColumn, section: SectionItem) =>
+  resolveColumnClass(column, isFloating(section));
+
+// Orden de los bloques cuando la sección se apila en móvil.
+const blockOrdersBySection = computed(() =>
+  Object.fromEntries(sections.value.map((section) => [section.id, resolveBlockOrders(section.columns)])),
+);
+const blockOrders = (section: SectionItem) => blockOrdersBySection.value[section.id] ?? {};
 </script>
 
 <style scoped>
@@ -81,6 +136,10 @@ const columnStyle = (column: SectionColumn, section: SectionItem) =>
 .page-section__column {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+}
+
+.page-section__block {
   min-width: 0;
 }
 

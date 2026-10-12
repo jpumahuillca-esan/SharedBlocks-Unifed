@@ -27,7 +27,7 @@
 .arcis-scope {
 
   .values-cards {
-    --values-cards-padding-x: var(--ds-spacing-md);
+    --values-cards-padding-x: var(--ds-container-padding-x);
 
     /*
      * Relleno vertical de la maqueta (anotado ahí como spacing/--ds-spacing-xl), algo
@@ -309,7 +309,6 @@
   @include bp.container-down('sm') {
 
     .values-cards {
-      --values-cards-padding-x: var(--ds-space-6);
       --values-cards-padding-y: var(--ds-spacing-lg);
       /* En teléfono los 30px de la maqueta son demasiado aire entre bloques. */
       --values-cards-body-gap: var(--ds-space-6);
