@@ -16,10 +16,9 @@ const navigation = inject(docsCodeNavigationKey);
 </script>
 
 <template>
-  <component :is="block ? 'div' : 'span'" class="preview-code-sample" :class="{ 'is-block': block }">
+  <component v-if="navigation" :is="block ? 'div' : 'span'" class="preview-code-sample" :class="{ 'is-block': block }">
     <slot />
     <button
-      v-if="navigation"
       type="button"
       class="preview-code-sample__action"
       :aria-label="`Ver código de ${label}`"
@@ -30,6 +29,7 @@ const navigation = inject(docsCodeNavigationKey);
       <span>Ver código</span>
     </button>
   </component>
+  <slot v-else />
 </template>
 
 <style scoped>
