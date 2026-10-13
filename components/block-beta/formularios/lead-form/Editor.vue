@@ -1,175 +1,134 @@
 <template>
-  <div class="arcis-form-editor card border-0 shadow-sm mb-3">
-    <div class="card-body p-3">
-      <h6 class="fw-bold mb-3 d-flex align-items-center gap-2" style="color: var(--ds-color-text-brand);">
-        <i class="las la-sliders-h fs-18"></i> Configuración del Bloque de Captación
-      </h6>
-
-      <!--
-        Solo con el formulario en una columna FLOTANTE de la sección. En
-        escritorio flota sobre el contenido; en móvil entra en el flujo como un
-        bloque más, y aquí se decide debajo de cuál de los bloques de la sección.
-      -->
-      <div
-        v-if="placement"
-        class="p-3 rounded mb-3 border"
-        style="background-color: var(--ds-color-background-light); border-color: var(--ds-color-border-subtle);"
-        data-edit-target="mobile_placement"
-      >
-        <div class="d-flex align-items-center gap-2 mb-2">
-          <i class="las la-thumbtack text-primary"></i>
-          <span class="small fw-bold" style="color: var(--ds-color-text-primary);">
-            Anclado como flotante a la {{ placement.side === 'start' ? 'izquierda' : 'derecha' }}
-          </span>
-        </div>
-
-        <label class="small fw-bold d-block mb-1" for="lead-mobile-after" style="color: var(--ds-color-text-primary);">
-          En móvil, mostrar debajo de
-        </label>
-        <select
-          id="lead-mobile-after"
-          class="form-select form-select-sm"
-          :value="mobileAfterValue"
-          @change="onMobileAfterChange"
-        >
-          <option :value="MOBILE_AFTER_START">Al inicio, antes de todos los bloques</option>
-          <option v-for="anchor in placement.anchors" :key="anchor.id" :value="anchor.id">
-            {{ anchor.label }}
-          </option>
-          <option value="">Al final, después de todos los bloques</option>
-        </select>
-
-        <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">
-          En escritorio y tableta el formulario flota sobre el contenido y acompaña al scroll. En
-          móvil (menos de 768px) pasa a modo bloque y se coloca en el punto que elijas.
-        </small>
+  <div class="lf-editor">
+    <!--
+      Solo con el formulario en una columna FLOTANTE de la sección. Desde 1280px
+      flota sobre el contenido; por debajo entra en el flujo como un bloque más, y
+      aquí se decide debajo de cuál de los bloques de la sección.
+    -->
+    <section v-if="placement" class="lf-callout" data-edit-target="mobile_placement">
+      <div class="lf-callout__head">
+        <i class="las la-thumbtack"></i>
+        <strong>Flotante a la {{ placement.side === 'start' ? 'izquierda' : 'derecha' }}</strong>
       </div>
 
-      <!-- Selector de Campaña Dinámica -->
-      <div class="p-3 rounded mb-3 border" style="background-color: var(--ds-color-background-light); border-color: var(--ds-color-border-subtle);">
-        <label class="small fw-bold d-block mb-1" style="color: var(--ds-color-text-primary);">
-          Vincular Campaña de Marketing
-        </label>
-        
-        <div class="d-flex gap-2">
-          <select 
+      <label class="lf-label" for="lead-mobile-after">En tableta y móvil, mostrar debajo de</label>
+      <select
+        id="lead-mobile-after"
+        class="form-select form-select-sm"
+        :value="mobileAfterValue"
+        @change="onMobileAfterChange"
+      >
+        <option :value="MOBILE_AFTER_START">Al inicio de la sección</option>
+        <option v-for="anchor in placement.anchors" :key="anchor.id" :value="anchor.id">
+          {{ anchor.label }}
+        </option>
+        <option value="">Al final de la sección</option>
+      </select>
+      <p class="lf-hint">Desde 1280px flota sobre el contenido y acompaña al scroll. Por debajo se coloca en este punto.</p>
+    </section>
+
+    <!-- Textos -->
+    <section class="lf-section">
+      <h6 class="lf-title">Textos</h6>
+
+      <EditorText v-model="localForm.mainTitle" data-edit-target="mainTitle" label="Título principal" label-class="lf-label" />
+      <EditorTextarea v-model="localForm.subTitle" data-edit-target="subTitle" label="Subtítulo" label-class="lf-label" :rows="2" />
+      <EditorText v-model="localForm.button_text" data-edit-target="button_text" label="Texto del botón" label-class="lf-label" />
+    </section>
+
+    <!-- Integración: de dónde salen los campos y adónde llega el lead -->
+    <section class="lf-section">
+      <h6 class="lf-title">Integración</h6>
+
+      <div class="lf-field-group">
+        <label class="lf-label" for="lead-campaign">Campaña de marketing</label>
+        <div class="lf-select-row">
+          <select
+            id="lead-campaign"
             class="form-select form-select-sm"
             v-model="localForm.campaign_id"
             data-edit-target="campaign_id"
             @change="handleCampaignChange"
             :disabled="loadingCampaigns"
           >
-            <option :value="null">-- Ninguna (Respuesta Genérica / Fallback) --</option>
+            <option :value="null">Ninguna (respuesta genérica)</option>
             <option v-for="c in campaigns" :key="c.id" :value="c.id">
               {{ c.name }} ({{ c.academic_period || 'General' }})
             </option>
           </select>
-          <button class="btn btn-sm btn-outline-secondary" type="button" @click="fetchCampaigns" :disabled="loadingCampaigns" title="Recargar campañas">
+          <button class="lf-reload" type="button" @click="fetchCampaigns" :disabled="loadingCampaigns" title="Recargar campañas" aria-label="Recargar campañas">
             <i class="las la-sync" :class="{ 'la-spin': loadingCampaigns }"></i>
           </button>
         </div>
-
-        <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">
-          Al seleccionar una campaña, los campos del formulario se reconstruirán automáticamente según las preguntas configuradas.
-        </small>
+        <p class="lf-hint">Al elegir una campaña, los campos del formulario se reconstruyen según sus preguntas.</p>
       </div>
 
-      <!-- Selector de Programa de Estudio / Carrera -->
-      <div class="p-3 rounded mb-3 border" style="background-color: var(--ds-color-background-light); border-color: var(--ds-color-border-subtle);">
-        <div class="d-flex justify-content-between align-items-center mb-1">
-          <label class="small fw-bold mb-0" style="color: var(--ds-color-text-primary);">
-            Vincular Programa de Estudio / Carrera
-          </label>
-          <span v-if="selectedProgram" class="badge bg-primary text-white small" style="font-size: 0.7rem;">
-            ID #{{ selectedProgram.id }}
-          </span>
+      <div class="lf-field-group">
+        <div class="lf-label-row">
+          <label class="lf-label" for="lead-program">Programa de estudio / carrera</label>
+          <span v-if="selectedProgram" class="lf-pill">ID #{{ selectedProgram.id }}</span>
         </div>
-        
-        <div class="d-flex gap-2">
-          <select 
+        <div class="lf-select-row">
+          <select
+            id="lead-program"
             class="form-select form-select-sm"
             v-model="localForm.study_program_id"
             data-edit-target="study_program_id"
             :disabled="loadingPrograms"
           >
-            <option :value="null">-- General (Sin programa fijo / Auto-heredar de Campaña) --</option>
+            <option :value="null">General (hereda de la campaña)</option>
             <option v-for="p in studyPrograms" :key="p.id" :value="p.id">
               {{ p.name }}
             </option>
           </select>
-          <button class="btn btn-sm btn-outline-secondary" type="button" @click="fetchStudyPrograms" :disabled="loadingPrograms" title="Recargar programas">
+          <button class="lf-reload" type="button" @click="fetchStudyPrograms" :disabled="loadingPrograms" title="Recargar programas" aria-label="Recargar programas">
             <i class="las la-sync" :class="{ 'la-spin': loadingPrograms }"></i>
           </button>
         </div>
-
-        <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">
-          Permite vincular este formulario a una carrera o posgrado específico para que el lead y las plantillas Blade de correo reciban automáticamente el nombre y brochure del programa.
-        </small>
+        <p class="lf-hint">Para que el lead y los correos reciban el nombre y el brochure del programa.</p>
       </div>
 
-      <!-- ID Campaña Externa / CRM (Opcional / Sobrescritura) -->
-      <div class="p-3 rounded mb-3 border" style="background-color: var(--ds-color-background-light); border-color: var(--ds-color-border-subtle);">
-        <label class="small fw-bold d-block mb-1" style="color: var(--ds-color-text-primary);">
-          <i class="las la-plug text-primary me-1"></i> ID Campaña Externa / CRM (Opcional)
-        </label>
+      <div class="lf-field-group">
+        <label class="lf-label" for="lead-external">ID de campaña externa (CRM) <span class="lf-optional">Opcional</span></label>
         <input
+          id="lead-external"
           type="text"
           class="form-control form-control-sm font-monospace"
           v-model="localForm.external_campaign_id"
           data-edit-target="external_campaign_id"
-          placeholder="Ej: CMP-SF-2026-001 (Deja en blanco para heredar de Campaña)"
+          placeholder="Ej: CMP-SF-2026-001"
         />
-        <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">
-          Permite asignar o sobrescribir el ID de campaña de CRM para este formulario específico. Si se deja en blanco, heredará automáticamente el ID externo de la campaña vinculada.
-        </small>
+        <p class="lf-hint">Sobrescribe el ID de campaña del CRM. En blanco, hereda el de la campaña vinculada.</p>
       </div>
 
-      <!-- Inspección de Campos Inyectados -->
-      <div class="p-2 rounded mb-3 border" style="background-color: var(--ds-color-background-light);">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <span class="small fw-bold" style="color: var(--ds-color-text-secondary);">
-            Campos del Formulario Activo ({{ localForm.fields.length }})
-          </span>
-          <span v-if="selectedCampaign" class="badge bg-danger text-white">Campaña: {{ selectedCampaign.name }}</span>
-          <span v-else class="badge bg-secondary text-white">Preset Estándar ESAN</span>
-        </div>
+      <EditorText v-model="localForm.cod_form_old" data-edit-target="cod_form_old" label="ID de formulario legacy" label-class="lf-label" placeholder="Ej: 45" />
+    </section>
 
-        <ul class="list-group list-group-flush border rounded bg-white" style="max-height: 180px; overflow-y: auto;">
-          <li v-for="(f, idx) in localForm.fields" :key="idx" class="list-group-item d-flex justify-content-between align-items-center py-1 px-2 small">
-            <div>
-              <strong>{{ f.label }}</strong> 
-              <code class="text-muted ms-1">({{ f.name }})</code>
-            </div>
-            <div class="d-flex align-items-center gap-1">
-              <span v-if="f.validation_rule && f.validation_rule !== 'none'" class="badge bg-info-subtle text-info border font-monospace">
-                {{ f.validation_rule === 'doc_dynamic' ? 'Doc Dinámico' : f.validation_rule }}
-              </span>
-              <span v-if="f.max_length" class="badge bg-light text-dark border font-monospace">
-                {{ f.max_length }} car.
-              </span>
-              <span class="badge bg-light text-dark border">{{ f.type }}</span>
-              <span v-if="f.required" class="badge bg-danger">Requerido</span>
-            </div>
-          </li>
-        </ul>
+    <!-- Campos que el formulario muestra ahora (solo lectura: salen de la campaña o del preset) -->
+    <section class="lf-section">
+      <div class="lf-title-row">
+        <h6 class="lf-title">Campos del formulario <span class="lf-count">{{ localForm.fields.length }}</span></h6>
+        <span v-if="selectedCampaign" class="lf-pill lf-pill--brand" :title="selectedCampaign.name">Campaña: {{ selectedCampaign.name }}</span>
+        <span v-else class="lf-pill">Preset estándar ESAN</span>
       </div>
 
-      <!-- Controles de Textos y Títulos -->
-      <div class="row g-2 mb-3">
-        <div class="col-12">
-          <EditorText v-model="localForm.mainTitle" data-edit-target="mainTitle" label="Título Principal" label-class="small text-muted mb-1" />
-        </div>
-        <div class="col-12">
-          <EditorTextarea v-model="localForm.subTitle" data-edit-target="subTitle" label="Subtítulo Descriptivo" label-class="small text-muted mb-1" :rows="2" />
-        </div>
-        <div class="col-6">
-          <EditorText v-model="localForm.button_text" data-edit-target="button_text" label="Texto del Botón" label-class="small text-muted mb-1" />
-        </div>
-        <div class="col-6">
-          <EditorText v-model="localForm.cod_form_old" data-edit-target="cod_form_old" label="ID Formulario Legacy" label-class="small text-muted mb-1" placeholder="Ej: 45" />
-        </div>
-      </div>
-    </div>
+      <ul class="lf-fields">
+        <li v-for="(f, idx) in localForm.fields" :key="idx" class="lf-fields__item">
+          <div class="lf-fields__main">
+            <strong>{{ f.label }}</strong>
+            <span v-if="f.required" class="lf-req" title="Obligatorio">*</span>
+          </div>
+          <div class="lf-fields__meta">
+            <code>{{ f.name }}</code>
+            <span class="lf-chip">{{ f.type }}</span>
+            <span v-if="f.validation_rule && f.validation_rule !== 'none'" class="lf-chip lf-chip--rule">
+              {{ f.validation_rule === 'doc_dynamic' ? 'Doc dinámico' : f.validation_rule }}
+            </span>
+            <span v-if="f.max_length" class="lf-chip">{{ f.max_length }} car.</span>
+          </div>
+        </li>
+      </ul>
+    </section>
   </div>
 </template>
 
@@ -381,3 +340,249 @@ onMounted(() => {
   fetchStudyPrograms();
 });
 </script>
+
+<style scoped>
+/*
+ * Editor del formulario de captación. Secciones planas, sin cajas dentro de
+ * cajas: el panel ya trae su propio relleno y, con tarjetas anidadas, los
+ * controles quedaban en ~230px (selectores cortados, etiquetas partidas en dos).
+ * Los colores salen de la paleta del editor (--ed-*), declarada en PageEditor.
+ */
+.lf-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.lf-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lf-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--ed-border, #e6e9ef);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ed-text, #1f2733);
+}
+
+/* Título con insignia: el filete lo lleva la fila y no el título. */
+.lf-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--ed-border, #e6e9ef);
+}
+
+.lf-title-row .lf-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.lf-count {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--ed-surface-muted, #f4f6fa);
+  color: var(--ed-muted, #6b7688);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.lf-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* `:deep`: las etiquetas de EditorText/EditorTextarea las dibuja el componente hijo, que los estilos con ámbito no alcanzan. */
+.lf-editor :deep(.lf-label) {
+  display: block;
+  margin: 0 0 2px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ed-text, #1f2733);
+}
+
+.lf-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.lf-optional {
+  margin-left: 4px;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--ed-muted, #6b7688);
+}
+
+.lf-hint {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--ed-muted, #6b7688);
+}
+
+.lf-select-row {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.lf-select-row .form-select {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.lf-reload {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  border: 1px solid var(--ed-border-strong, #c6cedb);
+  border-radius: var(--ed-radius-sm, 7px);
+  background: var(--ed-surface, #fff);
+  color: var(--ed-muted, #6b7688);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.lf-reload:hover:not(:disabled) {
+  background: var(--ed-surface-muted, #f4f6fa);
+  color: var(--ed-text, #1f2733);
+}
+
+.lf-reload:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Colocación flotante: aviso destacado, con el color informativo del editor. */
+.lf-callout {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid var(--ed-info, #0d6efd);
+  border-radius: var(--ed-radius-sm, 7px);
+  background: var(--ed-info-soft, rgba(13, 110, 253, 0.07));
+}
+
+.lf-callout__head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--ed-text, #1f2733);
+}
+
+.lf-callout__head i {
+  color: var(--ed-info, #0d6efd);
+}
+
+.lf-pill {
+  flex: none;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--ed-surface-muted, #f4f6fa);
+  border: 1px solid var(--ed-border, #e6e9ef);
+  color: var(--ed-muted, #6b7688);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lf-pill--brand {
+  background: var(--ed-accent-soft, rgba(227, 17, 64, 0.09));
+  border-color: transparent;
+  color: var(--ed-accent, #e31140);
+}
+
+/* Lista de campos: etiqueta arriba y sus datos técnicos debajo, cada fila con aire. */
+.lf-fields {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  max-height: 320px;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid var(--ed-border, #e6e9ef);
+  border-radius: var(--ed-radius-sm, 7px);
+  background: var(--ed-surface, #fff);
+}
+
+.lf-fields__item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 9px 12px;
+}
+
+.lf-fields__item + .lf-fields__item {
+  border-top: 1px solid var(--ed-border, #e6e9ef);
+}
+
+.lf-fields__main {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--ed-text, #1f2733);
+}
+
+.lf-req {
+  color: var(--ed-accent, #e31140);
+  font-weight: 700;
+}
+
+.lf-fields__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.lf-fields__meta code {
+  margin-right: 2px;
+  padding: 0;
+  background: none;
+  color: var(--ed-muted, #6b7688);
+  font-size: 11px;
+}
+
+.lf-chip {
+  padding: 1px 7px;
+  border-radius: 4px;
+  background: var(--ed-surface-muted, #f4f6fa);
+  border: 1px solid var(--ed-border, #e6e9ef);
+  color: var(--ed-muted, #6b7688);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10.5px;
+}
+
+.lf-chip--rule {
+  background: var(--ed-info-soft, rgba(13, 110, 253, 0.07));
+  border-color: transparent;
+  color: var(--ed-info, #0d6efd);
+}
+</style>

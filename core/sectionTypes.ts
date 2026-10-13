@@ -32,7 +32,7 @@ export type SectionVerticalAlign = 'start' | 'center' | 'end' | 'stretch';
  *   las demás columnas, pegada al lado derecho o izquierdo, y acompaña al scroll
  *   mientras dure la sección. Es el patrón del formulario sobre el hero: el
  *   contenido llega a todo el ancho y el formulario queda flotando encima.
- *   Flota desde tableta (768px) hacia arriba; en móvil la columna entra en el
+ *   Flota desde 1280px; por debajo (tableta y móvil) la columna entra en el
  *   flujo (ver `mobileAfterBlockId`).
  */
 export type ColumnPlacement = 'flow' | 'float-end' | 'float-start';
@@ -102,12 +102,12 @@ export const GRID_UNITS = 12;
 export const BOXED_MAX_WIDTH = 1280;
 
 /**
- * Ancho máximo del contenido en una sección con columna flotante. Es mayor que
- * el normal (BOXED_MAX_WIDTH): al flotar un formulario sobre el hero, el
- * contenido necesita más sitio, sobre todo en pantallas anchas, donde con
- * 1280px quedaba un bloque estrecho con el formulario encima.
+ * Ancho mínimo (px) de una columna flotante. El contenedor de la sección sigue
+ * siendo el de siempre (BOXED_MAX_WIDTH, 1280px): la flotante toma ese ancho
+ * mínimo —o más, si su proporción de 12 da más— y los bloques del costado se
+ * quedan con el resto. Con menos de 400px el formulario no deja leer sus campos.
  */
-export const FLOAT_CONTAINER_MAX = 1600;
+export const FLOAT_MIN_WIDTH = 400;
 
 export const DEFAULT_SECTION_SETTINGS: SectionSettings = {
     width: 'full',
