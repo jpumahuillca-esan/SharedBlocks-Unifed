@@ -19,6 +19,7 @@
         :image-alt="card.imageAlt"
         :image-focus-x="card.imageFocusX"
         :image-focus-y="card.imageFocusY"
+        :image-focus-profiles="card.imageFocusProfiles"
         :date="card.date"
         :title="card.title"
         :cta-label="card.ctaLabel || undefined"
@@ -50,7 +51,10 @@ import CardSectionFooter from '../_shared/CardSectionFooter.vue';
 import CardSlider from '../_shared/CardSlider.vue';
 import { normalizeCardCount, type PostCardItem } from '../_shared/types';
 import { toDisplayDate } from '../_shared/date';
-import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import {
+  normalizeImageFocus,
+  normalizeImageFocusProfiles,
+} from '../../../../helpers/imageFocus';
 import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 import { useEditTarget } from '../../../../core/editFocus';
 
@@ -69,12 +73,21 @@ const visibleCards = computed<PostCardItem[]>(() => {
 
   // Se muestran todas: el número elegido en el editor decide cuántas se ven a
   // la vez, no cuántas existen. El resto queda al alcance del carrusel.
-  return raw.map((card: any, i: number) => ({
+  return raw.map((card: any, i: number) => {
+    const imageFocusX = normalizeImageFocus(card?.imageFocusX);
+    const imageFocusY = normalizeImageFocus(card?.imageFocusY);
+
+    return ({
     id: card?.id || `post-${i}`,
     image: card?.image ?? '',
     imageAlt: card?.imageAlt ?? '',
-    imageFocusX: normalizeImageFocus(card?.imageFocusX),
-    imageFocusY: normalizeImageFocus(card?.imageFocusY),
+    imageFocusX,
+    imageFocusY,
+    imageFocusProfiles: normalizeImageFocusProfiles(
+      card?.imageFocusProfiles,
+      imageFocusX,
+      imageFocusY,
+    ),
     title: card?.title ?? '',
     href: card?.href ?? '',
     target: normalizeLinkTarget(card?.target),
@@ -87,6 +100,7 @@ const visibleCards = computed<PostCardItem[]>(() => {
     badges: Array.isArray(card?.badges)
       ? card.badges.filter((b: any) => typeof b === 'string' && b.trim())
       : [],
-  })) as PostCardItem[];
+    });
+  }) as PostCardItem[];
 });
 </script>

@@ -61,6 +61,7 @@
         :image-alt="card.imageAlt"
         :image-focus-x="card.imageFocusX"
         :image-focus-y="card.imageFocusY"
+        :image-focus-profiles="card.imageFocusProfiles"
         :title="card.title"
         :title-level="3"
         title-size="h5"

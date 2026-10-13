@@ -40,13 +40,15 @@
     <EditorImage
       v-model="card.image"
       v-model:alt="card.imageAlt"
-      v-model:focus-x="card.imageFocusX"
-      v-model:focus-y="card.imageFocusY"
+      :focus-values="card.imageFocusProfiles"
+      :focus-modes="imageFocusModes"
       :focus-ratio="imageRatio"
+      focus-crop-preview
       data-edit-target=".image"
       alt-edit-target=".imageAlt"
       class="mb-2"
       @select="$emit('select-image', { item: card, field: 'image' })"
+      @update:focus-values="saveImageFocusProfiles(card, $event)"
     />
 
     <EditorUrl v-model="card.href" v-model:target="card.target" data-edit-target=".href" label="Destino" />
@@ -63,13 +65,18 @@
  * La tarjeta llega por referencia y se edita en sitio: es el mismo objeto de la
  * lista del editor, que es quien avisa del cambio hacia arriba.
  */
+import { computed } from 'vue';
 import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
 import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
+import {
+  createImageFocusModes,
+  saveImageFocusProfiles,
+} from '../../../../helpers/imageFocus';
 import { ECOSYSTEM_COLORS, type EcosystemCardItem } from './types';
 
-defineProps<{
+const props = defineProps<{
   card: EcosystemCardItem;
   /**
    * Proporción de la caja de la foto en el bloque (`12 / 5` las escuelas grandes,
@@ -77,6 +84,10 @@ defineProps<{
    */
   imageRatio?: string;
 }>();
+
+const imageFocusModes = computed(() =>
+  createImageFocusModes(props.imageRatio || '16 / 9'),
+);
 
 defineEmits(['select-image']);
 </script>

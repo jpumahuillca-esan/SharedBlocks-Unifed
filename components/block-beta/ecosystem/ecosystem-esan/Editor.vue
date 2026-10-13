@@ -138,19 +138,21 @@
         <EditorImage
           v-model="item.image"
           v-model:alt="item.imageAlt"
-          v-model:focus-x="item.imageFocusX"
-          v-model:focus-y="item.imageFocusY"
+          :focus-values="item.imageFocusProfiles"
+          :focus-modes="ECOSYSTEM_IMAGE_FOCUS_MODES"
           data-edit-target=".image"
           alt-edit-target=".imageAlt"
           class="mb-3"
           variant="dropzone"
           :height="110"
+          focus-crop-preview
           hint-position="bottom"
-          hint="Referencia web: 410 × 155 px. Para pantallas de alta densidad, usa 820 × 310 px o más. En móvil se recorta en vertical; ajusta el punto focal para mantener visible lo importante."
+          hint="Referencia web: 410 × 155 px (usa 820 × 310 px o más para alta densidad). Ajusta por separado el punto focal para web, tablet y móvil; la vista previa de tablet es referencial porque el ancho de la tarjeta cambia según el contenedor."
           dropzone-text="Haz clic para elegir una imagen para este card."
           alt-placeholder="Describe brevemente la imagen"
           :alt-maxlength="rules.card.imageAlt.maxLength"
           @select="selectImage(item)"
+          @update:focus-values="updateImageFocusProfiles(item, $event)"
           @remove="resetImageExtras(item)"
         />
 
@@ -295,6 +297,7 @@ import {
   normalizeEcosystemEsanData,
   normalizeEcosystemEsanItem,
   type EcosystemEsanData,
+  type EcosystemEsanFocusProfiles,
   type EcosystemEsanItem,
 } from './shared/types';
 
@@ -318,6 +321,27 @@ const emit = defineEmits([
 
 const rules =
   ECOSYSTEM_ESAN_CONTENT_RULES;
+
+const ECOSYSTEM_IMAGE_FOCUS_MODES = [
+  {
+    key: 'web',
+    label: 'Web',
+    ratio: '410 / 155',
+    frameLabel: 'Área de referencia: 410 × 155 px',
+  },
+  {
+    key: 'tablet',
+    label: 'Tablet',
+    ratio: '2 / 1',
+    frameLabel: 'Proporción orientativa: 2:1; el ancho depende del contenedor',
+  },
+  {
+    key: 'mobile',
+    label: 'Móvil',
+    ratio: '3 / 4',
+    frameLabel: 'Proporción aproximada: 3:4 (120 × 156 px)',
+  },
+] as const;
 
 /* ==========================================================================
    Colores iniciales
@@ -425,6 +449,11 @@ const addItem = () => {
 
       image: '',
       imageAlt: '',
+      imageFocusProfiles: {
+        web: { x: 50, y: 50 },
+        tablet: { x: 50, y: 50 },
+        mobile: { x: 50, y: 50 },
+      },
       imageFocusX: 50,
       imageFocusY: 50,
 
@@ -522,8 +551,28 @@ const resetImageExtras = (
   item: EcosystemEsanItem,
 ) => {
   item.imageAlt = '';
+  item.imageFocusProfiles = {
+    web: { x: 50, y: 50 },
+    tablet: { x: 50, y: 50 },
+    mobile: { x: 50, y: 50 },
+  };
   item.imageFocusX = 50;
   item.imageFocusY = 50;
+};
+
+const updateImageFocusProfiles = (
+  item: EcosystemEsanItem,
+  values: Record<string, { x: number; y: number }>,
+) => {
+  const profiles: EcosystemEsanFocusProfiles = {
+    web: values.web ?? item.imageFocusProfiles.web,
+    tablet: values.tablet ?? item.imageFocusProfiles.tablet,
+    mobile: values.mobile ?? item.imageFocusProfiles.mobile,
+  };
+
+  item.imageFocusProfiles = profiles;
+  item.imageFocusX = profiles.web.x;
+  item.imageFocusY = profiles.web.y;
 };
 
 /* ==========================================================================

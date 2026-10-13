@@ -28,6 +28,7 @@
         :image-alt="card.imageAlt"
         :image-focus-x="card.imageFocusX"
         :image-focus-y="card.imageFocusY"
+        :image-focus-profiles="card.imageFocusProfiles"
         :badges="card.badges"
       />
     </CardSlider>
@@ -57,7 +58,10 @@ import CardSectionFooter from '../_shared/CardSectionFooter.vue';
 import CardSlider from '../_shared/CardSlider.vue';
 import { normalizeCardCount, type EventCardItem } from '../_shared/types';
 import { toEventDateParts } from '../_shared/date';
-import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import {
+  normalizeImageFocus,
+  normalizeImageFocusProfiles,
+} from '../../../../helpers/imageFocus';
 import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 import { useEditTarget } from '../../../../core/editFocus';
 
@@ -83,22 +87,30 @@ const visibleCards = computed<EventCardItem[]>(() => {
      */
     const fromCalendar = toEventDateParts(card?.date ?? '');
 
+    const imageFocusX = normalizeImageFocus(card?.imageFocusX);
+    const imageFocusY = normalizeImageFocus(card?.imageFocusY);
+
     return {
-    id: card?.id || `event-${i}`,
-    date: card?.date ?? '',
-    day: fromCalendar?.day ?? card?.day ?? '',
-    month: fromCalendar?.month ?? card?.month ?? '',
-    title: card?.title ?? '',
-    href: card?.href ?? '',
-    target: normalizeLinkTarget(card?.target),
-    image: card?.image ?? '',
-    imageAlt: card?.imageAlt ?? '',
-    imageFocusX: normalizeImageFocus(card?.imageFocusX),
-    imageFocusY: normalizeImageFocus(card?.imageFocusY),
-    tag: card?.tag ?? '',
-    badges: Array.isArray(card?.badges)
-      ? card.badges.filter((b: any) => typeof b === 'string' && b.trim())
-      : [],
+      id: card?.id || `event-${i}`,
+      date: card?.date ?? '',
+      day: fromCalendar?.day ?? card?.day ?? '',
+      month: fromCalendar?.month ?? card?.month ?? '',
+      title: card?.title ?? '',
+      href: card?.href ?? '',
+      target: normalizeLinkTarget(card?.target),
+      image: card?.image ?? '',
+      imageAlt: card?.imageAlt ?? '',
+      imageFocusX,
+      imageFocusY,
+      imageFocusProfiles: normalizeImageFocusProfiles(
+        card?.imageFocusProfiles,
+        imageFocusX,
+        imageFocusY,
+      ),
+      tag: card?.tag ?? '',
+      badges: Array.isArray(card?.badges)
+        ? card.badges.filter((b: any) => typeof b === 'string' && b.trim())
+        : [],
     };
   }) as EventCardItem[];
 });

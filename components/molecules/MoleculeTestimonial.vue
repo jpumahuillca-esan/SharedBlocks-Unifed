@@ -37,7 +37,11 @@ import AtomIcon from '../atoms/AtomIcon.vue';
 import AtomButton from '../atoms/AtomButton.vue';
 import AtomLink from '../atoms/AtomLink.vue';
 import { toVideoSource } from '../../helpers/video';
-import { imageFocusStyle } from '../../helpers/imageFocus';
+import {
+  imageFocusProfilesStyle,
+  imageFocusStyle,
+  type ImageFocusProfiles,
+} from '../../helpers/imageFocus';
 import { linkTargetAttrs } from '../../helpers/linkTarget';
 
 const props = withDefaults(defineProps<{
@@ -55,6 +59,7 @@ const props = withDefaults(defineProps<{
   /** Punto focal de la foto (0-100). Sin ellos la foto no lleva `object-position`. */
   imageFocusX?: number;
   imageFocusY?: number;
+  imageFocusProfiles?: ImageFocusProfiles;
   ctaLabel?: string;
   href?: string;
   /** `_blank` abre `href` en una pestaña nueva. Sin él, en la misma página. */
@@ -156,7 +161,10 @@ watch(
           v-if="image"
           :src="image"
           :alt="imageAlt || authorName"
-          :style="imageFocusStyle(imageFocusX, imageFocusY)"
+          :class="{ 'image-focus-responsive': imageFocusProfiles }"
+          :style="imageFocusProfiles
+            ? imageFocusProfilesStyle(imageFocusProfiles, imageFocusX, imageFocusY)
+            : imageFocusStyle(imageFocusX, imageFocusY)"
           loading="lazy"
         />
       </div>

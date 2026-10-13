@@ -121,14 +121,16 @@
         <EditorImage
           v-model="slide.image"
           v-model:alt="slide.imageAlt"
-          v-model:focus-x="slide.imageFocusX"
-          v-model:focus-y="slide.imageFocusY"
+          :focus-values="slide.imageFocusProfiles"
+          :focus-modes="imageFocusModes"
           focus-ratio="18 / 7"
+          focus-crop-preview
           data-edit-target=".image"
           alt-edit-target=".imageAlt"
           class="mb-3"
           label="Imagen de fondo"
           @select="$emit('select-image', { item: slide, field: 'image' })"
+          @update:focus-values="saveImageFocusProfiles(slide, $event)"
         />
 
         <hr />
@@ -209,7 +211,12 @@ import { ref, watch } from 'vue';
  * reutiliza así: conviene subirlo a block-beta/_shared/.
  */
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
-import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import {
+  createImageFocusModes,
+  normalizeImageFocus,
+  normalizeImageFocusProfiles,
+  saveImageFocusProfiles,
+} from '../../../../helpers/imageFocus';
 import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
@@ -227,19 +234,34 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(['update:modelValue', 'select-image']);
-
-const buildSlide = (source: any): HeroSlideItem => ({
-  id: source?.id || newHeroSlideId(),
-  eyebrow: source?.eyebrow ?? '',
-  title: source?.title ?? '',
-  desc: source?.desc ?? '',
-  image: source?.image ?? '',
-  imageAlt: source?.imageAlt ?? '',
-  imageFocusX: normalizeImageFocus(source?.imageFocusX),
-  imageFocusY: normalizeImageFocus(source?.imageFocusY),
-  primary: normalizeHeroAction(source?.primary),
-  secondary: normalizeHeroAction(source?.secondary),
+const imageFocusModes = createImageFocusModes({
+  web: '18 / 7',
+  tablet: '16 / 9',
+  mobile: '4 / 3',
 });
+
+const buildSlide = (source: any): HeroSlideItem => {
+  const imageFocusX = normalizeImageFocus(source?.imageFocusX);
+  const imageFocusY = normalizeImageFocus(source?.imageFocusY);
+
+  return {
+    id: source?.id || newHeroSlideId(),
+    eyebrow: source?.eyebrow ?? '',
+    title: source?.title ?? '',
+    desc: source?.desc ?? '',
+    image: source?.image ?? '',
+    imageAlt: source?.imageAlt ?? '',
+    imageFocusX,
+    imageFocusY,
+    imageFocusProfiles: normalizeImageFocusProfiles(
+      source?.imageFocusProfiles,
+      imageFocusX,
+      imageFocusY,
+    ),
+    primary: normalizeHeroAction(source?.primary),
+    secondary: normalizeHeroAction(source?.secondary),
+  };
+};
 
 const build = (source: any) => ({
   showSeoHeading: normalizeShowSeoHeading(source?.showSeoHeading),

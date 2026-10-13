@@ -26,7 +26,11 @@ import AtomEyebrow from '../atoms/AtomEyebrow.vue';
 import AtomDivider from '../atoms/AtomDivider.vue';
 import AtomButton from '../atoms/AtomButton.vue';
 import AtomIcon from '../atoms/AtomIcon.vue';
-import { imageFocusStyle } from '../../helpers/imageFocus';
+import {
+  imageFocusProfilesStyle,
+  imageFocusStyle,
+  type ImageFocusProfiles,
+} from '../../helpers/imageFocus';
 
 withDefaults(defineProps<{
   variant?: 'standard' | 'news';
@@ -35,6 +39,7 @@ withDefaults(defineProps<{
   /** Punto focal de la foto (0-100). Sin ellos la foto no lleva `object-position`. */
   imageFocusX?: number;
   imageFocusY?: number;
+  imageFocusProfiles?: ImageFocusProfiles;
   /** Solo "standard": categoría, ej. "Liderazgo". */
   eyebrow?: string;
   /** Solo "news": etiqueta sobre la imagen, ej. "Actualidad". */
@@ -74,7 +79,10 @@ withDefaults(defineProps<{
         v-if="image"
         :src="image"
         :alt="imageAlt || ''"
-        :style="imageFocusStyle(imageFocusX, imageFocusY)"
+        :class="{ 'image-focus-responsive': imageFocusProfiles }"
+        :style="imageFocusProfiles
+          ? imageFocusProfilesStyle(imageFocusProfiles, imageFocusX, imageFocusY)
+          : imageFocusStyle(imageFocusX, imageFocusY)"
         loading="lazy"
       />
       <div v-if="variant === 'news' && badges?.length" class="post-card__tags">

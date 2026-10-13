@@ -87,9 +87,10 @@
         <EditorImage
           v-model="card.image"
           v-model:alt="card.imageAlt"
-          v-model:focus-x="card.imageFocusX"
-          v-model:focus-y="card.imageFocusY"
+          :focus-values="card.imageFocusProfiles"
+          :focus-modes="imageFocusModes"
           focus-ratio="16 / 10"
+          focus-crop-preview
           data-edit-target=".image"
           alt-edit-target=".imageAlt"
           class="mb-2"
@@ -98,6 +99,7 @@
           alt-label="Texto alternativo de la imagen"
           alt-placeholder="Describe brevemente la imagen"
           @select="emit('select-image', { item: card, field: 'image' })"
+          @update:focus-values="saveImageFocusProfiles(card, $event)"
         />
 
         <EditorText
@@ -144,6 +146,7 @@ import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
 import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
+import { createImageFocusModes, saveImageFocusProfiles } from '../../../../helpers/imageFocus';
 import {
   buildAdmissionCard,
   buildAdmissionPregradoData,
@@ -156,6 +159,8 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(['update:modelValue', 'select-image']);
+
+const imageFocusModes = createImageFocusModes('16 / 10');
 
 const localData = ref(buildAdmissionPregradoData(props.modelValue));
 const openIndex = ref<number | null>(null);

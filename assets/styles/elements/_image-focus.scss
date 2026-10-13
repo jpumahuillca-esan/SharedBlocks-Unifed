@@ -1,0 +1,27 @@
+@use '../breakpoints' as bp;
+
+/*
+ * El editor escribe las tres posiciones como variables CSS en cada imagen.
+ * Esta clase optativa hace que el navegador elija el perfil por breakpoint.
+ * Sin la clase, los bloques conservan su comportamiento anterior.
+ */
+img.image-focus-responsive {
+  object-position: var(--image-focus-web, 50% 50%);
+}
+
+@include bp.container-down('lg') {
+  img.image-focus-responsive {
+    object-position:
+      var(--image-focus-tablet, var(--image-focus-web, 50% 50%));
+  }
+}
+
+@include bp.container-down('sm') {
+  img.image-focus-responsive {
+    object-position:
+      var(
+        --image-focus-mobile,
+        var(--image-focus-tablet, var(--image-focus-web, 50% 50%))
+      );
+  }
+}

@@ -5,6 +5,7 @@
  * y cada sección añade el tipo de tarjeta que le corresponde.
  */
 import type { LinkTarget } from '../../../../helpers/linkTarget';
+import type { ImageFocusProfiles } from '../../../../helpers/imageFocus';
 
 /** Cuántas tarjetas se muestran en la fila. */
 export type CardCount = 2 | 3 | 4;
@@ -48,6 +49,7 @@ export interface EventCardItem {
     /** Punto focal de la foto, en %. 50 y 50 es el centro (ver helpers/imageFocus.ts). */
     imageFocusX: number;
     imageFocusY: number;
+    imageFocusProfiles: ImageFocusProfiles;
     /** Etiqueta única, heredada. Se conserva por compatibilidad. */
     tag: string;
     /** Etiquetas, tantas como se quieran. Tienen prioridad sobre `tag`. */
@@ -69,6 +71,7 @@ export interface PostCardItem {
     /** Punto focal de la foto, en %. 50 y 50 es el centro (ver helpers/imageFocus.ts). */
     imageFocusX: number;
     imageFocusY: number;
+    imageFocusProfiles: ImageFocusProfiles;
     title: string;
     href: string;
     /** `_blank` abre `href` en una pestaña nueva; vacío, en la misma página. */

@@ -5,6 +5,7 @@
       :image-alt="imageAlt"
       :image-focus-x="imageFocusX"
       :image-focus-y="imageFocusY"
+      :image-focus-profiles="imageFocusProfiles"
       :panel-style="panelColorStyle"
     />
 
@@ -36,6 +37,13 @@ const image = computed(() => props.data?.image ?? '');
 const imageAlt = computed(() => props.data?.imageAlt ?? '');
 const imageFocusX = computed(() => props.data?.imageFocusX ?? 50);
 const imageFocusY = computed(() => props.data?.imageFocusY ?? 50);
+const imageFocusProfiles = computed(() =>
+  props.data?.imageFocusProfiles ?? {
+    web: { x: imageFocusX.value, y: imageFocusY.value },
+    tablet: { x: imageFocusX.value, y: imageFocusY.value },
+    mobile: { x: imageFocusX.value, y: imageFocusY.value },
+  },
+);
 
 const panelColorToken = computed(() => resolvePanelColorToken(props.data));
 const panelContentToken = computed(() => resolvePanelContentToken(props.data));

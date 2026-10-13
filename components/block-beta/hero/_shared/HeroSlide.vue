@@ -6,7 +6,10 @@
         v-if="image"
         :src="image"
         :alt="imageAlt || ''"
-        :style="imageFocusStyle(imageFocusX, imageFocusY)"
+        :class="{ 'image-focus-responsive': imageFocusProfiles }"
+        :style="imageFocusProfiles
+          ? imageFocusProfilesStyle(imageFocusProfiles, imageFocusX, imageFocusY)
+          : imageFocusStyle(imageFocusX, imageFocusY)"
         :loading="eager ? 'eager' : 'lazy'"
       />
     </div>
@@ -80,7 +83,11 @@ import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import AtomButton from '../../../atoms/AtomButton.vue';
 import type { HeroAction } from './types';
-import { imageFocusStyle } from '../../../../helpers/imageFocus';
+import {
+  imageFocusProfilesStyle,
+  imageFocusStyle,
+  type ImageFocusProfiles,
+} from '../../../../helpers/imageFocus';
 import { useEditTarget } from '../../../../core/editFocus';
 
 /* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
@@ -96,6 +103,7 @@ withDefaults(
     /** Punto focal de la foto (0-100). Sin ellos la foto no lleva `object-position`. */
     imageFocusX?: number;
     imageFocusY?: number;
+    imageFocusProfiles?: ImageFocusProfiles;
     primary: HeroAction;
     secondary: HeroAction;
     /** La primera se carga de inmediato: está a la vista al abrir la página. */

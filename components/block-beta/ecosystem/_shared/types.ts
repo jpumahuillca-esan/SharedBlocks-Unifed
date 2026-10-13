@@ -5,7 +5,11 @@
  * que el editor guarda y que el bloque reparte. El aspecto lo ponen los átomos
  * y la hoja assets/styles/elements/_ecosystem.scss.
  */
-import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import {
+    normalizeImageFocus,
+    normalizeImageFocusProfiles,
+    type ImageFocusProfiles,
+} from '../../../../helpers/imageFocus';
 import { normalizeLinkTarget, type LinkTarget } from '../../../../helpers/linkTarget';
 
 /**
@@ -99,6 +103,7 @@ export interface EcosystemCardItem {
     /** Punto focal de la foto, en %. 50 y 50 es el centro (ver helpers/imageFocus.ts). */
     imageFocusX: number;
     imageFocusY: number;
+    imageFocusProfiles: ImageFocusProfiles;
     href: string;
     /** `_blank` abre `href` en una pestaña nueva; vacío, en la misma página. */
     target: LinkTarget;
@@ -135,15 +140,25 @@ export const newEcosystemCardId = (): string => {
 };
 
 /** Normaliza una tarjeta, tolerando contenido incompleto. */
-export const normalizeEcosystemCard = (raw: any, index = 0): EcosystemCardItem => ({
-    id: raw?.id || `eco-${index}`,
-    title: raw?.title ?? '',
-    desc: raw?.desc ?? '',
-    image: raw?.image ?? '',
-    imageAlt: raw?.imageAlt ?? '',
-    imageFocusX: normalizeImageFocus(raw?.imageFocusX),
-    imageFocusY: normalizeImageFocus(raw?.imageFocusY),
-    href: raw?.href ?? '',
-    target: normalizeLinkTarget(raw?.target),
-    color: normalizeEcosystemColor(raw?.color),
-});
+export const normalizeEcosystemCard = (raw: any, index = 0): EcosystemCardItem => {
+    const imageFocusX = normalizeImageFocus(raw?.imageFocusX);
+    const imageFocusY = normalizeImageFocus(raw?.imageFocusY);
+
+    return {
+        id: raw?.id || `eco-${index}`,
+        title: raw?.title ?? '',
+        desc: raw?.desc ?? '',
+        image: raw?.image ?? '',
+        imageAlt: raw?.imageAlt ?? '',
+        imageFocusX,
+        imageFocusY,
+        imageFocusProfiles: normalizeImageFocusProfiles(
+            raw?.imageFocusProfiles,
+            imageFocusX,
+            imageFocusY,
+        ),
+        href: raw?.href ?? '',
+        target: normalizeLinkTarget(raw?.target),
+        color: normalizeEcosystemColor(raw?.color),
+    };
+};

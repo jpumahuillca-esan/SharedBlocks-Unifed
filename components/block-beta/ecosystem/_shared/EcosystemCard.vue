@@ -9,7 +9,8 @@
         v-if="card.image"
         :src="card.image"
         :alt="card.imageAlt || ''"
-        :style="imageFocusStyle(card.imageFocusX, card.imageFocusY)"
+        class="image-focus-responsive"
+        :style="imageFocusProfilesStyle(card.imageFocusProfiles, card.imageFocusX, card.imageFocusY)"
         loading="lazy"
       />
     </div>
@@ -59,7 +60,7 @@ import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import AtomLink from '../../../atoms/AtomLink.vue';
 import EcosystemArrow from './EcosystemArrow.vue';
-import { imageFocusStyle } from '../../../../helpers/imageFocus';
+import { imageFocusProfilesStyle } from '../../../../helpers/imageFocus';
 import type { EcosystemCardItem, EcosystemTitleLevel } from './types';
 import { useEditTarget } from '../../../../core/editFocus';
 

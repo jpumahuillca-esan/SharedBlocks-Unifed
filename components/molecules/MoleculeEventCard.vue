@@ -31,7 +31,11 @@ import AtomIcon from '../atoms/AtomIcon.vue';
 import AtomButton from '../atoms/AtomButton.vue';
 import AtomBadge, { type BadgeVariant } from '../atoms/AtomBadge.vue';
 import AtomLink from '../atoms/AtomLink.vue';
-import { imageFocusStyle } from '../../helpers/imageFocus';
+import {
+  imageFocusProfilesStyle,
+  imageFocusStyle,
+  type ImageFocusProfiles,
+} from '../../helpers/imageFocus';
 
 /** Una etiqueta suelta, o con su variante propia si se quiere otro color. */
 export type EventCardBadge = string | { label: string; variant?: BadgeVariant };
@@ -62,6 +66,7 @@ const props = withDefaults(defineProps<{
   /** Punto focal de la foto (0-100). Sin ellos la foto no lleva `object-position`. */
   imageFocusX?: number;
   imageFocusY?: number;
+  imageFocusProfiles?: ImageFocusProfiles;
   /** Solo "media": etiqueta sobre el cuerpo, ej. "Conferencia informativa". */
   tag?: string;
   /**
@@ -114,7 +119,10 @@ const resolvedBadges = computed(() =>
           v-if="image"
           :src="image"
           :alt="imageAlt || ''"
-          :style="imageFocusStyle(imageFocusX, imageFocusY)"
+          :class="{ 'image-focus-responsive': imageFocusProfiles }"
+          :style="imageFocusProfiles
+            ? imageFocusProfilesStyle(imageFocusProfiles, imageFocusX, imageFocusY)
+            : imageFocusStyle(imageFocusX, imageFocusY)"
           loading="lazy"
         />
         <div class="event-card__date-badge">

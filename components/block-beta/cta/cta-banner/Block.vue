@@ -18,7 +18,8 @@
             v-if="banner.image"
             :src="banner.image"
             :alt="banner.imageAlt"
-            :style="imageFocusStyle(banner.imageFocusX, banner.imageFocusY)"
+            class="image-focus-responsive"
+            :style="imageFocusProfilesStyle(banner.imageFocusProfiles, banner.imageFocusX, banner.imageFocusY)"
             loading="lazy"
             decoding="async"
           />
@@ -34,7 +35,7 @@ import { computed } from 'vue';
 import CtaBannerContent from './shared/CtaBannerContent.vue';
 import { normalizeCtaBannerData } from './shared/types';
 import { resolveBrandContentToken } from '../../../editor-beta/EditorBrandColor/brandColors';
-import { imageFocusStyle } from '../../../../helpers/imageFocus';
+import { imageFocusProfilesStyle } from '../../../../helpers/imageFocus';
 import { useEditTarget } from '../../../../core/editFocus';
 
 const props = defineProps<{ data: any }>();

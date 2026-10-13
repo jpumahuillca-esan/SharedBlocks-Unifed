@@ -39,6 +39,7 @@
         :image-alt="card.imageAlt"
         :image-focus-x="card.imageFocusX"
         :image-focus-y="card.imageFocusY"
+        :image-focus-profiles="card.imageFocusProfiles"
         :title="card.title"
         :title-level="3"
         title-size="h5"
@@ -83,7 +84,11 @@ import MoleculeBanner from '../../../molecules/MoleculeBanner.vue';
 import CardSectionHeader from '../../events/_shared/CardSectionHeader.vue';
 import CardSectionFooter from '../../events/_shared/CardSectionFooter.vue';
 import CardSlider from '../../events/_shared/CardSlider.vue';
-import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import {
+  normalizeImageFocus,
+  normalizeImageFocusProfiles,
+  type ImageFocusProfiles,
+} from '../../../../helpers/imageFocus';
 import { normalizeLinkTarget, type LinkTarget } from '../../../../helpers/linkTarget';
 import { useEditTarget } from '../../../../core/editFocus';
 
@@ -99,6 +104,7 @@ interface ImageGridCard {
   imageAlt: string;
   imageFocusX: number;
   imageFocusY: number;
+  imageFocusProfiles: ImageFocusProfiles;
   title: string;
   desc: string;
   href: string;
@@ -110,17 +116,27 @@ const props = defineProps<{ data: any }>();
 const cards = computed<ImageGridCard[]>(() => {
   const raw = Array.isArray(props.data?.cards) ? props.data.cards : [];
 
-  return raw.map((card: any, i: number) => ({
-    id: card?.id || `ig-${i}`,
-    // Una ruta con solo espacios cuenta como vacía: si no, saldría una foto rota.
-    image: typeof card?.image === 'string' ? card.image.trim() : '',
-    imageAlt: card?.imageAlt ?? '',
-    imageFocusX: normalizeImageFocus(card?.imageFocusX),
-    imageFocusY: normalizeImageFocus(card?.imageFocusY),
-    title: card?.title ?? '',
-    desc: card?.desc ?? '',
-    href: card?.href ?? '',
-    target: normalizeLinkTarget(card?.target),
-  }));
+  return raw.map((card: any, i: number) => {
+    const imageFocusX = normalizeImageFocus(card?.imageFocusX);
+    const imageFocusY = normalizeImageFocus(card?.imageFocusY);
+
+    return {
+      id: card?.id || `ig-${i}`,
+      // Una ruta con solo espacios cuenta como vacía: si no, saldría una foto rota.
+      image: typeof card?.image === 'string' ? card.image.trim() : '',
+      imageAlt: card?.imageAlt ?? '',
+      imageFocusX,
+      imageFocusY,
+      imageFocusProfiles: normalizeImageFocusProfiles(
+        card?.imageFocusProfiles,
+        imageFocusX,
+        imageFocusY,
+      ),
+      title: card?.title ?? '',
+      desc: card?.desc ?? '',
+      href: card?.href ?? '',
+      target: normalizeLinkTarget(card?.target),
+    };
+  });
 });
 </script>

@@ -155,13 +155,15 @@
           <EditorImage
             v-model="card.image"
             v-model:alt="card.imageAlt"
-            v-model:focus-x="card.imageFocusX"
-            v-model:focus-y="card.imageFocusY"
+            :focus-values="card.imageFocusProfiles"
+            :focus-modes="imageFocusModes"
             focus-ratio="16 / 9"
+            focus-crop-preview
             data-edit-target=".image"
             alt-edit-target=".imageAlt"
             class="mb-2"
             @select="$emit('select-image', { item: card, field: 'image' })"
+            @update:focus-values="saveImageFocusProfiles(card, $event)"
           />
 
           <BadgeListEditor :badges="card.badges" data-edit-target=".badges" />
@@ -237,7 +239,12 @@ import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.v
 import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import { newCardId, normalizeCardCount, type EventCardItem } from '../_shared/types';
 import { toEventDateParts } from '../_shared/date';
-import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import {
+  createImageFocusModes,
+  normalizeImageFocus,
+  normalizeImageFocusProfiles,
+  saveImageFocusProfiles,
+} from '../../../../helpers/imageFocus';
 import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 import { usePostsFeed, type PostsFeedFilters, type RawPostEntity } from '../../../../composables/usePostsFeed';
 
@@ -261,22 +268,33 @@ const {
 } = usePostsFeed();
 
 const feedStatusMsg = ref<string>('');
+const imageFocusModes = createImageFocusModes('16 / 9');
 
-const buildCard = (source: any): EventCardItem => ({
-  id: source?.id || newCardId(),
-  date: source?.date ?? '',
-  day: source?.day ?? '',
-  month: source?.month ?? '',
-  title: source?.title ?? '',
-  href: source?.href ?? '',
-  target: normalizeLinkTarget(source?.target),
-  image: source?.image ?? '',
-  imageAlt: source?.imageAlt ?? '',
-  imageFocusX: normalizeImageFocus(source?.imageFocusX),
-  imageFocusY: normalizeImageFocus(source?.imageFocusY),
-  tag: source?.tag ?? '',
-  badges: Array.isArray(source?.badges) ? [...source.badges] : [],
-});
+const buildCard = (source: any): EventCardItem => {
+  const imageFocusX = normalizeImageFocus(source?.imageFocusX);
+  const imageFocusY = normalizeImageFocus(source?.imageFocusY);
+
+  return {
+    id: source?.id || newCardId(),
+    date: source?.date ?? '',
+    day: source?.day ?? '',
+    month: source?.month ?? '',
+    title: source?.title ?? '',
+    href: source?.href ?? '',
+    target: normalizeLinkTarget(source?.target),
+    image: source?.image ?? '',
+    imageAlt: source?.imageAlt ?? '',
+    imageFocusX,
+    imageFocusY,
+    imageFocusProfiles: normalizeImageFocusProfiles(
+      source?.imageFocusProfiles,
+      imageFocusX,
+      imageFocusY,
+    ),
+    tag: source?.tag ?? '',
+    badges: Array.isArray(source?.badges) ? [...source.badges] : [],
+  };
+};
 
 const build = (source: any) => ({
   desc: source?.desc ?? '',

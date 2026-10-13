@@ -6,6 +6,7 @@
  * y la hoja assets/styles/elements/_hero.scss.
  */
 import { normalizeLinkTarget, type LinkTarget } from '../../../../helpers/linkTarget';
+import type { ImageFocusProfiles } from '../../../../helpers/imageFocus';
 
 /** Un botón del área de acciones de una diapositiva. */
 export interface HeroAction {
@@ -34,6 +35,7 @@ export interface HeroSlideItem {
     /** Punto focal de la foto, en %. 50 y 50 es el centro (ver helpers/imageFocus.ts). */
     imageFocusX: number;
     imageFocusY: number;
+    imageFocusProfiles: ImageFocusProfiles;
     primary: HeroAction;
     /** Opcional. */
     secondary: HeroAction;

@@ -37,6 +37,7 @@
       :image-alt="active.imageAlt"
       :image-focus-x="active.imageFocusX"
       :image-focus-y="active.imageFocusY"
+      :image-focus-profiles="active.imageFocusProfiles"
       :primary="active.primary"
       :secondary="active.secondary"
       :eager="current === 0"
@@ -77,7 +78,10 @@ import {
   normalizeShowSeoHeading,
   type HeroSlideItem,
 } from '../_shared/types';
-import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import {
+  normalizeImageFocus,
+  normalizeImageFocusProfiles,
+} from '../../../../helpers/imageFocus';
 import { useEditTarget } from '../../../../core/editFocus';
 
 /* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
@@ -90,18 +94,28 @@ const showSeoHeading = computed(() => normalizeShowSeoHeading(props.data?.showSe
 const slides = computed<HeroSlideItem[]>(() => {
   const raw = Array.isArray(props.data?.slides) ? props.data.slides : [];
 
-  return raw.map((slide: any, i: number) => ({
+  return raw.map((slide: any, i: number) => {
+    const imageFocusX = normalizeImageFocus(slide?.imageFocusX);
+    const imageFocusY = normalizeImageFocus(slide?.imageFocusY);
+
+    return ({
     id: slide?.id || `hero-${i}`,
     eyebrow: slide?.eyebrow ?? '',
     title: slide?.title ?? '',
     desc: slide?.desc ?? '',
     image: slide?.image ?? '',
     imageAlt: slide?.imageAlt ?? '',
-    imageFocusX: normalizeImageFocus(slide?.imageFocusX),
-    imageFocusY: normalizeImageFocus(slide?.imageFocusY),
+    imageFocusX,
+    imageFocusY,
+    imageFocusProfiles: normalizeImageFocusProfiles(
+      slide?.imageFocusProfiles,
+      imageFocusX,
+      imageFocusY,
+    ),
     primary: normalizeHeroAction(slide?.primary),
     secondary: normalizeHeroAction(slide?.secondary),
-  })) as HeroSlideItem[];
+    });
+  }) as HeroSlideItem[];
 });
 
 const current = ref(0);

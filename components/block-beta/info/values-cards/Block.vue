@@ -93,6 +93,7 @@
             :image-alt="active.imageAlt"
             :image-focus-x="active.imageFocusX"
             :image-focus-y="active.imageFocusY"
+            :image-focus-profiles="active.imageFocusProfiles"
             :duration="active.duration"
             :video-url="active.videoUrl"
             :href="active.linkUrl"
@@ -127,7 +128,11 @@ import AtomButton from '../../../atoms/AtomButton.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 import MoleculeTabs, { type TabItem } from '../../../molecules/MoleculeTabs.vue';
 import MoleculeVideoPreview from '../../../molecules/MoleculeVideoPreview.vue';
-import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import {
+  normalizeImageFocus,
+  normalizeImageFocusProfiles,
+  type ImageFocusProfiles,
+} from '../../../../helpers/imageFocus';
 import { normalizeLinkTarget, type LinkTarget } from '../../../../helpers/linkTarget';
 import { useEditTarget } from '../../../../core/editFocus';
 
@@ -150,6 +155,7 @@ interface ValueItem {
   imageAlt: string;
   imageFocusX: number;
   imageFocusY: number;
+  imageFocusProfiles: ImageFocusProfiles;
   videoUrl: string;
   duration: string;
 }
@@ -160,7 +166,11 @@ const props = defineProps<{ data: any }>();
 const items = computed<ValueItem[]>(() => {
   const raw = Array.isArray(props.data?.items) ? props.data.items : [];
 
-  return raw.map((item: any, i: number) => ({
+  return raw.map((item: any, i: number) => {
+    const imageFocusX = normalizeImageFocus(item?.imageFocusX);
+    const imageFocusY = normalizeImageFocus(item?.imageFocusY);
+
+    return ({
     id: item?.id || `value-${i}`,
     icon: item?.icon ?? '',
     tabLabel: item?.tabLabel ?? '',
@@ -176,11 +186,17 @@ const items = computed<ValueItem[]>(() => {
     linkTarget: normalizeLinkTarget(item?.linkTarget),
     image: item?.image ?? '',
     imageAlt: item?.imageAlt ?? '',
-    imageFocusX: normalizeImageFocus(item?.imageFocusX),
-    imageFocusY: normalizeImageFocus(item?.imageFocusY),
+    imageFocusX,
+    imageFocusY,
+    imageFocusProfiles: normalizeImageFocusProfiles(
+      item?.imageFocusProfiles,
+      imageFocusX,
+      imageFocusY,
+    ),
     videoUrl: item?.videoUrl ?? '',
     duration: item?.duration ?? '',
-  }));
+    });
+  });
 });
 
 const activeId = ref('');

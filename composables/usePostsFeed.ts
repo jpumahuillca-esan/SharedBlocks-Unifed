@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import { PUBLIC_API_URL, PUBLIC_STORAGE_URL } from '../config/apiConfig';
 import type { PostCardItem, EventCardItem } from '../components/block-beta/events/_shared/types';
 import { toDisplayDate, toEventDateParts } from '../components/block-beta/events/_shared/date';
+import { normalizeImageFocusProfiles } from '../helpers/imageFocus';
 
 export interface FeedAcademicUnit {
   id: number;
@@ -93,6 +94,7 @@ export function mapRawPostToCard(item: RawPostEntity, index = 0): PostCardItem {
     imageAlt: item.title || '',
     imageFocusX: 50,
     imageFocusY: 50,
+    imageFocusProfiles: normalizeImageFocusProfiles(),
     title: item.title || '',
     href: resolvePostHref(item),
     target: '_self',
@@ -122,6 +124,7 @@ export function mapRawPostToEventCard(item: RawPostEntity, index = 0): EventCard
     imageAlt: item.title || '',
     imageFocusX: 50,
     imageFocusY: 50,
+    imageFocusProfiles: normalizeImageFocusProfiles(),
     tag: item.modality === 'online' ? 'Virtual' : (item.modality === 'in_person' ? 'Presencial' : (item.type || '')),
     badges,
   };

@@ -1,4 +1,8 @@
-import { normalizeImageFocus } from '../../../../../helpers/imageFocus';
+import {
+  normalizeImageFocus,
+  normalizeImageFocusProfiles,
+  type ImageFocusProfiles,
+} from '../../../../../helpers/imageFocus';
 import { normalizeLinkTarget, type LinkTarget } from '../../../../../helpers/linkTarget';
 
 export type AdmissionCardCount = 2 | 3 | 4;
@@ -10,6 +14,7 @@ export interface AdmissionCard {
   /** Punto focal de la foto, en %. 50 y 50 es el centro (ver helpers/imageFocus.ts). */
   imageFocusX: number;
   imageFocusY: number;
+  imageFocusProfiles: ImageFocusProfiles;
   title: string;
   desc: string;
   href: string;
@@ -43,17 +48,27 @@ export const newAdmissionCardId = (): string => {
   return 'admision-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
 };
 
-export const buildAdmissionCard = (source: any = {}): AdmissionCard => ({
-  id: source?.id || newAdmissionCardId(),
-  image: typeof source?.image === 'string' ? source.image : '',
-  imageAlt: typeof source?.imageAlt === 'string' ? source.imageAlt : '',
-  imageFocusX: normalizeImageFocus(source?.imageFocusX),
-  imageFocusY: normalizeImageFocus(source?.imageFocusY),
-  title: typeof source?.title === 'string' ? source.title : '',
-  desc: typeof source?.desc === 'string' ? source.desc : '',
-  href: typeof source?.href === 'string' ? source.href : '',
-  target: normalizeLinkTarget(source?.target),
-});
+export const buildAdmissionCard = (source: any = {}): AdmissionCard => {
+  const imageFocusX = normalizeImageFocus(source?.imageFocusX);
+  const imageFocusY = normalizeImageFocus(source?.imageFocusY);
+
+  return {
+    id: source?.id || newAdmissionCardId(),
+    image: typeof source?.image === 'string' ? source.image : '',
+    imageAlt: typeof source?.imageAlt === 'string' ? source.imageAlt : '',
+    imageFocusX,
+    imageFocusY,
+    imageFocusProfiles: normalizeImageFocusProfiles(
+      source?.imageFocusProfiles,
+      imageFocusX,
+      imageFocusY,
+    ),
+    title: typeof source?.title === 'string' ? source.title : '',
+    desc: typeof source?.desc === 'string' ? source.desc : '',
+    href: typeof source?.href === 'string' ? source.href : '',
+    target: normalizeLinkTarget(source?.target),
+  };
+};
 
 export const buildAdmissionPregradoData = (source: any = {}): AdmissionPregradoData => ({
   title: typeof source?.title === 'string' ? source.title : 'Admisión de pregrado',

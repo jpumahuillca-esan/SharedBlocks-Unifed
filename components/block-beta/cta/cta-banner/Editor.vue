@@ -69,8 +69,8 @@
     <EditorImage
       v-model="localData.image"
       v-model:alt="localData.imageAlt"
-      v-model:focus-x="localData.imageFocusX"
-      v-model:focus-y="localData.imageFocusY"
+      :focus-values="localData.imageFocusProfiles"
+      :focus-modes="imageFocusModes"
       data-edit-target="image"
       alt-edit-target="imageAlt"
       alt-only-with-image
@@ -79,8 +79,10 @@
       alt-hint="Describe la imagen si aporta información; déjalo vacío si es decorativa."
       focus-ratio="592 / 266"
       :focus-height="150"
+      focus-crop-preview
       label=""
       @select="selectImage"
+      @update:focus-values="saveImageFocusProfiles(localData, $event)"
       @remove="resetImageExtras"
     />
   </div>
@@ -94,6 +96,11 @@ import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
 import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import { nextFieldId } from '../../../editor-beta/_shared/fieldUtils';
+import {
+  createImageFocusModes,
+  normalizeImageFocusProfiles,
+  saveImageFocusProfiles,
+} from '../../../../helpers/imageFocus';
 import { normalizeCtaBannerData } from './shared/types';
 
 const props = defineProps<{
@@ -108,6 +115,11 @@ const emit = defineEmits<{
 
 const localData = ref(normalizeCtaBannerData(props.modelValue));
 const buttonNegativeSwitchId = nextFieldId('cta-banner-button-negative');
+const imageFocusModes = createImageFocusModes({
+  web: '592 / 266',
+  tablet: '2 / 1',
+  mobile: '3 / 2',
+});
 
 const selectImage = () => {
   emit('select-image', { item: localData.value, field: 'image' });
@@ -117,6 +129,7 @@ const resetImageExtras = () => {
   localData.value.imageAlt = '';
   localData.value.imageFocusX = 50;
   localData.value.imageFocusY = 50;
+  localData.value.imageFocusProfiles = normalizeImageFocusProfiles();
 };
 
 watch(

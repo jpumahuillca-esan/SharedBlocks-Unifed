@@ -19,9 +19,6 @@
         :alt="item.imageAlt || ''"
         width="410"
         height="155"
-        :style="{
-          objectPosition: `${item.imageFocusX ?? 50}% ${item.imageFocusY ?? 50}%`
-        }"
         loading="lazy"
         decoding="async"
       />
@@ -116,8 +113,17 @@ const description = computed(() => props.item.desc?.trim() ?? '');
 const href = computed(() => props.item.href?.trim() ?? '');
 
 const cardStyle = computed<CSSProperties>(
-  () =>
-    ({
+  () => {
+    const focus = props.item.imageFocusProfiles;
+    const legacyX = props.item.imageFocusX ?? 50;
+    const legacyY = props.item.imageFocusY ?? 50;
+
+    const focusPosition = (mode: 'web' | 'tablet' | 'mobile') => {
+      const point = focus?.[mode];
+      return `${point?.x ?? legacyX}% ${point?.y ?? legacyY}%`;
+    };
+
+    return ({
       '--ecosystem-esan-card-color':
         `var(${props.item.colorToken})`,
 
@@ -125,6 +131,10 @@ const cardStyle = computed<CSSProperties>(
         `var(${resolveBrandContentToken(
           props.item.colorToken,
         )})`,
-    }) as CSSProperties,
+      '--ecosystem-esan-image-focus-web': focusPosition('web'),
+      '--ecosystem-esan-image-focus-tablet': focusPosition('tablet'),
+      '--ecosystem-esan-image-focus-mobile': focusPosition('mobile'),
+    }) as CSSProperties;
+  },
 );
 </script>

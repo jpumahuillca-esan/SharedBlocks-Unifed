@@ -4,15 +4,58 @@
 
     <EditorHint v-if="hint && hintPosition === 'top'">{{ hint }}</EditorHint>
 
-    <!-- Con punto focal, la vista previa es el propio enfocador. -->
+    <!-- Selector opcional por dispositivo; solo se muestra si el bloque lo configura. -->
+    <template v-if="hasResponsiveFocus && model">
+      <div
+        class="editor-image__focus-modes editor-image__block"
+        role="group"
+        aria-label="Tamaño de pantalla para ajustar el encuadre"
+      >
+        <button
+          v-for="mode in focusModes"
+          :key="mode.key"
+          type="button"
+          class="editor-image__focus-mode"
+          :class="{ 'is-active': mode.key === activeFocusMode?.key }"
+          :aria-pressed="mode.key === activeFocusMode?.key"
+          @click="activeFocusModeKey = mode.key"
+        >
+          {{ mode.label }}
+        </button>
+      </div>
+
+      <p
+        v-if="activeFocusMode?.frameLabel"
+        class="editor-image__focus-frame-label editor-image__block"
+      >
+        {{ activeFocusMode.frameLabel }}
+      </p>
+
+      <EditorImageFocus
+        v-if="activeFocusMode"
+        class="editor-image__block"
+        :image="model"
+        :focus-x="activeFocusPoint.x"
+        :focus-y="activeFocusPoint.y"
+        :height="focusHeight"
+        :ratio="activeFocusMode.ratio || focusRatio"
+        :crop-preview="focusCropPreview"
+        :sliders="focusSliders"
+        @update:focus-x="updateResponsiveFocus('x', $event)"
+        @update:focus-y="updateResponsiveFocus('y', $event)"
+      />
+    </template>
+
+    <!-- Con punto focal simple, la vista previa es el propio enfocador. -->
     <EditorImageFocus
-      v-if="hasFocus && model"
+      v-else-if="hasFocus && model"
       class="editor-image__block"
       :image="model"
       :focus-x="focusX"
       :focus-y="focusY"
       :height="focusHeight"
       :ratio="focusRatio"
+      :crop-preview="focusCropPreview"
       :sliders="focusSliders"
       @update:focus-x="$emit('update:focusX', $event)"
       @update:focus-y="$emit('update:focusY', $event)"
@@ -91,7 +134,8 @@
  * Es el bloque que cada editor copiaba (13 veces) con su propia hoja de vista
  * previa. La URL va por `v-model`; el texto alternativo y el punto focal por
  * `v-model:alt`, `v-model:focus-x` y `v-model:focus-y`, y solo se dibujan si el
- * editor los enlaza.
+ * editor los enlaza. De forma opcional, `focus-modes` y `focus-values` activan
+ * varios puntos focales sin cambiar los editores que usan el modo simple.
  *
  * ELEGIR la imagen no lo hace este campo: emite `select` y el editor sigue
  * armando `$emit('select-image', { item, field })`, que es lo que entiende el
@@ -103,13 +147,27 @@
  * que es lo que enfoca el panel cuando se pulsa la foto en el lienzo. La ruta
  * del alt se pasa aparte, en `alt-edit-target`.
  */
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import EditorHint from '../EditorHint/EditorHint.vue';
 import EditorImageFocus from '../EditorImageFocus/EditorImageFocus.vue';
 import EditorText from '../EditorText/EditorText.vue';
 import { controlAttrsOf } from '../_shared/fieldUtils';
 
 defineOptions({ inheritAttrs: false });
+
+type FocusMode = {
+  key: string;
+  label: string;
+  /** Proporción aproximada de la imagen visible en este modo. */
+  ratio?: string;
+  /** Referencia mostrada sobre el marco de recorte. */
+  frameLabel?: string;
+};
+
+type FocusPoint = {
+  x: number;
+  y: number;
+};
 
 const props = withDefaults(
   defineProps<{
@@ -155,6 +213,14 @@ const props = withDefaults(
      */
     focusRatio?: string;
     focusSliders?: boolean;
+    /**
+     * Activa controles independientes por modo. Si no se pasa, los bloques
+     * conservan el control de punto focal simple que ya usan.
+     */
+    focusModes?: readonly FocusMode[];
+    focusValues?: Record<string, FocusPoint>;
+    /** Muestra la imagen completa con el área que quedará visible marcada encima. */
+    focusCropPreview?: boolean;
   }>(),
   {
     label: 'Imagen',
@@ -179,15 +245,79 @@ const emit = defineEmits<{
   (event: 'update:alt', value: string): void;
   (event: 'update:focusX', value: number): void;
   (event: 'update:focusY', value: number): void;
+  (event: 'update:focusValues', value: Record<string, FocusPoint>): void;
 }>();
 
 const model = defineModel<string>({ default: '' });
 
+const normalizeFocusValue = (value: unknown): number => {
+  const number = Number(value);
+  return Number.isFinite(number) ? Math.min(100, Math.max(0, number)) : 50;
+};
+
 const hasFocus = computed(() => props.focusX !== undefined && props.focusY !== undefined);
+const focusModes = computed(() => props.focusModes ?? []);
+const activeFocusModeKey = ref(focusModes.value[0]?.key ?? '');
+const activeFocusMode = computed(
+  () => focusModes.value.find((mode) => mode.key === activeFocusModeKey.value) ?? focusModes.value[0] ?? null,
+);
+const hasResponsiveFocus = computed(
+  () => focusModes.value.length > 0 && props.focusValues !== undefined,
+);
+
+const responsiveFocusValues = ref<Record<string, FocusPoint>>({});
+
+watch(
+  () => props.focusValues,
+  (values) => {
+    responsiveFocusValues.value = Object.fromEntries(
+      Object.entries(values ?? {}).map(([key, point]) => [
+        key,
+        {
+          x: normalizeFocusValue(point?.x),
+          y: normalizeFocusValue(point?.y),
+        },
+      ]),
+    );
+  },
+  { immediate: true, deep: true },
+);
+
+const activeFocusPoint = computed(() => {
+  const point = activeFocusMode.value
+    ? responsiveFocusValues.value[activeFocusMode.value.key]
+    : undefined;
+
+  return {
+    x: normalizeFocusValue(point?.x),
+    y: normalizeFocusValue(point?.y),
+  };
+});
 
 const previewStyle = computed(() =>
   props.ratio ? { aspectRatio: props.ratio } : { height: `${props.height}px` },
 );
+
+const updateResponsiveFocus = (axis: keyof FocusPoint, value: number) => {
+  const mode = activeFocusMode.value;
+  if (!mode) return;
+
+  const values = responsiveFocusValues.value;
+  const current = values[mode.key] ?? { x: 50, y: 50 };
+
+  const nextValues = {
+    ...values,
+    [mode.key]: {
+      ...current,
+      [axis]: normalizeFocusValue(value),
+    },
+  };
+
+  // Mantiene X/Y sincronizados si el enfocador emite ambos ejes en el mismo
+  // gesto, antes de que Vue propague de vuelta el cambio del padre.
+  responsiveFocusValues.value = nextValues;
+  emit('update:focusValues', nextValues);
+};
 
 const remove = () => {
   model.value = '';
@@ -195,6 +325,13 @@ const remove = () => {
   if (hasFocus.value) {
     emit('update:focusX', 50);
     emit('update:focusY', 50);
+  }
+  if (hasResponsiveFocus.value) {
+    const resetValues = Object.fromEntries(
+      focusModes.value.map(({ key }) => [key, { x: 50, y: 50 }]),
+    );
+    responsiveFocusValues.value = resetValues;
+    emit('update:focusValues', resetValues);
   }
   emit('remove');
 };
@@ -246,6 +383,35 @@ const remove = () => {
 .editor-image__actions {
   display: flex;
   gap: 8px;
+}
+
+.editor-image__focus-modes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.editor-image__focus-mode {
+  min-width: 0;
+  padding: 4px 6px;
+  border: 1px solid #c6cedb;
+  border-radius: 5px;
+  background: #fff;
+  color: #536171;
+  font-size: 11px;
+}
+
+.editor-image__focus-mode.is-active {
+  border-color: #536171;
+  background: #e9edf3;
+  color: #253143;
+  font-weight: 600;
+}
+
+.editor-image__focus-frame-label {
+  color: #536171;
+  font-size: 11px;
+  text-align: center;
 }
 
 /* Estado vacío grande: el área entera es el botón. */

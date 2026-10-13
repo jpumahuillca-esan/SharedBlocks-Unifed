@@ -9,9 +9,10 @@
         :alt="imageAlt"
         width="880"
         height="360"
+        class="image-focus-responsive"
         loading="eager"
         fetchpriority="high"
-        :style="{ objectPosition: `${imageFocusX}% ${imageFocusY}%` }"
+        :style="imageFocusProfilesStyle(imageFocusProfiles, imageFocusX, imageFocusY)"
       />
     </div>
   </div>
@@ -19,6 +20,10 @@
 
 <script setup lang="ts">
 import { useEditTarget } from '../../../../../core/editFocus';
+import {
+  imageFocusProfilesStyle,
+  type ImageFocusProfiles,
+} from '../../../../../helpers/imageFocus';
 
 /* Marcas para el enfoque de campos del constructor (core/editFocus.ts). */
 const edit = useEditTarget();
@@ -29,12 +34,14 @@ withDefaults(
     imageAlt?: string;
     imageFocusX?: number;
     imageFocusY?: number;
+    imageFocusProfiles?: ImageFocusProfiles;
     panelStyle: Record<string, string>;
   }>(),
   {
     imageAlt: '',
     imageFocusX: 50,
-    imageFocusY: 50
+    imageFocusY: 50,
+    imageFocusProfiles: undefined,
   }
 );
 </script>

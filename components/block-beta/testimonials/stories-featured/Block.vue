@@ -40,6 +40,7 @@
           :image-alt="card.imageAlt"
           :image-focus-x="card.imageFocusX"
           :image-focus-y="card.imageFocusY"
+          :image-focus-profiles="card.imageFocusProfiles"
           :video-url="card.videoUrl"
           :href="card.href"
           :target="card.target"
@@ -70,7 +71,10 @@ import { ref, computed } from 'vue';
 import MoleculeTestimonial from '../../../molecules/MoleculeTestimonial.vue';
 import StorySectionHeader from '../_shared/StorySectionHeader.vue';
 import { useDragScroll } from '../../../../composables/useDragScroll';
-import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import {
+  normalizeImageFocus,
+  normalizeImageFocusProfiles,
+} from '../../../../helpers/imageFocus';
 import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 import { normalizeStoryCardCount, type StoryCardItem } from '../_shared/types';
 import { useEditTarget } from '../../../../core/editFocus';
@@ -92,18 +96,28 @@ const cardCount = computed(() => normalizeStoryCardCount(props.data?.cardCount))
 const cards = computed<StoryCardItem[]>(() => {
   const raw = Array.isArray(props.data?.cards) ? props.data.cards : [];
 
-  return raw.map((card: any, i: number) => ({
+  return raw.map((card: any, i: number) => {
+    const imageFocusX = normalizeImageFocus(card?.imageFocusX);
+    const imageFocusY = normalizeImageFocus(card?.imageFocusY);
+
+    return ({
     id: card?.id || `story-${i}`,
     name: card?.name ?? '',
     role: card?.role ?? '',
     image: card?.image ?? '',
     imageAlt: card?.imageAlt ?? '',
-    imageFocusX: normalizeImageFocus(card?.imageFocusX),
-    imageFocusY: normalizeImageFocus(card?.imageFocusY),
+    imageFocusX,
+    imageFocusY,
+    imageFocusProfiles: normalizeImageFocusProfiles(
+      card?.imageFocusProfiles,
+      imageFocusX,
+      imageFocusY,
+    ),
     videoUrl: card?.videoUrl ?? '',
     href: card?.href ?? '',
     target: normalizeLinkTarget(card?.target),
     ctaLabel: card?.ctaLabel ?? '',
-  })) as StoryCardItem[];
+    });
+  }) as StoryCardItem[];
 });
 </script>

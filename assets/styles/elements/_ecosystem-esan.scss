@@ -236,6 +236,15 @@
     height: 100%;
 
     object-fit: cover;
+    object-position:
+      var(--ecosystem-esan-image-focus-web, 50% 50%);
+  }
+
+  @include bp.container-down('lg') {
+    .ecosystem-esan-card__media img {
+      object-position:
+        var(--ecosystem-esan-image-focus-tablet, 50% 50%);
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -514,6 +523,11 @@
       .ecosystem-esan-card__media-empty {
         position: absolute;
         inset: 0;
+      }
+
+      .ecosystem-esan-card__media img {
+        object-position:
+          var(--ecosystem-esan-image-focus-mobile, 50% 50%);
       }
 
       .ecosystem-esan-card__body {

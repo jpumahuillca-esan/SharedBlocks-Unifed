@@ -29,9 +29,10 @@
     <EditorImage
       v-model="localData.image"
       v-model:alt="localData.imageAlt"
-      v-model:focus-x="localData.imageFocusX"
-      v-model:focus-y="localData.imageFocusY"
+      :focus-values="localData.imageFocusProfiles"
+      :focus-modes="imageFocusModes"
       focus-ratio="19 / 5"
+      focus-crop-preview
       data-edit-target="image"
       alt-edit-target="imageAlt"
       class="mb-3"
@@ -40,6 +41,7 @@
       empty-text="Sin imagen seleccionada"
       alt-placeholder="Descripción de la imagen para accesibilidad"
       @select="$emit('select-image', { item: localData, field: 'image' })"
+      @update:focus-values="saveImageFocusProfiles(localData, $event)"
     />
 
     <hr />
@@ -61,7 +63,12 @@ import { ref, watch } from 'vue';
 import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
-import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import {
+  createImageFocusModes,
+  normalizeImageFocus,
+  normalizeImageFocusProfiles,
+  saveImageFocusProfiles,
+} from '../../../../helpers/imageFocus';
 import CtaActionsEditor from '../_shared/CtaActionsEditor.vue';
 import { normalizeAction, normalizeButtonCount } from '../_shared/types';
 
@@ -72,18 +79,30 @@ const props = defineProps<{
 
 const emit = defineEmits(['update:modelValue', 'select-image']);
 
-const build = (source: any) => ({
+const imageFocusModes = createImageFocusModes('19 / 5');
+
+const build = (source: any) => {
+  const imageFocusX = normalizeImageFocus(source?.imageFocusX);
+  const imageFocusY = normalizeImageFocus(source?.imageFocusY);
+
+  return ({
   eyebrow: source?.eyebrow ?? '',
   title: source?.title ?? '',
   desc: source?.desc ?? '',
   image: source?.image ?? '',
   imageAlt: source?.imageAlt ?? '',
-  imageFocusX: normalizeImageFocus(source?.imageFocusX),
-  imageFocusY: normalizeImageFocus(source?.imageFocusY),
+  imageFocusX,
+  imageFocusY,
+  imageFocusProfiles: normalizeImageFocusProfiles(
+    source?.imageFocusProfiles,
+    imageFocusX,
+    imageFocusY,
+  ),
   buttonCount: normalizeButtonCount(source?.buttonCount),
   primary: normalizeAction(source?.primary),
   secondary: normalizeAction(source?.secondary),
-});
+  });
+};
 
 const localData = ref(build(props.modelValue));
 

@@ -95,15 +95,17 @@
         <EditorImage
           v-model="item.image"
           v-model:alt="item.imageAlt"
-          v-model:focus-x="item.imageFocusX"
-          v-model:focus-y="item.imageFocusY"
+          :focus-values="item.imageFocusProfiles"
+          :focus-modes="imageFocusModes"
           focus-ratio="16 / 9"
+          focus-crop-preview
           data-edit-target=".image"
           alt-edit-target=".imageAlt"
           class="mb-2"
           label="Imagen del video"
           hint="Es la miniatura que se ve antes de reproducir."
           @select="$emit('select-image', { item, field: 'image' })"
+          @update:focus-values="saveImageFocusProfiles(item, $event)"
         />
 
         <EditorUrl
@@ -156,7 +158,12 @@ import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 import { ICON_SUGGESTIONS } from '../../../../helpers/iconOptions';
 import { toVideoSource } from '../../../../helpers/video';
-import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import {
+  createImageFocusModes,
+  normalizeImageFocus,
+  normalizeImageFocusProfiles,
+  saveImageFocusProfiles,
+} from '../../../../helpers/imageFocus';
 import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 
 const props = defineProps<{
@@ -165,10 +172,15 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(['update:modelValue', 'select-image']);
+const imageFocusModes = createImageFocusModes('16 / 9');
 
 const newItemId = () => `vc-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 
-const buildItem = (source: any) => ({
+const buildItem = (source: any) => {
+  const imageFocusX = normalizeImageFocus(source?.imageFocusX);
+  const imageFocusY = normalizeImageFocus(source?.imageFocusY);
+
+  return ({
   id: source?.id || newItemId(),
   icon: source?.icon ?? '',
   tabLabel: source?.tabLabel ?? '',
@@ -181,11 +193,17 @@ const buildItem = (source: any) => ({
   linkTarget: normalizeLinkTarget(source?.linkTarget),
   image: source?.image ?? '',
   imageAlt: source?.imageAlt ?? '',
-  imageFocusX: normalizeImageFocus(source?.imageFocusX),
-  imageFocusY: normalizeImageFocus(source?.imageFocusY),
+  imageFocusX,
+  imageFocusY,
+  imageFocusProfiles: normalizeImageFocusProfiles(
+    source?.imageFocusProfiles,
+    imageFocusX,
+    imageFocusY,
+  ),
   videoUrl: source?.videoUrl ?? '',
   duration: source?.duration ?? '',
-});
+  });
+};
 
 const build = (source: any) => ({
   items: Array.isArray(source?.items) ? source.items.map(buildItem) : [],

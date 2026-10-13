@@ -13,6 +13,7 @@
  * nombre de sistema, testimonial-card.
  */
 import type { LinkTarget } from '../../../../helpers/linkTarget';
+import type { ImageFocusProfiles } from '../../../../helpers/imageFocus';
 
 /** Cuántas tarjetas se ven a la vez en la fila. */
 export type StoryCardCount = 2 | 3 | 4;
@@ -50,6 +51,7 @@ export interface StoryCardItem {
     /** Punto focal de la foto, en %. 50 y 50 es el centro (ver helpers/imageFocus.ts). */
     imageFocusX: number;
     imageFocusY: number;
+    imageFocusProfiles: ImageFocusProfiles;
     /** YouTube, Vimeo o un archivo de video directo. Vacío = sin video. */
     videoUrl: string;
     /** Destino de "Ver historia". */

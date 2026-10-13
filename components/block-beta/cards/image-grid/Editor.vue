@@ -49,9 +49,10 @@
         <EditorImage
           v-model="card.image"
           v-model:alt="card.imageAlt"
-          v-model:focus-x="card.imageFocusX"
-          v-model:focus-y="card.imageFocusY"
+          :focus-values="card.imageFocusProfiles"
+          :focus-modes="imageFocusModes"
           focus-ratio="16 / 10"
+          focus-crop-preview
           data-edit-target=".image"
           alt-edit-target=".imageAlt"
           class="mb-2"
@@ -60,6 +61,7 @@
           alt-hint-position="top"
           alt-placeholder="Estudiantes conversando en el jardín del campus"
           @select="$emit('select-image', { item: card, field: 'image' })"
+          @update:focus-values="saveImageFocusProfiles(card, $event)"
         />
 
         <EditorText
@@ -107,7 +109,13 @@
 import { ref, watch } from 'vue';
 import CardSectionHeaderEditor from '../../events/_shared/CardSectionHeaderEditor.vue';
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
-import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import {
+  createImageFocusModes,
+  normalizeImageFocus,
+  normalizeImageFocusProfiles,
+  saveImageFocusProfiles,
+  type ImageFocusProfiles,
+} from '../../../../helpers/imageFocus';
 import { normalizeLinkTarget, type LinkTarget } from '../../../../helpers/linkTarget';
 import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
@@ -120,6 +128,7 @@ interface ImageGridCard {
   imageAlt: string;
   imageFocusX: number;
   imageFocusY: number;
+  imageFocusProfiles: ImageFocusProfiles;
   title: string;
   desc: string;
   href: string;
@@ -133,19 +142,31 @@ const props = defineProps<{
 
 const emit = defineEmits(['update:modelValue', 'select-image']);
 
+const imageFocusModes = createImageFocusModes('16 / 10');
+
 const newCardId = () => `ig-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 
-const buildCard = (source: any): ImageGridCard => ({
-  id: source?.id || newCardId(),
-  image: source?.image ?? '',
-  imageAlt: source?.imageAlt ?? '',
-  imageFocusX: normalizeImageFocus(source?.imageFocusX),
-  imageFocusY: normalizeImageFocus(source?.imageFocusY),
-  title: source?.title ?? '',
-  desc: source?.desc ?? '',
-  href: source?.href ?? '',
-  target: normalizeLinkTarget(source?.target),
-});
+const buildCard = (source: any): ImageGridCard => {
+  const imageFocusX = normalizeImageFocus(source?.imageFocusX);
+  const imageFocusY = normalizeImageFocus(source?.imageFocusY);
+
+  return {
+    id: source?.id || newCardId(),
+    image: source?.image ?? '',
+    imageAlt: source?.imageAlt ?? '',
+    imageFocusX,
+    imageFocusY,
+    imageFocusProfiles: normalizeImageFocusProfiles(
+      source?.imageFocusProfiles,
+      imageFocusX,
+      imageFocusY,
+    ),
+    title: source?.title ?? '',
+    desc: source?.desc ?? '',
+    href: source?.href ?? '',
+    target: normalizeLinkTarget(source?.target),
+  };
+};
 
 const build = (source: any) => ({
   eyebrow: source?.eyebrow ?? '',

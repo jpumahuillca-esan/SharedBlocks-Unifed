@@ -32,7 +32,11 @@ import { ref, computed, watch } from 'vue';
 import AtomIcon from '../atoms/AtomIcon.vue';
 import AtomEyebrow from '../atoms/AtomEyebrow.vue';
 import { toVideoSource } from '../../helpers/video';
-import { imageFocusStyle } from '../../helpers/imageFocus';
+import {
+  imageFocusProfilesStyle,
+  imageFocusStyle,
+  type ImageFocusProfiles,
+} from '../../helpers/imageFocus';
 import { linkTargetAttrs } from '../../helpers/linkTarget';
 
 const props = withDefaults(defineProps<{
@@ -42,6 +46,7 @@ const props = withDefaults(defineProps<{
   /** Punto focal de la foto (0-100). Sin ellos la foto no lleva `object-position`. */
   imageFocusX?: number;
   imageFocusY?: number;
+  imageFocusProfiles?: ImageFocusProfiles;
   duration?: string;
   /** Solo "featured". */
   eyebrow?: string;
@@ -138,7 +143,10 @@ watch(
         v-if="image"
         :src="image"
         :alt="imageAlt || ''"
-        :style="imageFocusStyle(imageFocusX, imageFocusY)"
+        :class="{ 'image-focus-responsive': imageFocusProfiles }"
+        :style="imageFocusProfiles
+          ? imageFocusProfilesStyle(imageFocusProfiles, imageFocusX, imageFocusY)
+          : imageFocusStyle(imageFocusX, imageFocusY)"
         loading="lazy"
       />
       <span v-if="variant === 'featured' && duration" class="video-preview__duration">{{ duration }}</span>
@@ -177,7 +185,10 @@ watch(
       v-if="image"
       :src="image"
       :alt="imageAlt || ''"
-      :style="imageFocusStyle(imageFocusX, imageFocusY)"
+      :class="{ 'image-focus-responsive': imageFocusProfiles }"
+      :style="imageFocusProfiles
+        ? imageFocusProfilesStyle(imageFocusProfiles, imageFocusX, imageFocusY)
+        : imageFocusStyle(imageFocusX, imageFocusY)"
       loading="lazy"
     />
     <span v-if="variant === 'featured' && duration" class="video-preview__duration">{{ duration }}</span>

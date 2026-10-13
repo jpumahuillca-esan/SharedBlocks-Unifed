@@ -39,7 +39,11 @@ import AtomText from '../atoms/AtomText.vue';
 import AtomEyebrow from '../atoms/AtomEyebrow.vue';
 import AtomIcon from '../atoms/AtomIcon.vue';
 import AtomLink from '../atoms/AtomLink.vue';
-import { imageFocusStyle } from '../../helpers/imageFocus';
+import {
+  imageFocusProfilesStyle,
+  imageFocusStyle,
+  type ImageFocusProfiles,
+} from '../../helpers/imageFocus';
 
 type BannerVariant = 'brand' | 'dark' | 'outline' | 'image' | 'image-split';
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
@@ -67,6 +71,7 @@ const props = withDefaults(defineProps<{
   /** Punto focal de la foto (0-100). Sin ellos la foto no lleva `object-position`. */
   imageFocusX?: number;
   imageFocusY?: number;
+  imageFocusProfiles?: ImageFocusProfiles;
   href?: string;
   /** `_blank` abre `href` en una pestaña nueva. Sin él, en la misma página. */
   target?: string;
@@ -98,7 +103,10 @@ const eyebrowVariant = computed(() => (props.variant === 'outline' ? 'brand' : '
           v-if="image"
           :src="image"
           :alt="imageAlt || ''"
-          :style="imageFocusStyle(imageFocusX, imageFocusY)"
+          :class="{ 'image-focus-responsive': imageFocusProfiles }"
+          :style="imageFocusProfiles
+            ? imageFocusProfilesStyle(imageFocusProfiles, imageFocusX, imageFocusY)
+            : imageFocusStyle(imageFocusX, imageFocusY)"
           loading="lazy"
         />
       </div>

@@ -3,23 +3,48 @@
     <div
       ref="preview"
       class="editor-image-focus__preview"
+      :class="{ 'is-crop-preview': cropPreview }"
       :style="previewStyle"
       :aria-hidden="sliders ? 'true' : undefined"
       @pointerdown="startFocusDrag"
       @pointermove="moveFocus"
       @pointerup="endFocusDrag"
       @pointercancel="endFocusDrag"
+      @click="handlePreviewClick"
     >
       <img
         :src="image"
         alt=""
         draggable="false"
+        @load="updateImageSize"
         :style="{
           objectPosition: `${normalizedX}% ${normalizedY}%`,
         }"
       />
 
+      <template v-if="cropPreview">
+        <span
+          v-for="(shade, index) in cropShades"
+          :key="index"
+          class="editor-image-focus__crop-shade"
+          :style="shade"
+          aria-hidden="true"
+        ></span>
+
+        <span
+          class="editor-image-focus__crop-window"
+          :style="cropWindowStyle"
+          aria-hidden="true"
+        >
+          <i class="editor-image-focus__crop-corner is-top-left"></i>
+          <i class="editor-image-focus__crop-corner is-top-right"></i>
+          <i class="editor-image-focus__crop-corner is-bottom-left"></i>
+          <i class="editor-image-focus__crop-corner is-bottom-right"></i>
+        </span>
+      </template>
+
       <span
+        v-else
         class="editor-image-focus__point"
         :style="{
           left: `${normalizedX}%`,
@@ -29,13 +54,17 @@
     </div>
 
     <p class="editor-image-focus__hint">
-      Haz clic o arrastra el punto para ajustar el encuadre.
+      {{ cropHint }}
     </p>
 
     <template v-if="sliders">
       <div class="editor-image-focus__control">
         <div class="editor-image-focus__label">
-          Horizontal <span>{{ Math.round(normalizedX) }}%</span>
+          {{ cropPreview
+            ? (canCropHorizontally ? 'Recorte horizontal' : 'Sin recorte lateral')
+            : 'Horizontal' }}
+          <span v-if="cropPreview && !canCropHorizontally">No aplica</span>
+          <span v-else>{{ Math.round(normalizedX) }}%</span>
         </div>
         <input
           type="range"
@@ -44,15 +73,20 @@
           max="100"
           step="1"
           :value="normalizedX"
+          :disabled="cropPreview && !canCropHorizontally"
           data-edit-target=".imageFocusX"
-          aria-label="Punto focal horizontal"
+          :aria-label="cropPreview ? 'Recorte horizontal' : 'Punto focal horizontal'"
           @input="updateFocusX"
         />
       </div>
 
       <div class="editor-image-focus__control">
         <div class="editor-image-focus__label">
-          Vertical <span>{{ Math.round(normalizedY) }}%</span>
+          {{ cropPreview
+            ? (canCropVertically ? 'Recorte vertical' : 'Sin recorte vertical')
+            : 'Vertical' }}
+          <span v-if="cropPreview && !canCropVertically">No aplica</span>
+          <span v-else>{{ Math.round(normalizedY) }}%</span>
         </div>
         <input
           type="range"
@@ -61,8 +95,9 @@
           max="100"
           step="1"
           :value="normalizedY"
+          :disabled="cropPreview && !canCropVertically"
           data-edit-target=".imageFocusY"
-          aria-label="Punto focal vertical"
+          :aria-label="cropPreview ? 'Recorte vertical' : 'Punto focal vertical'"
           @input="updateFocusY"
         />
       </div>
@@ -79,7 +114,7 @@
       class="btn btn-sm btn-link editor-image-focus__reset"
       @click="resetFocus"
     >
-      Centrar punto focal
+      {{ cropPreview ? 'Centrar recorte' : 'Centrar punto focal' }}
     </button>
   </div>
 </template>
@@ -96,7 +131,7 @@
  * Nació en ecosystem-esan y sub-hero tenía una copia propia del arrastre; esta
  * es la única.
  */
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const props = withDefaults(
   defineProps<{
@@ -110,6 +145,8 @@ const props = withDefaults(
      * el bloque recorta la foto, para ver el recorte real mientras se mueve el punto.
      */
     ratio?: string;
+    /** Muestra la imagen completa y marca encima el área que se recortará. */
+    cropPreview?: boolean;
     /**
      * Con `ratio`, el alto máximo en px: una proporción vertical se estrecha en
      * vez de alargar el panel.
@@ -128,6 +165,7 @@ const props = withDefaults(
     height: 110,
     maxHeight: 240,
     sliders: true,
+    cropPreview: false,
   },
 );
 
@@ -138,22 +176,115 @@ const emit = defineEmits<{
 
 const preview = ref<HTMLElement | null>(null);
 const isDragging = ref(false);
+const imageSize = ref<{ width: number; height: number } | null>(null);
 
 const normalizeFocus = (value: number): number =>
   Number.isFinite(Number(value))
     ? Math.min(100, Math.max(0, Number(value)))
     : 50;
 
+const normalizedX = computed(() => normalizeFocus(props.focusX));
+const normalizedY = computed(() => normalizeFocus(props.focusY));
+
 /*
  * Con proporción: la caja la manda `aspect-ratio`, y si el alto saldría mayor que
  * `maxHeight` se acota el ANCHO (limitar solo el alto deformaría la proporción) y
  * se centra. Sin proporción, alto fijo.
  */
+const ratioValue = (ratio?: string): number => {
+  if (!ratio) return 0;
+  const [w, h] = ratio.split('/').map((part) => Number(part.trim()));
+  return w > 0 && h > 0 ? w / h : 0;
+};
+
+const imageAspectRatio = computed(() =>
+  imageSize.value ? imageSize.value.width / imageSize.value.height : 0,
+);
+
+const cropGeometry = computed(() => {
+  const imageRatio = imageAspectRatio.value;
+  const frameRatio = ratioValue(props.ratio);
+  let width = 100;
+  let height = 100;
+
+  if (imageRatio > 0 && frameRatio > 0 && imageRatio > frameRatio) {
+    width = (frameRatio / imageRatio) * 100;
+  } else if (imageRatio > 0 && frameRatio > 0 && imageRatio < frameRatio) {
+    height = (imageRatio / frameRatio) * 100;
+  }
+
+  const availableX = 100 - width;
+  const availableY = 100 - height;
+
+  return {
+    left: (availableX * normalizedX.value) / 100,
+    top: (availableY * normalizedY.value) / 100,
+    width,
+    height,
+  };
+});
+
+const cropWindowStyle = computed(() => ({
+  left: `${cropGeometry.value.left}%`,
+  top: `${cropGeometry.value.top}%`,
+  width: `${cropGeometry.value.width}%`,
+  height: `${cropGeometry.value.height}%`,
+}));
+
+const canCropHorizontally = computed(() => cropGeometry.value.width < 99.99);
+const canCropVertically = computed(() => cropGeometry.value.height < 99.99);
+
+const cropHint = computed(() => {
+  if (!props.cropPreview) {
+    return 'Haz clic o arrastra el punto para ajustar el encuadre.';
+  }
+
+  if (!canCropHorizontally.value && !canCropVertically.value) {
+    return 'La proporción de la imagen ya coincide con este marco; no hace falta recortarla.';
+  }
+  if (!canCropHorizontally.value) {
+    return 'La foto completa está visible. Haz clic o arrastra el marco arriba o abajo para elegir el área.';
+  }
+  if (!canCropVertically.value) {
+    return 'La foto completa está visible. Haz clic o arrastra el marco a los lados para elegir el área.';
+  }
+
+  return 'La foto completa está visible. Haz clic o arrastra el marco para elegir qué área se mostrará.';
+});
+
+const cropShades = computed(() => {
+  const { left, top, width, height } = cropGeometry.value;
+  const right = left + width;
+  const bottom = top + height;
+
+  return [
+    { left: '0', top: '0', width: '100%', height: `${top}%` },
+    { left: '0', top: `${bottom}%`, width: '100%', height: `${100 - bottom}%` },
+    { left: '0', top: `${top}%`, width: `${left}%`, height: `${height}%` },
+    { left: `${right}%`, top: `${top}%`, width: `${100 - right}%`, height: `${height}%` },
+  ];
+});
+
 const previewStyle = computed(() => {
+  if (props.cropPreview) {
+    if (!imageAspectRatio.value || !imageSize.value) {
+      return {
+        width: '100%',
+        height: `${props.maxHeight}px`,
+        margin: '0 auto',
+      };
+    }
+
+    return {
+      aspectRatio: `${imageSize.value.width} / ${imageSize.value.height}`,
+      width: `min(100%, ${Math.round(props.maxHeight * imageAspectRatio.value)}px)`,
+      margin: '0 auto',
+    };
+  }
+
   if (!props.ratio) return { height: `${props.height}px` };
 
-  const [w, h] = props.ratio.split('/').map((part) => Number(part.trim()));
-  const value = w > 0 && h > 0 ? w / h : 0;
+  const value = ratioValue(props.ratio);
 
   return {
     aspectRatio: props.ratio,
@@ -162,15 +293,48 @@ const previewStyle = computed(() => {
   };
 });
 
-const normalizedX = computed(() => normalizeFocus(props.focusX));
-const normalizedY = computed(() => normalizeFocus(props.focusY));
+const updateImageSize = (event: Event) => {
+  const imageElement = event.target as HTMLImageElement;
+  if (!imageElement.naturalWidth || !imageElement.naturalHeight) return;
 
-const updateFromPointer = (event: PointerEvent) => {
+  imageSize.value = {
+    width: imageElement.naturalWidth,
+    height: imageElement.naturalHeight,
+  };
+};
+
+watch(
+  () => props.image,
+  () => {
+    imageSize.value = null;
+  },
+);
+
+const updateFromPointer = (event: MouseEvent | PointerEvent) => {
   const element = preview.value;
   if (!element) return;
 
   const rect = element.getBoundingClientRect();
   if (!rect.width || !rect.height) return;
+
+  if (props.cropPreview) {
+    const contentLeft = rect.left + element.clientLeft;
+    const contentTop = rect.top + element.clientTop;
+    const { width, height } = cropGeometry.value;
+    const availableX = 100 - width;
+    const availableY = 100 - height;
+
+    if (availableX > 0 && element.clientWidth > 0) {
+      const pointerX = ((event.clientX - contentLeft) / element.clientWidth) * 100;
+      emit('update:focusX', normalizeFocus(((pointerX - width / 2) / availableX) * 100));
+    }
+    if (availableY > 0 && element.clientHeight > 0) {
+      const pointerY = ((event.clientY - contentTop) / element.clientHeight) * 100;
+      emit('update:focusY', normalizeFocus(((pointerY - height / 2) / availableY) * 100));
+    }
+
+    return;
+  }
 
   emit(
     'update:focusX',
@@ -180,6 +344,10 @@ const updateFromPointer = (event: PointerEvent) => {
     'update:focusY',
     normalizeFocus(((event.clientY - rect.top) / rect.height) * 100),
   );
+};
+
+const handlePreviewClick = (event: MouseEvent) => {
+  if (props.cropPreview) updateFromPointer(event);
 };
 
 const startFocusDrag = (event: PointerEvent) => {
@@ -239,6 +407,58 @@ const resetFocus = () => {
   object-fit: cover;
   pointer-events: none;
   user-select: none;
+}
+
+.editor-image-focus__preview.is-crop-preview {
+  cursor: move;
+}
+
+.editor-image-focus__preview.is-crop-preview img {
+  object-fit: contain;
+}
+
+.editor-image-focus__crop-shade {
+  position: absolute;
+  z-index: 1;
+  background: rgba(10, 19, 25, 0.56);
+  pointer-events: none;
+}
+
+.editor-image-focus__crop-window {
+  position: absolute;
+  z-index: 2;
+  box-sizing: border-box;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(10, 19, 25, 0.4);
+  pointer-events: none;
+}
+
+.editor-image-focus__crop-corner {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border: 2px solid #fff;
+  background: rgba(10, 19, 25, 0.35);
+}
+
+.editor-image-focus__crop-corner.is-top-left {
+  top: -5px;
+  left: -5px;
+}
+
+.editor-image-focus__crop-corner.is-top-right {
+  top: -5px;
+  right: -5px;
+}
+
+.editor-image-focus__crop-corner.is-bottom-left {
+  bottom: -5px;
+  left: -5px;
+}
+
+.editor-image-focus__crop-corner.is-bottom-right {
+  right: -5px;
+  bottom: -5px;
 }
 
 .editor-image-focus__point {

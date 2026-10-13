@@ -79,9 +79,10 @@
         <EditorImage
           v-model="card.image"
           v-model:alt="card.imageAlt"
-          v-model:focus-x="card.imageFocusX"
-          v-model:focus-y="card.imageFocusY"
+          :focus-values="card.imageFocusProfiles"
+          :focus-modes="imageFocusModes"
           focus-ratio="3 / 4"
+          focus-crop-preview
           data-edit-target=".image"
           alt-edit-target=".imageAlt"
           class="mb-2"
@@ -89,6 +90,7 @@
           noun="foto"
           hint="Se recorta en vertical (3:4). Elige una imagen alta."
           @select="$emit('select-image', { item: card, field: 'image' })"
+          @update:focus-values="saveImageFocusProfiles(card, $event)"
         />
 
         <EditorUrl
@@ -142,7 +144,12 @@ import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
 import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import { toVideoSource } from '../../../../helpers/video';
-import { normalizeImageFocus } from '../../../../helpers/imageFocus';
+import {
+  createImageFocusModes,
+  normalizeImageFocus,
+  normalizeImageFocusProfiles,
+  saveImageFocusProfiles,
+} from '../../../../helpers/imageFocus';
 import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 import {
   newStoryId,
@@ -156,20 +163,31 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(['update:modelValue', 'select-image']);
+const imageFocusModes = createImageFocusModes('3 / 4');
 
-const buildCard = (source: any): StoryCardItem => ({
-  id: source?.id || newStoryId(),
-  name: source?.name ?? '',
-  role: source?.role ?? '',
-  image: source?.image ?? '',
-  imageAlt: source?.imageAlt ?? '',
-  imageFocusX: normalizeImageFocus(source?.imageFocusX),
-  imageFocusY: normalizeImageFocus(source?.imageFocusY),
-  videoUrl: source?.videoUrl ?? '',
-  href: source?.href ?? '',
-  target: normalizeLinkTarget(source?.target),
-  ctaLabel: source?.ctaLabel ?? 'Ver historia',
-});
+const buildCard = (source: any): StoryCardItem => {
+  const imageFocusX = normalizeImageFocus(source?.imageFocusX);
+  const imageFocusY = normalizeImageFocus(source?.imageFocusY);
+
+  return {
+    id: source?.id || newStoryId(),
+    name: source?.name ?? '',
+    role: source?.role ?? '',
+    image: source?.image ?? '',
+    imageAlt: source?.imageAlt ?? '',
+    imageFocusX,
+    imageFocusY,
+    imageFocusProfiles: normalizeImageFocusProfiles(
+      source?.imageFocusProfiles,
+      imageFocusX,
+      imageFocusY,
+    ),
+    videoUrl: source?.videoUrl ?? '',
+    href: source?.href ?? '',
+    target: normalizeLinkTarget(source?.target),
+    ctaLabel: source?.ctaLabel ?? 'Ver historia',
+  };
+};
 
 const build = (source: any) => ({
   title: source?.title ?? '',

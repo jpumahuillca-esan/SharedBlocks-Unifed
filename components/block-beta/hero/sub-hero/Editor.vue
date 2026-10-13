@@ -65,11 +65,12 @@
     <EditorImage
       v-model="localData.image"
       v-model:alt="localData.imageAlt"
-      v-model:focus-x="localData.imageFocusX"
-      v-model:focus-y="localData.imageFocusY"
+      :focus-values="localData.imageFocusProfiles"
+      :focus-modes="imageFocusModes"
       data-edit-target="image"
       alt-edit-target="imageAlt"
       :focus-height="130"
+      focus-crop-preview
       :focus-sliders="false"
       alt-only-with-image
       alt-label="Texto alternativo de la imagen"
@@ -77,6 +78,7 @@
       :alt-maxlength="IMAGE_ALT_MAX_LENGTH"
       alt-hint="Describe la imagen si aporta información. Déjalo vacío si es decorativa."
       @select="selectImage"
+      @update:focus-values="saveImageFocusProfiles(localData, $event)"
       @remove="resetImageExtras"
     />
   </div>
@@ -88,6 +90,12 @@ import EditorBrandColor from '../../../editor-beta/EditorBrandColor/EditorBrandC
 import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
+import {
+  createImageFocusModes,
+  normalizeImageFocus,
+  normalizeImageFocusProfiles,
+  saveImageFocusProfiles,
+} from '../../../../helpers/imageFocus';
 import { resolvePanelColorToken } from './shared/config';
 import { SUBHERO_CONTENT_RULES } from './shared/rule';
 
@@ -108,15 +116,16 @@ const emit = defineEmits<{
 
 const rules = SUBHERO_CONTENT_RULES;
 const IMAGE_ALT_MAX_LENGTH = 150;
-
-const normalizeFocus = (value: unknown): number => {
-  const number = Number(value);
-  if (!Number.isFinite(number)) return 50;
-  return Math.min(100, Math.max(0, number));
-};
+const imageFocusModes = createImageFocusModes({
+  web: '880 / 360',
+  tablet: '16 / 9',
+  mobile: '328 / 200',
+});
 
 const build = (source: any) => {
   const eyebrow = source?.eyebrow ?? '';
+  const imageFocusX = normalizeImageFocus(source?.imageFocusX);
+  const imageFocusY = normalizeImageFocus(source?.imageFocusY);
 
   return {
     eyebrow,
@@ -128,8 +137,13 @@ const build = (source: any) => {
     panelColorToken: resolvePanelColorToken(source),
     image: source?.image ?? '',
     imageAlt: source?.imageAlt ?? '',
-    imageFocusX: normalizeFocus(source?.imageFocusX),
-    imageFocusY: normalizeFocus(source?.imageFocusY)
+    imageFocusX,
+    imageFocusY,
+    imageFocusProfiles: normalizeImageFocusProfiles(
+      source?.imageFocusProfiles,
+      imageFocusX,
+      imageFocusY,
+    ),
   };
 };
 
@@ -150,6 +164,7 @@ const resetImageExtras = () => {
   localData.value.imageAlt = '';
   localData.value.imageFocusX = 50;
   localData.value.imageFocusY = 50;
+  localData.value.imageFocusProfiles = normalizeImageFocusProfiles();
 };
 
 /* Si se borra el antetítulo no puede mantenerse activo como H1. */

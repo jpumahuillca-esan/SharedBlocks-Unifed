@@ -17,6 +17,17 @@ import {
    ========================================================================== */
 
 export type EcosystemEsanColumns = 3 | 4;
+export type EcosystemEsanFocusMode = 'web' | 'tablet' | 'mobile';
+
+export interface EcosystemEsanFocusPoint {
+  x: number;
+  y: number;
+}
+
+export type EcosystemEsanFocusProfiles = Record<
+  EcosystemEsanFocusMode,
+  EcosystemEsanFocusPoint
+>;
 
 export interface EcosystemEsanLink {
   id: string;
@@ -34,6 +45,8 @@ export interface EcosystemEsanItem {
 
   image: string;
   imageAlt: string;
+  imageFocusProfiles: EcosystemEsanFocusProfiles;
+  /** Compatibilidad con datos anteriores; reflejan el foco web. */
   imageFocusX: number;
   imageFocusY: number;
 
@@ -86,6 +99,14 @@ const normalizeImageFocus = (value: unknown): number => {
 
   return Math.min(100, Math.max(0, number));
 };
+
+const normalizeImageFocusPoint = (
+  raw: any,
+  fallback: EcosystemEsanFocusPoint,
+): EcosystemEsanFocusPoint => ({
+  x: normalizeImageFocus(raw?.x ?? fallback.x),
+  y: normalizeImageFocus(raw?.y ?? fallback.y),
+});
 
 /* ==========================================================================
    IDs
@@ -149,50 +170,64 @@ export const normalizeEcosystemEsanLink = (
 export const normalizeEcosystemEsanItem = (
   raw: any,
   index = 0,
-): EcosystemEsanItem => ({
-  id: raw?.id || `eco-esan-${index}`,
+): EcosystemEsanItem => {
+  const legacyFocus = {
+    x: normalizeImageFocus(raw?.imageFocusX),
+    y: normalizeImageFocus(raw?.imageFocusY),
+  };
 
-  title: normalizeLimitedString(
-    raw?.title,
-    ECOSYSTEM_ESAN_CONTENT_RULES.card.title.maxLength,
-  ),
+  const imageFocusProfiles: EcosystemEsanFocusProfiles = {
+    web: normalizeImageFocusPoint(raw?.imageFocusProfiles?.web, legacyFocus),
+    tablet: normalizeImageFocusPoint(raw?.imageFocusProfiles?.tablet, legacyFocus),
+    mobile: normalizeImageFocusPoint(raw?.imageFocusProfiles?.mobile, legacyFocus),
+  };
 
-  desc: normalizeLimitedString(
-    raw?.desc,
-    ECOSYSTEM_ESAN_CONTENT_RULES.card.desc.maxLength,
-  ),
+  return {
+    id: raw?.id || `eco-esan-${index}`,
 
-  image:
-    typeof raw?.image === 'string'
-      ? raw.image
-      : '',
+    title: normalizeLimitedString(
+      raw?.title,
+      ECOSYSTEM_ESAN_CONTENT_RULES.card.title.maxLength,
+    ),
 
-  imageAlt: normalizeLimitedString(
-    raw?.imageAlt,
-    ECOSYSTEM_ESAN_CONTENT_RULES.card.imageAlt.maxLength,
-  ),
+    desc: normalizeLimitedString(
+      raw?.desc,
+      ECOSYSTEM_ESAN_CONTENT_RULES.card.desc.maxLength,
+    ),
 
-  imageFocusX: normalizeImageFocus(raw?.imageFocusX),
-  imageFocusY: normalizeImageFocus(raw?.imageFocusY),
+    image:
+      typeof raw?.image === 'string'
+        ? raw.image
+        : '',
 
-  href: normalizeLimitedString(
-    raw?.href,
-    ECOSYSTEM_ESAN_CONTENT_RULES.card.href.maxLength,
-  ),
+    imageAlt: normalizeLimitedString(
+      raw?.imageAlt,
+      ECOSYSTEM_ESAN_CONTENT_RULES.card.imageAlt.maxLength,
+    ),
 
-  target: normalizeLinkTarget(raw?.target),
+    imageFocusProfiles,
+    imageFocusX: imageFocusProfiles.web.x,
+    imageFocusY: imageFocusProfiles.web.y,
 
-  colorToken: normalizeBrandColorToken(
-    raw?.colorToken ?? DEFAULT_BRAND_COLOR_TOKEN,
-  ),
+    href: normalizeLimitedString(
+      raw?.href,
+      ECOSYSTEM_ESAN_CONTENT_RULES.card.href.maxLength,
+    ),
 
-  links: Array.isArray(raw?.links)
-    ? raw.links.map(
-        (link: any, linkIndex: number) =>
-          normalizeEcosystemEsanLink(link, linkIndex),
-      )
-    : [],
-});
+    target: normalizeLinkTarget(raw?.target),
+
+    colorToken: normalizeBrandColorToken(
+      raw?.colorToken ?? DEFAULT_BRAND_COLOR_TOKEN,
+    ),
+
+    links: Array.isArray(raw?.links)
+      ? raw.links.map(
+          (link: any, linkIndex: number) =>
+            normalizeEcosystemEsanLink(link, linkIndex),
+        )
+      : [],
+  };
+};
 
 export const normalizeEcosystemEsanData = (
   raw: any,
