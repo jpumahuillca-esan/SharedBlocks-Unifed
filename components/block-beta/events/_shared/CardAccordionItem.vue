@@ -7,7 +7,7 @@
       <span class="card-acc__title">{{ title || 'Sin título' }}</span>
 
       <!-- Las acciones no deben abrir ni cerrar el panel -->
-      <span class="card-acc__actions" @click.stop>
+      <span v-if="!locked" class="card-acc__actions" @click.stop>
         <button
           type="button"
           class="card-acc__btn"
@@ -72,8 +72,10 @@ const props = withDefaults(
     removeLabel?: string;
     /** Ruta de la tarjeta en el dato del bloque, para el enfoque desde el lienzo. */
     editKey?: string;
+    /** Sin subir, bajar ni quitar: para la tarjeta única que no se puede mover ni borrar. */
+    locked?: boolean;
   }>(),
-  { removeLabel: 'Quitar', editKey: '' },
+  { removeLabel: 'Quitar', editKey: '', locked: false },
 );
 
 const emit = defineEmits<{

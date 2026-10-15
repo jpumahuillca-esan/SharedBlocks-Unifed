@@ -1,56 +1,74 @@
 <template>
   <div class="editor-image-focus">
-    <div
-      ref="preview"
-      class="editor-image-focus__preview"
-      :class="{ 'is-crop-preview': cropPreview }"
-      :style="previewStyle"
-      :aria-hidden="sliders ? 'true' : undefined"
-      @pointerdown="startFocusDrag"
-      @pointermove="moveFocus"
-      @pointerup="endFocusDrag"
-      @pointercancel="endFocusDrag"
-      @click="handlePreviewClick"
-    >
+    <!--
+      Recuadro de la vista previa. Con `crop-preview` la foto se ve ENTERA y toma
+      su propia proporción, así que una foto vertical o casi cuadrada quedaba en
+      una tira estrecha con huecos a los lados. El fondo es la misma foto
+      desenfocada: llena todo el recuadro sin estirar ni recortar la foto de
+      verdad, que se muestra nítida y a su tamaño encima. Es solo decoración
+      (aria-hidden, sin eventos) y reutiliza la misma URL: no descarga nada más.
+    -->
+    <div class="editor-image-focus__stage" :class="{ 'has-backdrop': cropPreview }">
       <img
+        v-if="cropPreview"
+        class="editor-image-focus__backdrop"
         :src="image"
         alt=""
+        aria-hidden="true"
         draggable="false"
-        @load="updateImageSize"
-        :style="{
-          objectPosition: `${normalizedX}% ${normalizedY}%`,
-        }"
       />
+      <div
+        ref="preview"
+        class="editor-image-focus__preview"
+        :class="{ 'is-crop-preview': cropPreview }"
+        :style="previewStyle"
+        :aria-hidden="sliders ? 'true' : undefined"
+        @pointerdown="startFocusDrag"
+        @pointermove="moveFocus"
+        @pointerup="endFocusDrag"
+        @pointercancel="endFocusDrag"
+        @click="handlePreviewClick"
+      >
+        <img
+          :src="image"
+          alt=""
+          draggable="false"
+          @load="updateImageSize"
+          :style="{
+            objectPosition: `${normalizedX}% ${normalizedY}%`,
+          }"
+        />
 
-      <template v-if="cropPreview">
+        <template v-if="cropPreview">
+          <span
+            v-for="(shade, index) in cropShades"
+            :key="index"
+            class="editor-image-focus__crop-shade"
+            :style="shade"
+            aria-hidden="true"
+          ></span>
+
+          <span
+            class="editor-image-focus__crop-window"
+            :style="cropWindowStyle"
+            aria-hidden="true"
+          >
+            <i class="editor-image-focus__crop-corner is-top-left"></i>
+            <i class="editor-image-focus__crop-corner is-top-right"></i>
+            <i class="editor-image-focus__crop-corner is-bottom-left"></i>
+            <i class="editor-image-focus__crop-corner is-bottom-right"></i>
+          </span>
+        </template>
+
         <span
-          v-for="(shade, index) in cropShades"
-          :key="index"
-          class="editor-image-focus__crop-shade"
-          :style="shade"
-          aria-hidden="true"
+          v-else
+          class="editor-image-focus__point"
+          :style="{
+            left: `${normalizedX}%`,
+            top: `${normalizedY}%`,
+          }"
         ></span>
-
-        <span
-          class="editor-image-focus__crop-window"
-          :style="cropWindowStyle"
-          aria-hidden="true"
-        >
-          <i class="editor-image-focus__crop-corner is-top-left"></i>
-          <i class="editor-image-focus__crop-corner is-top-right"></i>
-          <i class="editor-image-focus__crop-corner is-bottom-left"></i>
-          <i class="editor-image-focus__crop-corner is-bottom-right"></i>
-        </span>
-      </template>
-
-      <span
-        v-else
-        class="editor-image-focus__point"
-        :style="{
-          left: `${normalizedX}%`,
-          top: `${normalizedY}%`,
-        }"
-      ></span>
+      </div>
     </div>
 
     <p class="editor-image-focus__hint">
@@ -389,8 +407,41 @@ const resetFocus = () => {
 </script>
 
 <style scoped>
+/* El recuadro ocupa siempre todo el ancho; la vista previa va centrada dentro. */
+.editor-image-focus__stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 7px;
+}
+
+.editor-image-focus__stage.has-backdrop {
+  background: #e9edf3;
+}
+
+/*
+ * `scale` tapa el borde que deja el desenfoque (el blur difumina hacia afuera y
+ * deja un halo claro en los extremos).
+ */
+.editor-image-focus__backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(14px) brightness(0.92);
+  transform: scale(1.15);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Ancho completo por defecto (ahora es hijo flex del recuadro); el inline lo acota. */
 .editor-image-focus__preview {
   position: relative;
+  z-index: 1;
+  width: 100%;
   overflow: hidden;
   border: 1px dashed #c6cedb;
   border-radius: 7px;

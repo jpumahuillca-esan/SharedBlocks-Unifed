@@ -51,4 +51,13 @@ export const ICON_SUGGESTIONS: string[] = [
     'handshake',
     'lightbulb',
     'building-2',
+    // Flechas y controles de AtomIcon que faltaban: EditorIcon avisa cuando un
+    // nombre no está en esta lista, así que tiene que cubrir todo el catálogo.
+    'arrow-up-right',
+    'arrow-up',
+    'chevron-right',
+    'chevron-left',
+    'chevron-down',
+    'menu',
+    'x',
 ];
