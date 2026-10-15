@@ -25,3 +25,30 @@ img.image-focus-responsive {
       );
   }
 }
+
+/*
+ * Perfil forzado: solo lo pone el lienzo del editor (`data-focus-mode` en el
+ * `.arcis-scope` de cada bloque), con el perfil que se está editando en el panel.
+ *
+ * El lienzo mide un solo ancho y los perfiles de arriba se eligen por ancho, así
+ * que sin esto el panel podía estar editando Web mientras el lienzo dibujaba
+ * Tablet y el cambio no se veía. El sitio público nunca lleva este atributo.
+ *
+ * Mayor especificidad que las reglas por ancho (atributo + clase), sin !important.
+ * Misma cadena de respaldo que ellas: lo que falta cae al perfil de más arriba.
+ */
+.arcis-scope[data-focus-mode='web'] img.image-focus-responsive {
+  object-position: var(--image-focus-web, 50% 50%);
+}
+
+.arcis-scope[data-focus-mode='tablet'] img.image-focus-responsive {
+  object-position: var(--image-focus-tablet, var(--image-focus-web, 50% 50%));
+}
+
+.arcis-scope[data-focus-mode='mobile'] img.image-focus-responsive {
+  object-position:
+    var(
+      --image-focus-mobile,
+      var(--image-focus-tablet, var(--image-focus-web, 50% 50%))
+    );
+}

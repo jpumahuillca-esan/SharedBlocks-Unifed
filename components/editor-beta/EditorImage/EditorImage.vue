@@ -147,11 +147,12 @@
  * que es lo que enfoca el panel cuando se pulsa la foto en el lienzo. La ruta
  * del alt se pasa aparte, en `alt-edit-target`.
  */
-import { computed, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import EditorHint from '../EditorHint/EditorHint.vue';
 import EditorImageFocus from '../EditorImageFocus/EditorImageFocus.vue';
 import EditorText from '../EditorText/EditorText.vue';
 import { controlAttrsOf } from '../_shared/fieldUtils';
+import { claimCanvasFocusMode, releaseCanvasFocusMode } from '../_shared/imageFocusMode';
 
 defineOptions({ inheritAttrs: false });
 
@@ -264,6 +265,21 @@ const activeFocusMode = computed(
 const hasResponsiveFocus = computed(
   () => focusModes.value.length > 0 && props.focusValues !== undefined,
 );
+
+/*
+ * Con perfiles por dispositivo, el lienzo dibuja el que se está editando aquí
+ * (ver _shared/imageFocusMode.ts). Sin foto o sin perfiles no hay nada que
+ * mostrar y se suelta, para que el lienzo vuelva a elegir por su ancho.
+ */
+const canvasOwner = Symbol('editor-image');
+
+watch(
+  () => (hasResponsiveFocus.value && model.value ? activeFocusMode.value?.key : null),
+  (key) => (key ? claimCanvasFocusMode(canvasOwner, key) : releaseCanvasFocusMode(canvasOwner)),
+  { immediate: true },
+);
+
+onBeforeUnmount(() => releaseCanvasFocusMode(canvasOwner));
 
 const responsiveFocusValues = ref<Record<string, FocusPoint>>({});
 

@@ -1,0 +1,105 @@
+/* =========================================================================
+   KEY FACTS (datos clave) — ARCIS Design System
+
+   Franja de color con hasta cuatro datos de un programa: un rótulo pequeño
+   sobre su valor en negrita, entre dos filetes. La usa el bloque
+   block-beta/info/key-facts.
+
+   ATENCIÓN: no es un porte del kit. El kit de este repositorio no documenta
+   esta franja; se reconstruyó a partir de la maqueta del equipo. Conviene
+   reconciliarla cuando el kit se actualice.
+
+   COLORES: ninguno es nuevo. El fondo es un color institucional elegido en el
+   editor (se guarda el token), y el texto sale de él: blanco, salvo sobre los
+   fondos claros de la paleta. El Block.vue calcula las cuatro variables:
+
+     --key-facts-color     fondo de la franja
+     --key-facts-content   color del dato
+     --key-facts-rule      filetes
+     --key-facts-label     rótulo (más suave que el dato)
+
+   Dos composiciones:
+     escritorio  una fila, una columna por dato, entre dos filetes
+     teléfono    dos columnas; un filete más entre cada fila
+
+   Todo bajo .arcis-scope por la razón explicada en base.scss.
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+
+  /*
+   * Franja a sangre: el color llega de borde a borde y el contenido se limita
+   * al contenedor. Por eso no lleva margen por fuera (ver section-rhythm.scss):
+   * el aire va dentro del color.
+   */
+  .key-facts {
+    background-color: var(--key-facts-color, var(--ds-color-univ-management));
+    color: var(--key-facts-content, var(--ds-color-text-inverse));
+  }
+
+  .key-facts__inner {
+    width: 100%;
+    max-width: var(--ds-container-max);
+    margin-inline: auto;
+    padding: var(--ds-spacing-lg) var(--ds-container-padding-x);
+    box-sizing: border-box;
+  }
+
+  /*
+   * Una columna por dato: el número lo pone el bloque (--key-facts-columns), así
+   * con tres datos cada uno se queda con un tercio y no hay un hueco a la
+   * derecha. Los filetes son el borde de la lista, no elementos aparte.
+   */
+  .key-facts__list {
+    display: grid;
+    grid-template-columns: repeat(var(--key-facts-columns, 4), minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block: var(--ds-border-width-sm) solid var(--key-facts-rule, var(--ds-color-white-60));
+  }
+
+  .key-facts__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-1);
+    min-width: 0;
+    padding-block: var(--ds-space-5);
+    padding-inline-end: var(--ds-space-4);
+  }
+
+  .key-facts__label {
+    color: var(--key-facts-label, var(--ds-color-white-80));
+    line-height: 1.4;
+  }
+
+  /*
+   * El color va explícito y no heredado: así el dato no depende de que el reset
+   * de títulos de cada sitio deje pasar el de la franja.
+   */
+  .key-facts__value {
+    color: var(--key-facts-content, var(--ds-color-text-inverse));
+    line-height: 1.25;
+  }
+
+  /* -----------------------------------------------------------------------
+     Teléfono y tableta estrecha — por debajo de 768px.
+
+     Cuatro columnas ya no caben: un dato como "Marzo de 2027" necesita unos
+     130px. Dos columnas, y a partir del tercer dato —la segunda fila— un
+     filete más que cruza todo el ancho. Va como borde del ítem y no como
+     separación de la rejilla, porque un `gap` lo cortaría entre columnas.
+     ----------------------------------------------------------------------- */
+  @include bp.container-down('md') {
+
+    .key-facts__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .key-facts__item:nth-child(n + 3) {
+      border-top: var(--ds-border-width-sm) solid var(--key-facts-rule, var(--ds-color-white-60));
+    }
+  }
+}

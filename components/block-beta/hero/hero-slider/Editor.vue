@@ -30,23 +30,93 @@
 
     <hr />
 
+    <h6 class="fw-bold small text-uppercase mb-1">Presentación</h6>
+    <div class="btn-group w-100" role="group" aria-label="Presentación de la portada">
+      <button
+        v-for="option in MODE_OPTIONS"
+        :key="option.value"
+        type="button"
+        class="btn btn-sm"
+        :class="localData.mode === option.value ? 'btn-secondary' : 'btn-outline-secondary'"
+        :aria-pressed="localData.mode === option.value"
+        @click="setMode(option.value)"
+      >
+        {{ option.label }}
+      </button>
+    </div>
+    <p class="hs-hint mt-1">
+      <template v-if="isSingle">
+        Se muestra una sola diapositiva, sin flechas ni contador.
+        <template v-if="localData.slides.length > 1">
+          Las otras {{ localData.slides.length - 1 }} se conservan y vuelven si
+          eliges Carrusel.
+        </template>
+      </template>
+      <template v-else>
+        Varias diapositivas con flechas y contador.
+      </template>
+    </p>
+
+    <hr />
+
+    <EditorBrandColor
+      v-model="localData.panelColorToken"
+      data-edit-target="panelColorToken"
+      label="Color de la franja"
+    />
+    <p class="hs-hint mt-1">
+      Es el color de la franja diagonal que se ve en teléfono. Aplica a todas
+      las diapositivas.
+    </p>
+
+    <hr />
+
+    <h6 class="fw-bold small text-uppercase mb-1">Velo sobre la foto</h6>
+    <div class="hs-overlay__label">
+      <label for="hs-overlay">Opacidad</label>
+      <span>{{ localData.overlayOpacity }}%</span>
+    </div>
+    <input
+      id="hs-overlay"
+      v-model.number="localData.overlayOpacity"
+      data-edit-target="overlayOpacity"
+      type="range"
+      class="form-range"
+      min="0"
+      max="100"
+      step="5"
+    />
+    <p class="hs-hint">
+      Es la oscuridad del degradado que va detrás del texto. 100% es el velo de
+      siempre y 0% lo quita, para que se vea la foto tal cual. Aplica a todas las
+      diapositivas, en escritorio y tableta: en teléfono el texto va sobre la
+      franja de color y no hay velo.
+    </p>
+
+    <hr />
+
     <div class="d-flex align-items-center justify-content-between mb-1">
-      <h6 class="fw-bold small text-uppercase m-0">Diapositivas</h6>
-      <span class="badge bg-secondary">{{ localData.slides.length }}</span>
+      <h6 class="fw-bold small text-uppercase m-0">{{ isSingle ? 'Diapositiva' : 'Diapositivas' }}</h6>
+      <span v-if="!isSingle" class="badge bg-secondary">{{ localData.slides.length }}</span>
     </div>
     <p class="hs-hint">
       Los títulos de las diapositivas son de presentación: se ven como titulares,
       pero no son el título principal de la página.
     </p>
 
+    <!--
+      En modo de una sola diapositiva solo se edita la primera: sin subir, bajar
+      ni quitar (no hay nada que reordenar y quitarla dejaría la portada vacía).
+    -->
     <CardAccordionItem
-      v-for="(slide, index) in localData.slides"
+      v-for="(slide, index) in visibleSlides"
       :edit-key="`slides.${index}`"
       :key="slide.id"
       :title="slide.title"
       :index="index"
-      :total="localData.slides.length"
+      :total="visibleSlides.length"
       :open="openIndex === index"
+      :locked="isSingle"
       remove-label="Quitar diapositiva"
       @toggle="toggle(index)"
       @move="moveSlide(index, $event)"
@@ -135,65 +205,84 @@
 
         <hr />
 
-        <h6 class="fw-bold small text-uppercase mb-1">Botón principal</h6>
-        <EditorText
-          v-model="slide.primary.label"
-          data-edit-target=".primary.label"
-          class="mb-2"
-          label="Texto"
-          placeholder="Habla con un asesor"
-        />
-        <EditorUrl
-          v-model="slide.primary.url"
-          v-model:target="slide.primary.target"
-          data-edit-target=".primary.url"
-          class="mb-3"
-          label="Destino"
-        />
-
-        <!-- Botón secundario — opcional -->
-        <div class="hs-optional">
-          <div class="hs-optional__head">
-            <h6 class="fw-bold small text-uppercase m-0">Botón secundario</h6>
-            <button
-              v-if="isOpen(slide, 'secondary')"
-              type="button"
-              class="hs-optional__drop"
-              title="Quitar botón secundario"
-              @click="clearField(slide, 'secondary')"
-            >
-              <i class="las la-times"></i>
-            </button>
-          </div>
-
-          <template v-if="isOpen(slide, 'secondary')">
-            <EditorText
-              v-model="slide.secondary.label"
-              data-edit-target=".secondary.label"
-              class="mb-2"
-              label="Texto"
-              placeholder="Postula ahora"
-            />
-            <EditorUrl
-              v-model="slide.secondary.url"
-              v-model:target="slide.secondary.target"
-              data-edit-target=".secondary.url"
-              label="Destino"
-            />
-          </template>
+        <h6 class="fw-bold small text-uppercase mb-1">Botones</h6>
+        <div class="btn-group w-100 mb-1" role="group" aria-label="Botones de la diapositiva">
           <button
-            v-else
+            v-for="option in BUTTONS_OPTIONS"
+            :key="option.value"
             type="button"
-            class="btn btn-sm btn-outline-secondary w-100"
-            @click="openField(slide, 'secondary')"
+            class="btn btn-sm"
+            :class="slide.buttons === option.value ? 'btn-secondary' : 'btn-outline-secondary'"
+            :aria-pressed="slide.buttons === option.value"
+            @click="slide.buttons = option.value"
           >
-            <i class="las la-plus me-1"></i> Agregar botón secundario
+            {{ option.label }}
           </button>
         </div>
+        <p class="hs-hint">
+          El botón que no se elige se conserva, solo deja de mostrarse.
+        </p>
+
+        <!-- Botón principal: con "Ambos" o "Solo principal" -->
+        <template v-if="slide.buttons !== 'secondary'">
+          <h6 class="fw-bold small text-uppercase mb-1">Botón principal</h6>
+          <EditorText
+            v-model="slide.primary.label"
+            data-edit-target=".primary.label"
+            class="mb-2"
+            label="Texto"
+            placeholder="Habla con un asesor"
+          />
+          <EditorUrl
+            v-model="slide.primary.url"
+            v-model:target="slide.primary.target"
+            data-edit-target=".primary.url"
+            class="mb-2"
+            label="Destino"
+          />
+          <EditorIcon
+            v-model="slide.primary.icon"
+            v-model:position="slide.primary.iconPosition"
+            with-position
+            class="mb-3"
+            hint="Opcional. Déjalo vacío para un botón sin ícono."
+          />
+        </template>
+
+        <!-- Botón secundario: con "Ambos" o "Solo secundario" -->
+        <template v-if="slide.buttons !== 'primary'">
+          <h6 class="fw-bold small text-uppercase mb-1">Botón secundario</h6>
+          <EditorText
+            v-model="slide.secondary.label"
+            data-edit-target=".secondary.label"
+            class="mb-2"
+            label="Texto"
+            placeholder="Postula ahora"
+          />
+          <EditorUrl
+            v-model="slide.secondary.url"
+            v-model:target="slide.secondary.target"
+            data-edit-target=".secondary.url"
+            class="mb-2"
+            label="Destino"
+          />
+          <EditorIcon
+            v-model="slide.secondary.icon"
+            v-model:position="slide.secondary.iconPosition"
+            with-position
+            hint="Opcional. Déjalo vacío para un botón sin ícono."
+          />
+        </template>
       </div>
     </CardAccordionItem>
 
-    <button type="button" class="btn btn-sm btn-danger w-100 mt-2" @click="addSlide">
+    <!-- En modo de una sola diapositiva solo hace falta si no queda ninguna. -->
+    <button
+      v-if="!isSingle || !localData.slides.length"
+      type="button"
+      class="btn btn-sm btn-danger w-100 mt-2"
+      @click="addSlide"
+    >
       <i class="las la-plus me-1"></i> Agregar diapositiva
     </button>
   </div>
@@ -203,7 +292,7 @@
 /**
  * Editor del carrusel de portada.
  */
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 /*
  * El acordeón viene de la familia `events`. Es una pieza de interfaz del panel
  * sin nada específico de aquella familia, y duplicarla solo para no cruzar
@@ -217,6 +306,8 @@ import {
   normalizeImageFocusProfiles,
   saveImageFocusProfiles,
 } from '../../../../helpers/imageFocus';
+import EditorBrandColor from '../../../editor-beta/EditorBrandColor/EditorBrandColor.vue';
+import EditorIcon from '../../../editor-beta/EditorIcon/EditorIcon.vue';
 import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
@@ -224,7 +315,13 @@ import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import {
   newHeroSlideId,
   normalizeHeroAction,
+  normalizeHeroButtons,
+  normalizeHeroMode,
+  normalizeHeroOverlay,
+  normalizeHeroPanelColor,
   normalizeShowSeoHeading,
+  type HeroButtons,
+  type HeroMode,
   type HeroSlideItem,
 } from '../_shared/types';
 
@@ -240,9 +337,21 @@ const imageFocusModes = createImageFocusModes({
   mobile: '4 / 3',
 });
 
+const MODE_OPTIONS: Array<{ value: HeroMode; label: string }> = [
+  { value: 'carousel', label: 'Carrusel' },
+  { value: 'single', label: 'Una diapositiva' },
+];
+
+const BUTTONS_OPTIONS: Array<{ value: HeroButtons; label: string }> = [
+  { value: 'both', label: 'Ambos' },
+  { value: 'primary', label: 'Solo principal' },
+  { value: 'secondary', label: 'Solo secundario' },
+];
+
 const buildSlide = (source: any): HeroSlideItem => {
   const imageFocusX = normalizeImageFocus(source?.imageFocusX);
   const imageFocusY = normalizeImageFocus(source?.imageFocusY);
+  const secondary = normalizeHeroAction(source?.secondary);
 
   return {
     id: source?.id || newHeroSlideId(),
@@ -258,30 +367,53 @@ const buildSlide = (source: any): HeroSlideItem => {
       imageFocusX,
       imageFocusY,
     ),
+    buttons: normalizeHeroButtons(source?.buttons, secondary),
     primary: normalizeHeroAction(source?.primary),
-    secondary: normalizeHeroAction(source?.secondary),
+    secondary,
   };
 };
 
 const build = (source: any) => ({
   showSeoHeading: normalizeShowSeoHeading(source?.showSeoHeading),
+  mode: normalizeHeroMode(source?.mode),
+  panelColorToken: normalizeHeroPanelColor(source?.panelColorToken),
+  overlayOpacity: normalizeHeroOverlay(source?.overlayOpacity),
   slides: Array.isArray(source?.slides) ? source.slides.map(buildSlide) : [],
 });
 
 const localData = ref(build(props.modelValue));
 
 /* -------------------------------------------------------------------------- */
+/* Presentación: carrusel o una sola diapositiva                               */
+/* -------------------------------------------------------------------------- */
+
+const isSingle = computed(() => localData.value.mode === 'single');
+
+/** En modo de una sola diapositiva solo se edita la primera; las demás se conservan. */
+const visibleSlides = computed(() =>
+  isSingle.value ? localData.value.slides.slice(0, 1) : localData.value.slides,
+);
+
+const setMode = (mode: HeroMode) => {
+  localData.value.mode = mode;
+
+  // La única diapositiva visible se abre sola: es lo que hay que editar.
+  if (mode === 'single' && localData.value.slides.length) openIndex.value = 0;
+};
+
+/* -------------------------------------------------------------------------- */
 /* Campos opcionales                                                           */
 /* -------------------------------------------------------------------------- */
 
 /**
- * Los tres campos que la maqueta marca como opcionales.
+ * Los dos campos de texto que la maqueta marca como opcionales.
  *
- * Ninguno ocupa sitio en el panel hasta que se pide: con los siete campos
+ * Ninguno ocupa sitio en el panel hasta que se pide: con todos los campos
  * siempre desplegados, una diapositiva obligaba a recorrer el doble de panel
- * para llegar a lo que de verdad se estaba editando.
+ * para llegar a lo que de verdad se estaba editando. (El botón secundario ya no
+ * es un opcional más: se elige con el selector "Botones" de cada diapositiva.)
  */
-type OptionalField = 'eyebrow' | 'desc' | 'secondary';
+type OptionalField = 'eyebrow' | 'desc';
 
 /**
  * Campos desplegados, por diapositiva y campo.
@@ -297,11 +429,8 @@ const optionalOpen = ref<Record<string, boolean>>({});
 const fieldKey = (slide: HeroSlideItem, field: OptionalField) => `${slide.id}:${field}`;
 
 /** ¿Este campo opcional trae contenido guardado? */
-const hasContent = (slide: HeroSlideItem, field: OptionalField) => {
-  if (field === 'secondary') return Boolean(slide.secondary.label || slide.secondary.url);
-  if (field === 'eyebrow') return Boolean(slide.eyebrow);
-  return Boolean(slide.desc);
-};
+const hasContent = (slide: HeroSlideItem, field: OptionalField) =>
+  Boolean(field === 'eyebrow' ? slide.eyebrow : slide.desc);
 
 /**
  * Sin decisión previa manda el dato, que es lo que hace que una diapositiva ya
@@ -316,14 +445,8 @@ const openField = (slide: HeroSlideItem, field: OptionalField) => {
 
 /** Se limpia el dato además de plegar: si no, el bloque seguiría dibujándolo. */
 const clearField = (slide: HeroSlideItem, field: OptionalField) => {
-  if (field === 'secondary') {
-    slide.secondary.label = '';
-    slide.secondary.url = '';
-  } else if (field === 'eyebrow') {
-    slide.eyebrow = '';
-  } else {
-    slide.desc = '';
-  }
+  if (field === 'eyebrow') slide.eyebrow = '';
+  else slide.desc = '';
 
   optionalOpen.value[fieldKey(slide, field)] = false;
 };
@@ -424,6 +547,20 @@ watch(
   margin: 0 0 8px;
   font-size: 11.5px;
   line-height: 1.45;
+  color: #6b7688;
+}
+
+/* Etiqueta del control de opacidad: nombre a la izquierda, valor a la derecha. */
+.hs-overlay__label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.hs-overlay__label span {
+  font-variant-numeric: tabular-nums;
   color: #6b7688;
 }
 

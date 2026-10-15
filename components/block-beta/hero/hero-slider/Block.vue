@@ -1,5 +1,5 @@
 <template>
-  <section v-if="slides.length" class="hero">
+  <section v-if="slides.length" class="hero" :style="panelStyle">
     <!--
       Título principal de la página, para buscadores y lectores de pantalla.
 
@@ -74,8 +74,13 @@ import { ref, computed, watch } from 'vue';
 import HeroSlide from '../_shared/HeroSlide.vue';
 import HeroControls from '../_shared/HeroControls.vue';
 import {
+  heroOverlayStyle,
+  heroPanelStyle,
   normalizeHeroAction,
+  normalizeHeroButtons,
+  normalizeHeroMode,
   normalizeShowSeoHeading,
+  resolveHeroActions,
   type HeroSlideItem,
 } from '../_shared/types';
 import {
@@ -91,12 +96,30 @@ const props = defineProps<{ data: any }>();
 
 const showSeoHeading = computed(() => normalizeShowSeoHeading(props.data?.showSeoHeading));
 
+/* Color de la franja: la hoja lo lee de --hero-panel-bg (ver _hero.scss). */
+const panelStyle = computed(() => ({
+  ...heroPanelStyle(props.data?.panelColorToken),
+  // Intensidad del velo sobre la foto: la hoja lo lee de --hero-overlay.
+  ...heroOverlayStyle(props.data?.overlayOpacity),
+}));
+
+/*
+ * En modo `single` solo cuenta la primera diapositiva. Las demás siguen en el
+ * dato (el editor las conserva), pero ni se dibujan ni cuentan para las flechas
+ * y el contador: con una sola ya no salen.
+ */
 const slides = computed<HeroSlideItem[]>(() => {
-  const raw = Array.isArray(props.data?.slides) ? props.data.slides : [];
+  const all = Array.isArray(props.data?.slides) ? props.data.slides : [];
+  const raw = normalizeHeroMode(props.data?.mode) === 'single' ? all.slice(0, 1) : all;
 
   return raw.map((slide: any, i: number) => {
     const imageFocusX = normalizeImageFocus(slide?.imageFocusX);
     const imageFocusY = normalizeImageFocus(slide?.imageFocusY);
+    const actions = resolveHeroActions(
+      normalizeHeroButtons(slide?.buttons, normalizeHeroAction(slide?.secondary)),
+      normalizeHeroAction(slide?.primary),
+      normalizeHeroAction(slide?.secondary),
+    );
 
     return ({
     id: slide?.id || `hero-${i}`,
@@ -112,8 +135,9 @@ const slides = computed<HeroSlideItem[]>(() => {
       imageFocusX,
       imageFocusY,
     ),
-    primary: normalizeHeroAction(slide?.primary),
-    secondary: normalizeHeroAction(slide?.secondary),
+    buttons: normalizeHeroButtons(slide?.buttons, normalizeHeroAction(slide?.secondary)),
+    primary: actions.primary,
+    secondary: actions.secondary,
     });
   }) as HeroSlideItem[];
 });

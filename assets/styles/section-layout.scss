@@ -54,6 +54,8 @@ $ps-float-breakpoint: 1280px;
  * borde derecho del contenido es el del `__inner`, así que el hueco va ahí.
  */
 $ps-block-containers: (
+  '.about-career__inner',
+  '.breadcrumb-block__inner--boxed',
   '.cards-pillars__container',
   '.cards-r3__container',
   '.cards-v2__container',
@@ -63,6 +65,7 @@ $ps-block-containers: (
   '.ecosystem-esan__inner',
   '.hero__inner',
   '.hero__controls',
+  '.key-facts__inner',
   '.mapamundi__inner',
   '.subhero__inner'
 );

@@ -72,11 +72,16 @@
    * Opaco sobre el texto y difuminado hacia la derecha, para que la foto se
    * vea cuanto más lejos del bloque de texto. Mismo recurso que usa
    * .ctaband--image, que resuelve el mismo problema.
+   *
+   * `--hero-overlay` (0 a 1) lo pone el bloque desde el editor y atenúa todo el
+   * degradado a la vez: 1 es el velo de siempre, 0 lo quita. Sin la variable
+   * (la hoja usada fuera del bloque) vale 1 y nada cambia.
    */
   .hero__media::after {
     content: '';
     position: absolute;
     inset: 0;
+    opacity: var(--hero-overlay, 1);
     background: linear-gradient(
       90deg,
       rgba(11, 12, 16, 0.92) 0%,
@@ -121,6 +126,9 @@
    * Va como ::after y no como un elemento aparte porque es puro adorno: así no
    * aparece en el texto que lee un lector de pantalla ni obliga al componente a
    * emitir un <span> vacío.
+   *
+   * Siempre rojo de marca: el color que elige el editor (--hero-panel-bg) es el
+   * de la franja diagonal del teléfono y no alcanza a este filete.
    *
    * Medidas tomadas de .testimonial-card__accent, que es el mismo recurso ya
    * portado en el sistema: mismo ancho, grosor y radio, para que los dos filetes
@@ -232,10 +240,13 @@
   /* -----------------------------------------------------------------------
      Teléfono — por debajo de 480px.
 
-     Aquí sí cambia la composición entera: la foto deja de ser fondo y pasa
-     arriba, y el texto baja a un panel de color de marca. Sobre una foto
-     estrecha el texto no se lee, y el velo tendría que ser tan opaco que
-     taparía la imagen.
+     Aquí cambia la composición: el texto baja a un panel de color de marca,
+     porque sobre una foto estrecha no se lee y el velo tendría que ser tan
+     opaco que taparía la imagen.
+
+     La foto SIGUE siendo el fondo de todo el alto del hero, igual que en
+     escritorio (antes era una caja 4/3 arriba y el resto quedaba sin foto). La
+     franja de color va encima, translúcida, y deja asomar la foto por detrás.
 
      El corte va en 'sm' (480px) y NO en 'md' (768px): la captura de
      tableta del equipo, a 764px, todavía muestra el texto sobre la foto. Con
@@ -254,17 +265,32 @@
        * como se comporta un corte de este tipo en una maqueta.
        */
       --hero-slant: 24px;
+
+      /*
+       * Cuánto color tiene la franja cuando hay foto debajo. Con 100% sería
+       * opaca y la foto no se vería detrás; más abajo de ~85% el texto blanco
+       * empieza a perder contraste sobre fotos claras.
+       */
+      --hero-panel-opacity: 88%;
     }
 
     .hero__slide {
       flex-direction: column;
       align-items: stretch;
-      /* El alto lo decide el contenido: foto más panel. */
+      /* El alto lo decide el contenido: el hueco de la foto más el panel. */
       min-height: 0;
     }
 
-    .hero__media {
-      position: relative;
+    /*
+     * Hueco de la foto: reserva arriba la altura que antes ocupaba la caja 4/3
+     * de la foto, para que el hero mida lo mismo. La foto en sí ya no vive
+     * ahí: es el fondo (.hero__media, absoluto a todo el alto, como en
+     * escritorio) y el panel se le pone encima.
+     */
+    .hero__slide::before {
+      content: '';
+      display: block;
+      flex: none;
       aspect-ratio: 4 / 3;
     }
 
@@ -287,7 +313,7 @@
      * separación con el borde que tendría si el corte fuera recto.
      */
     .hero__inner {
-      background-color: var(--ds-color-surface-primary);
+      background-color: var(--hero-panel-bg, var(--ds-color-surface-primary));
       padding: var(--ds-spacing-lg) var(--hero-padding-x);
 
       margin-top: calc(-1 * var(--hero-slant));
@@ -296,11 +322,41 @@
     }
 
     /*
+     * Con foto, la franja es translúcida y deja ver la foto detrás. Sin foto
+     * se queda opaca: translúcida sobre el fondo oscuro del hero se vería más
+     * oscura que el color elegido.
+     *
+     * Va aparte del color sólido de arriba a propósito: un navegador sin
+     * `color-mix` descarta esta declaración y conserva el sólido.
+     */
+    .hero__slide--photo .hero__inner {
+      background-color: color-mix(
+        in srgb,
+        var(--hero-panel-bg, var(--ds-color-surface-primary)) var(--hero-panel-opacity),
+        transparent
+      );
+    }
+
+    /*
      * Sobre el panel de marca, un filete rojo no se ve. Pasa a blanco, igual
      * que el resto del texto de este panel.
      */
     .hero__eyebrow::after {
-      background-color: var(--ds-color-background-default);
+      background-color: var(--hero-panel-content, var(--ds-color-background-default));
+    }
+
+    /*
+     * Texto del panel. Los colores de marca claros (Communications, Law,
+     * Psychology) piden texto oscuro: el bloque emite --hero-panel-content solo
+     * en ese caso. Sin él, el panel conserva el blanco de siempre.
+     */
+    .hero__eyebrow,
+    .hero__title {
+      color: var(--hero-panel-content, var(--ds-color-text-inverse));
+    }
+
+    .hero__desc {
+      color: var(--hero-panel-content, rgba(255, 255, 255, 0.85));
     }
 
     .hero__actions {

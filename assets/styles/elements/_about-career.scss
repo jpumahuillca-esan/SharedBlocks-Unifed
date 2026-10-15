@@ -1,0 +1,240 @@
+/* =========================================================================
+   ABOUT CAREER (acerca de la carrera) — ARCIS Design System
+
+   Sección blanca que presenta una carrera: título con filete, subtítulo y
+   descripción, el video, una lista de datos (Grado, Título…) y, al pie,
+   tarjetas de enlace con ícono. La usa el bloque block-beta/about/career.
+
+   ATENCIÓN: no es un porte del kit. El kit de este repositorio no documenta
+   esta sección; se reconstruyó a partir de la maqueta del equipo. Conviene
+   reconciliarla cuando el kit se actualice.
+
+   COLORES: ninguno es nuevo. Fondo blanco, rojo de marca en el filete y en la
+   flecha, y los tokens de texto y borde de siempre. El video trae su propio
+   aspecto de _video-preview.scss; aquí solo se lo coloca.
+
+   Dos composiciones:
+     escritorio  datos en dos columnas (rótulo | valor) con filete entre filas;
+                 los enlaces en dos columnas
+     teléfono    datos apilados (rótulo sobre valor), sin filetes; los enlaces
+                 uno debajo del otro
+
+   Todo bajo .arcis-scope por la razón explicada en base.scss.
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+
+  .about-career {
+    --about-career-padding-x: var(--ds-container-padding-x);
+
+    /* Lado del cuadro del ícono en las tarjetas de enlace. */
+    --about-career-icon-size: 64px;
+  }
+
+  /*
+   * Sección blanca: el aire va DENTRO, como padding-block, igual que las demás
+   * secciones blancas (ver section-rhythm.scss). El contenido se limita al
+   * contenedor del sistema con el token y no con un número.
+   */
+  .about-career__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-spacing-md);
+
+    width: 100%;
+    max-width: var(--ds-container-max);
+    margin-inline: auto;
+    padding: var(--ds-spacing-xxl) var(--about-career-padding-x);
+    box-sizing: border-box;
+  }
+
+  /* -----------------------------------------------------------------------
+     Encabezado
+     ----------------------------------------------------------------------- */
+  .about-career__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--ds-spacing-xxs);
+  }
+
+  .about-career__title {
+    color: var(--ds-color-text-primary);
+  }
+
+  /*
+   * Filete corto, rojo de marca, bajo el título. Mismas medidas que
+   * .ecosystem__rule, .card-section__rule y .values-cards__rule: es el mismo
+   * recurso de la maqueta, y así se ve como la misma pieza en toda la página.
+   */
+  .about-career__rule {
+    width: 40px;
+    height: 2px;
+    background-color: var(--ds-color-esan-corp);
+  }
+
+  .about-career__intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-spacing-xs);
+  }
+
+  .about-career__subtitle {
+    color: var(--ds-color-text-primary);
+  }
+
+  .about-career__description {
+    color: var(--ds-color-text-secondary);
+  }
+
+  /* El marco del video lo define MoleculeVideoPreview (16:9, esquinas redondeadas). */
+  .about-career__media {
+    width: 100%;
+  }
+
+  /* -----------------------------------------------------------------------
+     Datos
+
+     Dos columnas: el rótulo ocupa un cuarto y el valor el resto, como en la
+     maqueta. Cada fila lleva un filete debajo, también la última, que cierra
+     la lista antes de las tarjetas.
+     ----------------------------------------------------------------------- */
+  .about-career__details {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .about-career__detail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+    align-items: center;
+    gap: var(--ds-space-4);
+    padding-block: var(--ds-space-5);
+    border-bottom: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+  }
+
+  /*
+   * Si el dato no lleva rótulo, el valor ocupa su misma columna y no salta a la
+   * del rótulo: la columna de valores se mantiene alineada entre filas.
+   */
+  .about-career__detail-label {
+    grid-column: 1;
+    color: var(--ds-color-text-secondary);
+  }
+
+  .about-career__detail-value {
+    grid-column: 2;
+    color: var(--ds-color-text-primary);
+  }
+
+  /* -----------------------------------------------------------------------
+     Enlaces
+
+     Dos columnas; con un número impar el último queda en la primera, sin
+     estirarse. `grid` y no `flex`: así todas las tarjetas miden igual aunque
+     una tenga el texto en dos líneas.
+     ----------------------------------------------------------------------- */
+  .about-career__links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--ds-space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .about-career__links-item {
+    display: flex;
+  }
+
+  /*
+   * La tarjeta de enlace NO está en el kit: se escribe aquí, junto al único
+   * bloque que la usa. Ícono en cuadro claro, texto y flecha roja al final.
+   */
+  .about-career-link {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: var(--ds-space-6);
+    min-width: 0;
+    padding: var(--ds-space-6);
+    box-sizing: border-box;
+
+    background-color: var(--ds-color-background-default);
+    border-radius: var(--ds-radius-sm);
+    box-shadow: var(--ds-shadow-sm);
+    color: var(--ds-color-text-primary);
+    text-decoration: none;
+    transition: box-shadow var(--ds-ease-fast);
+  }
+
+  .about-career-link:hover,
+  .about-career-link:focus-visible {
+    box-shadow: var(--ds-shadow-md);
+  }
+
+  .about-career-link__icon {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--about-career-icon-size);
+    height: var(--about-career-icon-size);
+
+    background-color: var(--ds-color-background-light);
+    border-radius: var(--ds-radius-sm);
+    color: var(--ds-color-text-primary);
+  }
+
+  .about-career-link__label {
+    flex: 1;
+    min-width: 0;
+    color: var(--ds-color-text-primary);
+    line-height: 1.4;
+  }
+
+  .about-career-link__chevron {
+    flex: none;
+    color: var(--ds-color-text-brand);
+  }
+
+  /* -----------------------------------------------------------------------
+     Teléfono y tableta estrecha — por debajo de 768px.
+
+     Los datos se apilan (rótulo sobre valor) y pierden los filetes, como en la
+     maqueta; las tarjetas pasan a una columna y el ícono se achica un poco.
+     ----------------------------------------------------------------------- */
+  @include bp.container-down('md') {
+
+    .about-career {
+      --about-career-icon-size: 56px;
+    }
+
+    .about-career__detail {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--ds-space-1);
+      padding-block: var(--ds-space-2);
+      border-bottom: none;
+    }
+
+    .about-career__detail-label,
+    .about-career__detail-value {
+      grid-column: 1;
+    }
+
+    .about-career__links {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--ds-space-4);
+    }
+
+    .about-career-link {
+      gap: var(--ds-space-4);
+      padding: var(--ds-space-4);
+    }
+  }
+}

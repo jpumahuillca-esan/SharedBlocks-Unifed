@@ -1,12 +1,17 @@
 <template>
-  <div class="breadcrumb-block py-2" :class="{ 'container': isBoxed }">
-    <MoleculeBreadcrumb :items="resolvedItems" />
+  <div class="breadcrumb-block">
+    <AtomDivider variant="horizontal" />
+    <div class="breadcrumb-block__inner" :class="{ 'breadcrumb-block__inner--boxed': isBoxed }">
+      <MoleculeBreadcrumb :items="resolvedItems" />
+    </div>
+    <AtomDivider variant="horizontal" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import MoleculeBreadcrumb, { type BreadcrumbItem } from '../../../molecules/MoleculeBreadcrumb.vue';
+import AtomDivider from '../../../atoms/AtomDivider.vue';
+import MoleculeBreadcrumb,{ type BreadcrumbItem } from '../../../molecules/MoleculeBreadcrumb.vue';
 
 const props = defineProps<{
   data?: any;
@@ -25,9 +30,3 @@ const resolvedItems = computed<BreadcrumbItem[]>(() => {
   return fallback;
 });
 </script>
-
-<style scoped>
-.breadcrumb-block {
-  width: 100%;
-}
-</style>

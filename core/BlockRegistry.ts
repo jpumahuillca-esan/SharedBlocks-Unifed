@@ -373,6 +373,13 @@ export const BLOCK_REGISTRY: Record<string, any> = {
             // <h1> oculto "ESAN" para buscadores. Se desactiva en las páginas
             // que ya tengan su propio título principal.
             showSeoHeading: true,
+            // Color de la franja (token de la paleta institucional). El rojo
+            // corporativo es el de siempre.
+            panelColorToken: '--ds-color-esan-corp',
+            // Intensidad del velo oscuro sobre la foto, en % (100 = el de siempre, 0 = sin velo).
+            overlayOpacity: 100,
+            // 'carousel' (varias diapositivas con flechas) o 'single' (solo la primera).
+            mode: 'carousel',
             slides: [
                 {
                     id: 'hero-1',
@@ -588,6 +595,54 @@ export const BLOCK_REGISTRY: Record<string, any> = {
                     linkLabel: 'Conoce nuestras acreditaciones', linkUrl: '',
                     image: '', imageAlt: '', videoUrl: '', duration: '',
                 },
+            ],
+        },
+    },
+
+    InfoKeyFacts: {
+        label: 'Datos clave (hasta 4)',
+        icon: 'las la-th-list',
+        group: 'Info',
+        beta: true,
+        // La franja de color sangra a todo el ancho: no va dentro de una caja.
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/info/key-facts/Block.vue')),
+        initialData: {
+            items: [
+                { id: 'kf-1', label: 'Duración:', value: '10 semestres académicos' },
+                { id: 'kf-2', label: 'Plan:', value: '48 cursos, 200 créditos' },
+                { id: 'kf-3', label: 'Modalidad', value: 'Presencial' },
+                { id: 'kf-4', label: 'Próximo inicio:', value: 'Marzo de 2027' },
+            ],
+            colorToken: '--ds-color-univ-management',
+        },
+    },
+
+    AboutCareer: {
+        label: 'Acerca de la carrera',
+        icon: 'las la-graduation-cap',
+        group: 'About',
+        beta: true,
+        // Sección blanca con su propio ancho máximo, igual que las de `events`.
+        isBoxed: true,
+        component: defineAsyncComponent(() => import('../components/block-beta/about/career/Block.vue')),
+        initialData: {
+            title: 'Acerca de la carrera',
+            subtitle: 'Formación integral para liderar equipos interdisciplinarios',
+            description: 'Nuestra carrera de Administración te ofrece una formación integral y dinámica, con un enfoque estratégico para liderar equipos interdisciplinarios. Aprenderás gestión empresarial, finanzas y marketing, orientado a desarrollar habilidades gerenciales y un espíritu innovador para enfrentar desafíos globales.',
+            image: '',
+            imageAlt: '',
+            imageFocusX: 50,
+            imageFocusY: 50,
+            videoUrl: '',
+            duration: '02:14',
+            details: [
+                { id: 'ac-d1', label: 'Grado', value: 'Bachiller en Administración' },
+                { id: 'ac-d2', label: 'Título', value: 'Licenciado en Administración' },
+            ],
+            links: [
+                { id: 'ac-l1', icon: 'award', label: 'Conoce las certificaciones', url: '', target: '' },
+                { id: 'ac-l2', icon: 'briefcase', label: 'Conoce las áreas de especialización', url: '', target: '' },
             ],
         },
     },
@@ -883,6 +938,8 @@ const betaBaseGroups = [
     // 'Cards' no coincide con ningún id de baseGroups: no se cuela en el catálogo clásico.
     { id: 'Cards', label: 'Cards', color: 'outline-success', icon: 'las la-th-large' },
     { id: 'Navigation', label: 'Navegación', color: 'outline-primary', icon: 'las la-compass' },
+    // 'About' no coincide con ningún id de baseGroups: no se cuela en el catálogo clásico.
+    { id: 'About', label: 'About', color: 'outline-info', icon: 'las la-id-card' },
 ];
 
 /** Claves de los bloques marcados como beta, sin agrupar. */

@@ -22,6 +22,35 @@
    ============================================================ */
 
 .arcis-scope {
+  /*
+   * Bloque Breadcrumb (navigation/breadcrumb). Con "ancho contenido" el interior
+   * se limita al ancho del contenedor del sistema (--ds-container-max, 1280px) y
+   * lleva su relleno lateral, igual que el resto de bloques; ya no depende del
+   * `.container` de Bootstrap, que mide 1140/1320px según el sitio. Sin él, el
+   * breadcrumb ocupa todo el ancho de su columna. Un divider horizontal
+   * (AtomDivider) cierra el bloque arriba y abajo, a todo el ancho; el `hr` de
+   * Bootstrap lo atenúa con opacity .25, aquí se anula para que se vea el token.
+   */
+  .breadcrumb-block {
+    width: 100%;
+  }
+
+  .breadcrumb-block > .divider {
+    opacity: 1;
+  }
+
+  .breadcrumb-block__inner {
+    padding-block: var(--ds-spacing-xs);
+    box-sizing: border-box;
+  }
+
+  .breadcrumb-block__inner--boxed {
+    width: 100%;
+    max-width: var(--ds-container-max);
+    margin-inline: auto;
+    padding-inline: var(--ds-container-padding-x);
+  }
+
   .breadcrumb.breadcrumb--arcis {
     display: flex;
     flex-wrap: wrap;
