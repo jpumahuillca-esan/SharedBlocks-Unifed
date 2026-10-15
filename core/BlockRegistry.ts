@@ -38,7 +38,8 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         initialData: {
             mode: 'dynamic',
             academic_unit_id: null,
-            includeCurrentPage: true,
+            includeCurrentPage: false,
+            explicitIncludeCurrent: false,
             currentPage: '',
             isBoxed: true,
             items: [

@@ -52,6 +52,10 @@
     color: var(--ds-color-text-brand);
   }
 
+  .breadcrumb__item:last-child .breadcrumb__link {
+    color: var(--ds-color-text-primary);
+  }
+
   .breadcrumb__current {
     color: var(--ds-color-text-primary);
     font-weight: var(--ds-weight-medium);
