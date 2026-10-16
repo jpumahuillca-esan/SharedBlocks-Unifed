@@ -89,14 +89,15 @@
             v-model="localData.includeCurrentPage"
             class="form-check-input"
             type="checkbox"
-            @change="rebuildAutoPath"
+            @change="onIncludeCurrentPageToggle"
           />
           <label class="form-check-label small fw-bold" for="breadcrumb-include-current">
             Incluir página actual al final
           </label>
         </div>
         <small class="text-muted d-block mb-2" style="font-size: 11px;">
-          Si se desactiva, la ruta mostrará solo los niveles anteriores hasta el penúltimo.
+          <span class="badge bg-secondary-subtle text-dark border me-1" style="font-size: 10px;">SEO</span>
+          Desactivado por recomendación SEO (muestra solo la ruta jerárquica hasta la unidad o nivel padre).
         </small>
 
         <div v-if="localData.includeCurrentPage" class="mt-2">
@@ -121,12 +122,12 @@
         <div class="d-flex flex-wrap align-items-center gap-1">
           <template v-for="(item, idx) in localData.items" :key="idx">
             <span
-              v-if="idx < localData.items.length - 1 || !localData.includeCurrentPage"
+              v-if="item.href"
               class="badge bg-white text-dark border px-2 py-1"
               style="font-size: 11px;"
             >
               {{ item.label }}
-              <small class="text-muted ms-1">({{ item.href || '/' }})</small>
+              <small class="text-muted ms-1">({{ item.href }})</small>
             </span>
             <span
               v-else
@@ -218,7 +219,7 @@
           </div>
 
           <div class="row g-2">
-            <div :class="idx === localData.items.length - 1 ? 'col-12' : 'col-6'">
+            <div class="col-6">
               <input
                 v-model="crumb.label"
                 type="text"
@@ -226,12 +227,12 @@
                 placeholder="Texto del nivel"
               />
             </div>
-            <div v-if="idx < localData.items.length - 1" class="col-6">
+            <div class="col-6">
               <input
                 v-model="crumb.href"
                 type="text"
                 class="form-control form-control-sm"
-                placeholder="URL (ej: /pregrado/)"
+                placeholder="URL (opcional, ej: /pregrado/)"
                 @blur="crumb.href = ensureTrailingSlash(crumb.href)"
               />
             </div>
@@ -267,12 +268,13 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
-import { useBreadcrumb } from '../../../../composables/useBreadcrumb';
+import { useBreadcrumb, type BreadcrumbAcademicUnit } from '../../../../composables/useBreadcrumb';
 
 const props = defineProps<{
   modelValue?: any;
   pageAcademicUnitId?: number | null;
   pageTitle?: string;
+  academicUnits?: BreadcrumbAcademicUnit[];
 }>();
 
 const emit = defineEmits(['update:modelValue']);
@@ -289,10 +291,12 @@ const showCustomUnitSelect = ref(false);
 
 const buildModel = (source: any) => {
   const currentTitle = source?.currentPage || props.pageTitle || '';
+  const includeCurrent = source?.includeCurrentPage === true && source?.explicitIncludeCurrent === true;
   return {
     mode: source?.mode ?? 'dynamic',
     academic_unit_id: source?.academic_unit_id ?? null,
-    includeCurrentPage: source?.includeCurrentPage !== false,
+    includeCurrentPage: includeCurrent,
+    explicitIncludeCurrent: includeCurrent,
     currentPage: currentTitle,
     isBoxed: source?.isBoxed !== false,
     items: Array.isArray(source?.items) && source.items.length > 0
@@ -309,18 +313,18 @@ const localData = ref(buildModel(props.modelValue));
  * ID efectivo de la unidad académica:
  * 1. Si el usuario eligió manualmente una unidad en el selector avanzado, usa esa.
  * 2. Si no, usa directamente la unidad de la página actual (props.pageAcademicUnitId).
- * 3. Solo si la página no tuviese unidad asignada (null), recurre a localStorage o 'all'.
+ * 3. Si la página no tiene unidad asignada (null), se considera Portal Central ('all').
  */
 const effectiveUnitId = computed(() => {
-  if (localData.value.academic_unit_id !== null && localData.value.academic_unit_id !== undefined) {
+  if (
+    localData.value.academic_unit_id !== null &&
+    localData.value.academic_unit_id !== undefined &&
+    localData.value.academic_unit_id !== ''
+  ) {
     return localData.value.academic_unit_id;
   }
   if (props.pageAcademicUnitId !== null && props.pageAcademicUnitId !== undefined) {
     return props.pageAcademicUnitId;
-  }
-  if (typeof window !== 'undefined') {
-    const stored = localStorage.getItem('academic_unit_id');
-    if (stored) return Number(stored);
   }
   return 'all';
 });
@@ -329,20 +333,22 @@ const isOverridden = computed(() => {
   return (
     localData.value.academic_unit_id !== null &&
     localData.value.academic_unit_id !== undefined &&
+    localData.value.academic_unit_id !== '' &&
     String(localData.value.academic_unit_id) !== String(props.pageAcademicUnitId)
   );
 });
 
 const pageUnitName = computed(() => {
-  if (!props.pageAcademicUnitId) return 'Sin unidad';
-  const found = academicUnits.value.find((u) => String(u.id) === String(props.pageAcademicUnitId));
-  return found?.name || `Unidad #${props.pageAcademicUnitId}`;
+  const targetId = props.pageAcademicUnitId;
+  if (!targetId || targetId === 'all') return 'Portal Central / Raíz';
+  const found = academicUnits.value.find((u) => Number(u.id) === Number(targetId));
+  return found?.name || `Unidad #${targetId}`;
 });
 
 const currentUnitName = computed(() => {
   const targetId = effectiveUnitId.value;
-  if (targetId === 'all') return 'Portal Central / Raíz';
-  const found = academicUnits.value.find((u) => String(u.id) === String(targetId));
+  if (!targetId || targetId === 'all') return 'Portal Central / Raíz';
+  const found = academicUnits.value.find((u) => Number(u.id) === Number(targetId));
   return found?.name || pageUnitName.value;
 });
 
@@ -360,6 +366,16 @@ const resetToPageUnit = () => {
 };
 
 const onUnitChanged = () => {
+  if (localData.value.academic_unit_id === 'null' || localData.value.academic_unit_id === '') {
+    localData.value.academic_unit_id = null;
+  } else if (localData.value.academic_unit_id !== 'all' && localData.value.academic_unit_id !== null) {
+    localData.value.academic_unit_id = Number(localData.value.academic_unit_id);
+  }
+  rebuildAutoPath();
+};
+
+const onIncludeCurrentPageToggle = () => {
+  localData.value.explicitIncludeCurrent = localData.value.includeCurrentPage;
   rebuildAutoPath();
 };
 
@@ -408,7 +424,12 @@ const moveCrumb = (index: number, delta: number) => {
 };
 
 const loadUnits = async () => {
-  await fetchAcademicUnits();
+  if (Array.isArray(props.academicUnits) && props.academicUnits.length > 0) {
+    academicUnits.value = props.academicUnits;
+  } else {
+    await fetchAcademicUnits();
+  }
+
   if (localData.value.mode === 'dynamic') {
     if (!localData.value.currentPage && props.pageTitle) {
       localData.value.currentPage = props.pageTitle;
@@ -421,23 +442,42 @@ onMounted(() => {
   loadUnits();
 });
 
+// Reactividad ante la carga de unidades académicas
+watch(
+  academicUnits,
+  (units) => {
+    if (units && units.length > 0 && localData.value.mode === 'dynamic') {
+      rebuildAutoPath();
+    }
+  },
+  { deep: true }
+);
+
 // Cuando llega el ID de la unidad desde el backend (PageBuilderController)
 watch(
   () => props.pageAcademicUnitId,
   () => {
-    rebuildAutoPath();
-  }
+    if (localData.value.mode === 'dynamic') {
+      rebuildAutoPath();
+    }
+  },
+  { immediate: true }
 );
 
 // Cuando llega el título real de la página (ej: "ESAN Management")
 watch(
   () => props.pageTitle,
   (newTitle) => {
-    if (newTitle && (!localData.value.currentPage || localData.value.currentPage === 'Página actual')) {
-      localData.value.currentPage = newTitle;
+    if (newTitle) {
+      if (!localData.value.currentPage || localData.value.currentPage === 'Página actual') {
+        localData.value.currentPage = newTitle;
+      }
+      if (localData.value.mode === 'dynamic') {
+        rebuildAutoPath();
+      }
     }
-    rebuildAutoPath();
-  }
+  },
+  { immediate: true }
 );
 
 watch(
@@ -448,6 +488,9 @@ watch(
     const current = JSON.stringify(localData.value);
     if (incoming !== current) {
       localData.value = buildModel(newVal);
+      if (localData.value.mode === 'dynamic') {
+        rebuildAutoPath();
+      }
     }
   },
   { deep: true }

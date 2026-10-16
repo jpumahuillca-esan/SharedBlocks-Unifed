@@ -141,9 +141,9 @@
         :total="localData.cards.length"
         :open="openIndex === index"
         remove-label="Quitar publicación"
-        @toggle="toggle(index)"
-        @move="moveCard(index, $event)"
-        @remove="removeCard(index)"
+        @toggle="toggle(Number(index))"
+        @move="moveCard(Number(index), $event)"
+        @remove="removeCard(Number(index))"
       >
         <div>
           <EditorTextarea v-model="card.title" data-edit-target=".title" class="mb-2" label="Título" :rows="2" />

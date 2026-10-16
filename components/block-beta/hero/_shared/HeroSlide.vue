@@ -1,5 +1,5 @@
 <template>
-  <div class="hero__slide">
+  <div class="hero__slide" :class="{ 'hero__slide--photo': image }">
     <div class="hero__media" v-bind="edit('.image')">
       <!-- Sin imagen no se emite <img>: un src vacío da un icono roto. -->
       <img
@@ -46,7 +46,9 @@
 
         <div v-if="primary.label || secondary.label" class="hero__actions">
           <AtomButton v-if="primary.label" variant="primary" :href="primary.url || undefined" :target="primary.target" v-bind="edit('.primary.label')">
+            <AtomIcon v-if="primary.icon && primary.iconPosition === 'start'" :name="primary.icon" :size="16" aria-hidden="true" />
             {{ primary.label }}
+            <AtomIcon v-if="primary.icon && primary.iconPosition === 'end'" :name="primary.icon" :size="16" aria-hidden="true" />
           </AtomButton>
 
           <!-- Opcional, según la maqueta. -->
@@ -58,7 +60,9 @@
             :href="secondary.url || undefined"
             :target="secondary.target"
           >
+            <AtomIcon v-if="secondary.icon && secondary.iconPosition === 'start'" :name="secondary.icon" :size="16" aria-hidden="true" />
             {{ secondary.label }}
+            <AtomIcon v-if="secondary.icon && secondary.iconPosition === 'end'" :name="secondary.icon" :size="16" aria-hidden="true" />
           </AtomButton>
         </div>
       </div>
@@ -82,6 +86,7 @@
 import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import AtomButton from '../../../atoms/AtomButton.vue';
+import AtomIcon from '../../../atoms/AtomIcon.vue';
 import type { HeroAction } from './types';
 import {
   imageFocusProfilesStyle,

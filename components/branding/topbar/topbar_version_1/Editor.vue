@@ -7,6 +7,7 @@
     <label class="form-label">Texto</label>
     <input
       v-model="localData.brandLabel"
+      data-edit-target="brandLabel"
       type="text"
       class="form-control form-control-sm mb-2"
       placeholder="Portal Académico"
@@ -15,6 +16,7 @@
     <label class="form-label">Destino</label>
     <input
       v-model="localData.brandUrl"
+      data-edit-target="brandUrl"
       type="text"
       class="form-control form-control-sm"
       placeholder="/ruta o https://"
@@ -37,6 +39,7 @@
         :index="index"
         :total="localData[group.key].length"
         :open="openKey === item.id"
+        :edit-key="`${group.key}.${index}`"
         remove-label="Quitar enlace"
         @toggle="toggle(item.id)"
         @move="move(localData[group.key], index, $event)"
@@ -45,6 +48,7 @@
         <label class="form-label">Texto</label>
         <input
           v-model="item.label"
+          data-edit-target=".label"
           type="text"
           class="form-control form-control-sm mb-2"
           :placeholder="group.placeholder"
@@ -54,6 +58,7 @@
         <p class="te-hint">Si tiene opciones, se ignora: el texto abre el desplegable.</p>
         <input
           v-model="item.url"
+          data-edit-target=".url"
           type="text"
           class="form-control form-control-sm mb-2"
           placeholder="/ruta o https://"

@@ -48,9 +48,9 @@ withDefaults(defineProps<{
     >
       <AtomIcon v-if="index > 0" name="chevron-right" :size="14" aria-hidden="true" />
       
-      <!-- Enlace intermedio con SEO y navegación SPA reactiva (sin recargar página) -->
+      <!-- Enlace con SEO y navegación SPA reactiva (sin recargar página) -->
       <AtomLink
-        v-if="index < items.length - 1 && item.href"
+        v-if="item.href"
         class="breadcrumb__link"
         :href="item.href"
         itemprop="item"
@@ -58,16 +58,15 @@ withDefaults(defineProps<{
         <span itemprop="name">{{ item.label }}</span>
       </AtomLink>
 
-      <!-- Último ítem o nivel sin enlace: página actual -->
+      <!-- Último ítem o nivel sin enlace: texto actual -->
       <template v-else>
         <span
           class="breadcrumb__current"
-          aria-current="page"
+          :aria-current="index === items.length - 1 ? 'page' : undefined"
           itemprop="name"
         >
           {{ item.label }}
         </span>
-        <meta v-if="item.href" itemprop="item" :content="item.href" />
       </template>
 
       <!-- Posición obligatoria para Google BreadcrumbList -->
