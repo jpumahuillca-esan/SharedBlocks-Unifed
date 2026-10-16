@@ -17,6 +17,7 @@
       :index="index"
       :total="localData.contacts.length"
       :open="openKey === `contact-${contact.id}`"
+      :edit-key="`contacts.${index}`"
       remove-label="Quitar contacto"
       @toggle="toggle(`contact-${contact.id}`)"
       @move="move(localData.contacts, index, $event)"
@@ -25,6 +26,7 @@
       <label class="form-label">Título</label>
       <input
         v-model="contact.title"
+        data-edit-target=".title"
         type="text"
         class="form-control form-control-sm mb-2"
         placeholder="Sede principal:"
@@ -34,6 +36,7 @@
       <p class="fe-hint">Cada salto de línea se respeta en el pie.</p>
       <textarea
         v-model="contact.text"
+        data-edit-target=".text"
         class="form-control form-control-sm mb-2"
         rows="2"
         placeholder="Alonso de Molina 1652,&#10;Monterrico, Surco - Lima, Perú"
@@ -41,10 +44,10 @@
 
       <label class="form-label">Enlace (opcional)</label>
       <p class="fe-hint">Para que el dato se pueda pulsar: mailto:, tel: o una ruta.</p>
-      <input
+      <EditorUrl
         v-model="contact.url"
-        type="text"
-        class="form-control form-control-sm"
+        v-model:target="contact.target"
+        data-edit-target=".url"
         placeholder="mailto:informes@esan.edu.pe"
       />
     </CardAccordionItem>
@@ -72,6 +75,7 @@
       :index="index"
       :total="localData.columns.length"
       :open="openKey === `column-${column.id}`"
+      :edit-key="`columns.${index}`"
       remove-label="Quitar columna"
       @toggle="toggle(`column-${column.id}`)"
       @move="move(localData.columns, index, $event)"
@@ -80,6 +84,7 @@
       <label class="form-label">Título de la columna</label>
       <input
         v-model="column.title"
+        data-edit-target=".title"
         type="text"
         class="form-control form-control-sm mb-2"
         placeholder="Estudia en ESAN"
@@ -90,15 +95,15 @@
         <div class="fe-link__fields">
           <input
             v-model="link.label"
+            :data-edit-target="`.links.${linkIndex}.label`"
             type="text"
             class="form-control form-control-sm"
             placeholder="Texto"
           />
-          <input
+          <EditorUrl
             v-model="link.url"
-            type="text"
-            class="form-control form-control-sm"
-            placeholder="/ruta o https://"
+            v-model:target="link.target"
+            :data-edit-target="`.links.${linkIndex}.url`"
           />
         </div>
         <div class="fe-link__actions">
@@ -165,6 +170,7 @@
         </select>
         <input
           v-model="social.url"
+          :data-edit-target="`socials.${index}.url`"
           type="text"
           class="form-control form-control-sm"
           placeholder="https://"
@@ -217,7 +223,7 @@
       <img v-if="localData.claimsImage" :src="localData.claimsImage" alt="" />
       <span v-else class="text-muted small">Sin imagen</span>
     </div>
-    <div class="d-flex gap-2 mb-2">
+    <div class="d-flex gap-2 mb-2" data-edit-target="claimsImage">
       <button
         type="button"
         class="btn btn-sm btn-outline-secondary flex-grow-1"
@@ -240,16 +246,17 @@
     <label class="form-label">Texto alternativo</label>
     <input
       v-model="localData.claimsImageAlt"
+      data-edit-target="claimsImageAlt"
       type="text"
       class="form-control form-control-sm mb-2"
       placeholder="Libro de Reclamaciones"
     />
 
     <label class="form-label">Destino</label>
-    <input
+    <EditorUrl
       v-model="localData.claimsUrl"
-      type="text"
-      class="form-control form-control-sm"
+      v-model:target="localData.claimsTarget"
+      data-edit-target="claimsUrl"
       placeholder="/libro-de-reclamaciones o https://"
     />
 
@@ -259,6 +266,7 @@
     <label class="form-label fw-bold small text-uppercase">Copyright</label>
     <input
       v-model="localData.copyright"
+      data-edit-target="copyright"
       type="text"
       class="form-control form-control-sm"
       placeholder="© Copyright 2026 - Universidad ESAN | Todos los derechos reservados."
@@ -277,6 +285,8 @@
  */
 import { ref, watch } from 'vue';
 import CardAccordionItem from '../../../block-beta/events/_shared/CardAccordionItem.vue';
+import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
+import { normalizeLinkTarget, type LinkTarget } from '../../../../helpers/linkTarget';
 
 type SocialNetwork = 'facebook' | 'x' | 'youtube' | 'instagram' | 'linkedin';
 
@@ -289,8 +299,8 @@ const NETWORK_OPTIONS: Array<{ value: SocialNetwork; label: string }> = [
   { value: 'linkedin', label: 'LinkedIn' },
 ];
 
-interface FooterContact { id: string; title: string; text: string; url: string }
-interface FooterLink { id: string; label: string; url: string }
+interface FooterContact { id: string; title: string; text: string; url: string; target: LinkTarget }
+interface FooterLink { id: string; label: string; url: string; target: LinkTarget }
 interface FooterColumn { id: string; title: string; links: FooterLink[] }
 interface FooterSocial { id: string; network: SocialNetwork; url: string }
 
@@ -309,12 +319,14 @@ const buildContact = (source: any): FooterContact => ({
   title: text(source?.title),
   text: text(source?.text),
   url: text(source?.url),
+  target: normalizeLinkTarget(source?.target),
 });
 
 const buildLink = (source: any): FooterLink => ({
   id: source?.id || newId('fl'),
   label: text(source?.label),
   url: text(source?.url),
+  target: normalizeLinkTarget(source?.target),
 });
 
 const buildColumn = (source: any): FooterColumn => ({
@@ -338,6 +350,7 @@ const build = (source: any) => ({
   claimsImage: text(source?.claimsImage),
   claimsImageAlt: text(source?.claimsImageAlt),
   claimsUrl: text(source?.claimsUrl),
+  claimsTarget: normalizeLinkTarget(source?.claimsTarget),
   copyright: text(source?.copyright),
 });
 

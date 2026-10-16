@@ -5,7 +5,7 @@
       <div class="mmb-panel__head">
         <component
           :is="root.url ? linkTag : 'p'"
-          v-bind="root.url ? getLinkProps(root.url) : {}"
+          v-bind="{ ...(root.url ? getLinkProps(root.url) : {}), ...edit(`menu_tree.${root.index}.header_title`) }"
           class="mmb-panel__title"
         >
           {{ root.headerTitle || root.title }}
@@ -16,7 +16,7 @@
       <div class="mmb-panel__grid">
         <!-- Columna izquierda: pestañas (nivel 2). -->
         <ul class="mmb-panel__tabs">
-          <li v-for="tab in root.children" :key="tab.id">
+          <li v-for="(tab, j) in root.children" :key="tab.id">
             <!--
               Con ratón, pasar por encima la activa y el clic navega. Con el dedo
               no hay "pasar por encima": el primer toque la activa (para ver su
@@ -24,7 +24,10 @@
             -->
             <component
               :is="tab.url ? linkTag : 'a'"
-              v-bind="tab.url ? getLinkProps(tab.url) : { role: 'button', tabindex: 0 }"
+              v-bind="{
+                ...(tab.url ? getLinkProps(tab.url) : { role: 'button', tabindex: 0 }),
+                ...edit(`menu_tree.${root.index}.children.${j}`),
+              }"
               class="mmb-panel__tab"
               :class="{ 'is-active': activeTab?.id === tab.id }"
               @pointerenter="onTabPointerEnter($event, tab.id)"
@@ -46,7 +49,7 @@
           pide hasta que se muestra.
         -->
         <div
-          v-for="tab in root.children"
+          v-for="(tab, j) in root.children"
           v-show="activeTab?.id === tab.id"
           :key="tab.id"
           class="mmb-panel__content"
@@ -94,7 +97,10 @@
             -->
             <component
               :is="tab.bannerUrl ? linkTag : 'div'"
-              v-bind="tab.bannerUrl ? getLinkProps(tab.bannerUrl) : {}"
+              v-bind="{
+                ...(tab.bannerUrl ? getLinkProps(tab.bannerUrl) : {}),
+                ...edit(`menu_tree.${root.index}.children.${j}.banner_image`),
+              }"
               class="mmb-panel__banner"
               :class="{ 'is-empty': !tab.bannerImage }"
             >
@@ -128,6 +134,7 @@
 import { ref, computed, watch } from 'vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 import { useDynamicLink } from '../../../../composables/useDynamicLink';
+import { useEditTarget } from '../../../../core/editFocus';
 import type { MenuRoot, MenuTab } from './menu';
 
 const props = defineProps<{
@@ -140,6 +147,9 @@ const props = defineProps<{
 const emit = defineEmits<{ (e: 'close'): void }>();
 
 const { linkTag, getLinkProps } = useDynamicLink(props.linkComponent);
+
+/* Enfoque de campos: clic en una pieza del lienzo → su campo en el editor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 /*
  * De entrada, la primera pestaña: el panel nunca se abre con la derecha vacía.

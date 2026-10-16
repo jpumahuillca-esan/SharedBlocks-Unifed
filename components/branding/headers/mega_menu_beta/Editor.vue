@@ -7,7 +7,7 @@
     <div class="me-logo-preview mb-2">
       <img :src="localData.logoUrl || defaultLogo" alt="" :style="{ height: `${localData.logoHeight}px` }" />
     </div>
-    <div class="d-flex gap-2 mb-2">
+    <div class="d-flex gap-2 mb-2" data-edit-target="logoUrl">
       <button
         type="button"
         class="btn btn-sm btn-outline-secondary flex-grow-1"
@@ -51,7 +51,13 @@
 
     <label class="form-label">Destino de la búsqueda</label>
     <p class="me-hint">La página a la que lleva el botón rojo de la lupa. Vacío, la lupa no se muestra.</p>
-    <input v-model="localData.searchUrl" type="text" class="form-control form-control-sm" placeholder="/buscar" />
+    <input
+      v-model="localData.searchUrl"
+      data-edit-target="searchUrl"
+      type="text"
+      class="form-control form-control-sm"
+      placeholder="/buscar"
+    />
 
     <hr />
 
@@ -103,7 +109,13 @@
       Todavía no hay menú. Vincula uno en <strong>Menú Institucional</strong>.
     </p>
 
-    <div v-for="root in localData.menu_tree" :key="root.id" class="me-root" :class="{ 'is-open': openId === root.id }">
+    <div
+      v-for="(root, rootIndex) in localData.menu_tree"
+      :key="root.id"
+      class="me-root"
+      :class="{ 'is-open': openId === root.id }"
+      :data-edit-target="`menu_tree.${rootIndex}`"
+    >
       <button type="button" class="me-root__head" :aria-expanded="openId === root.id" @click="toggle(root.id)">
         <i class="las" :class="openId === root.id ? 'la-angle-down' : 'la-angle-right'"></i>
         <span class="me-root__title">{{ root.title || 'Sin título' }}</span>
@@ -115,6 +127,7 @@
         <p class="me-hint">Encabeza el panel, con la flecha roja. Vacío, se usa el de la entrada.</p>
         <input
           v-model="root.header_title"
+          data-edit-target=".header_title"
           type="text"
           class="form-control form-control-sm mb-2"
           :placeholder="root.title || 'ESAN University'"
@@ -125,7 +138,12 @@
 
         <p v-if="!root.children?.length" class="me-hint mb-0">Esta entrada no tiene submenú: es un enlace directo.</p>
 
-        <div v-for="tab in root.children" :key="tab.id" class="me-tab">
+        <div
+          v-for="(tab, tabIndex) in root.children"
+          :key="tab.id"
+          class="me-tab"
+          :data-edit-target="`.children.${tabIndex}`"
+        >
           <div class="me-tab__head">
             <span class="me-tab__title">{{ tab.title || 'Sin título' }}</span>
             <select v-model="tab.layout" class="form-select form-select-sm me-tab__layout">
@@ -139,7 +157,7 @@
               <img v-if="tab.banner_image" :src="tab.banner_image" alt="" />
               <span v-else class="small">Banner</span>
             </div>
-            <div class="d-flex gap-2 mb-2">
+            <div class="d-flex gap-2 mb-2" data-edit-target=".banner_image">
               <button
                 type="button"
                 class="btn btn-sm btn-outline-secondary flex-grow-1"
@@ -193,8 +211,9 @@
  * vuelve a tomar títulos y estructura del menú. Por eso aquí solo se editan
  * esos campos, y títulos y estructura se editan en Menús.
  */
-import { ref, watch } from 'vue';
+import { inject, ref, watch } from 'vue';
 import defaultLogo from '../../../../assets/images/logos/logo-esan-official.svg';
+import { EDIT_FOCUS_KEY } from '../../../../core/editFocus';
 
 const props = defineProps<{ modelValue: any }>();
 
@@ -225,6 +244,25 @@ const openId = ref<string | number | null>(null);
 const toggle = (id: string | number) => {
   openId.value = openId.value === id ? null : id;
 };
+
+/*
+ * Enfoque de campos (core/editFocus.ts): las entradas son un plegable propio y
+ * no un CardAccordionItem, así que se abre aquí la que contiene el campo pedido
+ * (`menu_tree.2.children.0.banner_image` abre la tercera). Solo reacciona a una
+ * petición NUEVA, y no a cada render: si después se cierra a mano, se queda
+ * cerrada.
+ */
+const focus = inject(EDIT_FOCUS_KEY, null);
+
+watch(
+  () => focus?.value?.nonce,
+  () => {
+    const match = /^menu_tree\.(\d+)(?:\.|$)/.exec(focus?.value?.path ?? '');
+    const root = match ? localData.value.menu_tree[Number(match[1])] : null;
+    if (root) openId.value = root.id;
+  },
+  { immediate: true, flush: 'post' },
+);
 
 watch(
   () => props.modelValue,

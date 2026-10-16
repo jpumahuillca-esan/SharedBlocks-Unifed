@@ -13,17 +13,22 @@
     <div class="footer-v1">
       <div class="footer-v1__inner">
         <div v-if="contacts.length" class="footer-v1__contacts">
-          <div v-for="contact in contacts" :key="contact.id" class="footer-v1__contact">
-            <AtomText v-if="contact.title" size="body-compact" class="footer-v1__contact-title">
+          <div
+            v-for="(contact, i) in contacts"
+            :key="contact.id"
+            class="footer-v1__contact"
+            v-bind="edit(`contacts.${i}`)"
+          >
+            <AtomText v-if="contact.title" size="body-compact" class="footer-v1__contact-title" v-bind="edit('.title')">
               {{ contact.title }}
             </AtomText>
 
             <!-- Los saltos de línea del editor se respetan desde la hoja (pre-line). -->
-            <AtomText v-if="contact.text" size="body-compact" class="footer-v1__contact-value">
+            <AtomText v-if="contact.text" size="body-compact" class="footer-v1__contact-value" v-bind="edit('.text')">
               <component
                 :is="linkTag"
                 v-if="contact.url"
-                v-bind="getLinkProps(contact.url)"
+                v-bind="getLinkProps(contact.url, linkTargetAttrs(contact.target))"
               >{{ contact.text }}</component>
               <template v-else>{{ contact.text }}</template>
             </AtomText>
@@ -51,6 +56,7 @@
               'is-first': i === 0,
               'is-last': i === columns.length - 1,
             }"
+            v-bind="edit(`columns.${i}`)"
           >
             <!--
               En escritorio es un rótulo (<p>): las columnas se ven siempre
@@ -65,6 +71,7 @@
               :role="accordion ? 'button' : undefined"
               :tabindex="accordion ? 0 : undefined"
               :aria-expanded="accordion ? String(isOpen(column.id)) : undefined"
+              v-bind="edit('.title')"
               @click="accordion && toggle(column.id)"
               @keydown="accordion && activate($event, column.id)"
             >
@@ -81,12 +88,14 @@
                 -->
                 <nav class="footer-v1__links" :aria-label="column.title || undefined">
                   <AtomButton
-                    v-for="link in column.links"
+                    v-for="(link, j) in column.links"
                     :key="link.id"
                     variant="list"
                     negative
                     :href="link.url || '#'"
+                    :target="link.target || undefined"
                     class="footer-v1__link"
+                    v-bind="edit(`.links.${j}.label`)"
                   >
                     <AtomIcon name="arrow-right" :size="16" />
                     {{ link.label }}
@@ -106,14 +115,15 @@
               :href="social.url || '#'"
               :target="social.url ? '_blank' : undefined"
               :rel="social.url ? 'noopener noreferrer' : undefined"
+              v-bind="edit(`socials.${social.index}.url`)"
             />
           </div>
 
-          <div v-if="claims.image" class="footer-v1__claims">
+          <div v-if="claims.image" class="footer-v1__claims" v-bind="edit('claimsImage')">
             <component
               :is="linkTag"
               v-if="claims.url"
-              v-bind="getLinkProps(claims.url)"
+              v-bind="getLinkProps(claims.url, linkTargetAttrs(claims.target))"
               class="footer-v1__claims-link"
             >
               <img class="footer-v1__claims-image" :src="claims.image" :alt="claims.imageAlt" loading="lazy" decoding="async" />
@@ -123,7 +133,7 @@
         </div>
 
         <div v-if="copyright" class="footer-v1__bottom">
-          <AtomText size="body-compact" class="footer-v1__copyright">{{ copyright }}</AtomText>
+          <AtomText size="body-compact" class="footer-v1__copyright" v-bind="edit('copyright')">{{ copyright }}</AtomText>
           <div class="footer-v1__legal-links">
             <button
               type="button"
@@ -166,6 +176,8 @@ import AtomButton from '../../../atoms/AtomButton.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 import AtomSocialIcon from '../../../atoms/AtomSocialIcon.vue';
 import { useDynamicLink } from '../../../../composables/useDynamicLink';
+import { normalizeLinkTarget, linkTargetAttrs, type LinkTarget } from '../../../../helpers/linkTarget';
+import { useEditTarget } from '../../../../core/editFocus';
 
 type SocialNetwork = 'facebook' | 'x' | 'youtube' | 'instagram' | 'linkedin';
 
@@ -179,10 +191,11 @@ const NETWORKS: SocialNetwork[] = ['facebook', 'x', 'youtube', 'instagram', 'lin
  */
 const ACCORDION_BELOW = 1024;
 
-interface FooterContact { id: string; title: string; text: string; url: string }
-interface FooterLink { id: string; label: string; url: string }
+interface FooterContact { id: string; title: string; text: string; url: string; target: LinkTarget }
+interface FooterLink { id: string; label: string; url: string; target: LinkTarget }
 interface FooterColumn { id: string; title: string; links: FooterLink[] }
-interface FooterSocial { id: string; network: SocialNetwork; url: string }
+/* `index`: posición en el dato guardado, que el filtro de redes desconocidas no debe mover. */
+interface FooterSocial { id: string; network: SocialNetwork; url: string; index: number }
 
 const props = defineProps<{
   config: any;
@@ -199,6 +212,9 @@ const props = defineProps<{
 
 const { linkTag, getLinkProps } = useDynamicLink(props.linkComponent);
 
+/* Enfoque de campos: clic en una pieza del lienzo → su campo en el editor (core/editFocus.ts). */
+const edit = useEditTarget();
+
 const text = (value: unknown) => (typeof value === 'string' ? value : '');
 const list = (value: unknown): any[] => (Array.isArray(value) ? value : []);
 
@@ -208,6 +224,7 @@ const contacts = computed<FooterContact[]>(() =>
     title: text(contact?.title),
     text: text(contact?.text),
     url: text(contact?.url).trim(),
+    target: normalizeLinkTarget(contact?.target),
   }))
 );
 
@@ -219,17 +236,21 @@ const columns = computed<FooterColumn[]>(() =>
       id: link?.id || `link-${i}-${j}`,
       label: text(link?.label),
       url: text(link?.url).trim(),
+      target: normalizeLinkTarget(link?.target),
     })),
   }))
 );
 
 const socials = computed<FooterSocial[]>(() =>
   list(props.config?.socials)
-    .filter((social: any) => NETWORKS.includes(social?.network))
-    .map((social: any, i: number) => ({
-      id: social?.id || `social-${i}`,
+    // El índice se toma ANTES del filtro: es el del dato, que es el del editor.
+    .map((social: any, i: number) => ({ social, index: i }))
+    .filter(({ social }) => NETWORKS.includes(social?.network))
+    .map(({ social, index }) => ({
+      id: social?.id || `social-${index}`,
       network: social.network as SocialNetwork,
       url: text(social?.url).trim(),
+      index,
     }))
 );
 
@@ -238,6 +259,7 @@ const claims = computed(() => ({
   image: text(props.config?.claimsImage).trim(),
   imageAlt: text(props.config?.claimsImageAlt),
   url: text(props.config?.claimsUrl).trim(),
+  target: normalizeLinkTarget(props.config?.claimsTarget),
 }));
 
 const copyright = computed(() => text(props.config?.copyright));
