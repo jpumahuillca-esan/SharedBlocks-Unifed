@@ -672,6 +672,30 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         },
     },
 
+    AwardsFeaturedV2: {
+        label: 'Reconocimientos (logos) V2',
+        icon: 'las la-award',
+        group: 'Awards',
+        beta: true,
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/awards/awards-featured-v2/Block.vue')),
+        initialData: {
+            eyebrow: 'CIFRAS QUE RESPALDAN',
+            title: '<p>Indicadores de <span style="color: #E3173E;">excelencia ESAN</span></p>',
+            desc: 'El prestigio se construye con resultados, reconocimiento internacional y el impacto de nuestros egresados.',
+            linkLabel: 'Ver más reconocimientos',
+            linkUrl: '',
+            backgroundColorToken: '--ds-color-univ-management',
+            bottomText: '',
+            awards: [
+                { id: 'awv2-1', image: '', imageAlt: '' },
+                { id: 'awv2-2', image: '', imageAlt: '' },
+                { id: 'awv2-3', image: '', imageAlt: '' },
+                { id: 'awv2-4', image: '', imageAlt: '' },
+            ],
+        },
+    },
+
     CardsImageGrid: {
         label: 'Tarjetas con imagen (grilla)',
         icon: 'las la-th-large',
