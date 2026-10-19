@@ -2,22 +2,25 @@
   <section class="ecosystem">
     <div class="ecosystem__inner">
       <header v-if="data.title || data.desc" class="ecosystem__header">
+        <!--
+          Sin `align`: la alineación (a la izquierda) la decide la hoja del bloque.
+          El átomo la aplicaría en línea y ganaría siempre sobre ella.
+        -->
         <AtomHeading
           v-if="data.title"
           :level="2"
           size="h2"
           weight="bold"
-          align="center"
           class="ecosystem__title"
           v-bind="edit('title')"
         >
           {{ data.title }}
         </AtomHeading>
 
-        <!-- Entre el título y la descripción, como en la referencia. -->
+        <!-- Entre el título y la descripción, a la izquierda como el texto. -->
         <span class="ecosystem__rule" aria-hidden="true"></span>
 
-        <AtomText v-if="data.desc" size="body" align="center" class="ecosystem__desc" v-bind="edit('desc')">
+        <AtomText v-if="data.desc" size="body" class="ecosystem__desc" v-bind="edit('desc')">
           {{ data.desc }}
         </AtomText>
       </header>
@@ -66,7 +69,7 @@
 /**
  * Sección del ecosistema académico.
  *
- * Encabezado centrado y, debajo, dos grupos: las escuelas grandes a la
+ * Encabezado alineado a la izquierda y, debajo, dos grupos: las escuelas grandes a la
  * izquierda y el conjunto de facultades a la derecha, presidido por su franja.
  * El contenido se escribe desde el editor; no consulta ninguna API.
  *

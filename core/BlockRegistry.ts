@@ -477,29 +477,30 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-globe-americas',
         group: 'Info',
         beta: true,
-        // La franja gris sangra a todo el ancho: no va dentro de una caja.
+        // La franja roja de abajo sangra a todo el ancho: no va dentro de una caja.
         isBoxed: false,
         component: defineAsyncComponent(() => import('../components/block-beta/info/mapamundi/Block.vue')),
         initialData: {
-            eyebrow: 'ESAN Global Experience',
-            title: 'Lleva tu excelencia más lejos',
-            // Los logos de cada tarjeta son fijos (los pone el bloque): aquí solo va la lista.
+            eyebrow: 'Internacionalización',
+            title: 'ESAN Global Experience',
+            subtitle: 'Una plataforma global para cada etapa de tu desarrollo profesional',
+            // Los logos de cada tarjeta son fijos (los pone el bloque): aquí van la etiqueta y la lista.
             left: {
+                tag: 'Pregrado',
                 items: [
-                    { id: 'mm-l1', icon: 'graduate-doc', text: 'Programas cortos y experiencias inmersivas' },
-                    { id: 'mm-l2', icon: 'airplane', text: '+130 Intercambios internacionales' },
-                    { id: 'mm-l3', icon: 'alumni', text: 'Doble titulación con universidades internacionales' },
-                    { id: 'mm-l4', icon: 'awards', text: 'Doble titulación con programas de grado internacionales' },
-                    { id: 'mm-l5', icon: 'chats', text: '+300 estudiantes han completado un programa de intercambio.' },
+                    { id: 'mm-l1', icon: 'globe', text: 'Internacionalización desde los primeros ciclos: Global Weeks, Summer & Winter Programs' },
+                    { id: 'mm-l2', icon: 'handshake', text: '+130 Intercambios internacionales' },
+                    { id: 'mm-l3', icon: 'graduation-cap', text: '+11 oportunidades de Doble Grado' },
+                    { id: 'mm-l4', icon: 'alumni', text: '+300 alumnos han realizado programas de intercambio' },
                 ],
             },
             right: {
+                tag: 'Postgrado',
                 items: [
-                    { id: 'mm-r1', icon: 'alumni', text: 'Doble titulación de MBA' },
-                    { id: 'mm-r2', icon: 'airplane', text: '+70 oportunidades de MBA internacional' },
-                    { id: 'mm-r3', icon: 'family-hold', text: 'Consorcio de escuelas de EMBA internacionales' },
-                    { id: 'mm-r4', icon: 'awards', text: 'Programas de máster especializados' },
-                    { id: 'mm-r5', icon: 'graduate-doc', text: 'Programas de educación ejecutiva' },
+                    { id: 'mm-r1', icon: 'graduate-doc', text: '+20 Programas de Educación Ejecutiva con componente global' },
+                    { id: 'mm-r2', icon: 'graduation-cap', text: '+20 programas de Maestría con oportunidades internacionales' },
+                    { id: 'mm-r3', icon: 'globe', text: '+70 alternativas de intercambio para MBA' },
+                    { id: 'mm-r4', icon: 'alumni', text: '+8 opciones de Doble Grado en MBA' },
                 ],
             },
             button: { label: 'Descubre ESAN Internacional', url: '' },

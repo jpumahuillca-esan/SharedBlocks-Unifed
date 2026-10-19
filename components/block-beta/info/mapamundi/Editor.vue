@@ -8,14 +8,23 @@
       class="mb-2"
       label="Etiqueta superior"
       hint="Texto corto en rojo sobre el título. Vacío la oculta."
-      placeholder="ESAN Global Experience"
+      placeholder="Internacionalización"
     />
 
     <EditorTextarea v-model="localData.title" data-edit-target="title" class="mb-2" label="Título" :rows="2" />
 
+    <EditorTextarea
+      v-model="localData.subtitle"
+      data-edit-target="subtitle"
+      class="mb-2"
+      label="Subtítulo"
+      :rows="2"
+      hint="Una línea bajo el filete. Vacío la oculta."
+    />
+
     <p class="mm-hint">
       <i class="las la-globe-americas me-1"></i>
-      El mapa del centro y los logos de las tarjetas son fijos: no se editan desde aquí.
+      El globo del centro y los logos de las tarjetas son fijos: no se editan desde aquí.
     </p>
 
     <template v-for="side in SIDES" :key="side.key">
@@ -26,6 +35,15 @@
         <span class="badge bg-secondary">{{ localData[side.key].items.length }}</span>
       </div>
       <p class="mm-hint">{{ side.hint }}</p>
+
+      <EditorText
+        v-model="localData[side.key].tag"
+        :data-edit-target="`${side.key}.tag`"
+        class="mb-2"
+        label="Etiqueta de la tarjeta"
+        hint="Texto corto sobre la lista (se muestra en mayúsculas). Vacío la oculta."
+        :placeholder="side.tagPlaceholder"
+      />
 
       <CardAccordionItem
         v-for="(item, index) in localData[side.key].items"
@@ -128,9 +146,9 @@ type SideKey = 'left' | 'right';
  * El título de cada panel nombra la escuela y no solo el lado: el logo ya no se
  * ve en el editor, y así queda claro a qué tarjeta pertenece cada lista.
  */
-const SIDES: Array<{ key: SideKey; title: string; hint: string }> = [
-  { key: 'left', title: 'ESAN University', hint: 'Tarjeta izquierda.' },
-  { key: 'right', title: 'ESAN Graduate School of Business', hint: 'Tarjeta derecha.' },
+const SIDES: Array<{ key: SideKey; title: string; hint: string; tagPlaceholder: string }> = [
+  { key: 'left', title: 'ESAN University', hint: 'Tarjeta izquierda.', tagPlaceholder: 'Pregrado' },
+  { key: 'right', title: 'ESAN Graduate School of Business', hint: 'Tarjeta derecha.', tagPlaceholder: 'Postgrado' },
 ];
 
 const props = defineProps<{
@@ -148,14 +166,16 @@ const buildItem = (source: any) => ({
   text: source?.text ?? '',
 });
 
-/* Solo la lista: el logo de cada tarjeta es fijo y lo pone el bloque. */
+/* Etiqueta y lista: el logo de cada tarjeta es fijo y lo pone el bloque. */
 const buildCard = (source: any) => ({
+  tag: source?.tag ?? '',
   items: Array.isArray(source?.items) ? source.items.map(buildItem) : [],
 });
 
 const build = (source: any) => ({
   eyebrow: source?.eyebrow ?? '',
   title: source?.title ?? '',
+  subtitle: source?.subtitle ?? '',
   left: buildCard(source?.left),
   right: buildCard(source?.right),
   button: {
