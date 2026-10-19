@@ -182,7 +182,7 @@ defineEmits<{
 
 .custom-lead-input:focus {
   border-color: #e31140;
-  box-shadow: 0 0 0 2px rgba(227, 17, 64, 0.15);
+  box-shadow: 0 0 0 2px rgba(227, 17, 64, 1);
   outline: none;
 }
 

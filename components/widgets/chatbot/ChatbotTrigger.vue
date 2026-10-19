@@ -34,7 +34,7 @@ defineEmits<{
   width: var(--fw-size, 54px);
   height: var(--fw-size, 54px);
   border-radius: 50%;
-  background: linear-gradient(135deg, #e31140 0%, #c20b32 100%);
+  background: linear-gradient(135deg, #e31140 0%, #e31140 100%);
   color: #ffffff;
   border: 2px solid rgba(255, 255, 255, 0.4);
   display: flex;
@@ -42,13 +42,13 @@ defineEmits<{
   justify-content: center;
   position: relative;
   cursor: pointer;
-  box-shadow: 0 4px 18px rgba(227, 17, 64, 0.45);
+  box-shadow: 0 4px 18px rgba(227, 17, 64, 1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .chatbot-toggle-btn:hover {
   transform: scale(1.08);
-  box-shadow: 0 6px 24px rgba(227, 17, 64, 0.6);
+  box-shadow: 0 6px 24px rgba(227, 17, 64, 1);
 }
 
 .chatbot-icon-inner {
