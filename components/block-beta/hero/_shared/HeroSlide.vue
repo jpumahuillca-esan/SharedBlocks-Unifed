@@ -16,21 +16,26 @@
 
     <div class="hero__inner">
       <div class="hero__content">
-        <AtomText v-if="eyebrow" size="body-compact" class="hero__eyebrow" v-bind="edit('.eyebrow')">
+        <AtomText
+          v-if="eyebrow"
+          :as="seoHeadingSource === 'eyebrow' ? 'h1' : 'p'"
+          size="body-compact"
+          class="hero__eyebrow"
+          v-bind="edit('.eyebrow')"
+        >
           {{ eyebrow }}
         </AtomText>
 
         <!--
-          El título de TODAS las diapositivas es un párrafo con aspecto de
-          titular. El <h1> de la portada es uno solo y vive fuera, en Block.vue,
-          independiente de qué diapositiva esté a la vista.
+          El título solo se vuelve H1 si se elige como título principal en el
+          editor; el aspecto lo conserva AtomHeading.
 
           El aspecto no cambia: `as` solo sustituye la etiqueta, el tamaño lo
           sigue poniendo el átomo.
         -->
         <AtomHeading
           v-if="title"
-          as="p"
+          :as="seoHeadingSource === 'title' ? 'h1' : 'p'"
           size="h1"
           weight="bold"
           class="hero__title"
@@ -87,7 +92,7 @@ import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import AtomButton from '../../../atoms/AtomButton.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
-import type { HeroAction } from './types';
+import type { HeroAction, HeroSeoHeadingSource } from './types';
 import {
   imageFocusProfilesStyle,
   imageFocusStyle,
@@ -100,6 +105,7 @@ const edit = useEditTarget();
 
 withDefaults(
   defineProps<{
+    seoHeadingSource: HeroSeoHeadingSource;
     eyebrow: string;
     title: string;
     desc: string;

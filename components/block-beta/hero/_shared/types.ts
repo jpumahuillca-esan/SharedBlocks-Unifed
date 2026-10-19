@@ -90,13 +90,11 @@ export interface HeroSlideItem {
 
 export interface HeroSliderData {
     /**
-     * Si el bloque emite el <h1> oculto "ESAN" para buscadores.
-     *
-     * Configurable porque el hero se reutiliza en varias páginas y cada página
-     * debe tener un único título principal: donde la página ya tenga su propio
-     * <h1>, o donde "ESAN" no la describa, se desactiva.
+     * Fuente del H1 SEO: texto fijo o uno de los textos de la única diapositiva visible.
      */
-    showSeoHeading: boolean;
+    seoHeadingSource: HeroSeoHeadingSource;
+    /** Texto del H1 cuando `seoHeadingSource` es `esan` (ESAN por defecto). */
+    seoHeadingText: string;
     /** Carrusel o una sola diapositiva (ver `HeroMode`). */
     mode: HeroMode;
     /**
@@ -167,14 +165,21 @@ export const heroOverlayStyle = (value: unknown): Record<string, string> => ({
     '--hero-overlay': String(normalizeHeroOverlay(value) / 100),
 });
 
-/**
- * Normaliza la opción del título para buscadores.
- *
- * Ausente cuenta como activado, no como desactivado: los bloques guardados antes
- * de que existiera la opción ya emitían el <h1>, y no deben perderlo en silencio
- * por no tener el campo.
- */
-export const normalizeShowSeoHeading = (value: unknown): boolean => value !== false;
+export type HeroSeoHeadingSource = 'esan' | 'title' | 'eyebrow' | 'none';
+
+const HERO_SEO_HEADING_SOURCES: readonly HeroSeoHeadingSource[] = ['esan', 'title', 'eyebrow', 'none'];
+
+/** Old boolean values remain readable: true meant ESAN and false meant no H1. */
+export const normalizeHeroSeoHeadingSource = (
+    value: unknown,
+    legacyShowSeoHeading?: unknown,
+): HeroSeoHeadingSource => {
+    if (HERO_SEO_HEADING_SOURCES.includes(value as HeroSeoHeadingSource)) {
+        return value as HeroSeoHeadingSource;
+    }
+
+    return legacyShowSeoHeading === false ? 'none' : 'esan';
+};
 
 /** Normaliza una acción, tolerando contenido incompleto. */
 export const normalizeHeroAction = (raw: any): HeroAction => ({

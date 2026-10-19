@@ -371,9 +371,9 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         isBoxed: false,
         component: defineAsyncComponent(() => import('../components/block-beta/hero/hero-slider/Block.vue')),
         initialData: {
-            // <h1> oculto "ESAN" para buscadores. Se desactiva en las páginas
-            // que ya tengan su propio título principal.
-            showSeoHeading: true,
+            // Fuente del único <h1> SEO: ESAN, título/antetítulo activo o ninguno.
+            seoHeadingSource: 'esan',
+            seoHeadingText: 'ESAN',
             // Color de la franja (token de la paleta institucional). El rojo
             // corporativo es el de siempre.
             panelColorToken: '--ds-color-esan-corp',
