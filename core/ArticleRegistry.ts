@@ -23,6 +23,18 @@ export const ARTICLE_LAYOUT_REGISTRY: Record<string, any> = {
       () => import("../components/articles/layouts/ArticleClassic.vue"),
     ),
   },
+
+  faculty: {
+    id: "faculty",
+    label: "👨‍🏫 Perfil Docente",
+    description:
+      "Perfil de plana docente con avatar, grados, bio, experiencia, cursos y artículos.",
+    icon: "las la-user-tie",
+
+    component: defineAsyncComponent(
+      () => import("../components/articles/layouts/FacultyProfile.vue"),
+    ),
+  },
   // hero: {
   //     id: 'hero',
   //     label: '🔥 Moderno (Hero)',

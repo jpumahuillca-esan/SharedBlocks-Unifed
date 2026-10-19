@@ -1,7 +1,7 @@
 /* =========================================================================
    ECOSYSTEM — ARCIS Design System
 
-   Sección del ecosistema académico: encabezado centrado y, debajo, las dos
+   Sección del ecosistema académico: encabezado a la izquierda y, debajo, las dos
    escuelas grandes a la izquierda y el grupo de facultades a la derecha.
    La usa el bloque block-beta/ecosystem/section-ecosystem.
 
@@ -86,14 +86,19 @@
   /* -----------------------------------------------------------------------
      Encabezado
      ----------------------------------------------------------------------- */
+  /*
+   * Todo el texto del encabezado va pegado al borde izquierdo: `align-items`
+   * coloca el filete y los bloques, y `text-align` las líneas dentro de cada uno.
+   */
   .ecosystem__header {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--ds-space-4);
+    text-align: left;
   }
 
-  /* Filete corto, rojo de marca, centrado entre el título y la descripción. */
+  /* Filete corto, rojo de marca, a la izquierda entre el título y la descripción. */
   .ecosystem__rule {
     width: 40px;
     height: 2px;

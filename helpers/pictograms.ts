@@ -28,6 +28,9 @@ import awards from '../assets/icons/pictograms/awards.svg?raw';
 import chats from '../assets/icons/pictograms/chats.svg?raw';
 import familyHold from '../assets/icons/pictograms/family-hold.svg?raw';
 import graduateDoc from '../assets/icons/pictograms/graduate-doc.svg?raw';
+import globe from '../assets/icons/pictograms/globe.svg?raw';
+import graduationCap from '../assets/icons/pictograms/graduation-cap.svg?raw';
+import handshake from '../assets/icons/pictograms/handshake.svg?raw';
 
 export interface PictogramDefinition {
     /** Nombre legible para el selector del editor. */
@@ -48,6 +51,13 @@ export const PICTOGRAMS: Record<string, PictogramDefinition> = {
     chats: { label: 'Comunidad — personas conectadas', svg: chats },
     'family-hold': { label: 'Red — personas acompañadas', svg: familyHold },
     'graduate-doc': { label: 'Documento — programas y certificados', svg: graduateDoc },
+    /*
+     * Estos tres son de trazo (stroke) y no rellenos como los demás: salen de
+     * Lucide, con el grosor ajustado para que pesen igual que los del kit.
+     */
+    globe: { label: 'Globo — alcance internacional', svg: globe },
+    'graduation-cap': { label: 'Birrete — estudios y grados', svg: graduationCap },
+    handshake: { label: 'Apretón de manos — convenios y alianzas', svg: handshake },
 };
 
 /** Opciones listas para un <select>, en el orden del catálogo. */

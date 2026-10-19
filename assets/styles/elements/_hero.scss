@@ -224,6 +224,107 @@
   }
 
   /* -----------------------------------------------------------------------
+     Movimiento
+
+     Todo es CSS: sin librería y sin esperar a que el cliente hidrate, así que
+     la entrada se ve desde la primera carga. Cada diapositiva se monta de nuevo
+     al cambiar (ver la `key` en Block.vue), por eso las mismas reglas valen
+     para la carga de la página y para cada cambio de diapositiva.
+
+     Orden de entrada, uno a uno: foto → antetítulo (y su filete) → título →
+     descripción (si existe) → botones. La curva es una salida suave, sin rebote.
+     ----------------------------------------------------------------------- */
+  .hero {
+    /* Duración del fundido entre diapositivas. Igual que HERO_FADE_MS en
+       Block.vue: Vue la usa para saber cuándo retirar la que sale. */
+    --hero-fade: 900ms;
+
+    --hero-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* Cuándo arranca el primer texto y cada cuánto entra el siguiente. */
+    --hero-text-start: 200ms;
+    --hero-text-step: 140ms;
+  }
+
+  /*
+   * Fundido entre diapositivas. La que entra aparece ENCIMA de la que sale, que
+   * se queda opaca debajo: así nunca se ve el fondo oscuro entre las dos, cosa
+   * que pasaría si las dos se desvanecieran a la vez.
+   *
+   * La que sale deja el flujo (absoluta) para que el hero no mida el doble
+   * mientras conviven.
+   */
+  .hero__slide.hero-slide-enter-active {
+    z-index: 1;
+    transition: opacity var(--hero-fade) var(--hero-ease);
+  }
+
+  .hero__slide.hero-slide-enter-from {
+    opacity: 0;
+  }
+
+  .hero__slide.hero-slide-leave-active {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+  }
+
+  /*
+   * El texto que sale se va enseguida, antes de que la nueva foto termine de
+   * aparecer: si no, durante el fundido se leerían dos textos superpuestos.
+   */
+  .hero__slide.hero-slide-leave-active .hero__inner {
+    transition: opacity 250ms ease-out;
+  }
+
+  .hero__slide.hero-slide-leave-to .hero__inner {
+    opacity: 0;
+  }
+
+  /* La foto se asienta: llega un poco ampliada y se acomoda. El .hero recorta
+     lo que sobra. */
+  .hero__media {
+    animation: hero-media-settle calc(var(--hero-fade) * 1.6) var(--hero-ease) both;
+  }
+
+  /* Texto: sube unos píxeles mientras aparece, escalonado. */
+  .hero__eyebrow,
+  .hero__title,
+  .hero__desc,
+  .hero__actions {
+    animation: hero-rise 700ms var(--hero-ease) both;
+  }
+
+  .hero__eyebrow { animation-delay: var(--hero-text-start); }
+  .hero__title   { animation-delay: calc(var(--hero-text-start) + var(--hero-text-step)); }
+  .hero__desc    { animation-delay: calc(var(--hero-text-start) + var(--hero-text-step) * 2); }
+  .hero__actions { animation-delay: calc(var(--hero-text-start) + var(--hero-text-step) * 3); }
+
+  /* El filete del antetítulo se dibuja de izquierda a derecha. */
+  .hero__eyebrow::after {
+    transform-origin: left center;
+    animation: hero-rule 600ms var(--hero-ease) both;
+    animation-delay: calc(var(--hero-text-start) + 250ms);
+  }
+
+  /* Quien pide menos movimiento: todo aparece de una vez, sin desplazamientos. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero__media,
+    .hero__eyebrow,
+    .hero__title,
+    .hero__desc,
+    .hero__actions,
+    .hero__eyebrow::after {
+      animation: none;
+    }
+
+    .hero__slide.hero-slide-enter-active,
+    .hero__slide.hero-slide-leave-active .hero__inner {
+      transition-duration: 0.01ms;
+    }
+  }
+
+  /* -----------------------------------------------------------------------
      Tableta — por debajo de 1024px.
 
      La composición no cambia: el texto sigue sobre la foto. Lo único que cae
@@ -402,4 +503,27 @@
       border-color: transparent;
     }
   }
+}
+
+/* Fuera de .arcis-scope a propósito: los @keyframes son globales, y con el
+   prefijo hero- no chocan con nada. */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hero-rule {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes hero-media-settle {
+  from { transform: scale(1.06); }
+  to { transform: scale(1); }
 }

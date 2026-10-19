@@ -26,6 +26,7 @@ import AtomEyebrow from '../atoms/AtomEyebrow.vue';
 import AtomDivider from '../atoms/AtomDivider.vue';
 import AtomButton from '../atoms/AtomButton.vue';
 import AtomIcon from '../atoms/AtomIcon.vue';
+import AtomLink from '../atoms/AtomLink.vue';
 import {
   imageFocusProfilesStyle,
   imageFocusStyle,
@@ -75,8 +76,27 @@ withDefaults(defineProps<{
   <article :class="['post-card', variant === 'news' ? 'post-card--news' : null]">
     <div class="post-card__media">
       <!-- Sin imagen no se emite <img>: un src vacío da un icono roto. -->
+      <AtomLink
+        v-if="href"
+        :href="href"
+        :target="target"
+        class="post-card__media-link"
+        tabindex="-1"
+        aria-hidden="true"
+      >
+        <img
+          v-if="image"
+          :src="image"
+          :alt="imageAlt || ''"
+          :class="{ 'image-focus-responsive': imageFocusProfiles }"
+          :style="imageFocusProfiles
+            ? imageFocusProfilesStyle(imageFocusProfiles, imageFocusX, imageFocusY)
+            : imageFocusStyle(imageFocusX, imageFocusY)"
+          loading="lazy"
+        />
+      </AtomLink>
       <img
-        v-if="image"
+        v-else-if="image"
         :src="image"
         :alt="imageAlt || ''"
         :class="{ 'image-focus-responsive': imageFocusProfiles }"
@@ -106,7 +126,10 @@ withDefaults(defineProps<{
           se dibujaría al tamaño que le toque al nivel y la regla de
           .post-card__title (--ds-heading-xs) nunca llegaría a aplicarse.
         -->
-        <AtomHeading v-if="title" :level="3" size="h6" class="post-card__title">{{ title }}</AtomHeading>
+        <AtomHeading v-if="title" :level="3" size="h6" class="post-card__title">
+          <AtomLink v-if="href" :href="href" :target="target">{{ title }}</AtomLink>
+          <template v-else>{{ title }}</template>
+        </AtomHeading>
         <AtomDivider />
         <AtomButton variant="link" class="post-card__link" :href="href || '#'" :target="target">
           {{ ctaLabel }}
@@ -116,7 +139,10 @@ withDefaults(defineProps<{
 
       <template v-else>
         <AtomEyebrow v-if="eyebrow">{{ eyebrow }}</AtomEyebrow>
-        <AtomHeading v-if="title" :level="3" size="h6" class="post-card__title">{{ title }}</AtomHeading>
+        <AtomHeading v-if="title" :level="3" size="h6" class="post-card__title">
+          <AtomLink v-if="href" :href="href" :target="target">{{ title }}</AtomLink>
+          <template v-else>{{ title }}</template>
+        </AtomHeading>
         <AtomText v-if="excerpt" class="post-card__excerpt">{{ excerpt }}</AtomText>
         <div v-if="publishedDate || readingTime" class="post-card__meta">
           <p v-if="publishedDate">{{ publishedDate }}</p>
