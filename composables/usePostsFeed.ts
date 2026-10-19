@@ -31,6 +31,7 @@ export interface RawPostEntity {
   id: number;
   title: string;
   slug: string;
+  full_slug?: string;
   type: string;
   modality?: string | null;
   excerpt?: string;
@@ -44,8 +45,9 @@ export interface RawPostEntity {
   target_audience?: string;
   views_count?: number;
   created_at?: string;
-  category?: { id: number; name: string } | null;
-  unit?: { id: number; name: string; slug: string } | null;
+  category?: { id: number; name: string; slug?: string } | null;
+  unit?: { id: number; name: string; slug: string; full_slug?: string } | null;
+  academic_unit?: { id: number; name: string; slug: string; full_slug?: string } | null;
 }
 
 export function resolveStorageUrl(path?: string | null): string {
@@ -61,22 +63,49 @@ export function resolveStorageUrl(path?: string | null): string {
 
 /**
  * Resuelve la URL canónica real del post respetando el enrutador multitenant de Nuxt 3 ([...slug].vue).
- * 1. Si existe action_url explícito (ej: landing externa, formulario, enlace a Zoom), se usa con prioridad.
- * 2. Si pertenece a una Unidad Académica (ej: 'conexion-esan', 'pregrado', etc.), se resuelve como /{unit.slug}/{post.slug}.
- * 3. Si pertenece al Portal Central ('main') o no tiene unidad, se resuelve como /{post.slug}.
+ * 1. Si existe action_url explícito que sea una URL válida (http://, https://, o ruta absoluta sin espacios), se usa con prioridad.
+ * 2. Si el resource trae un `full_slug` directo (ej: /universidad/pregrado/noticia-1/), se usa directamente.
+ * 3. Si pertenece a una Unidad Académica, se resuelve usando unit.full_slug o unit.slug (ej: /{unit.full_slug}/{post.slug}/).
+ * 4. Si pertenece al Portal Central ('main') o no tiene unidad, se resuelve como /{post.slug}/.
  */
 export function resolvePostHref(item: RawPostEntity): string {
-  if (item.action_url && item.action_url.trim()) {
-    return item.action_url.trim();
+  // 1. Si existe action_url explícito válido (enlace externo o ruta sin espacios)
+  if (item.action_url && typeof item.action_url === 'string') {
+    const trimmed = item.action_url.trim();
+    if (
+      trimmed.startsWith('http://') ||
+      trimmed.startsWith('https://') ||
+      (trimmed.startsWith('/') && !trimmed.includes(' '))
+    ) {
+      return trimmed;
+    }
   }
+
+  // 2. Si el resource de la API ya provee el full_slug canónico
+  const directFullSlug = item.full_slug || (item as any).full_slug;
+  if (directFullSlug && typeof directFullSlug === 'string') {
+    const trimmed = directFullSlug.trim();
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return trimmed;
+    }
+    const clean = trimmed.replace(/^\/+|\/+$/g, '');
+    return clean ? `/${clean}/` : '/';
+  }
+
   if (!item.slug) return '#';
+  const cleanPostSlug = item.slug.replace(/^\/+|\/+$/g, '');
 
-  const unitSlug = item.unit?.slug;
-  if (unitSlug && unitSlug !== 'main') {
-    return `/${unitSlug}/${item.slug}/`;
+  // 3. Si pertenece a una Unidad Académica, resolver con su full_slug o slug
+  const unit = item.unit || item.academic_unit;
+  const unitPath = unit?.full_slug || unit?.slug;
+  if (unitPath && typeof unitPath === 'string') {
+    const cleanUnit = unitPath.replace(/^\/+|\/+$/g, '');
+    if (cleanUnit && cleanUnit !== 'main') {
+      return `/${cleanUnit}/${cleanPostSlug}/`;
+    }
   }
 
-  return `/${item.slug}/`;
+  return `/${cleanPostSlug}/`;
 }
 
 export function mapRawPostToCard(item: RawPostEntity, index = 0): PostCardItem {

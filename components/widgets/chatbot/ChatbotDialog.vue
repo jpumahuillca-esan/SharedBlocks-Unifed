@@ -170,7 +170,7 @@ const onSuggestionSelected = (suggestionText: string) => {
 }
 
 .chatbot-header {
-  background: linear-gradient(135deg, #a61c1c 0%, #7d1212 100%);
+  background: linear-gradient(135deg, #e31140 0%, #ca1818 100%);
   padding: 14px 18px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   flex-shrink: 0;
@@ -203,7 +203,7 @@ const onSuggestionSelected = (suggestionText: string) => {
   width: 10px;
   height: 10px;
   background: #10b981;
-  border: 2px solid #a61c1c;
+  border: 2px solid #e31140;
   border-radius: 50%;
 }
 

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="events-editor">
     <CardSectionHeaderEditor
       :desc="localData.desc"
@@ -208,6 +208,9 @@
               <span v-if="card.badges?.length" class="badge bg-light text-secondary border">
                 {{ card.badges[0] }}
               </span>
+            </div>
+            <div v-if="card.href" class="text-truncate text-secondary mt-1" style="font-size: 10px;">
+              <i class="las la-link text-danger me-1"></i><code>{{ card.href }}</code>
             </div>
           </div>
         </div>

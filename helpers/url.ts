@@ -3,18 +3,21 @@ export const formatImageUrl = (url?: string) => {
 
   const baseUrl = (
     (typeof import.meta !== 'undefined' && (import.meta.env?.VITE_SITE_URL || import.meta.env?.VITE_MEDIA_URL)) || 
-    'https://redgirdaccperu.edu.pe'
+    ''
   ).replace(/\/+$/, "");
 
   let sanitizedUrl = url;
   if (
     sanitizedUrl.includes('127.0.0.1:8000') || 
     sanitizedUrl.includes('localhost:8000') ||
-    sanitizedUrl.includes('admin.redgirdaccperu.edu.pe')
+    /172\.\d+\.\d+\.\d+:8000/.test(sanitizedUrl) ||
+    sanitizedUrl.includes('admin.redgirdaccperu.edu.pe') ||
+    sanitizedUrl.includes('admin.esan.edu.pe')
   ) {
     sanitizedUrl = sanitizedUrl
-      .replace(/^http:\/\/(127\.0\.0\.1|localhost):8000/, baseUrl)
-      .replace('https://admin.redgirdaccperu.edu.pe', baseUrl);
+      .replace(/^https?:\/\/(127\.0\.0\.1|localhost|172\.\d+\.\d+\.\d+):8000/, baseUrl)
+      .replace('https://admin.redgirdaccperu.edu.pe', baseUrl)
+      .replace('https://admin.esan.edu.pe', baseUrl);
   }
 
   if (sanitizedUrl.startsWith('http') && !sanitizedUrl.includes('/storage/')) {
@@ -31,5 +34,5 @@ export const formatImageUrl = (url?: string) => {
     .replace(/^\/+/, "") 
     .replace(/\/+/g, "/");
 
-  return `${baseUrl}/storage/${cleanPath}`;
+  return baseUrl ? `${baseUrl}/storage/${cleanPath}` : `/storage/${cleanPath}`;
 };
