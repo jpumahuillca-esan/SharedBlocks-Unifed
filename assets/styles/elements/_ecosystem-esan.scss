@@ -45,7 +45,7 @@
   .ecosystem-esan__header {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
 
     gap:
       var(--ds-space-4);
@@ -53,7 +53,7 @@
     width: 100%;
     max-width: 960px;
 
-    margin-inline: auto;
+    margin-inline: 0;
   }
 
   .ecosystem-esan__title {
@@ -80,7 +80,19 @@
     letter-spacing:
       -0.01em;
 
-    text-align: center;
+    text-align: left;
+  }
+
+  .ecosystem-esan__eyebrow {
+    margin: 0;
+    color: var(--ds-color-esan-corp);
+    font-family: var(--ds-font-family-base);
+    font-size: var(--ds-text-body-sm);
+    font-weight: var(--ds-weight-semibold);
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-align: left;
+    text-transform: uppercase;
   }
 
   .ecosystem-esan__rule {
@@ -93,6 +105,7 @@
       var(--ds-border-width-md);
 
     flex: 0 0 auto;
+    align-self: flex-start;
 
     background-color:
       var(--ds-color-surface-primary);
@@ -121,7 +134,7 @@
 
     letter-spacing: 0;
 
-    text-align: center;
+    text-align: left;
   }
 
   /* ==========================================================================
@@ -136,7 +149,7 @@
     gap:
       var(--ds-space-6);
 
-    align-items: start;
+    align-items: stretch;
   }
 
   .ecosystem-esan--cols-3
@@ -178,6 +191,7 @@
   .ecosystem-esan__item {
     display: flex;
     flex-direction: column;
+    align-self: stretch;
 
     gap:
       var(--ds-space-6);
@@ -191,10 +205,12 @@
 
   .ecosystem-esan-card {
     position: relative;
-    display: block;
+    display: flex;
+    flex-direction: column;
 
     width: 100%;
-    height: 255px;
+    height: auto;
+    flex: 1 1 auto;
 
     min-width: 0;
 
@@ -209,7 +225,31 @@
       var(--ecosystem-esan-card-color);
 
     background-color:
-      var(--ecosystem-esan-card-color);
+      var(--ds-color-background-default);
+  }
+
+  .ecosystem-esan-card__main {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: var(--ds-spacing-xs);
+    min-width: 0;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ecosystem-esan-card__image-link {
+    display: block;
+    flex: 0 0 auto;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ecosystem-esan-card__image-link:focus-visible,
+  .ecosystem-esan-card__main:focus-visible {
+    outline: var(--ds-border-width-md) solid var(--ecosystem-esan-card-color);
+    outline-offset: calc(-1 * var(--ds-border-width-md));
   }
 
   /* ==========================================================================
@@ -358,29 +398,18 @@
      Card body
      ========================================================================== */
 
-  /*
-   * Con descripción, el card completo mide 255px.
-   *
-   * Imagen visible con el panel base: 155px, más el solape del radio.
-   * Panel base: 100px.
-   *
-   * El panel está anclado abajo.
-   * Si necesita más espacio por texto largo,
-   * crece hacia arriba sin cambiar los 255px.
-   */
+  /* El panel se superpone ligeramente a la imagen y crece con su contenido. */
 .ecosystem-esan-card__body {
-  position: absolute;
+  position: relative;
   z-index: 1;
 
-  right: 0;
-  bottom: 0;
-  left: 0;
-
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: stretch;
 
   min-height: 100px;
+  margin-top: calc(-1 * var(--ds-radius-sm));
 
   gap:
     var(--ds-spacing-xs);
@@ -424,15 +453,12 @@
     min-width: 0;
   }
 
-  // Sin descripción, la altura depende del contenido y conserva el solape.
-  .ecosystem-esan-card--without-description {
-    height: auto;
-
-    .ecosystem-esan-card__body {
-      position: relative;
-      min-height: 0;
-      margin-top: calc(-1 * var(--ds-radius-sm));
-    }
+  .ecosystem-esan-card__title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ds-spacing-xs);
+    min-width: 0;
   }
 
   .ecosystem-esan-card__title {
@@ -485,7 +511,7 @@
       0 0 auto;
 
     align-self:
-      flex-end;
+      center;
 
     background-color:
       var(--ecosystem-esan-card-color);
@@ -500,22 +526,19 @@
 
   @include bp.container-down('sm') {
     .ecosystem-esan-card {
-      display: grid;
-      // Medida de la referencia; la escala ds-size no incluye 120px.
-      grid-template-columns: 120px minmax(0, 1fr);
-      height: var(--ds-size-160);
+      display: flex;
+      height: auto;
       background-color: var(--ds-color-background-default);
       border: var(--ds-border-width-sm) solid var(--ds-color-border-default);
       border-bottom: var(--ds-size-4) solid var(--ecosystem-esan-card-color);
 
       .ecosystem-esan-card__media {
         height: auto;
+        aspect-ratio: 410 / 195;
         min-height: 0;
 
-        // Una tarjeta sin texto ni enlace conserva su imagen visible.
         &:only-child {
-          grid-column: 1 / -1;
-          aspect-ratio: 410 / 155;
+          aspect-ratio: 410 / 195;
         }
       }
 
@@ -533,47 +556,40 @@
       .ecosystem-esan-card__body {
         position: relative;
         inset: auto;
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        align-content: center;
-        gap: var(--ds-spacing-xxs) var(--ds-spacing-xs);
+        display: flex;
+        flex-direction: column;
+        gap: var(--ds-spacing-xs);
         min-width: 0;
         min-height: 0;
         margin: 0;
-        padding: var(--ds-space-3);
+        padding: var(--ds-space-4) var(--ds-space-5) var(--ds-space-5);
         border: 0;
         border-radius: 0;
         background-color: var(--ds-color-background-default);
         color: var(--ds-color-text-primary);
 
-        &--without-link {
-          grid-template-columns: minmax(0, 1fr);
-        }
       }
 
-      // Los textos participan en la rejilla sin duplicarlos en el template.
       .ecosystem-esan-card__text {
-        display: contents;
+        display: flex;
+        flex-direction: column;
+        gap: var(--ds-spacing-xxs);
       }
 
       .ecosystem-esan-card__title {
-        grid-column: 1 / -1;
         min-width: 0;
         overflow-wrap: anywhere;
         color: var(--ds-color-text-primary);
       }
 
       .ecosystem-esan-card__desc {
-        grid-column: 1;
         min-width: 0;
         overflow-wrap: anywhere;
         color: var(--ds-color-text-secondary);
       }
 
       .ecosystem-esan-card__action.btn {
-        grid-column: 2;
-        align-self: end;
-        justify-self: end;
+        align-self: center;
         width: var(--ds-size-40);
         height: var(--ds-size-40);
         min-height: 0;
@@ -581,7 +597,18 @@
         background-color: var(--ecosystem-esan-card-color);
         color: var(--ecosystem-esan-card-content);
       }
+
+      .ecosystem-esan__links {
+        padding-inline: 0;
+        padding-bottom: 0;
+      }
     }
+  }
+
+  .ecosystem-esan-card__divider {
+    display: block;
+    width: 100%;
+    border-top: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
   }
 
   /* ==========================================================================
@@ -596,9 +623,17 @@
     width: 100%;
 
     margin: 0;
-    padding: 0;
+    padding: 0 var(--ds-space-5) var(--ds-space-5);
+
+    background-color:
+      var(--ds-color-background-default);
 
     list-style: none;
+  }
+
+  .ecosystem-esan-card__body .ecosystem-esan__links {
+    padding-inline: 0;
+    padding-bottom: 0;
   }
 
   .ecosystem-esan__link-item {
@@ -610,5 +645,9 @@
 
   .ecosystem-esan__link.btn {
     width: 100%;
+  }
+
+  .ecosystem-esan__link.btn.btn--list svg.ecosystem-esan__link-icon {
+    color: var(--ds-color-action-secondary, #4F5A6C);
   }
 }

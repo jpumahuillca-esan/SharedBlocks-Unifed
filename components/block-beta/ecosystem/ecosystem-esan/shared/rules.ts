@@ -1,4 +1,8 @@
 export const ECOSYSTEM_ESAN_CONTENT_RULES = {
+  eyebrow: {
+    maxLength: 40,
+  },
+
   title: {
     maxLength: 60,
   },

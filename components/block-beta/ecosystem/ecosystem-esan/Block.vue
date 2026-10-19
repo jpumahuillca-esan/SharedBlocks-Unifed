@@ -5,15 +5,25 @@
   >
     <div class="ecosystem-esan__inner">
       <header
-        v-if="dataNormalized.title || dataNormalized.desc"
+        v-if="dataNormalized.eyebrow || dataNormalized.title || dataNormalized.desc"
         class="ecosystem-esan__header"
       >
+        <AtomText
+          v-if="dataNormalized.eyebrow"
+          size="body-sm"
+          weight="semibold"
+          class="ecosystem-esan__eyebrow"
+          v-bind="edit('eyebrow')"
+        >
+          {{ dataNormalized.eyebrow }}
+        </AtomText>
+
         <AtomHeading
           v-if="dataNormalized.title"
           :level="2"
           size="h2"
           weight="semibold"
-          align="center"
+          align="left"
           class="ecosystem-esan__title"
           v-bind="edit('title')"
         >
@@ -29,7 +39,7 @@
         <AtomText
           v-if="dataNormalized.desc"
           size="body-lg"
-          align="center"
+          align="left"
           class="ecosystem-esan__desc"
           v-bind="edit('desc')"
         >

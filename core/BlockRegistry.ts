@@ -196,6 +196,7 @@ export const BLOCK_REGISTRY: Record<string, any> = {
     isBoxed: true,
     component: defineAsyncComponent(() => import('../components/block-beta/ecosystem/ecosystem-esan/Block.vue')),
     initialData: {
+        eyebrow: 'PREGRADO',
         title: 'En ESAN University conviertes tu talento en oportunidades',
         desc: 'Encuentra la carrera que se adapte a tu vocación',
         columns: 3,

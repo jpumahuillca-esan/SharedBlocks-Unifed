@@ -67,6 +67,7 @@ export interface EcosystemEsanItem {
 }
 
 export interface EcosystemEsanData {
+  eyebrow: string;
   title: string;
   desc: string;
 
@@ -232,6 +233,11 @@ export const normalizeEcosystemEsanItem = (
 export const normalizeEcosystemEsanData = (
   raw: any,
 ): EcosystemEsanData => ({
+  eyebrow: normalizeLimitedString(
+    raw?.eyebrow,
+    ECOSYSTEM_ESAN_CONTENT_RULES.eyebrow.maxLength,
+  ),
+
   title: normalizeLimitedString(
     raw?.title,
     ECOSYSTEM_ESAN_CONTENT_RULES.title.maxLength,
