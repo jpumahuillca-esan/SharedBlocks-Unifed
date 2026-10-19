@@ -371,9 +371,9 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         isBoxed: false,
         component: defineAsyncComponent(() => import('../components/block-beta/hero/hero-slider/Block.vue')),
         initialData: {
-            // <h1> oculto "ESAN" para buscadores. Se desactiva en las páginas
-            // que ya tengan su propio título principal.
-            showSeoHeading: true,
+            // Fuente del único <h1> SEO: ESAN, título/antetítulo activo o ninguno.
+            seoHeadingSource: 'esan',
+            seoHeadingText: 'ESAN',
             // Color de la franja (token de la paleta institucional). El rojo
             // corporativo es el de siempre.
             panelColorToken: '--ds-color-esan-corp',
@@ -668,6 +668,30 @@ export const BLOCK_REGISTRY: Record<string, any> = {
                 { id: 'aw-2', image: '', imageAlt: '' },
                 { id: 'aw-3', image: '', imageAlt: '' },
                 { id: 'aw-4', image: '', imageAlt: '' },
+            ],
+        },
+    },
+
+    AwardsFeaturedV2: {
+        label: 'Reconocimientos (logos) V2',
+        icon: 'las la-award',
+        group: 'Awards',
+        beta: true,
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/awards/awards-featured-v2/Block.vue')),
+        initialData: {
+            eyebrow: 'CIFRAS QUE RESPALDAN',
+            title: '<p>Indicadores de <span style="color: #E3173E;">excelencia ESAN</span></p>',
+            desc: 'El prestigio se construye con resultados, reconocimiento internacional y el impacto de nuestros egresados.',
+            linkLabel: 'Ver más reconocimientos',
+            linkUrl: '',
+            backgroundColorToken: '--ds-color-univ-management',
+            bottomText: '',
+            awards: [
+                { id: 'awv2-1', image: '', imageAlt: '' },
+                { id: 'awv2-2', image: '', imageAlt: '' },
+                { id: 'awv2-3', image: '', imageAlt: '' },
+                { id: 'awv2-4', image: '', imageAlt: '' },
             ],
         },
     },

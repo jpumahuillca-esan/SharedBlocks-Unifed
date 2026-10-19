@@ -13,10 +13,10 @@
       de lo que se busca. .hero ya es position: relative con overflow: hidden,
       así que el elemento recortado queda contenido.
 
-      Se puede desactivar desde el editor para las páginas que ya tienen su
-      propio <h1>.
+      Según la elección del editor, ESAN queda oculto o el texto visible elegido
+      se renderiza como H1.
     -->
-    <h1 v-if="showSeoHeading" class="visually-hidden">ESAN</h1>
+    <h1 v-if="seoHeadingText" class="visually-hidden">{{ seoHeadingText }}</h1>
 
     <!--
       Solo se monta la diapositiva visible. Apilarlas todas y ocultarlas
@@ -30,6 +30,7 @@
     <HeroSlide
       :key="active.id"
       v-bind="edit(`slides.${current}`)"
+      :seo-heading-source="seoHeadingSource"
       :eyebrow="active.eyebrow"
       :title="active.title"
       :desc="active.desc"
@@ -62,10 +63,8 @@
  * recorrer las diapositivas. El contenido se escribe desde el editor; no
  * consulta ninguna API.
  *
- * Titulares: el <h1> de la página es uno solo, "ESAN", oculto a la vista y fijo
- * en el bloque. El título de cada diapositiva es un párrafo con aspecto de
- * titular, en todas, incluida la primera: así el título principal no cambia
- * según qué diapositiva esté a la vista ni según cuál se haya puesto primero.
+ * El H1 SEO es único y oculto; se puede tomar de ESAN o del título/antetítulo
+ * de la diapositiva activa. Los textos visibles conservan su marcado actual.
  *
  * Sin dependencia de carrusel: no hay ninguna en uso en la librería, y esto es
  * un índice y dos flechas.
@@ -79,7 +78,7 @@ import {
   normalizeHeroAction,
   normalizeHeroButtons,
   normalizeHeroMode,
-  normalizeShowSeoHeading,
+  normalizeHeroSeoHeadingSource,
   resolveHeroActions,
   type HeroSlideItem,
 } from '../_shared/types';
@@ -93,8 +92,6 @@ import { useEditTarget } from '../../../../core/editFocus';
 const edit = useEditTarget();
 
 const props = defineProps<{ data: any }>();
-
-const showSeoHeading = computed(() => normalizeShowSeoHeading(props.data?.showSeoHeading));
 
 /* Color de la franja: la hoja lo lee de --hero-panel-bg (ver _hero.scss). */
 const panelStyle = computed(() => ({
@@ -156,6 +153,22 @@ watch(
 );
 
 const active = computed(() => slides.value[current.value] ?? slides.value[0]);
+
+const seoHeadingSource = computed(() =>
+  slides.value.length > 1
+    ? 'esan'
+    : normalizeHeroSeoHeadingSource(
+    props.data?.seoHeadingSource,
+    props.data?.showSeoHeading,
+      ),
+);
+
+const seoHeadingText = computed(() => {
+  if (seoHeadingSource.value !== 'esan') return '';
+  return typeof props.data?.seoHeadingText === 'string' && props.data.seoHeadingText.trim()
+    ? props.data.seoHeadingText.trim()
+    : 'ESAN';
+});
 
 /** Avanza o retrocede, dando la vuelta por los extremos. */
 const go = (delta: number) => {

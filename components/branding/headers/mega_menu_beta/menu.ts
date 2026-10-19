@@ -35,6 +35,11 @@ export interface MenuRoot extends MenuLink {
   /** Título del panel ("ESAN University"). Sin él, el de la entrada. */
   headerTitle: string;
   children: MenuTab[];
+  /**
+   * Posición en `menu_tree`, la guardada: la normalización descarta las entradas
+   * sin título, y la ruta del enfoque de campos tiene que ser la del dato.
+   */
+  index: number;
 }
 
 /** Enlace del topbar que el menú móvil añade debajo del principal. */
@@ -89,6 +94,7 @@ export const normalizeMenu = (raw: unknown): MenuRoot[] =>
         ...link,
         headerTitle: text(item?.header_title),
         children: list(item?.children).map((tab: any, j: number) => toTab(tab, `m-${i}-${j}`)),
+        index: i,
       };
     })
     .filter((item) => item.title.trim());

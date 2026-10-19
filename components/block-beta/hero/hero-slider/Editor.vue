@@ -2,30 +2,37 @@
   <div class="hs-editor">
     <h6 class="fw-bold small text-uppercase mb-1">Título para buscadores (SEO)</h6>
 
-    <div class="hs-seo">
-      <div class="form-check form-switch m-0">
-        <input
-          id="hs-seo-heading"
-          v-model="localData.showSeoHeading"
-          data-edit-target="showSeoHeading"
-          class="form-check-input"
-          type="checkbox"
-          role="switch"
-        />
-        <label class="form-check-label" for="hs-seo-heading">
-          Emitir &lt;h1&gt; "ESAN"
-        </label>
-      </div>
-      <span class="hs-seo__state" :class="{ 'is-on': localData.showSeoHeading }">
-        {{ localData.showSeoHeading ? 'Activado' : 'Desactivado' }}
-      </span>
+    <div class="mb-2">
+      <label class="form-label" for="hs-seo-heading">Contenido del &lt;h1&gt;</label>
+      <select
+        id="hs-seo-heading"
+        v-model="localData.seoHeadingSource"
+        data-edit-target="seoHeadingSource"
+        class="form-select form-select-sm"
+      >
+        <option value="esan">Texto fijo (ESAN por defecto)</option>
+        <option value="title" :disabled="!canUseSlideHeading">Título de la diapositiva</option>
+        <option value="eyebrow" :disabled="!canUseSlideHeading">Antetítulo de la diapositiva</option>
+        <option value="none" :disabled="!canUseSlideHeading">No emitir H1</option>
+      </select>
     </div>
-
+    <EditorText
+      v-if="localData.seoHeadingSource === 'esan'"
+      v-model="localData.seoHeadingText"
+      data-edit-target="seoHeadingText"
+      class="mb-2"
+      label="Texto del H1"
+      placeholder="ESAN"
+    />
     <p class="hs-hint">
-      Es el título principal de la página: no se ve, pero lo leen los buscadores
-      y los lectores de pantalla. Cada página debe tener <strong>uno solo</strong>.
-      Desactívalo si la página ya tiene su propio título principal o si "ESAN" no
-      la describe.
+      <template v-if="canUseSlideHeading">
+        Puedes usar el título o antetítulo visible como H1. El texto fijo se mantiene
+        oculto. Cada página debe tener <strong>uno solo</strong>.
+      </template>
+      <template v-else>
+        Con varias diapositivas, el H1 debe ser fijo para no cambiar al avanzar el
+        carrusel. Cada página debe tener <strong>uno solo</strong>.
+      </template>
     </p>
 
     <hr />
@@ -319,7 +326,7 @@ import {
   normalizeHeroMode,
   normalizeHeroOverlay,
   normalizeHeroPanelColor,
-  normalizeShowSeoHeading,
+  normalizeHeroSeoHeadingSource,
   type HeroButtons,
   type HeroMode,
   type HeroSlideItem,
@@ -374,7 +381,8 @@ const buildSlide = (source: any): HeroSlideItem => {
 };
 
 const build = (source: any) => ({
-  showSeoHeading: normalizeShowSeoHeading(source?.showSeoHeading),
+  seoHeadingSource: normalizeHeroSeoHeadingSource(source?.seoHeadingSource, source?.showSeoHeading),
+  seoHeadingText: typeof source?.seoHeadingText === 'string' ? source.seoHeadingText : 'ESAN',
   mode: normalizeHeroMode(source?.mode),
   panelColorToken: normalizeHeroPanelColor(source?.panelColorToken),
   overlayOpacity: normalizeHeroOverlay(source?.overlayOpacity),
@@ -392,6 +400,18 @@ const isSingle = computed(() => localData.value.mode === 'single');
 /** En modo de una sola diapositiva solo se edita la primera; las demás se conservan. */
 const visibleSlides = computed(() =>
   isSingle.value ? localData.value.slides.slice(0, 1) : localData.value.slides,
+);
+
+const canUseSlideHeading = computed(() => visibleSlides.value.length === 1);
+
+watch(
+  () => visibleSlides.value.length,
+  (length) => {
+    if (length > 1 && localData.value.seoHeadingSource !== 'esan') {
+      localData.value.seoHeadingSource = 'esan';
+    }
+  },
+  { immediate: true },
 );
 
 const setMode = (mode: HeroMode) => {
@@ -509,40 +529,6 @@ watch(
 </script>
 
 <style scoped>
-/* Interruptor del título para buscadores, con su estado a la vista. */
-.hs-seo {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 6px;
-  padding: 8px 10px;
-  border: 1px solid #dde3ec;
-  border-radius: 7px;
-  background: #f4f6fa;
-}
-
-.hs-seo .form-check-label {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: #1f2733;
-}
-
-.hs-seo__state {
-  flex-shrink: 0;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: #dde3ec;
-  color: #495057;
-  font-size: 10.5px;
-  font-weight: 700;
-}
-
-.hs-seo__state.is-on {
-  background: #d1f0dc;
-  color: #0f6b34;
-}
-
 .hs-hint {
   margin: 0 0 8px;
   font-size: 11.5px;

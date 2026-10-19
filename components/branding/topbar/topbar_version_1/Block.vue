@@ -15,7 +15,7 @@
         <component
           :is="linkTag"
           v-if="brandLabel"
-          v-bind="getLinkProps(brandUrl)"
+          v-bind="{ ...getLinkProps(brandUrl), ...edit('brandLabel') }"
           class="topbar-v1__link topbar-v1__link--brand"
         >
           <!--
@@ -40,11 +40,12 @@
             :label="item.label"
             :items="toDropdownItems(item)"
             :link-component="linkComponent"
+            v-bind="edit(`startItems.${item.index}`)"
           />
           <component
             :is="linkTag"
             v-else
-            v-bind="getLinkProps(item.url)"
+            v-bind="{ ...getLinkProps(item.url), ...edit(`startItems.${item.index}.label`) }"
             class="topbar-v1__link topbar-v1__item"
           >{{ item.label }}</component>
         </template>
@@ -62,11 +63,12 @@
             :items="toDropdownItems(item)"
             :align="i === endItems.length - 1 ? 'right' : 'left'"
             :link-component="linkComponent"
+            v-bind="edit(`endItems.${item.index}`)"
           />
           <component
             :is="linkTag"
             v-else
-            v-bind="getLinkProps(item.url)"
+            v-bind="{ ...getLinkProps(item.url), ...edit(`endItems.${item.index}.label`) }"
             class="topbar-v1__link topbar-v1__item"
           >{{ item.label }}</component>
         </template>
@@ -101,9 +103,11 @@
 import { computed } from 'vue';
 import MoleculeDropdown, { type DropdownItem } from '../../../molecules/MoleculeDropdown.vue';
 import { useDynamicLink } from '../../../../composables/useDynamicLink';
+import { useEditTarget } from '../../../../core/editFocus';
 
 interface TopbarLink { id: string; label: string; url: string }
-interface TopbarItem extends TopbarLink { children: TopbarLink[] }
+/* `index`: posición en el dato guardado, que el filtro de ítems vacíos no debe mover. */
+interface TopbarItem extends TopbarLink { children: TopbarLink[]; index: number }
 
 const props = defineProps<{
   config: any;
@@ -120,6 +124,9 @@ const props = defineProps<{
 }>();
 
 const { linkTag, getLinkProps } = useDynamicLink(props.linkComponent);
+
+/* Enfoque de campos: clic en una pieza del lienzo → su campo en el editor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 const text = (value: unknown) => (typeof value === 'string' ? value : '');
 const list = (value: unknown): any[] => (Array.isArray(value) ? value : []);
@@ -138,6 +145,7 @@ const toItems = (raw: unknown, prefix: string): TopbarItem[] =>
       children: list(item?.children)
         .map((child: any, j: number) => toLink(child, `${prefix}-${i}-${j}`))
         .filter((child) => child.label.trim()),
+      index: i,
     }))
     .filter((item) => item.label.trim());
 

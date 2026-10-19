@@ -139,7 +139,7 @@
           v-model="item.image"
           v-model:alt="item.imageAlt"
           :focus-values="item.imageFocusProfiles"
-          :focus-modes="ECOSYSTEM_IMAGE_FOCUS_MODES"
+          :focus-modes="imageFocusModesForItem(item)"
           data-edit-target=".image"
           alt-edit-target=".imageAlt"
           class="mb-3"
@@ -147,7 +147,7 @@
           :height="110"
           focus-crop-preview
           hint-position="bottom"
-          hint="Referencia web: 410 × 155 px (usa 820 × 310 px o más para alta densidad). Ajusta por separado el punto focal para web, tablet y móvil; la vista previa de tablet es referencial porque el ancho de la tarjeta cambia según el contenedor."
+          hint="El marco se calcula según las columnas elegidas. Web usa el contenedor máximo de 1280 px; tablet usa una referencia de 768 px con 2 columnas; móvil refleja la imagen lateral de 120 × 155 px."
           dropzone-text="Haz clic para elegir una imagen para este card."
           alt-placeholder="Describe brevemente la imagen"
           :alt-maxlength="rules.card.imageAlt.maxLength"
@@ -322,26 +322,14 @@ const emit = defineEmits([
 const rules =
   ECOSYSTEM_ESAN_CONTENT_RULES;
 
-const ECOSYSTEM_IMAGE_FOCUS_MODES = [
-  {
-    key: 'web',
-    label: 'Web',
-    ratio: '410 / 155',
-    frameLabel: 'Área de referencia: 410 × 155 px',
-  },
-  {
-    key: 'tablet',
-    label: 'Tablet',
-    ratio: '2 / 1',
-    frameLabel: 'Proporción orientativa: 2:1; el ancho depende del contenedor',
-  },
-  {
-    key: 'mobile',
-    label: 'Móvil',
-    ratio: '3 / 4',
-    frameLabel: 'Proporción aproximada: 3:4 (120 × 156 px)',
-  },
-] as const;
+const IMAGE_GRID_GAP = 24; // --ds-space-6
+const IMAGE_VISIBLE_HEIGHT = 155;
+const DESKTOP_CONTENT_WIDTH = 1280; // --ds-container-max
+const TABLET_REFERENCE_WIDTH = 768;
+const TABLET_CONTAINER_PADDING = 20; // --ds-container-padding-x at 768px
+const MOBILE_IMAGE_WIDTH = 120;
+const MOBILE_CARD_CONTENT_HEIGHT = 155; // 160px card minus 1px top and 4px bottom border
+const MOBILE_FULL_IMAGE_RATIO = '410 / 155'; // SCSS aspect-ratio for image-only cards
 
 /* ==========================================================================
    Colores iniciales
@@ -409,6 +397,43 @@ const localData =
       props.modelValue,
     ),
   );
+
+const imageFocusModesForItem = (item: EcosystemEsanItem) => {
+  const columns = localData.value.columns;
+  const webCardWidth =
+    (DESKTOP_CONTENT_WIDTH - IMAGE_GRID_GAP * (columns - 1)) / columns;
+  const tabletGridWidth = TABLET_REFERENCE_WIDTH - TABLET_CONTAINER_PADDING * 2;
+  const tabletCardWidth = (tabletGridWidth - IMAGE_GRID_GAP) / 2;
+  const hasCardBody = Boolean(item.title.trim() || item.desc.trim() || item.href.trim());
+
+  const roundedWidth = (width: number) => Math.round(width);
+  const ratio = (width: number, height: number) => `${width} / ${height}`;
+
+  return [
+    {
+      key: 'web',
+      label: 'Web',
+      ratio: ratio(webCardWidth, IMAGE_VISIBLE_HEIGHT),
+      frameLabel: `Área visible de referencia: ${roundedWidth(webCardWidth)} × ${IMAGE_VISIBLE_HEIGHT} px (${columns} columnas)`,
+    },
+    {
+      key: 'tablet',
+      label: 'Tablet',
+      ratio: ratio(tabletCardWidth, IMAGE_VISIBLE_HEIGHT),
+      frameLabel: `Área visible a ${TABLET_REFERENCE_WIDTH} px: ${roundedWidth(tabletCardWidth)} × ${IMAGE_VISIBLE_HEIGHT} px (2 columnas)`,
+    },
+    {
+      key: 'mobile',
+      label: 'Móvil',
+      ratio: hasCardBody
+        ? ratio(MOBILE_IMAGE_WIDTH, MOBILE_CARD_CONTENT_HEIGHT)
+        : MOBILE_FULL_IMAGE_RATIO,
+      frameLabel: hasCardBody
+        ? `Área visible lateral: ${MOBILE_IMAGE_WIDTH} × ${MOBILE_CARD_CONTENT_HEIGHT} px`
+        : 'Tarjeta sin contenido: imagen completa en proporción 410:155',
+    },
+  ] as const;
+};
 
 const openIndex =
   ref<number | null>(null);

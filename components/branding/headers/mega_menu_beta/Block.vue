@@ -23,7 +23,7 @@
       :style="{ '--mmb-logo-height': `${logoHeight}px` }"
     >
       <div class="mmb__bar">
-        <component :is="linkTag" v-bind="getLinkProps(logoLink)" class="mmb__logo">
+        <component :is="linkTag" v-bind="{ ...getLinkProps(logoLink), ...edit('logoUrl') }" class="mmb__logo">
           <img class="mmb__logo-image" :src="logoSrc" :alt="logoAlt" />
         </component>
 
@@ -34,6 +34,7 @@
               v-for="item in roots"
               :key="item.id"
               class="mmb__menu-item"
+              v-bind="edit(`menu_tree.${item.index}`)"
               @pointerenter="onItemPointerEnter($event, item)"
             >
               <!--
@@ -68,7 +69,7 @@
           <component
             v-if="searchUrl"
             :is="linkTag"
-            v-bind="getLinkProps(searchUrl)"
+            v-bind="{ ...getLinkProps(searchUrl), ...edit('searchUrl') }"
             class="mmb__search"
             aria-label="Buscar"
           >
@@ -158,6 +159,7 @@
 import { ref, computed, watch, inject, nextTick, onMounted, onBeforeUnmount } from 'vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 import { useDynamicLink } from '../../../../composables/useDynamicLink';
+import { useEditTarget } from '../../../../core/editFocus';
 import { BRANDING_TOPBAR_KEY } from '../../../../helpers/branding';
 import defaultLogo from '../../../../assets/images/logos/logo-esan-official.svg';
 import MegaPanel from './MegaPanel.vue';
@@ -192,6 +194,9 @@ const props = defineProps<{
 }>();
 
 const { linkTag, getLinkProps } = useDynamicLink(props.linkComponent);
+
+/* Enfoque de campos: clic en una pieza del lienzo → su campo en el editor (core/editFocus.ts). */
+const edit = useEditTarget();
 
 const text = (value: unknown) => (typeof value === 'string' ? value : '');
 

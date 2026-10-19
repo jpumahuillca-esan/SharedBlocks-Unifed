@@ -1,0 +1,42 @@
+.arcis-scope {
+  .awards-featured-v2 {
+    display: block;
+    width: 100%;
+    color: var(--ds-color-white, #fff);
+  }
+
+  .card-section.awards-featured-v2__inner {
+    --card-section-padding-x: 0;
+    padding-block: var(--ds-spacing-xxl);
+  }
+
+  .awards-featured-v2__inner .card-section__rule {
+    background-color: var(--ds-color-white, #fff);
+  }
+
+  .awards-featured-v2 .card-section__title,
+  .awards-featured-v2 .card-section__desc,
+  .awards-featured-v2 .card-section__heading > .eyebrow,
+  .awards-featured-v2 .card-section__link,
+  .awards-featured-v2 .card-section__footer {
+    color: var(--ds-color-white, #fff) !important;
+  }
+
+  .awards-featured-v2__text {
+    margin: 0;
+    color: var(--ds-color-white, #fff);
+    font-family: var(--ds-font-family-base);
+    font-size: var(--ds-text-body-xs, var(--ds-font-size-12, 12px));
+    font-weight: var(--ds-weight-medium, 500);
+    font-style: normal;
+    line-height: 140%;
+    letter-spacing: 0;
+    text-box-trim: none;
+  }
+
+  @media (max-width: 1299.98px) {
+    .card-section.awards-featured-v2__inner {
+      --card-section-padding-x: var(--ds-container-padding-x);
+    }
+  }
+}

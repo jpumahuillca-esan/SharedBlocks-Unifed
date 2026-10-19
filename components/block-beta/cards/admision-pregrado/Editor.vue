@@ -42,7 +42,9 @@
     <hr />
 
     <h6 class="fw-bold small text-uppercase mb-1">Carrusel</h6>
-    <p class="ap-hint">Tarjetas visibles a la vez en escritorio.</p>
+    <p class="ap-hint">
+      Columnas configuradas para escritorio. El ancho se calcula según esta opción y respeta un mínimo de 308 px; cuando no caben, el carrusel permite deslizar.
+    </p>
     <div class="ap-count-options">
       <button
         v-for="option in [2, 3, 4]"
@@ -89,18 +91,36 @@
           v-model:alt="card.imageAlt"
           :focus-values="card.imageFocusProfiles"
           :focus-modes="imageFocusModes"
-          focus-ratio="16 / 10"
           focus-crop-preview
           data-edit-target=".image"
           alt-edit-target=".imageAlt"
           class="mb-2"
-          ratio="16 / 10"
           select-label="Seleccionar imagen"
           alt-label="Texto alternativo de la imagen"
           alt-placeholder="Describe brevemente la imagen"
           @select="emit('select-image', { item: card, field: 'image' })"
           @update:focus-values="saveImageFocusProfiles(card, $event)"
-        />
+        >
+          <template #framePreview>
+            <section class="card-section admision-pregrado">
+              <CardSlider
+                class="admision-pregrado__slider"
+                :count="1"
+                :columns="localData.cardCount"
+              >
+                <MoleculeBanner
+                  variant="image"
+                  class="admision-pregrado__card"
+                  :title="card.title"
+                  :title-level="3"
+                  title-size="h5"
+                  :text="card.desc"
+                  text-size="body-compact"
+                />
+              </CardSlider>
+            </section>
+          </template>
+        </EditorImage>
 
         <EditorText
           v-model="card.title"
@@ -142,11 +162,13 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
+import CardSlider from '../../events/_shared/CardSlider.vue';
 import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
 import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
-import { createImageFocusModes, saveImageFocusProfiles } from '../../../../helpers/imageFocus';
+import MoleculeBanner from '../../../molecules/MoleculeBanner.vue';
+import { saveImageFocusProfiles } from '../../../../helpers/imageFocus';
 import {
   buildAdmissionCard,
   buildAdmissionPregradoData,
@@ -160,7 +182,11 @@ const props = defineProps<{
 
 const emit = defineEmits(['update:modelValue', 'select-image']);
 
-const imageFocusModes = createImageFocusModes('16 / 10');
+const imageFocusModes = [
+  { key: 'web', label: 'Web' },
+  { key: 'tablet', label: 'Tablet' },
+  { key: 'mobile', label: 'Móvil' },
+] as const;
 
 const localData = ref(buildAdmissionPregradoData(props.modelValue));
 const openIndex = ref<number | null>(null);

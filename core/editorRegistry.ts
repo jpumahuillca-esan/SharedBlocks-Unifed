@@ -19,6 +19,7 @@ export const EDITOR_REGISTRY: Record<string, any> = {
     InfoKeyFacts: defineAsyncComponent(() => import('../components/block-beta/info/key-facts/Editor.vue')),
     AboutCareer: defineAsyncComponent(() => import('../components/block-beta/about/career/Editor.vue')),
     AwardsFeatured: defineAsyncComponent(() => import('../components/block-beta/awards/awards-featured/Editor.vue')),
+    AwardsFeaturedV2: defineAsyncComponent(() => import('../components/block-beta/awards/awards-featured-v2/Editor.vue')),
     CardsImageGrid: defineAsyncComponent(() => import('../components/block-beta/cards/image-grid/Editor.vue')),
     CardsAdmisionPregrado: defineAsyncComponent(() => import('../components/block-beta/cards/admision-pregrado/Editor.vue')),
     CardsVersion2: defineAsyncComponent(() => import('../components/block-beta/cards/cards-version-2/Editor.vue')),

@@ -98,7 +98,7 @@ const eyebrowVariant = computed(() => (props.variant === 'outline' ? 'brand' : '
     <template v-if="isImageVariant">
       <!-- Sin imagen no se dibuja el <img>: un src vacío deja el icono de
            imagen rota. Queda el fondo que le dé quien use el banner. -->
-      <div class="banner__media">
+      <div class="banner__media" data-image-frame>
         <img
           v-if="image"
           :src="image"

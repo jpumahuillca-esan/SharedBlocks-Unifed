@@ -1,5 +1,23 @@
 <template>
   <div class="editor-image" :class="$attrs.class" :style="$attrs.style as any">
+    <div
+      v-if="hasResponsiveFocus && hasFramePreview"
+      class="editor-image__frame-probes"
+      aria-hidden="true"
+    >
+      <div
+        v-for="mode in focusModes"
+        :key="mode.key"
+        :ref="frameProbeRef(mode.key)"
+        class="editor-image__frame-probe"
+        :style="{ width: `${frameProbeWidth(mode.key)}px` }"
+      >
+        <div class="arcis-scope">
+          <slot name="framePreview" :mode="mode" />
+        </div>
+      </div>
+    </div>
+
     <label v-if="label" class="form-label">{{ label }}</label>
 
     <EditorHint v-if="hint && hintPosition === 'top'">{{ hint }}</EditorHint>
@@ -25,10 +43,10 @@
       </div>
 
       <p
-        v-if="activeFocusMode?.frameLabel"
+        v-if="activeFocusFrameLabel"
         class="editor-image__focus-frame-label editor-image__block"
       >
-        {{ activeFocusMode.frameLabel }}
+        {{ activeFocusFrameLabel }}
       </p>
 
       <EditorImageFocus
@@ -38,7 +56,7 @@
         :focus-x="activeFocusPoint.x"
         :focus-y="activeFocusPoint.y"
         :height="focusHeight"
-        :ratio="activeFocusMode.ratio || focusRatio"
+        :ratio="activeFocusRatio"
         :crop-preview="focusCropPreview"
         :sliders="focusSliders"
         @update:focus-x="updateResponsiveFocus('x', $event)"
@@ -123,6 +141,7 @@
       :data-edit-target="altEditTarget"
       @update:model-value="$emit('update:alt', $event)"
     />
+
   </div>
 </template>
 
@@ -136,6 +155,8 @@
  * `v-model:alt`, `v-model:focus-x` y `v-model:focus-y`, y solo se dibujan si el
  * editor los enlaza. De forma opcional, `focus-modes` y `focus-values` activan
  * varios puntos focales sin cambiar los editores que usan el modo simple.
+ * Si recibe la ranura `framePreview`, mide su elemento `[data-image-frame]`
+ * con el CSS real y usa esa proporción para el selector de recorte.
  *
  * ELEGIR la imagen no lo hace este campo: emite `select` y el editor sigue
  * armando `$emit('select-image', { item, field })`, que es lo que entiende el
@@ -147,7 +168,8 @@
  * que es lo que enfoca el panel cuando se pulsa la foto en el lienzo. La ruta
  * del alt se pasa aparte, en `alt-edit-target`.
  */
-import { computed, onBeforeUnmount, ref, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, ref, useSlots, watch } from 'vue';
+// import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import EditorHint from '../EditorHint/EditorHint.vue';
 import EditorImageFocus from '../EditorImageFocus/EditorImageFocus.vue';
 import EditorText from '../EditorText/EditorText.vue';
@@ -168,6 +190,17 @@ type FocusMode = {
 type FocusPoint = {
   x: number;
   y: number;
+};
+
+type MeasuredFrame = {
+  width: number;
+  height: number;
+};
+
+const FOCUS_FRAME_REFERENCE_WIDTHS: Record<string, number> = {
+  web: 1280,
+  tablet: 768,
+  mobile: 375,
 };
 
 const props = withDefaults(
@@ -250,6 +283,7 @@ const emit = defineEmits<{
 }>();
 
 const model = defineModel<string>({ default: '' });
+const slots = useSlots();
 
 const normalizeFocusValue = (value: unknown): number => {
   const number = Number(value);
@@ -258,6 +292,7 @@ const normalizeFocusValue = (value: unknown): number => {
 
 const hasFocus = computed(() => props.focusX !== undefined && props.focusY !== undefined);
 const focusModes = computed(() => props.focusModes ?? []);
+const hasFramePreview = computed(() => Boolean(slots.framePreview));
 const activeFocusModeKey = ref(focusModes.value[0]?.key ?? '');
 const activeFocusMode = computed(
   () => focusModes.value.find((mode) => mode.key === activeFocusModeKey.value) ?? focusModes.value[0] ?? null,
@@ -282,6 +317,104 @@ watch(
 onBeforeUnmount(() => releaseCanvasFocusMode(canvasOwner));
 
 const responsiveFocusValues = ref<Record<string, FocusPoint>>({});
+const measuredFrames = ref<Record<string, MeasuredFrame>>({});
+const frameProbeRoots = new Map<string, HTMLElement>();
+const frameProbeRefCallbacks = new Map<string, (element: Element | null) => void>();
+const observedFrameElements = new Set<Element>();
+
+const frameResizeObserver = typeof ResizeObserver !== 'undefined'
+  ? new ResizeObserver(() => measureFrameProbes())
+  : null;
+const frameMutationObserver = typeof MutationObserver !== 'undefined'
+  ? new MutationObserver(() => measureFrameProbes())
+  : null;
+
+const frameProbeWidth = (key: string) => FOCUS_FRAME_REFERENCE_WIDTHS[key] ?? 1280;
+
+const setFrameProbe = (key: string, element: HTMLElement | null) => {
+  if (!element) {
+    frameProbeRoots.delete(key);
+    const next = { ...measuredFrames.value };
+    delete next[key];
+    measuredFrames.value = next;
+    return;
+  }
+
+  frameProbeRoots.set(key, element);
+  frameMutationObserver?.observe(element, {
+    attributes: true,
+    childList: true,
+    subtree: true,
+    attributeFilter: ['class', 'style'],
+  });
+  void nextTick(measureFrameProbes);
+};
+
+const frameProbeRef = (key: string) => {
+  let callback = frameProbeRefCallbacks.get(key);
+  if (!callback) {
+    callback = (element) => setFrameProbe(key, element as HTMLElement | null);
+    frameProbeRefCallbacks.set(key, callback);
+  }
+  return callback;
+};
+
+function measureFrameProbes() {
+  if (!hasFramePreview.value) return;
+
+  const next: Record<string, MeasuredFrame> = { ...measuredFrames.value };
+  let changed = false;
+
+  for (const mode of focusModes.value) {
+    const root = frameProbeRoots.get(mode.key);
+    const frame = root?.querySelector<HTMLElement>('[data-image-frame]');
+    if (!frame) continue;
+
+    if (frameResizeObserver && !observedFrameElements.has(frame)) {
+      frameResizeObserver.observe(frame);
+      observedFrameElements.add(frame);
+    }
+
+    const rect = frame.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) continue;
+
+    const previous = next[mode.key];
+    if (
+      !previous ||
+      Math.abs(previous.width - rect.width) > 0.1 ||
+      Math.abs(previous.height - rect.height) > 0.1
+    ) {
+      next[mode.key] = { width: rect.width, height: rect.height };
+      changed = true;
+    }
+  }
+
+  if (changed) measuredFrames.value = next;
+}
+
+const activeMeasuredFrame = computed(() =>
+  activeFocusMode.value ? measuredFrames.value[activeFocusMode.value.key] : undefined,
+);
+const activeFocusRatio = computed(() => {
+  const frame = activeMeasuredFrame.value;
+  if (frame) return `${frame.width} / ${frame.height}`;
+  return activeFocusMode.value?.ratio || props.focusRatio;
+});
+const activeFocusFrameLabel = computed(() => {
+  const frame = activeMeasuredFrame.value;
+  if (frame) {
+    return `Marco del componente: ${Math.round(frame.width)} × ${Math.round(frame.height)} px`;
+  }
+  return activeFocusMode.value?.frameLabel;
+});
+
+onBeforeUnmount(() => {
+  frameResizeObserver?.disconnect();
+  frameMutationObserver?.disconnect();
+  observedFrameElements.clear();
+  frameProbeRoots.clear();
+  frameProbeRefCallbacks.clear();
+});
 
 watch(
   () => props.focusValues,
@@ -354,6 +487,28 @@ const remove = () => {
 </script>
 
 <style scoped>
+.editor-image__frame-probes {
+  position: absolute;
+  top: 0;
+  left: -20000px;
+  z-index: -1;
+  width: 0;
+  height: 0;
+  overflow: visible;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.editor-image__frame-probe {
+  position: relative;
+  max-width: none;
+}
+
+.editor-image__frame-probe > .arcis-scope {
+  width: 100%;
+  max-width: none;
+}
+
 .editor-image__block {
   margin-bottom: 8px;
 }
