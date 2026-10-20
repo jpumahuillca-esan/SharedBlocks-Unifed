@@ -8,6 +8,15 @@
       Encabezado
     </h6>
 
+    <EditorText
+      v-model="localData.eyebrow"
+      data-edit-target="eyebrow"
+      class="mb-3"
+      label="Antetítulo"
+      :maxlength="rules.eyebrow.maxLength"
+      placeholder="PREGRADO"
+    />
+
     <EditorTextarea
       v-model="localData.title"
       data-edit-target="title"
@@ -147,7 +156,7 @@
           :height="110"
           focus-crop-preview
           hint-position="bottom"
-          hint="El marco se calcula según las columnas elegidas. Web usa el contenedor máximo de 1280 px; tablet usa una referencia de 768 px con 2 columnas; móvil refleja la imagen lateral de 120 × 155 px."
+          hint="El marco se calcula según las columnas elegidas. Web usa el contenedor máximo de 1280 px; tablet usa una referencia de 768 px con 2 columnas; móvil muestra la imagen superior de la tarjeta."
           dropzone-text="Haz clic para elegir una imagen para este card."
           alt-placeholder="Describe brevemente la imagen"
           :alt-maxlength="rules.card.imageAlt.maxLength"
@@ -327,9 +336,7 @@ const IMAGE_VISIBLE_HEIGHT = 155;
 const DESKTOP_CONTENT_WIDTH = 1280; // --ds-container-max
 const TABLET_REFERENCE_WIDTH = 768;
 const TABLET_CONTAINER_PADDING = 20; // --ds-container-padding-x at 768px
-const MOBILE_IMAGE_WIDTH = 120;
-const MOBILE_CARD_CONTENT_HEIGHT = 155; // 160px card minus 1px top and 4px bottom border
-const MOBILE_FULL_IMAGE_RATIO = '410 / 155'; // SCSS aspect-ratio for image-only cards
+const MOBILE_IMAGE_HEIGHT = 195; // Full-width image above the card body
 
 /* ==========================================================================
    Colores iniciales
@@ -404,8 +411,6 @@ const imageFocusModesForItem = (item: EcosystemEsanItem) => {
     (DESKTOP_CONTENT_WIDTH - IMAGE_GRID_GAP * (columns - 1)) / columns;
   const tabletGridWidth = TABLET_REFERENCE_WIDTH - TABLET_CONTAINER_PADDING * 2;
   const tabletCardWidth = (tabletGridWidth - IMAGE_GRID_GAP) / 2;
-  const hasCardBody = Boolean(item.title.trim() || item.desc.trim() || item.href.trim());
-
   const roundedWidth = (width: number) => Math.round(width);
   const ratio = (width: number, height: number) => `${width} / ${height}`;
 
@@ -425,12 +430,8 @@ const imageFocusModesForItem = (item: EcosystemEsanItem) => {
     {
       key: 'mobile',
       label: 'Móvil',
-      ratio: hasCardBody
-        ? ratio(MOBILE_IMAGE_WIDTH, MOBILE_CARD_CONTENT_HEIGHT)
-        : MOBILE_FULL_IMAGE_RATIO,
-      frameLabel: hasCardBody
-        ? `Área visible lateral: ${MOBILE_IMAGE_WIDTH} × ${MOBILE_CARD_CONTENT_HEIGHT} px`
-        : 'Tarjeta sin contenido: imagen completa en proporción 410:155',
+      ratio: ratio(410, MOBILE_IMAGE_HEIGHT),
+      frameLabel: `Imagen superior de referencia: 410 × ${MOBILE_IMAGE_HEIGHT} px`,
     },
   ] as const;
 };
