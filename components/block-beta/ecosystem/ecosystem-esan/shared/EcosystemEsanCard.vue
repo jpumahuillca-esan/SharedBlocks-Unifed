@@ -1,60 +1,72 @@
 <template>
-  <AtomLink
-    :href="href || undefined"
-    :target="item.target"
-    as="article"
+  <article
     class="ecosystem-esan-card"
-    :class="{ 'ecosystem-esan-card--without-description': !description }"
     :style="cardStyle"
-    :aria-label="href ? `Ir a ${title || 'la sección'}` : undefined"
   >
-    <!-- ================================================================
-         Imagen
-         ================================================================ -->
+    <AtomLink
+      :href="href || undefined"
+      :target="item.target"
+      as="div"
+      class="ecosystem-esan-card__image-link"
+      :aria-label="href ? `Ir a ${title || 'la sección'}` : undefined"
+    >
+      <div class="ecosystem-esan-card__media" v-bind="edit('.image')">
+        <img
+          v-if="item.image"
+          :src="item.image"
+          :alt="item.imageAlt || ''"
+          width="410"
+          height="155"
+          loading="lazy"
+          decoding="async"
+        />
 
-    <div class="ecosystem-esan-card__media" v-bind="edit('.image')">
-      <img
-        v-if="item.image"
-        :src="item.image"
-        :alt="item.imageAlt || ''"
-        width="410"
-        height="155"
-        loading="lazy"
-        decoding="async"
-      />
-
-      <div
-        v-else
-        class="ecosystem-esan-card__media-empty"
-        aria-hidden="true"
-      >
-        <span class="ecosystem-esan-card__media-empty-icon">
-          <span class="ecosystem-esan-card__media-empty-sun"></span>
-          <span class="ecosystem-esan-card__media-empty-landscape"></span>
-        </span>
+        <div
+          v-else
+          class="ecosystem-esan-card__media-empty"
+          aria-hidden="true"
+        >
+          <span class="ecosystem-esan-card__media-empty-icon">
+            <span class="ecosystem-esan-card__media-empty-sun"></span>
+            <span class="ecosystem-esan-card__media-empty-landscape"></span>
+          </span>
+        </div>
       </div>
-    </div>
 
-    <!-- ================================================================
-         Content
-         ================================================================ -->
+    </AtomLink>
 
     <div
-      v-if="title || description || href"
+      v-if="title || description || href || item.links.length"
       class="ecosystem-esan-card__body"
-      :class="{ 'ecosystem-esan-card__body--without-link': !href }"
     >
-      <div v-if="title || description" class="ecosystem-esan-card__text">
-        <AtomHeading
-          v-if="title"
-          :level="3"
-          size="h5"
-          weight="semibold"
-          class="ecosystem-esan-card__title"
-          v-bind="edit('.title')"
-        >
-          {{ title }}
-        </AtomHeading>
+      <AtomLink
+        v-if="title || description || href"
+        :href="href || undefined"
+        :target="item.target"
+        as="div"
+        class="ecosystem-esan-card__main"
+        :aria-label="href ? `Ir a ${title || 'la sección'}` : undefined"
+      >
+        <div v-if="title" class="ecosystem-esan-card__title-row">
+          <AtomHeading
+            :level="3"
+            size="h5"
+            weight="semibold"
+            class="ecosystem-esan-card__title"
+            v-bind="edit('.title')"
+          >
+            {{ title }}
+          </AtomHeading>
+
+          <span
+            v-if="href"
+            class="ecosystem-esan-card__action btn btn--surface btn--icon"
+            aria-hidden="true"
+            v-bind="edit('.href')"
+          >
+            <AtomIcon name="chevron-right" :size="16" />
+          </span>
+        </div>
 
         <AtomText
           v-if="description"
@@ -64,21 +76,38 @@
         >
           {{ description }}
         </AtomText>
-      </div>
+      </AtomLink>
 
       <span
-        v-if="href"
-        class="ecosystem-esan-card__action btn btn--surface btn--icon"
+        v-if="item.links.length"
+        class="ecosystem-esan-card__divider"
         aria-hidden="true"
-        v-bind="edit('.href')"
+      ></span>
+
+      <ul
+        v-if="item.links.length"
+        class="ecosystem-esan__links"
+        :aria-label="`Enlaces de ${item.title}`"
       >
-        <AtomIcon
-          name="chevron-right"
-          :size="16"
-        />
-      </span>
+        <li
+          v-for="(link, li) in item.links"
+          v-bind="edit(`.links.${li}.label`)"
+          :key="link.id"
+          class="ecosystem-esan__link-item"
+        >
+          <AtomButton
+            variant="list"
+            :href="link.href || undefined"
+            :target="link.target"
+            class="ecosystem-esan__link"
+          >
+            <span>{{ link.label }}</span>
+              <AtomIcon name="arrow-right" :size="16" class="ecosystem-esan__link-icon" />
+          </AtomButton>
+        </li>
+      </ul>
     </div>
-  </AtomLink>
+  </article>
 </template>
 
 <script setup lang="ts">
@@ -91,6 +120,7 @@ import AtomHeading from '../../../../atoms/AtomHeading.vue';
 import AtomText from '../../../../atoms/AtomText.vue';
 import AtomIcon from '../../../../atoms/AtomIcon.vue';
 import AtomLink from '../../../../atoms/AtomLink.vue';
+import AtomButton from '../../../../atoms/AtomButton.vue';
 
 import {
   resolveBrandContentToken,

@@ -58,13 +58,13 @@
   --ds-container-max: 1280px;
 
   /* Padding horizontal estándar para bloques y contenedores:
-     - Desktop (>= 1024px): 32px
-     - Tablet (768px - 1023.98px): 20px
+     - Desktop (>= 1300px): 0px (el contenido ya se centra con --ds-container-max)
+     - Tablet y laptop (768px - 1299.98px): 20px
      - Mobile (< 768px): 16px */
-  --ds-container-padding-x: 32px;
+  --ds-container-padding-x: 0px;
 }
 
-@media (max-width: 1023.98px) {
+@media (max-width: 1299.98px) {
   :root {
     --ds-container-padding-x: 20px;
   }
