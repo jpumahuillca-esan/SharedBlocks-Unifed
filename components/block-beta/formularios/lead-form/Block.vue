@@ -163,8 +163,12 @@ const {
   border: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
   /* Esquinas casi rectas, como el diseño: 4px y no los 16px de --ds-radius-md. */
   border-radius: var(--ds-radius-xs);
-  padding-block: var(--ds-spacing-md);
-  padding-inline: var(--ds-container-padding-x);
+  /*
+   * Relleno propio de la tarjeta, igual por los cuatro lados. No usa
+   * --ds-container-padding-x: ese token es el relleno lateral de la página y
+   * vale 0 desde 1300px, lo que dejaba los campos pegados al borde.
+   */
+  padding: var(--ds-spacing-md);
   box-shadow: var(--ds-shadow-md);
   /*
    * Ritmo vertical común a todos los bloques (ver
