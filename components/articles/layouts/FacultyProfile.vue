@@ -68,9 +68,9 @@
                     <i class="las la-book-reader text-danger fs-4 flex-shrink-0"></i>
                     <div>
                       <small class="text-muted d-block" style="font-size: 0.75rem;">Docente en:</small>
-                      <a :href="course.url" class="fw-bold text-dark text-decoration-none hover-primary small">
+                      <AtomLink :href="course.url" class="fw-bold text-dark text-decoration-none hover-primary small">
                         {{ course.title }}
-                      </a>
+                      </AtomLink>
                     </div>
                   </div>
                 </div>
@@ -89,9 +89,9 @@
                 :key="idx"
                 class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3"
               >
-                <a :href="art.url" class="text-dark fw-medium text-decoration-none hover-danger flex-grow-1 pe-3">
+                <AtomLink :href="art.url" class="text-dark fw-medium text-decoration-none hover-danger flex-grow-1 pe-3">
                   {{ art.title }}
-                </a>
+                </AtomLink>
                 <span v-if="art.date" class="badge bg-light text-muted border fw-normal flex-shrink-0">
                   <i class="las la-calendar me-1"></i>{{ art.date }}
                 </span>
@@ -118,6 +118,11 @@
           </div>
         </div>
       </div>
+
+      <!-- Secciones Libres del Page Builder (Opción D: Híbrido) -->
+      <div v-if="docente.content_blocks && docente.content_blocks.length" class="mt-5 pt-4 border-top">
+        <PageSections :content="docente.content_blocks" />
+      </div>
     </div>
   </article>
 </template>
@@ -125,6 +130,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { formatImageUrl } from '../../../helpers/url';
+import PageSections from '../../layout/PageSections.vue';
+import AtomLink from '../../atoms/AtomLink.vue';
 
 const props = defineProps<{
   data?: any;
@@ -159,6 +166,7 @@ const docente = computed(() => {
     experience: body.experience || raw.experience || raw.experiencia || '',
     courses: body.courses || raw.courses || [],
     articles: body.articles || raw.articles || [],
+    content_blocks: Array.isArray(raw.content_blocks) ? raw.content_blocks : (Array.isArray(body.content_blocks) ? body.content_blocks : []),
   };
 });
 </script>

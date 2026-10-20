@@ -8,7 +8,7 @@
  * - Sin destino / Inactivo: Etiqueta semántica vía `as` (por defecto 'div').
  * - Fallback: Etiqueta <a> nativa.
  */
-import { computed, inject, resolveComponent } from 'vue';
+import { computed, inject, resolveComponent, getCurrentInstance } from 'vue';
 import { useRouter } from 'vue-router';
 import { linkTargetAttrs } from '../../helpers/linkTarget';
 import { EDIT_CANVAS_KEY } from '../../core/editFocus';
@@ -29,6 +29,7 @@ const props = withDefaults(defineProps<{
 });
 
 const isEditCanvas = inject(EDIT_CANVAS_KEY, false);
+const instance = getCurrentInstance();
 
 let router: any = null;
 try {
@@ -58,12 +59,12 @@ const linkTag = computed(() => {
 
   try {
     const nuxtLink = resolveComponent('NuxtLink');
-    if (typeof nuxtLink !== 'string') return nuxtLink;
+    if (nuxtLink) return nuxtLink;
   } catch (_) {}
 
   try {
     const routerLink = resolveComponent('RouterLink');
-    if (typeof routerLink !== 'string') return routerLink;
+    if (routerLink) return routerLink;
   } catch (_) {}
 
   return 'a';
@@ -105,9 +106,10 @@ const handleClick = (event: MouseEvent) => {
     targetUrl.value !== '#' &&
     !targetUrl.value.startsWith('#')
   ) {
-    if (router && typeof router.push === 'function') {
+    const activeRouter = router || instance?.appContext.config.globalProperties.$router || (typeof window !== 'undefined' ? ((window as any).$nuxt?.$router || (window as any).__nuxtApp?.$router) : null);
+    if (activeRouter && typeof activeRouter.push === 'function') {
       event.preventDefault();
-      router.push(targetUrl.value);
+      activeRouter.push(targetUrl.value);
     }
   }
 };

@@ -1,9 +1,31 @@
 import { defineAsyncComponent } from "vue";
 
 export const ARTICLE_LAYOUT_REGISTRY: Record<string, any> = {
+  conexion_esan: {
+    id: "conexion_esan",
+    label: "📰 Noticia / Opinión Conexión ESAN",
+    description:
+      "Diseño editorial oficial de Conexión ESAN con autor integrado, compartir y barra lateral.",
+    icon: "las la-newspaper",
+    component: defineAsyncComponent(
+      () => import("../components/articles/layouts/ArticleConexionEsan.vue"),
+    ),
+  },
+
   default: {
     id: "default",
-    label: "📖 Estilo Default",
+    label: "📖 Estilo Conexión ESAN (Default)",
+    description:
+      "Diseño editorial oficial de Conexión ESAN con autor integrado, compartir y barra lateral.",
+    icon: "las la-newspaper",
+    component: defineAsyncComponent(
+      () => import("../components/articles/layouts/ArticleConexionEsan.vue"),
+    ),
+  },
+
+  magazine: {
+    id: "magazine",
+    label: "📖 Estilo Revista / Bloques",
     description:
       "Diseño tipo revista, imagen a un lado y contenido fluyendo al otro.",
     icon: "las la-book-open",
@@ -21,6 +43,28 @@ export const ARTICLE_LAYOUT_REGISTRY: Record<string, any> = {
 
     component: defineAsyncComponent(
       () => import("../components/articles/layouts/ArticleClassic.vue"),
+    ),
+  },
+
+  author: {
+    id: "author",
+    label: "✍️ Perfil de Autor (Conexión ESAN)",
+    description:
+      "Perfil de autor con avatar, grados, bio, experiencia, artículos de opinión y bloques libres (sin cursos).",
+    icon: "las la-feather-alt",
+    component: defineAsyncComponent(
+      () => import("../components/articles/layouts/AuthorProfile.vue"),
+    ),
+  },
+
+  faculty_v2: {
+    id: "faculty_v2",
+    label: "🚀 Perfil Híbrido V2 (Docente & Autor Completo)",
+    description:
+      "Versión 2 completa con cursos dictados, artículos y soporte de Page Builder.",
+    icon: "las la-graduation-cap",
+    component: defineAsyncComponent(
+      () => import("../components/articles/layouts/FacultyProfileV2.vue"),
     ),
   },
 
