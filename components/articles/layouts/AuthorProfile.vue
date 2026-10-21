@@ -59,6 +59,28 @@
             <div class="author-rich-text text-secondary lh-lg" v-html="author.experience || author.experiencia"></div>
           </section>
 
+          <!-- Cursos y Programas Donde Enseña (Maestrías, Diplomas, etc.) -->
+          <section v-if="author.courses && author.courses.length" class="pt-4 mt-2 border-top">
+            <h2 class="h5 fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+              <i class="las la-graduation-cap text-danger fs-4"></i> Programas y Maestrías
+            </h2>
+            <div class="row g-2">
+              <div v-for="(course, idx) in author.courses" :key="idx" class="col-md-6">
+                <div class="card h-100 border-light bg-light shadow-sm p-3 rounded-3">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="las la-book-reader text-danger fs-4 flex-shrink-0"></i>
+                    <div>
+                      <small class="text-muted d-block" style="font-size: 0.75rem;">Docente en:</small>
+                      <AtomLink :href="course.url" class="fw-bold text-dark text-decoration-none hover-primary small">
+                        {{ course.title || course.name }}
+                      </AtomLink>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <!-- Artículos Publicados en Conexión ESAN -->
           <section v-if="author.articles && author.articles.length" class="pt-4 mt-3 border-top">
             <h2 class="h5 fw-bold text-dark mb-3 d-flex align-items-center gap-2">
