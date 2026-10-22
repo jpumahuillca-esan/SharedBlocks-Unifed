@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Libreria de componentes Vue 3 compartida entre front y public-site. Se consume como codigo fuente via el alias @shared (no tiene build propio ni entry point unico): cada archivo se importa por su ruta directa, nunca por el nombre del paquete.",
   "private": true,
+  "engines": {
+    "node": ">=26.12.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

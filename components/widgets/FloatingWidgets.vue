@@ -51,11 +51,13 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { useRouter } from 'vue-router';
 import FloatingWhatsApp from './FloatingWhatsApp.vue';
 import FloatingScrollTop from './FloatingScrollTop.vue';
 import ChatbotTrigger from './chatbot/ChatbotTrigger.vue';
 import ChatbotDialog from './chatbot/ChatbotDialog.vue';
 import { useChatbot, appendChatbotUtm } from '../../composables/useChatbot';
+import { isInternalUrl, isDownloadableFile } from '../../helpers/chatbotUtm';
 
 const props = withDefaults(
   defineProps<{
@@ -147,6 +149,11 @@ const scrollToTop = () => {
   }
 };
 
+let router: any = null;
+try {
+  router = useRouter();
+} catch (_) {}
+
 const navigateToPage = (url: string) => {
   if (typeof window === 'undefined' || !url) return;
   const cb = props.config?.chatbot;
@@ -156,20 +163,46 @@ const navigateToPage = (url: string) => {
     campaign: cb?.utm_campaign || cb?.campaign_slug || 'esanbot'
   });
 
-  if (trackedUrl.startsWith('http://') || trackedUrl.startsWith('https://')) {
+  // 1. Si es un archivo descargable (PDF, DOC), abrirlo directamente en nueva pestaña
+  if (isDownloadableFile(trackedUrl)) {
     window.open(trackedUrl, '_blank', 'noopener,noreferrer');
-  } else {
-    const cleanUrl = trackedUrl.startsWith('/') ? trackedUrl : `/${trackedUrl}`;
-    try {
-      if (typeof navigateTo === 'function') {
-        navigateTo(cleanUrl);
-        return;
-      }
-    } catch {
-      // Fallback a redirección estándar si navigateTo no está disponible
-    }
-    window.location.href = cleanUrl;
+    return;
   }
+
+  // 2. Si es una URL externa (WhatsApp, redes, dominios terceros), abrir en nueva pestaña
+  if (!isInternalUrl(trackedUrl)) {
+    window.open(trackedUrl, '_blank', 'noopener,noreferrer');
+    return;
+  }
+
+  // 3. Si es ruta interna, extraer pathname limpio para el enrutador SPA
+  let routePath = trackedUrl;
+  try {
+    const dummyOrigin = window.location.origin || 'https://esan.edu.pe';
+    const parsed = new URL(trackedUrl, dummyOrigin);
+    routePath = parsed.pathname + parsed.search + parsed.hash;
+  } catch (_) {}
+
+  const cleanUrl = routePath.startsWith('/') ? routePath : `/${routePath}`;
+
+  // Intento A: Vue Router push (transición SPA fluida in-place en Nuxt 3 y Vue 3)
+  if (router && typeof router.push === 'function') {
+    try {
+      router.push(cleanUrl);
+      return;
+    } catch (_) {}
+  }
+
+  // Intento B: Nuxt 3 navigateTo
+  try {
+    if (typeof (navigateTo as any) === 'function') {
+      (navigateTo as any)(cleanUrl);
+      return;
+    }
+  } catch (_) {}
+
+  // Intento C: Fallback solo si ningún router SPA está disponible
+  window.location.href = cleanUrl;
 };
 
 const handleScroll = () => {
@@ -179,38 +212,54 @@ const handleScroll = () => {
 };
 
 const resolvedChatbotApiUrl = computed(() => {
-  if (props.chatbotApiUrl) return props.chatbotApiUrl;
   if (typeof window !== 'undefined') {
-    const nuxtConfigUrl = (window as any)?.__NUXT__?.config?.public?.chatbotApiUrl;
-    if (nuxtConfigUrl) return nuxtConfigUrl;
+    const host = window.location.hostname;
+    // Si el usuario navega desde localhost / 127.0.0.1
+    if (host === 'localhost' || host === '127.0.0.1') {
+      return 'http://127.0.0.1:5005/api/v1/chat';
+    }
+    // Si navega desde la IP de red local (ej: 172.59.1.134), apuntar al mismo host en el puerto 5005
+    if (host) {
+      return `http://${host}:5005/api/v1/chat`;
+    }
   }
+  if (props.chatbotApiUrl) return props.chatbotApiUrl;
   return 'http://127.0.0.1:5005/api/v1/chat';
 });
 
 const resolvedLaravelApiUrl = computed(() => {
   if (typeof window !== 'undefined') {
-    const nuxtConfigUrl = (window as any)?.__NUXT__?.config?.public?.laravelApiUrl;
-    if (nuxtConfigUrl) return nuxtConfigUrl;
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') {
+      return 'http://127.0.0.1:8000';
+    }
+    if (host) {
+      return `http://${host}:8000`;
+    }
   }
   return 'http://127.0.0.1:8000';
 });
 
 const handleSendMessage = (query?: string) => {
-  if (query) {
-    inputQuery.value = query;
-  }
+  const queryToSend = (query || inputQuery.value || '').trim();
+  if (!queryToSend) return;
+
   const cb = props.config?.chatbot;
   const resolvedLeadEndpoint =
     props.leadEndpoint || `${resolvedLaravelApiUrl.value}/api/public/leads`;
 
-  sendMessage(resolvedChatbotApiUrl.value, {
-    endpoint: resolvedLeadEndpoint,
-    academicUnitId: props.academicUnitId || 1,
-    campaignSlug: cb?.campaign_slug || 'esanbot',
-    utmSource: cb?.utm_source || 'chatbot',
-    utmMedium: cb?.utm_medium || 'chat_conversacional',
-    utmCampaign: cb?.utm_campaign || 'esanbot'
-  });
+  sendMessage(
+    resolvedChatbotApiUrl.value,
+    {
+      endpoint: resolvedLeadEndpoint,
+      academicUnitId: props.academicUnitId || 1,
+      campaignSlug: cb?.campaign_slug || 'esanbot',
+      utmSource: cb?.utm_source || 'chatbot',
+      utmMedium: cb?.utm_medium || 'chat_conversacional',
+      utmCampaign: cb?.utm_campaign || 'esanbot'
+    },
+    queryToSend
+  );
 };
 
 const injectChatbotScript = () => {

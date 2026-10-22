@@ -8,7 +8,11 @@
       :class="msg.role === 'user' ? 'row-user' : 'row-bot'"
     >
       <div class="chat-bubble" :class="msg.role === 'user' ? 'bubble-user' : 'bubble-bot'">
-        <div class="bubble-text" v-html="formatMessage(msg.content)"></div>
+        <div
+          class="bubble-text"
+          v-html="formatMessage(msg.content)"
+          @click="onBubbleContentClick"
+        ></div>
 
         <!-- Tarjetas de Páginas Sugeridas / Encontradas en el Portal -->
         <div v-if="msg.suggestedPages && msg.suggestedPages.length > 0" class="suggested-pages-box mt-2">
@@ -24,6 +28,7 @@
               <a
                 :href="appendChatbotUtm(page.url)"
                 class="page-suggestion-item"
+                data-spa-link="true"
                 @click.prevent="$emit('navigate-page', page.url)"
               >
                 <div class="page-item-icon">
@@ -91,12 +96,34 @@ defineProps<{
   suggestions: string[];
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'select-suggestion', sug: string): void;
   (e: 'navigate-page', url: string): void;
 }>();
 
 const containerRef = ref<HTMLElement | null>(null);
+
+/**
+ * Intercepta clics en enlaces HTML dentro del texto de los mensajes.
+ * Si es un enlace SPA interno, previene la recarga del navegador y emite navigate-page.
+ */
+const onBubbleContentClick = (event: MouseEvent) => {
+  const target = event.target as HTMLElement | null;
+  if (!target) return;
+
+  const anchor = target.closest('a');
+  if (!anchor) return;
+
+  const isSpa =
+    anchor.dataset.spaLink === 'true' ||
+    anchor.classList.contains('chat-spa-link');
+  const href = anchor.getAttribute('href');
+
+  if (isSpa && href) {
+    event.preventDefault();
+    emit('navigate-page', href);
+  }
+};
 
 defineExpose({
   containerRef
@@ -150,9 +177,37 @@ defineExpose({
 }
 
 :deep(.chat-inline-link) {
-  color: #e31140;
   font-weight: 600;
   text-decoration: underline;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+:deep(.chat-spa-link) {
+  color: #c52b27;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(197, 43, 39, 0.08);
+  text-decoration: none;
+  border-bottom: 1.5px solid #c52b27;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin: 1px 2px;
+  font-size: 0.82rem;
+}
+
+:deep(.chat-spa-link:hover) {
+  background: rgba(197, 43, 39, 0.16);
+  color: #991b1b;
+  transform: translateX(1px);
+}
+
+:deep(.chat-external-link) {
+  color: #0284c7;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
 }
 
 .bubble-user :deep(.chat-inline-link) {
