@@ -17,6 +17,25 @@
                     </div>
 
                     <div class="article-content fs-5 text-secondary" style="line-height: 1.9;" v-html="htmlContent"></div>
+
+                    <!-- Pastillas de Tags / Temas Relacionados -->
+                    <div v-if="tagsList && tagsList.length > 0" class="mt-5 pt-4 border-top">
+                        <span class="d-block small text-muted text-uppercase fw-bold mb-2">
+                            <i class="las la-tags text-primary me-1"></i> Temas relacionados:
+                        </span>
+                        <div class="d-flex flex-wrap gap-2">
+                            <AtomLink
+                                v-for="tag in tagsList"
+                                :key="tag.id || tag.slug"
+                                :to="`/tema/${tag.slug}/`"
+                                class="badge bg-light text-dark border text-decoration-none py-2 px-3 d-inline-flex align-items-center gap-1 shadow-sm hover-primary"
+                                style="font-size: 0.85rem;"
+                            >
+                                <i class="las la-tag text-muted"></i>
+                                {{ tag.name }}
+                            </AtomLink>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -32,13 +51,13 @@
 <script setup lang="ts">
 import AtomHeading from '../../atoms/AtomHeading.vue';
 import AtomText from '../../atoms/AtomText.vue';
+import AtomLink from '../../atoms/AtomLink.vue';
 import { computed } from 'vue';
 import { formatImageUrl } from '../../../helpers/url';
 
 const props = defineProps({
     data: { type: Object, required: true }
 });
-
 
 const bodyData = computed(() => {
     let parsed = props.data.body || props.data.content_blocks;
@@ -52,17 +71,42 @@ const htmlContent = computed(() => bodyData.value.html || '');
 const authorName = computed(() => bodyData.value.author?.name || '');
 const authorAvatar = computed(() => bodyData.value.author?.avatar || '');
 const readTime = computed(() => bodyData.value.extra?.read_time || '5 min');
-const tags = computed(() => bodyData.value.extra?.tags || []);
+
+const tagsList = computed(() => {
+    const p = props.data;
+    const rawTags = p.tags || p.article?.tags || bodyData.value.tags || bodyData.value.extra?.tags || [];
+    if (!Array.isArray(rawTags)) return [];
+    return rawTags.map((t: any) => {
+        if (typeof t === 'string') {
+            const cleanSlug = t.toLowerCase().trim().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+            return { id: t, name: t, slug: cleanSlug };
+        }
+        return {
+            id: t.id,
+            name: t.name,
+            slug: t.slug || String(t.name).toLowerCase().trim().replace(/ /g, '-').replace(/[^\w-]+/g, ''),
+        };
+    });
+});
 
 const formatDate = (dateString: string) => {
     if (!dateString) return '';
     return new Date(dateString).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
 };
-
-
 </script>
 
 <style scoped>
 .tracking-wide { letter-spacing: 0.1em; }
 .article-content :deep(img) { max-width: 100%; height: auto; border-radius: 4px; margin: 1.5rem 0; }
+.hover-primary {
+    transition: all 0.2s ease-in-out;
+}
+.hover-primary:hover {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    border-color: #0d6efd !important;
+}
+.hover-primary:hover i {
+    color: #ffffff !important;
+}
 </style>

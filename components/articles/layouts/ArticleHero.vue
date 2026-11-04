@@ -57,15 +57,22 @@
                         El contenido de la noticia aparecerá aquí...
                     </div>
 
-                    <div v-if="tags && tags.length" class="mt-5 pt-4 border-top">
-                        <AtomHeading :level="6" class="text-muted fw-bold mb-3 text-uppercase small tracking-wide">
-                            Temas relacionados
-                        </AtomHeading>
+                    <!-- Pastillas de Tags / Temas Relacionados -->
+                    <div v-if="tagsList && tagsList.length > 0" class="mt-5 pt-4 border-top">
+                        <span class="d-block small text-muted text-uppercase fw-bold mb-2">
+                            <i class="las la-tags text-danger me-1"></i> Temas relacionados:
+                        </span>
                         <div class="d-flex flex-wrap gap-2">
-                            <span v-for="tag in tags" :key="tag" 
-                                  class="badge bg-light text-secondary border px-3 py-2 fw-normal">
-                                #{{ tag }}
-                            </span>
+                            <AtomLink
+                                v-for="tag in tagsList"
+                                :key="tag.id || tag.slug"
+                                :to="`/tema/${tag.slug}/`"
+                                class="badge bg-light text-dark border text-decoration-none py-2 px-3 d-inline-flex align-items-center gap-1 shadow-sm hover-danger"
+                                style="font-size: 0.85rem;"
+                            >
+                                <i class="las la-tag text-muted"></i>
+                                {{ tag.name }}
+                            </AtomLink>
                         </div>
                     </div>
 
@@ -78,6 +85,7 @@
 <script setup lang="ts">
 import AtomHeading from '../../atoms/AtomHeading.vue';
 import AtomText from '../../atoms/AtomText.vue';
+import AtomLink from '../../atoms/AtomLink.vue';
 import { computed } from 'vue';
 import { formatImageUrl } from '../../../helpers/url';
 
@@ -97,7 +105,23 @@ const htmlContent = computed(() => bodyData.value.html || '');
 const authorName = computed(() => bodyData.value.author?.name || '');
 const authorAvatar = computed(() => bodyData.value.author?.avatar || '');
 const readTime = computed(() => bodyData.value.extra?.read_time || '');
-const tags = computed(() => bodyData.value.extra?.tags || []);
+
+const tagsList = computed(() => {
+    const p = props.data;
+    const rawTags = p.tags || p.article?.tags || bodyData.value.tags || bodyData.value.extra?.tags || [];
+    if (!Array.isArray(rawTags)) return [];
+    return rawTags.map((t: any) => {
+        if (typeof t === 'string') {
+            const cleanSlug = t.toLowerCase().trim().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+            return { id: t, name: t, slug: cleanSlug };
+        }
+        return {
+            id: t.id,
+            name: t.name,
+            slug: t.slug || String(t.name).toLowerCase().trim().replace(/ /g, '-').replace(/[^\w-]+/g, ''),
+        };
+    });
+});
 
 const formatDate = (dateString: string) => {
     if (!dateString) return '';
@@ -116,14 +140,11 @@ const formatDate = (dateString: string) => {
     line-height: 1.8;
     color: #334155;
     
-    /* CAMBIO AQUÍ: Aseguramos que el texto respete los límites del contenedor y parta palabras muy largas si es necesario */
     word-wrap: break-word;
     overflow-wrap: break-word;
-    /* Esto ayuda si el editor guardó saltos de línea como \n en lugar de <p> o <br> */
     white-space: pre-wrap; 
 }
 
-/* Resto de estilos igual... */
 .article-content :deep(p) {
     margin-bottom: 1.5rem;
 }
@@ -153,4 +174,16 @@ const formatDate = (dateString: string) => {
 .article-content :deep(a:hover) {
     opacity: 0.8;
 }
-</style>    
+
+.hover-danger {
+    transition: all 0.2s ease-in-out;
+}
+.hover-danger:hover {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    border-color: #dc3545 !important;
+}
+.hover-danger:hover i {
+    color: #ffffff !important;
+}
+</style>

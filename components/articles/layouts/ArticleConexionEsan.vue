@@ -145,6 +145,24 @@
                 La formación continua y el aprendizaje práctico constituyen el pilar fundamental para liderar con éxito en entornos dinámicos y de alta incertidumbre.
               </p>
             </div>
+
+            <!-- Pastillas de Tags / Temas Relacionados -->
+            <div v-if="tagsList && tagsList.length > 0" class="article-tags-wrapper mt-4 pt-3 border-top">
+              <span class="d-block small text-muted text-uppercase fw-bold mb-2">
+                <i class="las la-tags text-danger me-1"></i> Temas relacionados:
+              </span>
+              <div class="d-flex flex-wrap gap-2">
+                <AtomLink
+                  v-for="tag in tagsList"
+                  :key="tag.id || tag.slug"
+                  :to="`/tema/${tag.slug}/`"
+                  class="badge bg-light text-dark border text-decoration-none py-2 px-3 hover-danger d-inline-flex align-items-center gap-1 shadow-sm"
+                  style="font-size: 0.85rem;"
+                >
+                  <span class="text-danger fw-bold">#</span> {{ tag.name }}
+                </AtomLink>
+              </div>
+            </div>
           </div>
 
           <!-- SIDEBAR: CUADRO2 (AUTOR + BIO BULLETS + PROGRAMAS DOCENTE) -->
@@ -244,6 +262,23 @@ const article = computed(() => {
     author: p.author || null,
     related_posts: p.related_posts || []
   };
+});
+
+const tagsList = computed(() => {
+  const p = rawData.value;
+  const rawTags = p.tags || p.article?.tags || p.extra?.tags || [];
+  if (!Array.isArray(rawTags)) return [];
+  return rawTags.map((t) => {
+    if (typeof t === 'string') {
+      const cleanSlug = t.toLowerCase().trim().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+      return { id: t, name: t, slug: cleanSlug };
+    }
+    return {
+      id: t.id,
+      name: t.name,
+      slug: t.slug || String(t.name).toLowerCase().trim().replace(/ /g, '-').replace(/[^\w-]+/g, ''),
+    };
+  });
 });
 
 // Autor

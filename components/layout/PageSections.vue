@@ -37,6 +37,7 @@
                 v-if="resolveBlock(block.type)"
                 :is="resolveBlock(block.type)"
                 :id="'sec-' + block.id"
+                :data-block-id="block.id"
                 :data="block.content"
               />
 
@@ -50,6 +51,7 @@
                 v-if="resolveBlock(block.type)"
                 :is="resolveBlock(block.type)"
                 :id="'sec-' + block.id"
+                :data-block-id="block.id"
                 :data="block.content"
               />
 
