@@ -14,6 +14,7 @@
         v-if="items.length > 1"
         v-model="activeId"
         variant="cards"
+        as="button"
         :items="tabItems"
         aria-label="Filtros"
         class="values-cards__filters"
@@ -27,7 +28,7 @@
             parejos. Agrupados, ese hueco lo pone un solo `gap` en el cuerpo.
           -->
           <div class="values-cards__heading">
-            <AtomEyebrow v-if="active.eyebrow" as="h2" v-bind="edit('.eyebrow')">{{ active.eyebrow }}</AtomEyebrow>  
+            <AtomEyebrow v-if="active.eyebrow" as="p" v-bind="edit('.eyebrow')">{{ active.eyebrow }}</AtomEyebrow>  
 
             <!--
               Es un h3 y no un h2: el bloque se inserta dentro de una página que
@@ -201,12 +202,11 @@ const items = computed<ValueItem[]>(() => {
 
 const activeId = ref('');
 
-/* Lo que la molécula necesita de cada pilar: id, etiqueta e ícono. */
+/* Lo que la molécula necesita de cada pilar: id y etiqueta (sin íconos según maqueta). */
 const tabItems = computed<TabItem[]>(() =>
   items.value.map((item) => ({
     id: item.id,
     label: item.tabLabel,
-    icon: item.icon || undefined,
   }))
 );
 

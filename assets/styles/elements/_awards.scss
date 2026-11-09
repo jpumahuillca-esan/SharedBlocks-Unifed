@@ -25,6 +25,13 @@
 
 .arcis-scope {
 
+  .awards-featured-wrapper {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease, margin-top 0.2s ease;
+  }
+
   .card-section.awards .card-section__heading > .eyebrow {
     display: block;
     font-family: var(--ds-font-family-base);
@@ -51,6 +58,9 @@
     /* En la maqueta hay más aire entre la descripción y los logos que en las
        secciones de tarjetas (24px). */
     gap: var(--ds-spacing-lg);
+
+    /* Espaciado superior configurable (por defecto conserva el ritmo institucional de 80px) */
+    padding-top: var(--awards-top-spacing, var(--ds-spacing-xxl));
   }
 
   /*

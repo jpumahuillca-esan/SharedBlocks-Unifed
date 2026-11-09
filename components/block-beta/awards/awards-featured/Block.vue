@@ -4,58 +4,64 @@
     mismo enlace al pie que `events`. `awards` solo le ajusta a la fila lo que
     cambia al llevar logos en vez de tarjetas (ver _awards.scss).
   -->
-  <section class="card-section awards">
-    <CardSectionHeader
-      :eyebrow="data.eyebrow ? `— ${data.eyebrow}` : ''"
-      eyebrow-as="span"
-      title-as="h2"
-      :desc="data.desc || ''"
-      :title="titleContent.text"
-      :link-label="data.linkLabel || ''"
-      :link-url="data.linkUrl || ''"
-      :link-target="normalizeLinkTarget(data.linkTarget)"
-    >
-      <template #title>
-        <span v-html="titleContent.html"></span>
-      </template>
-    </CardSectionHeader>
+  <section
+    class="awards-featured-wrapper"
+    :style="sectionStyles"
+    v-bind="edit('backgroundColor')"
+  >
+    <div class="card-section awards" :style="innerStyles">
+      <CardSectionHeader
+        :eyebrow="data.eyebrow ? `— ${data.eyebrow}` : ''"
+        eyebrow-as="span"
+        title-as="h2"
+        :desc="data.desc || ''"
+        :title="titleContent.text"
+        :link-label="data.linkLabel || ''"
+        :link-url="data.linkUrl || ''"
+        :link-target="normalizeLinkTarget(data.linkTarget)"
+      >
+        <template #title>
+          <span v-html="titleContent.html"></span>
+        </template>
+      </CardSectionHeader>
 
-    <!--
-      Las columnas son tantas como reconocimientos: con cuatro, cada logo se
-      centra en su cuarto de ancho, como en la maqueta; con menos, se reparten
-      el ancho en lugar de dejar un hueco a la derecha.
-    -->
-    <CardSlider v-if="awards.length" :count="awards.length" :columns="awards.length">
-      <div v-for="(award, i) in awards" :key="award.id" class="awards__item" v-bind="edit(`awards.${i}`)">
-        <!--
-          Sin ancho ni alto en el <img>: cada logo lo sube el usuario y no se
-          conocen sus medidas. El hueco lo reserva la casilla, que tiene alto
-          fijo, así que la fila no salta mientras cargan.
-        -->
-        <img
-          v-if="award.image"
-          class="awards__logo"
-          v-bind="edit('.image')"
-          :src="award.image"
-          :alt="award.imageAlt"
-          loading="lazy"
-          decoding="async"
-        />
+      <!--
+        Las columnas son tantas como reconocimientos: con cuatro, cada logo se
+        centra en su cuarto de ancho, como en la maqueta; con menos, se reparten
+        el ancho en lugar de dejar un hueco a la derecha.
+      -->
+      <CardSlider v-if="awards.length" :count="awards.length" :columns="awards.length">
+        <div v-for="(award, i) in awards" :key="award.id" class="awards__item" v-bind="edit(`awards.${i}`)">
+          <!--
+            Sin ancho ni alto en el <img>: cada logo lo sube el usuario y no se
+            conocen sus medidas. El hueco lo reserva la casilla, que tiene alto
+            fijo, así que la fila no salta mientras cargan.
+          -->
+          <img
+            v-if="award.image"
+            class="awards__logo"
+            v-bind="edit('.image')"
+            :src="award.image"
+            :alt="award.imageAlt"
+            loading="lazy"
+            decoding="async"
+          />
 
-        <!--
-          Sin imagen, la casilla no desaparece: queda un recuadro gris que marca
-          dónde va el logo. Es puro adorno, por eso es un <span> oculto a los
-          lectores de pantalla.
-        -->
-        <span v-else class="awards__placeholder" aria-hidden="true" v-bind="edit('.image')"></span>
-      </div>
-    </CardSlider>
+          <!--
+            Sin imagen, la casilla no desaparece: queda un recuadro gris que marca
+            dónde va el logo. Es puro adorno, por eso es un <span> oculto a los
+            lectores de pantalla.
+          -->
+          <span v-else class="awards__placeholder" aria-hidden="true" v-bind="edit('.image')"></span>
+        </div>
+      </CardSlider>
 
-    <CardSectionFooter
-      :link-label="data.linkLabel || ''"
-      :link-url="data.linkUrl || ''"
-      :link-target="normalizeLinkTarget(data.linkTarget)"
-    />
+      <CardSectionFooter
+        :link-label="data.linkLabel || ''"
+        :link-url="data.linkUrl || ''"
+        :link-target="normalizeLinkTarget(data.linkTarget)"
+      />
+    </div>
   </section>
 </template>
 
@@ -158,6 +164,49 @@ interface AwardItem {
 }
 
 const props = defineProps<{ data: any }>();
+
+const resolveBgColor = (value?: string): string | undefined => {
+  if (!value || value === 'transparent' || value === 'none') {
+    return 'transparent';
+  }
+  if (value.startsWith('--')) {
+    return `var(${value})`;
+  }
+  return value;
+};
+
+const resolveMarginTop = (token?: string): string | undefined => {
+  if (token === undefined || token === null || token === '') {
+    return undefined;
+  }
+  if (token === '0' || token === 0) {
+    return '0';
+  }
+  if (token.startsWith('--')) {
+    return `var(${token})`;
+  }
+  return token;
+};
+
+const sectionStyles = computed(() => {
+  const styles: Record<string, string> = {};
+
+  const bg = resolveBgColor(props.data?.backgroundColor);
+  if (bg) {
+    styles.backgroundColor = bg;
+  }
+
+  const mt = resolveMarginTop(props.data?.marginTopToken);
+  if (mt !== undefined) {
+    styles.marginTop = mt;
+  }
+
+  return styles;
+});
+
+const innerStyles = computed(() => {
+  return {};
+});
 
 const titleContent = computed(() => sanitizeTitleHtml(props.data?.title));
 

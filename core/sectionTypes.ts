@@ -10,6 +10,10 @@ export interface BlockItem {
     id: string;
     type: string;
     content: Record<string, any>;
+    global_block_id?: number | null;
+    global_block_name?: string | null;
+    is_global?: boolean;
+    is_active?: boolean;
 }
 
 /** Ancho del contenedor: a todo el ancho de la ventana o centrado con tope. */

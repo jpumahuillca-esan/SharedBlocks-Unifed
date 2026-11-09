@@ -146,6 +146,11 @@
               </p>
             </div>
 
+            <!-- Secciones Libres del Page Builder (Soporte Híbrido V2) -->
+            <div v-if="articleBlocks && articleBlocks.length" class="article-blocks-container my-4">
+              <PageSections :content="articleBlocks" />
+            </div>
+
             <!-- Pastillas de Tags / Temas Relacionados -->
             <div v-if="tagsList && tagsList.length > 0" class="article-tags-wrapper mt-4 pt-3 border-top">
               <span class="d-block small text-muted text-uppercase fw-bold mb-2">
@@ -239,6 +244,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue';
 import AtomLink from '../../atoms/AtomLink.vue';
+import PageSections from '../../layout/PageSections.vue';
 import { formatImageUrl } from '../../../helpers/url';
 
 const props = defineProps<{
@@ -279,6 +285,17 @@ const tagsList = computed(() => {
       slug: t.slug || String(t.name).toLowerCase().trim().replace(/ /g, '-').replace(/[^\w-]+/g, ''),
     };
   });
+});
+
+const articleBlocks = computed(() => {
+  const p = rawData.value;
+  if (Array.isArray(p.content_blocks) && p.content_blocks.length > 0) {
+    return p.content_blocks;
+  }
+  if (Array.isArray(p.blocks) && p.blocks.length > 0) {
+    return p.blocks;
+  }
+  return [];
 });
 
 // Autor

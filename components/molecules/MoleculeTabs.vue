@@ -48,9 +48,12 @@ const props = withDefaults(defineProps<{
   variant?: 'underline' | 'vertical' | 'cards';
   /** Nombre del grupo para el lector de pantalla, ej. "Filtros". */
   ariaLabel?: string;
+  /** Etiqueta a renderizar para cada pestaña: 'a' (por defecto) o 'button'. */
+  as?: string;
 }>(), {
   items: () => [],
   variant: 'underline',
+  as: 'a',
 });
 
 const emit = defineEmits<{
@@ -116,9 +119,11 @@ const onKeydown = (event: KeyboardEvent, index: number) => {
       :aria-label="ariaLabel"
       :aria-orientation="variant === 'vertical' ? 'vertical' : undefined"
     >
-      <a
+      <component
+        :is="as"
         v-for="(item, index) in items"
         :key="item.id"
+        :type="as === 'button' ? 'button' : undefined"
         class="tabs__tab"
         :class="{ 'is-active': item.id === modelValue }"
         role="tab"
@@ -130,7 +135,7 @@ const onKeydown = (event: KeyboardEvent, index: number) => {
       >
         <AtomIcon v-if="item.icon" :name="item.icon" :size="16" />
         {{ item.label }}
-      </a>
+      </component>
     </div>
   </div>
 </template>

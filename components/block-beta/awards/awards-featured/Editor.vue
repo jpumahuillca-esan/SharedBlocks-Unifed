@@ -34,6 +34,73 @@
 
     <hr />
 
+    <!-- Configuración de Fondo y Espaciado Superior -->
+    <div class="mb-3">
+      <h6 class="fw-bold small text-uppercase mb-2">Fondo y Espaciado</h6>
+
+      <!-- Control de Color de Fondo -->
+      <div class="mb-3" data-edit-target="backgroundColor">
+        <label class="form-label mb-1">Color de fondo</label>
+        <p class="aw-hint">
+          Elige si la sección tiene fondo de color o se muestra transparente ("sin fondo").
+        </p>
+        <div class="d-flex align-items-center gap-2">
+          <span
+            class="aw-bg-preview"
+            :class="{ 'aw-bg-preview--transparent': isTransparentBg }"
+            :style="previewStyle"
+            aria-hidden="true"
+          ></span>
+          <select
+            v-model="selectedBgMode"
+            class="form-select form-select-sm"
+            @change="onBgModeChange"
+          >
+            <option
+              v-for="bg in PRESET_BACKGROUNDS"
+              :key="bg.value"
+              :value="bg.value"
+            >
+              {{ bg.label }}
+            </option>
+            <option value="custom">Personalizado (Hex / Token)...</option>
+          </select>
+        </div>
+
+        <div v-if="selectedBgMode === 'custom'" class="mt-2">
+          <input
+            v-model="customBgValue"
+            type="text"
+            class="form-control form-control-sm"
+            placeholder="Ej: #F8FAFC o --ds-color-..."
+            @input="onCustomBgInput"
+          />
+        </div>
+      </div>
+
+      <!-- Control de Espaciado Superior (Margin Top con Tokens) -->
+      <div class="mb-3" data-edit-target="marginTopToken">
+        <label class="form-label mb-1">Espaciado hacia arriba (Margin Top)</label>
+        <p class="aw-hint">
+          Separación externa superior (margin-top) con respecto al bloque de arriba. Permite juntar o distanciar este bloque del superior manteniendo el aire y lectura interna del texto.
+        </p>
+        <select
+          v-model="localData.marginTopToken"
+          class="form-select form-select-sm"
+        >
+          <option
+            v-for="token in SPACING_TOKENS"
+            :key="token.value"
+            :value="token.value"
+          >
+            {{ token.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <hr />
+
     <div class="d-flex align-items-center justify-content-between mb-1">
       <h6 class="fw-bold small text-uppercase m-0">Reconocimientos</h6>
       <span class="badge bg-secondary">{{ localData.awards.length }} / {{ MAX_AWARDS }}</span>
@@ -127,6 +194,8 @@ const buildAward = (source: any): AwardItem => ({
 });
 
 const build = (source: any) => ({
+  backgroundColor: source?.backgroundColor ?? 'transparent',
+  marginTopToken: source?.marginTopToken ?? '',
   eyebrow: source?.eyebrow ?? '',
   title: source?.title ?? '',
   desc: source?.desc ?? '',
@@ -138,7 +207,68 @@ const build = (source: any) => ({
     : [],
 });
 
+const PRESET_BACKGROUNDS = [
+  { value: 'transparent', label: 'Sin fondo (Transparente)' },
+  { value: '#E4E6ED', label: 'Gris Values Cards (#E4E6ED - Imagen 3)' },
+  { value: '#F1F5F9', label: 'Gris Maqueta Logros / Neutral 100 (#F1F5F9 - Imagen 1)' },
+  { value: 'var(--ds-color-background-default, #FFFFFF)', label: 'Blanco institucional (--ds-color-background-default)' },
+  { value: 'var(--ds-color-background-light, #F4F6FA)', label: 'Gris claro institucional (--ds-color-background-light)' },
+  { value: 'var(--ds-color-background-soft, #EAEFF5)', label: 'Gris suave (--ds-color-background-soft)' },
+  { value: 'var(--ds-color-background-blend, #CBD5E1)', label: 'Gris neutro (--ds-color-background-blend)' },
+  { value: '#F8FAFC', label: 'Gris tenue (#F8FAFC)' },
+  { value: '#FFFFFF', label: 'Blanco puro (#FFFFFF)' },
+];
+
+const SPACING_TOKENS = [
+  { value: '', label: 'Por defecto (Sin margen superior adicional)' },
+  { value: '0', label: '0px (Sin separación superior)' },
+  { value: '--ds-spacing-xxs', label: '--ds-spacing-xxs (8px)' },
+  { value: '--ds-spacing-xs', label: '--ds-spacing-xs (12px)' },
+  { value: '--ds-spacing-sm', label: '--ds-spacing-sm (20px / 16px móvil)' },
+  { value: '--ds-spacing-md', label: '--ds-spacing-md (32px / 20px móvil)' },
+  { value: '--ds-spacing-lg', label: '--ds-spacing-lg (48px / 24px móvil)' },
+  { value: '--ds-spacing-xl', label: '--ds-spacing-xl (64px / 32px móvil)' },
+  { value: '--ds-spacing-xxl', label: '--ds-spacing-xxl (80px / 48px móvil)' },
+  { value: '--ds-spacing-xxxl', label: '--ds-spacing-xxxl (128px / 64px móvil)' },
+];
+
 const localData = ref(build(props.modelValue));
+
+const isKnownPreset = (val: string) => PRESET_BACKGROUNDS.some((p) => p.value === val);
+
+const selectedBgMode = ref(
+  isKnownPreset(localData.value.backgroundColor) ? localData.value.backgroundColor : 'custom',
+);
+const customBgValue = ref(
+  isKnownPreset(localData.value.backgroundColor) ? '' : localData.value.backgroundColor,
+);
+
+const isTransparentBg = computed(() => {
+  const bg = localData.value.backgroundColor;
+  return !bg || bg === 'transparent' || bg === 'none';
+});
+
+const previewStyle = computed(() => {
+  const bg = localData.value.backgroundColor;
+  if (!bg || bg === 'transparent' || bg === 'none') {
+    return {};
+  }
+  return {
+    backgroundColor: bg.startsWith('--') ? `var(${bg})` : bg,
+  };
+});
+
+const onBgModeChange = () => {
+  if (selectedBgMode.value === 'custom') {
+    localData.value.backgroundColor = customBgValue.value || '#FFFFFF';
+  } else {
+    localData.value.backgroundColor = selectedBgMode.value;
+  }
+};
+
+const onCustomBgInput = () => {
+  localData.value.backgroundColor = customBgValue.value.trim();
+};
 
 const isFull = computed(() => localData.value.awards.length >= MAX_AWARDS);
 
@@ -193,6 +323,13 @@ watch(
     if (!newVal) return;
     if (JSON.stringify(newVal) === JSON.stringify(localData.value)) return;
     localData.value = build(newVal);
+    if (isKnownPreset(localData.value.backgroundColor)) {
+      selectedBgMode.value = localData.value.backgroundColor;
+      customBgValue.value = '';
+    } else {
+      selectedBgMode.value = 'custom';
+      customBgValue.value = localData.value.backgroundColor;
+    }
   },
   { deep: true },
 );
@@ -224,5 +361,26 @@ watch(
   font-size: 11.5px;
   line-height: 1.45;
   color: #6b7688;
+}
+
+.aw-bg-preview {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.aw-bg-preview--transparent {
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
+    linear-gradient(-45deg, #e2e8f0 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
+    linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+  background-size: 8px 8px;
+  background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
 }
 </style>

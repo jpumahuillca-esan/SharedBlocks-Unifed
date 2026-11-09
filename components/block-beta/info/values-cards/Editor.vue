@@ -32,24 +32,6 @@
           hint="Va dentro de la pastilla, arriba de la tarjeta."
         />
 
-        <label class="form-label">Ícono del filtro</label>
-        <div class="d-flex align-items-center gap-2 mb-2">
-          <!--
-            Vista previa del ícono elegido. Se dibuja aquí con AtomIcon porque,
-            a diferencia de los pictogramas, este átomo no depende de los
-            estilos de .arcis-scope: trae su tamaño en el propio SVG.
-          -->
-          <span class="vc-icon-preview" :class="{ 'is-empty': !item.icon }" aria-hidden="true">
-            <AtomIcon v-if="item.icon" :name="item.icon" :size="18" />
-          </span>
-          <select v-model="item.icon" data-edit-target=".icon" class="form-select form-select-sm">
-            <option value="">Sin ícono</option>
-            <option v-for="name in ICON_SUGGESTIONS" :key="name" :value="name">
-              {{ name }}
-            </option>
-          </select>
-        </div>
-
         <hr class="my-2" />
 
         <EditorText

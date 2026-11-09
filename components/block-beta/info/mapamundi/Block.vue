@@ -90,8 +90,13 @@
             la propia tarjeta.
           -->
           <div class="mapamundi-card__body">
-            <!-- <p>: es texto de contenido (ver textos-de-contenido-en-p). -->
-            <AtomBadge v-if="card.tag" as="p" variant="brand-solid" class="mapamundi-card__tag" v-bind="edit('.tag')">
+            <AtomBadge
+              v-if="card.tag"
+              as="div"
+              variant="brand-solid"
+              class="mapamundi-card__tag"
+              v-bind="edit('.tag')"
+            >
               {{ card.tag }}
             </AtomBadge>
 

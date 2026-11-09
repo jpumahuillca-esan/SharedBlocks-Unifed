@@ -655,10 +655,12 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         icon: 'las la-award',
         group: 'Awards',
         beta: true,
-        // Sección blanca con su propio ancho máximo, igual que las de `events`.
-        isBoxed: true,
+        // Contenedor full-width para el fondo con contenido interno centrado a 1280px
+        isBoxed: false,
         component: defineAsyncComponent(() => import('../components/block-beta/awards/awards-featured/Block.vue')),
         initialData: {
+            backgroundColor: 'transparent',
+            marginTopToken: '',
             eyebrow: 'CIFRAS QUE RESPALDAN',
             title: '<p>Indicadores de <span style="color: #E3173E;">excelencia ESAN</span></p>',
             desc: 'El prestigio se construye con resultados, reconocimiento internacional y el impacto de nuestros egresados.',

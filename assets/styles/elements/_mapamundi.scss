@@ -333,18 +333,28 @@
   }
 
   /*
-   * Etiqueta (Pregrado / Postgrado): es un AtomBadge brand-solid al que aquí se
-   * le cambia el contorno y el color. El selector repite las tres clases del
-   * átomo para ganarle a su hoja por especificidad y no por orden de carga.
+   * Etiqueta (Pregrado / Postgrado): es un AtomBadge brand-solid adaptado
+   * según Figma (componente Hero-badge dentro de card-international-*):
+   * - Altura 36px, radio diagonal (esquinas superior izquierda e inferior derecha en punta 0;
+   *   superior derecha e inferior izquierda redondeadas con --ds-radius-sm).
+   * - Left: --mapamundi-accent (--ds-color-surface-primary).
+   * - Right: --mapamundi-accent (--ds-color-gsb-mba-primary / #273F59).
    */
   .mapamundi-card__tag.badge.badge--brand-solid {
     align-self: center;
-    padding: var(--ds-space-1) var(--ds-space-6);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: var(--ds-space-2) var(--ds-space-6);
 
     background-color: var(--mapamundi-accent);
-    border-radius: var(--ds-radius-xs);
+    color: var(--ds-color-text-inverse);
+    border-radius: 0 var(--ds-radius-sm) 0 var(--ds-radius-sm);
+    font-weight: var(--ds-weight-semibold);
     letter-spacing: 0.04em;
     text-transform: uppercase;
+    box-sizing: border-box;
   }
 
   /*

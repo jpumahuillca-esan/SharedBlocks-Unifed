@@ -118,10 +118,25 @@ export const sanitizeSettings = (raw: unknown): SectionSettings => {
 const sanitizeBlock = (raw: unknown): BlockItem | null => {
     if (!isRecord(raw) || typeof raw.type !== 'string' || !raw.type) return null;
 
+    const gId =
+        raw.global_block_id !== undefined && raw.global_block_id !== null && raw.global_block_id !== ''
+            ? Number(raw.global_block_id)
+            : null;
+
     return {
         id: typeof raw.id === 'string' && raw.id ? raw.id : createId(),
         type: raw.type,
         content: isRecord(raw.content) ? raw.content : {},
+        ...(gId ? { global_block_id: gId } : {}),
+        ...(typeof raw.global_block_name === 'string' && raw.global_block_name.trim()
+            ? { global_block_name: raw.global_block_name.trim() }
+            : {}),
+        ...(typeof raw.is_global === 'boolean'
+            ? { is_global: raw.is_global }
+            : gId
+              ? { is_global: true }
+              : {}),
+        ...(typeof raw.is_active === 'boolean' ? { is_active: raw.is_active } : {}),
     };
 };
 

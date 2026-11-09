@@ -23,42 +23,44 @@
           :style="columnStyles(section)[columnIndex]"
         >
           <template v-for="block in column.blocks" :key="block.id">
-            <!--
-              En una sección con columna flotante cada bloque va en su propio
-              envoltorio con `order`: en móvil las columnas desaparecen y es lo
-              que coloca el formulario debajo del bloque elegido.
-            -->
-            <div
-              v-if="isFloating(section)"
-              class="page-section__block"
-              :style="{ order: blockOrders(section)[block.id] }"
-            >
-              <component
-                v-if="resolveBlock(block.type)"
-                :is="resolveBlock(block.type)"
-                :id="'sec-' + block.id"
-                :data-block-id="block.id"
-                :data="block.content"
-              />
+            <template v-if="block.is_active !== false">
+              <!--
+                En una sección con columna flotante cada bloque va en su propio
+                envoltorio con `order`: en móvil las columnas desaparecen y es lo
+                que coloca el formulario debajo del bloque elegido.
+              -->
+              <div
+                v-if="isFloating(section)"
+                class="page-section__block"
+                :style="{ order: blockOrders(section)[block.id] }"
+              >
+                <component
+                  v-if="resolveBlock(block.type)"
+                  :is="resolveBlock(block.type)"
+                  :id="'sec-' + block.id"
+                  :data-block-id="block.id"
+                  :data="block.content"
+                />
 
-              <div v-else-if="showUnknown" class="page-section__unknown">
-                Bloque no registrado: <strong>{{ block.type }}</strong>
+                <div v-else-if="showUnknown" class="page-section__unknown">
+                  Bloque no registrado: <strong>{{ block.type }}</strong>
+                </div>
               </div>
-            </div>
 
-            <template v-else>
-              <component
-                v-if="resolveBlock(block.type)"
-                :is="resolveBlock(block.type)"
-                :id="'sec-' + block.id"
-                :data-block-id="block.id"
-                :data="block.content"
-              />
+              <template v-else>
+                <component
+                  v-if="resolveBlock(block.type)"
+                  :is="resolveBlock(block.type)"
+                  :id="'sec-' + block.id"
+                  :data-block-id="block.id"
+                  :data="block.content"
+                />
 
-              <!-- Un bloque sin registrar no debe tumbar la página -->
-              <div v-else-if="showUnknown" class="page-section__unknown">
-                Bloque no registrado: <strong>{{ block.type }}</strong>
-              </div>
+                <!-- Un bloque sin registrar no debe tumbar la página -->
+                <div v-else-if="showUnknown" class="page-section__unknown">
+                  Bloque no registrado: <strong>{{ block.type }}</strong>
+                </div>
+              </template>
             </template>
           </template>
         </div>
