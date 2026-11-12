@@ -39,8 +39,12 @@
 @use './elements/sub-hero';
 @use './elements/ecosystem';
 @use './elements/ecosystem-esan';
+@use './elements/ecosystem-dpa';
+@use './elements/about-dpa';
+@use './elements/study-modalities';
 @use './elements/pictograms';
 @use './elements/mapamundi';
+@use './elements/convenios-internacionales';
 @use './elements/key-facts';
 @use './elements/about-career';
 @use './elements/values-cards';
@@ -51,6 +55,7 @@
 @use './elements/cards-reason-version-3';
 @use './elements/cards-pillars';
 @use './elements/admision-pregrado';
+@use './elements/cards-dpa';
 @use './elements/footer-v1';
 @use './elements/topbar-v1';
 @use './elements/mega-menu-beta';

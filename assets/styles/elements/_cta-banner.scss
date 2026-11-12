@@ -61,6 +61,17 @@
     min-width: 0;
   }
 
+  .cta-banner__eyebrow {
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cta-banner-content-color, var(--ds-color-text-inverse));
+    margin: 0;
+  }
+
   .cta-banner__title {
     max-width: 100%;
     line-height: var(--ds-line-height-125);

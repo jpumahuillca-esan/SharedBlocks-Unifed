@@ -97,6 +97,16 @@
     background: transparent;
   }
 
+  .subhero__logo {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 240px;
+    max-height: 63px;
+    object-fit: contain;
+    object-position: left center;
+  }
+
   .subhero__eyebrow-heading {
     width: 100%;
     margin: 0;
@@ -266,6 +276,11 @@
       min-height: 162px;
       padding: var(--subhero-padding-y) var(--ds-container-padding-x);
       box-sizing: border-box;
+    }
+
+    .subhero__logo {
+      max-width: 200px;
+      max-height: 48px;
     }
 
     .subhero__empty {

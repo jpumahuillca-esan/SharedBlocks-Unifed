@@ -2,6 +2,17 @@
   <div class="subhero__inner">
     <div class="subhero__columns">
       <div class="subhero__content">
+        <!-- Logo opcional antes del antetítulo (Figma 240×63px Desktop/Tablet, 200×48px Mobile). -->
+        <img
+          v-if="logo"
+          :src="logo"
+          :alt="logoAlt || ''"
+          class="subhero__logo"
+          width="240"
+          height="63"
+          decoding="async"
+          v-bind="edit('logo')"
+        />
 
         <!--
           SWITCH ACTIVADO:
@@ -86,6 +97,8 @@ const edit = useEditTarget();
 
 withDefaults(
   defineProps<{
+    logo?: string;
+    logoAlt?: string;
     eyebrow: string;
     eyebrowAsH1?: boolean;
     title: string;

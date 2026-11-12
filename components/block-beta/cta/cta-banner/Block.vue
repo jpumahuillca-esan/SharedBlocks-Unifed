@@ -4,6 +4,8 @@
       <div class="cta-banner__layout" :style="panelColorStyle">
         <div class="cta-banner__panel">
           <CtaBannerContent
+            :eyebrow="banner.eyebrow"
+            :eyebrow-as-h2="banner.eyebrowAsH2"
             :title="banner.title"
             :desc="banner.desc"
             :button-label="banner.buttonLabel"

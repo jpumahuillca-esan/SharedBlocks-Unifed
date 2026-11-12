@@ -1,0 +1,280 @@
+/* ==========================================================================
+   CONVENIOS INTERNACIONALES DPA — 1:1 Figma [Section-ESAN-Internacional]
+   Desktop (2315:38516) | Tablet (2623:38663) | Mobile (2315:38709)
+   ========================================================================== */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .convenios-dpa {
+    position: relative;
+    width: 100%;
+    padding: 64px 20px;
+    overflow: hidden;
+    background-color: #F1F5F9;
+    box-sizing: border-box;
+
+    @include bp.container-down('sm') {
+      padding: 32px 16px;
+    }
+  }
+
+  /* World map SVG behind the cards (Figma 2315:38541: 1973x856, opacity 0.05 baked into SVG) */
+  .convenios-dpa__map {
+    position: absolute;
+    top: 17px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1973px;
+    max-width: none;
+    height: 856px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 1;
+
+    @include bp.container-down('lg') {
+      display: none;
+    }
+
+    @include bp.container-down('sm') {
+      display: block;
+      top: 223px;
+    }
+  }
+
+  /* Curved red dome + left compass watermark (Figma 2315:38517: 1920x360, top 204px visible) */
+  .convenios-dpa__dome {
+    position: absolute;
+    bottom: -156px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max(1920px, 100%);
+    max-width: none;
+    height: 361px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .convenios-dpa__inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 960px;
+    margin-inline: auto;
+    box-sizing: border-box;
+
+    @include bp.container-down('lg') {
+      max-width: 728px;
+      gap: 32px;
+    }
+
+    @include bp.container-down('sm') {
+      max-width: 328px;
+      gap: 16px;
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     Header (Title_section)
+     - Desktop (2315:38543): centered, gap 16px, title 40px/50px
+     - Tablet (2623:38689): left-aligned, gap 12px, title 40px/50px
+     - Mobile (2315:38736): centered, gap 16px, title 26px/32.5px
+     -------------------------------------------------------------------------- */
+  .convenios-dpa__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    text-align: center;
+
+    @include bp.container-down('lg') {
+      align-items: flex-start;
+      gap: 12px;
+      text-align: left;
+    }
+
+    @include bp.container-down('sm') {
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+    }
+  }
+
+  .eyebrow.convenios-dpa__eyebrow {
+    margin: 0;
+
+    &::before {
+      content: none;
+    }
+  }
+
+  .convenios-dpa__title {
+    margin: 0;
+    color: #000000;
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 50px;
+    letter-spacing: -0.4px;
+
+    @include bp.container-down('sm') {
+      font-size: 26px;
+      line-height: 32.5px;
+      letter-spacing: -0.26px;
+    }
+  }
+
+  .convenios-dpa__rule {
+    display: block;
+    width: 40px;
+    height: 2px;
+    background-color: #E3173E;
+    flex-shrink: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     Cards Grid (Body_section)
+     - Desktop: 2 cols of 470px (total 960px, gap 20px), min-height 555px
+     - Tablet: 2 cols of 354px (total 728px, gap 20px), min-height 541px
+     - Mobile: 1 col of 328px (gap 16px)
+     -------------------------------------------------------------------------- */
+  .convenios-dpa__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    width: 100%;
+    align-items: stretch;
+
+    @include bp.container-down('sm') {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
+    }
+  }
+
+  .convenios-dpa-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 555px;
+    background-color: #FFFFFF;
+    border: 1px solid #CCD3DC;
+    border-radius: 16px;
+    overflow: hidden;
+    box-sizing: border-box;
+
+    @include bp.container-down('lg') {
+      min-height: 541px;
+    }
+
+    @include bp.container-down('sm') {
+      min-height: auto;
+    }
+  }
+
+  .convenios-dpa-card__media {
+    width: 100%;
+    height: 259px;
+    flex: 0 0 259px;
+    overflow: hidden;
+    background-color: #E2E8F0;
+
+    @include bp.container-down('lg') {
+      height: 195px;
+      flex: 0 0 195px;
+    }
+
+    @include bp.container-down('sm') {
+      height: 180px;
+      flex: 0 0 180px;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .convenios-dpa-card__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 32px;
+    flex: 1 1 auto;
+    box-sizing: border-box;
+
+    @include bp.container-down('sm') {
+      padding: 20px;
+    }
+  }
+
+  .convenios-dpa-card__logo-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .convenios-dpa-card__logo {
+    display: block;
+    width: auto;
+    max-width: 260px;
+    height: auto;
+    object-fit: contain;
+    object-position: left center;
+
+    @include bp.container-down('sm') {
+      max-width: 282px;
+      max-height: 64px !important;
+    }
+  }
+
+  .convenios-dpa-card__rule {
+    display: block;
+    width: 40px;
+    height: 2px;
+    background-color: #E3173E;
+    flex-shrink: 0;
+  }
+
+  .convenios-dpa-card__desc {
+    margin: 0;
+    color: #000000;
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 25.2px;
+    text-align: left;
+  }
+
+  /* --------------------------------------------------------------------------
+     CTA Button on top of the Red Dome
+     -------------------------------------------------------------------------- */
+  .convenios-dpa__action.btn {
+    position: relative;
+    z-index: 2;
+    min-width: 318px;
+    min-height: 48px;
+    padding: 14px 32px;
+    border-radius: 4px;
+    background-color: #FFFFFF;
+    color: #E3173E;
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19.2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
+  }
+}
+

@@ -1,7 +1,17 @@
 <template>
   <div class="cta-banner__content">
+    <component
+      :is="isEyebrowH2 ? 'h2' : 'p'"
+      v-if="eyebrow"
+      class="cta-banner__eyebrow"
+      v-bind="edit('eyebrow')"
+    >
+      {{ eyebrow }}
+    </component>
+
     <AtomHeading
       v-if="title"
+      :as="isEyebrowH2 ? 'p' : 'h2'"
       :level="2"
       size="h3"
       weight="semibold"
@@ -37,13 +47,16 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import AtomButton from '../../../../atoms/AtomButton.vue';
 import AtomHeading from '../../../../atoms/AtomHeading.vue';
 import AtomIcon from '../../../../atoms/AtomIcon.vue';
 import AtomText from '../../../../atoms/AtomText.vue';
 import { useEditTarget } from '../../../../../core/editFocus';
 
-defineProps<{
+const props = defineProps<{
+  eyebrow?: string;
+  eyebrowAsH2?: boolean;
   title: string;
   desc: string;
   buttonLabel: string;
@@ -53,4 +66,7 @@ defineProps<{
 }>();
 
 const edit = useEditTarget();
+
+/* Si eyebrowAsH2 está activo y hay texto en el antetítulo, este pasa a ser el <h2> y el título a <p>. */
+const isEyebrowH2 = computed(() => Boolean(props.eyebrowAsH2 && props.eyebrow && props.eyebrow.trim()));
 </script>

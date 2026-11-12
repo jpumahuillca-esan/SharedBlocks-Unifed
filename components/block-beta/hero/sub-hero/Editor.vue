@@ -1,5 +1,54 @@
 <template>
   <div class="sh-editor">
+    <!-- LOGO SUPERIOR (OPCIONAL) -->
+    <div class="sh-optional mb-3">
+      <div class="sh-optional__head">
+        <label class="form-label m-0">Logo superior (opcional)</label>
+        <button
+          v-if="isLogoOpen"
+          type="button"
+          class="sh-optional__drop"
+          title="Quitar logo"
+          @click="clearLogo"
+        >
+          <i class="las la-times"></i>
+        </button>
+      </div>
+
+      <template v-if="isLogoOpen">
+        <EditorImage
+          v-model="localData.logo"
+          v-model:alt="localData.logoAlt"
+          fit="contain"
+          noun="logo"
+          :height="72"
+          alt-only-with-image
+          alt-label="Texto alternativo del logo"
+          alt-placeholder="ESAN DPA - Carreras para gente que trabaja"
+          data-edit-target="logo"
+          alt-edit-target="logoAlt"
+          hint="Tamaño de referencia Figma: 240×63 px en Desktop/Tablet y 200×48 px en Mobile."
+          @select="selectLogo"
+        />
+        <button
+          v-if="localData.logo !== DEFAULT_HERO_DPA_LOGO"
+          type="button"
+          class="btn btn-sm btn-outline-primary w-100 mt-1"
+          @click="applyDefaultDpaLogo"
+        >
+          <i class="las la-magic me-1"></i> Usar logo oficial ESAN DPA
+        </button>
+      </template>
+      <button
+        v-else
+        type="button"
+        class="btn btn-sm btn-outline-secondary w-100"
+        @click="openLogo"
+      >
+        <i class="las la-plus me-1"></i> Agregar logo
+      </button>
+    </div>
+
     <!-- ANTETÍTULO -->
     <EditorText
       v-model="localData.eyebrow"
@@ -85,7 +134,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import EditorBrandColor from '../../../editor-beta/EditorBrandColor/EditorBrandColor.vue';
 import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
@@ -96,6 +145,11 @@ import {
   normalizeImageFocusProfiles,
   saveImageFocusProfiles,
 } from '../../../../helpers/imageFocus';
+import {
+  DEFAULT_HERO_DPA_LOGO,
+  DEFAULT_HERO_DPA_LOGO_ALT,
+  normalizeHeroLogo,
+} from '../_shared/types';
 import { resolvePanelColorToken } from './shared/config';
 import { SUBHERO_CONTENT_RULES } from './shared/rule';
 
@@ -128,6 +182,8 @@ const build = (source: any) => {
   const imageFocusY = normalizeImageFocus(source?.imageFocusY);
 
   return {
+    logo: normalizeHeroLogo(source?.logo),
+    logoAlt: source?.logoAlt ?? '',
     eyebrow,
     eyebrowAsH1:
       eyebrow.trim().length > 0 &&
@@ -148,6 +204,35 @@ const build = (source: any) => {
 };
 
 const localData = ref(build(props.modelValue));
+const logoOpenOverride = ref<boolean | null>(null);
+const isLogoOpen = computed(() => logoOpenOverride.value ?? Boolean(localData.value.logo));
+
+const applyDefaultDpaLogo = () => {
+  localData.value.logo = DEFAULT_HERO_DPA_LOGO;
+  if (!localData.value.logoAlt) {
+    localData.value.logoAlt = DEFAULT_HERO_DPA_LOGO_ALT;
+  }
+};
+
+const openLogo = () => {
+  logoOpenOverride.value = true;
+  if (!localData.value.logo) {
+    applyDefaultDpaLogo();
+  }
+};
+
+const clearLogo = () => {
+  localData.value.logo = '';
+  localData.value.logoAlt = '';
+  logoOpenOverride.value = false;
+};
+
+const selectLogo = () => {
+  emit('select-image', {
+    item: localData.value,
+    field: 'logo',
+  });
+};
 
 const selectImage = () => {
   emit('select-image', {
@@ -225,5 +310,34 @@ watch(
 .sh-switch-label {
   font-size: 12.5px;
   font-weight: 500;
+}
+
+.sh-optional__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.sh-optional__drop {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: #6b7688;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.sh-optional__drop:hover {
+  background: #dc3545;
+  color: #fff;
 }
 </style>

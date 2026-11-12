@@ -11,6 +11,22 @@ import {
     BRAND_COLOR_GROUPS,
     DARK_TEXT_BACKGROUND_TOKENS,
 } from '../../../editor-beta/EditorBrandColor/brandColors';
+import dpaHeroLogoUrl from '../../../../assets/images/logos/logo-esan-dpa-white.png';
+
+/** Logo oficial ESAN DPA extraído de Figma (240×63px en Desktop/Tablet, 200×48px en Mobile). */
+export const DEFAULT_HERO_DPA_LOGO = dpaHeroLogoUrl;
+export const DEFAULT_HERO_DPA_LOGO_ALT = 'ESAN DPA - Carreras para gente que trabaja';
+
+/** Normaliza el logo opcional sobre el antetítulo. */
+export const normalizeHeroLogo = (value: unknown): string => {
+    if (typeof value !== 'string') return '';
+    const trimmed = value.trim();
+    if (!trimmed) return '';
+    if (trimmed === 'dpa' || trimmed.endsWith('logo-esan-dpa-white.png')) {
+        return DEFAULT_HERO_DPA_LOGO;
+    }
+    return trimmed;
+};
 
 /** Un botón del área de acciones de una diapositiva. */
 export interface HeroAction {
@@ -70,6 +86,9 @@ export const normalizeHeroMode = (value: unknown): HeroMode =>
  */
 export interface HeroSlideItem {
     id: string;
+    /** Logo opcional sobre/antes del antetítulo (240×63px en Desktop/Tablet, 200×48px en Mobile). */
+    logo: string;
+    logoAlt: string;
     /** Línea corta sobre el título. */
     eyebrow: string;
     title: string;
@@ -97,6 +116,8 @@ export interface HeroSliderData {
     seoHeadingText: string;
     /** Carrusel o una sola diapositiva (ver `HeroMode`). */
     mode: HeroMode;
+    /** Ancho máximo de la columna de contenido (ver `HeroContentWidth`). */
+    contentWidth?: HeroContentWidth;
     /**
      * Token del color de la franja (ver `normalizeHeroPanelColor`). Se guarda el
      * token y nunca el hexadecimal, como en el resto de bloques con color.
@@ -163,6 +184,30 @@ export const normalizeHeroOverlay = (value: unknown): number => {
 /** Variable CSS con la que la hoja (`_hero.scss`) atenúa el velo: 0 a 1. */
 export const heroOverlayStyle = (value: unknown): Record<string, string> => ({
     '--hero-overlay': String(normalizeHeroOverlay(value) / 100),
+});
+
+/**
+ * Ancho máximo de la columna de contenido de la portada.
+ *
+ * `wide`: 864px (9/12 columnas en contenedor 1280px, medida exacta de Figma Hero-Program-CF).
+ * `standard`: 50% (640px en contenedor de 1280px, mitad de pantalla).
+ * `full`: 100% (ancho completo del contenedor).
+ */
+export type HeroContentWidth = 'wide' | 'standard' | 'full';
+
+export const HERO_CONTENT_WIDTHS: Record<HeroContentWidth, string> = {
+    wide: '864px',
+    standard: '50%',
+    full: '100%',
+};
+
+export const normalizeHeroContentWidth = (value: unknown): HeroContentWidth => {
+    if (value === 'standard' || value === 'full') return value;
+    return 'wide';
+};
+
+export const heroContentWidthStyle = (value: unknown): Record<string, string> => ({
+    '--hero-content-max-width': HERO_CONTENT_WIDTHS[normalizeHeroContentWidth(value)],
 });
 
 export type HeroSeoHeadingSource = 'esan' | 'title' | 'eyebrow' | 'none';

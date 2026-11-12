@@ -35,14 +35,17 @@
    */
   --ds-color-text-placeholder: var(--ds-color-neutral-500);
 
-  /*
-   * Texto secundario sobre fondo oscuro. arcis-2 define text-inverse (blanco)
+  /* Texto secundario sobre fondo oscuro. arcis-2 define text-inverse (blanco)
    * pero no su versión apagada, y la librería la necesita en todo lo que va
    * sobre negro o azul oscuro: el párrafo del aviso de cookies y el cuerpo del
    * collapse en su variante inversa. Los dos usaban el primitivo neutral-200
    * suelto; acá queda con nombre, para poder cambiarlo en un solo sitio.
    */
   --ds-color-text-inverse-secondary: var(--ds-color-neutral-200);
+
+  /* Color institucional ESAN DPA (Figma Inicio DPA v2.2: #17245E) */
+  --ds-color-univ-dpa: #17245E;
+  --ds-color-univ-dpa-on: var(--ds-color-white);
 
   /* Sombras */
   --ds-shadow-sm: 0 2px 8px rgb(0 0 0 / 0.06);

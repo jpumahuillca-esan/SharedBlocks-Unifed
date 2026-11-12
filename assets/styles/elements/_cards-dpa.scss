@@ -1,0 +1,635 @@
+/* ============================================================
+   ARCIS Design System — ESAN University
+   Bloque: Cards DPA (Carreras para gente que trabaja)
+   Sincronizado 1:1 con Figma (node-id=854:20073):
+   - Desktop (1366/1920): [2503:13504] / [2185:3294]
+   - Tablet (768):        [2503:13566]
+   - Mobile (360):        [2031:29638]
+   ============================================================ */
+
+@use './buttons';
+
+.cards-dpa-section {
+  position: relative;
+  width: 100%;
+  /* Figma Desktop & Tablet: pad=64/0/64/0 */
+  padding: 64px 0;
+  color: #ffffff;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  @media (max-width: 767.98px) {
+    /* Figma Mobile [2031:29638]: pad=32/20/32/20 */
+    padding: 32px 0;
+  }
+
+  /* Capa de fondo con imagen */
+  .cards-dpa__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    z-index: 0;
+  }
+
+  /* Capa de velo / degradado */
+  .cards-dpa__overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Contenedor centrado:
+   * - Desktop [2503:13505]: 1280px útiles (302*4 + 24*3 = 1280px)
+   * - Tablet  [2503:13567]: 728px útiles (768px - 20px*2 = 728px = 352 + 24 + 352)
+   * - Mobile  [2031:29639]: 320px útiles en 360px (padding lateral 20px)
+   */
+  .cards-dpa__container {
+    position: relative;
+    z-index: 2;
+    max-width: calc(1280px + 48px);
+    margin: 0 auto;
+    padding: 0 24px;
+    box-sizing: border-box;
+
+    @media (max-width: 1023.98px) {
+      max-width: 768px;
+      padding: 0 20px;
+    }
+
+    @media (max-width: 767.98px) {
+      max-width: 100%;
+      padding: 0 var(--spacing---space-4, 20px);
+    }
+  }
+
+  /* Encabezado (Figma: Title_section, gap=16px, separación inferior con Body_section = 40px) */
+  .cards-dpa__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 16px;
+    row-gap: 16px;
+    align-items: end;
+    margin-bottom: 40px;
+
+    @media (max-width: 1023.98px) {
+      column-gap: 16px;
+      row-gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 767.98px) {
+      grid-template-columns: 1fr;
+      row-gap: 16px;
+      margin-bottom: 40px;
+    }
+  }
+
+  .cards-dpa__header-left {
+    display: contents;
+  }
+
+  .cards-dpa__logo-wrapper {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    margin: 0;
+  }
+
+  /* Figma: image 1 (240x63) */
+  .cards-dpa__logo {
+    display: block;
+    max-width: 240px;
+    height: auto;
+    object-fit: contain;
+  }
+
+  /* Figma: Titulo — Bricolage Grotesque 600, 40px / 50px (125%) en Desktop y Tablet, 26px / 32.5px en Mobile */
+  .cards-dpa__title {
+    grid-column: 1 / -1;
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 125%;
+    color: #ffffff;
+    margin: 0;
+
+    @media (max-width: 1023.98px) {
+      font-size: 40px;
+      line-height: 125%;
+    }
+
+    @media (max-width: 767.98px) {
+      font-size: 26px;
+      line-height: 125%;
+    }
+  }
+
+  /* Figma: hr (40x2) */
+  .cards-dpa__rule {
+    grid-column: 1 / -1;
+    display: block;
+    width: 40px;
+    height: 2px;
+    background-color: #ffffff;
+    border-radius: 1px;
+    margin: 0;
+  }
+
+  /* Figma: Texto — Inter 400, 18px / 25.2px (140%) en los 3 viewports (750px Desktop, 472px Tablet, 100% Mobile) */
+  .cards-dpa__desc {
+    grid-column: 1 / 2;
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 140%;
+    color: #ffffff;
+    margin: 0;
+    max-width: 750px;
+
+    @media (max-width: 1023.98px) {
+      font-size: 18px;
+      line-height: 140%;
+      max-width: 472px;
+    }
+
+    @media (max-width: 767.98px) {
+      grid-column: 1 / -1;
+      font-size: 18px;
+      line-height: 140%;
+      max-width: 100%;
+    }
+  }
+
+  /* Figma: Button--link (240x48) alineado al extremo inferior derecho de Frame 4 */
+  .cards-dpa__header-right {
+    grid-column: 2 / 3;
+    display: flex;
+    align-items: center;
+    justify-self: end;
+    min-height: 48px;
+    white-space: nowrap;
+
+    @media (max-width: 767.98px) {
+      display: none;
+    }
+  }
+
+  /* Enlace inferior centrado exclusivo para vista móvil (Figma [2031:29650]: 320x48, gap=12px bajo las cards) */
+  .cards-dpa__footer-mobile {
+    display: none;
+
+    @media (max-width: 767.98px) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 48px;
+      margin-top: 12px;
+    }
+  }
+
+  /* Figma: Textlink → Bricolage Grotesque 600, 16px / 19.2px, gap=8px */
+  .cards-dpa__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
+    color: #ffffff;
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 120%;
+    text-decoration: none;
+    transition: color 0.2s ease, opacity 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      color: #ffffff;
+      opacity: 0.9;
+      text-decoration: underline;
+
+      .cards-dpa__link-arrow {
+        transform: translateX(4px);
+      }
+    }
+  }
+
+  .cards-dpa__link-arrow {
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.25s ease;
+    font-size: 16px;
+  }
+
+  /* Rejilla de tarjetas:
+   * - Desktop [2503:13515]: 4 columnas de 302px, gap=24px
+   * - Tablet  [2504:13628]: 2 columnas de 352px, gap=24px (728px total)
+   * - Mobile  [2031:29645]: 1 columna, gap=12px
+   */
+  .cards-dpa__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: 309px;
+    gap: 24px;
+    align-items: stretch;
+
+    @media (max-width: 1023.98px) {
+      grid-template-columns: repeat(2, minmax(0, 352px));
+      grid-auto-rows: 160px;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    @media (max-width: 767.98px) {
+      grid-template-columns: 1fr;
+      grid-auto-rows: 160px;
+      gap: 12px;
+    }
+  }
+
+  /* Tarjeta individual:
+   * - Desktop [2503:13516]: 302x309, vertical, r=8, strokeBottom=4
+   * - Tablet  [2504:13629]: 352x160, horizontal, r=8, stroke=1, strokeBottom=4
+   * - Mobile  [2031:29646]: 320x160, horizontal, r=8, stroke=1, strokeBottom=4
+   */
+  .cards-dpa__card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 309px;
+    min-height: 309px;
+    max-height: 309px;
+    background: transparent;
+    border-radius: 8px;
+    border: none;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+    text-decoration: none;
+    color: #161922;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+    cursor: pointer;
+    box-sizing: border-box;
+
+    &:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+      color: #161922;
+
+      .cards-dpa__card-media img {
+        transform: scale(1.06);
+      }
+
+      .cards-dpa__card-btn {
+        background-color: var(--ds-color-dpa-hover, #1f3180);
+        transform: scale(1.05);
+      }
+    }
+
+    @media (max-width: 1023.98px) {
+      flex-direction: row;
+      width: 100%;
+      max-width: 352px;
+      height: 160px;
+      min-height: 160px;
+      max-height: 160px;
+      margin: 0 auto;
+      background: var(--Background---ds-color-background-default, var(--ds-color-background-default, #ffffff));
+      border: 1px solid var(--Branding-University---ds-color-dpa, var(--ds-color-dpa, #17245E));
+      border-bottom: 4px solid var(--Branding-University---ds-color-dpa, var(--ds-color-dpa, #17245E));
+
+      &:hover {
+        transform: translateY(-3px);
+      }
+    }
+
+    @media (max-width: 767.98px) {
+      flex-direction: row;
+      width: 100%;
+      max-width: 100%;
+      height: 160px;
+      min-height: 160px;
+      max-height: 160px;
+      margin: 0;
+      background: var(--Background---ds-color-background-default, var(--ds-color-background-default, #ffffff));
+      border: 1px solid var(--Branding-University---ds-color-dpa, var(--ds-color-dpa, #17245E));
+      border-bottom: 4px solid var(--Branding-University---ds-color-dpa, var(--ds-color-dpa, #17245E));
+    }
+  }
+
+  /* Fotografía de la tarjeta:
+   * - Desktop [I2503:13516;688:250]: 302x153 (los 8px inferiores quedan bajo el borde redondeado superior del panel blanco)
+   * - Tablet & Mobile: 120x158 (ancho fijo 120px, alto 100%)
+   */
+  .cards-dpa__card-media {
+    position: relative;
+    width: 100%;
+    height: 153px;
+    flex: 0 0 153px;
+    overflow: hidden;
+    background-color: #f1f5f9;
+
+    @media (max-width: 1023.98px) {
+      width: 120px;
+      min-width: 120px;
+      max-width: 120px;
+      height: 100%;
+      flex: 0 0 120px;
+      align-self: stretch;
+    }
+
+    @media (max-width: 767.98px) {
+      width: 120px;
+      min-width: 120px;
+      max-width: 120px;
+      height: 100%;
+      flex: 0 0 120px;
+      align-self: stretch;
+    }
+
+    img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 20%;
+      display: block;
+      transition: transform 0.4s ease;
+
+      &.image-focus-responsive {
+        object-position: var(--image-focus-web, 50% 20%);
+
+        @media (max-width: 1023.98px) {
+          object-position: var(--image-focus-tablet, var(--image-focus-web, 50% 20%));
+        }
+
+        @media (max-width: 767.98px) {
+          object-position: var(--image-focus-mobile, var(--image-focus-tablet, var(--image-focus-web, 50% 20%)));
+        }
+      }
+    }
+
+    .cards-dpa__card-media-empty {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      font-size: 2rem;
+    }
+  }
+
+  /* Cuerpo blanco de la tarjeta:
+   * - Desktop [I2503:13516;688:251 + 688:252]:
+   *   Solapa 8px sobre la foto (Rectangle 1 r=[8,8,0,0] + wrapper 302x156 pad=20/20/24/20).
+   *   El área interior útil (banner__body) mide exactamente 262x112.
+   * - Tablet [I2504:13629;688:261] & Mobile [I2031:29646;89:13970]:
+   *   pad=20/12/20/12, gap=8px, flex: 1 0 0, align-self: stretch.
+   */
+  .cards-dpa__card-body {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 164px;
+    min-height: 164px;
+    max-height: 164px;
+    flex: 0 0 164px;
+    margin-top: -8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+    /* 8px de solape superior + 20px padTop = 28px; 20px laterales; 20px padBottom + 4px border = 24px -> 112px interiores */
+    padding: 28px 20px 20px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--Branding-University---ds-color-dpa, var(--ds-color-dpa, #17245E));
+    border-bottom: 4px solid var(--Branding-University---ds-color-dpa, var(--ds-color-dpa, #17245E));
+    background-color: var(--Background---ds-color-background-default, var(--ds-color-background-default, #ffffff));
+    box-sizing: border-box;
+
+    @media (max-width: 1023.98px) {
+      width: auto;
+      height: 100%;
+      min-height: 0;
+      max-height: none;
+      margin-top: 0;
+      border: none;
+      border-radius: 0;
+      padding: var(--spacing---space-4, 20px) var(--spacing---space-3, 12px);
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: var(--spacing---space-2, 8px);
+      flex: 1 0 0;
+      align-self: stretch;
+    }
+
+    @media (max-width: 767.98px) {
+      display: flex;
+      width: auto;
+      height: 100%;
+      min-height: 0;
+      max-height: none;
+      margin-top: 0;
+      border: none;
+      border-radius: 0;
+      padding: var(--spacing---space-4, 20px) var(--spacing---space-3, 12px);
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: var(--spacing---space-2, 8px);
+      flex: 1 0 0;
+      align-self: stretch;
+    }
+  }
+
+  /* Título de la tarjeta:
+   * - Desktop [I2503:13516;688:255]: Bricolage Grotesque 600, 24px / 30px (125%), ancho 204px
+   *   (ESAN Management y ESAN Engineering = 60px en 2 líneas; ESAN Psychology y ESAN Law = 30px en 1 línea)
+   * - Tablet  [I2504:13629;688:262]: Bricolage Grotesque 600, 20px / 25px (125%), ancho 206px
+   * - Mobile  [I2031:29646;89:13971]: Bricolage Grotesque 600, 20px / 25px (125%), ancho 174px
+   */
+  .cards-dpa__card-title {
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--ds-color-text-primary, #161922);
+    line-height: 30px;
+    margin: 0;
+    height: auto;
+    min-height: 0;
+    width: 100%;
+    max-width: 204px;
+    display: block;
+
+    @media (max-width: 1023.98px) {
+      font-size: 20px;
+      line-height: 25px;
+      max-width: 206px;
+    }
+
+    @media (max-width: 767.98px) {
+      font-size: 20px;
+      line-height: 25px;
+      /* En Figma Mobile las tarjetas 1, 2 y 3 tienen salto de línea tras "ESAN" (50px de alto) y la 4 queda en 1 línea (25px) */
+      max-width: 145px;
+    }
+  }
+
+  /* En Desktop (>= 1024px): asegura que ESAN Management (card 1) y ESAN Engineering (card 2) quiebren en 2 líneas (60px)
+   * y ESAN Psychology (card 3) y ESAN Law (card 4) queden en 1 línea (30px), idéntico a [2503:13516..13535]. */
+  @media (min-width: 1024px) {
+    .cards-dpa__card:nth-child(1) .cards-dpa__card-title,
+    .cards-dpa__card:nth-child(2) .cards-dpa__card-title {
+      max-width: 180px;
+    }
+  }
+
+  /* En Tablet (768px - 1023.98px): en Figma [2504:13630] y [2504:13631] tienen salto de línea manual "ESAN \nEngineering" y "ESAN \nPsychology",
+   * mientras que Card 1 ("ESAN Management") y Card 4 ("ESAN Law") van en 1 línea. */
+  @media (min-width: 768px) and (max-width: 1023.98px) {
+    .cards-dpa__card:nth-child(2) .cards-dpa__card-title,
+    .cards-dpa__card:nth-child(3) .cards-dpa__card-title {
+      max-width: 145px;
+    }
+  }
+
+  /* Fila inferior:
+   * - La descripción se alinea ARRIBA (align-self: flex-start, siempre 8px bajo el título).
+   * - El botón flecha se alinea ABAJO a la derecha (align-self: flex-end).
+   */
+  .cards-dpa__card-bottom {
+    flex: 1 0 0;
+    align-self: stretch;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+    min-height: 0;
+    margin-top: 0;
+
+    @media (max-width: 767.98px) {
+      /* Figma Mobile [I2031:29646;89:13972]: gap=4px */
+      gap: 4px;
+    }
+  }
+
+  /* Descripción:
+   * - Desktop [I2503:13516;688:256]: Inter 400, 16px / 22.4px (140%), ancho 204px, #4F5A6C
+   * - Tablet  [I2504:13629;688:264]: Inter 400, 14px / 19.6px (140%), ancho 154px, #4F5A6C
+   * - Mobile  [I2031:29646;89:13973]: Inter 400, 16px / 22.4px (140%), ancho 126px, #4F5A6C
+   */
+  .cards-dpa__card-desc {
+    align-self: flex-start;
+    color: var(--Content---ds-color-text-secondary, #4F5A6C);
+    font-family: var(--Typography-Family-font-family-base, var(--ds-font-family-base, 'Inter', sans-serif));
+    font-size: var(--Body---ds-text-body, 16px);
+    font-style: normal;
+    font-weight: var(--weight---weight-regular, 400);
+    line-height: 140%;
+    margin: 0;
+    flex: 1 0 0;
+    min-width: 0;
+    max-width: 204px;
+
+    @media (max-width: 1023.98px) {
+      font-size: 14px;
+      line-height: 140%;
+      max-width: 154px;
+      align-self: flex-start;
+    }
+
+    @media (max-width: 767.98px) {
+      color: var(--Content---ds-color-text-secondary, #4F5A6C);
+      font-family: var(--Typography-Family-font-family-base, var(--ds-font-family-base, 'Inter', sans-serif));
+      font-size: var(--Body---ds-text-body, 16px);
+      font-style: normal;
+      font-weight: var(--weight---weight-regular, 400);
+      line-height: 140%;
+      flex: 1 0 0;
+      align-self: flex-start;
+      max-width: 126px;
+      max-height: 60px;
+      overflow: visible;
+    }
+  }
+
+  /* Botón con flecha de acción:
+   * - Desktop [I2503:13516;688:257]: 50x50px, ícono 24x24px, r=[8,0,8,8]
+   * - Tablet & Mobile [I2504:13629;688:265] / [I2031:29646;89:13974]: 44x44px, ícono 16x16px, r=[8,0,8,8]
+   */
+  .cards-dpa__card-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    min-height: 50px;
+    /* En Desktop banner__content mide 112px y cuando el título ocupa 60px + 8px gap, quedan 44px;
+     * margin-top: -6px permite que el botón de 50x50 suba sin empujar la altura de 112px. */
+    margin-top: -6px;
+    margin-left: auto;
+    margin-bottom: 0;
+    margin-right: 0;
+    border-radius: var(--ds-radius-sm, 8px) 0 var(--ds-radius-sm, 8px) var(--ds-radius-sm, 8px);
+    background-color: var(--Branding-University---ds-color-dpa, var(--ds-color-dpa, #17245E));
+    color: var(--ds-color-text-inverse, #ffffff);
+    padding: 0;
+    box-sizing: border-box;
+    transition: transform var(--ds-ease-fast, 0.2s ease), background-color var(--ds-ease-fast, 0.2s ease);
+    flex-shrink: 0;
+    align-self: flex-end;
+    cursor: pointer;
+
+    svg {
+      width: 24px;
+      height: 24px;
+      color: #ffffff;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 1023.98px) {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      min-height: 44px;
+      margin-top: 0;
+      padding: 0;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    @media (max-width: 767.98px) {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      min-height: 44px;
+      margin-top: 0;
+      padding: 0;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+
+  .cards-dpa__card:hover .cards-dpa__card-btn,
+  .cards-dpa__card:focus-visible .cards-dpa__card-btn {
+    transform: scale(1.05);
+    background-color: var(--ds-color-dpa-hover, #1f3180);
+  }
+}

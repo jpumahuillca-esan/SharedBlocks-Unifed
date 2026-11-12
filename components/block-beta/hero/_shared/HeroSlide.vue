@@ -16,6 +16,19 @@
 
     <div class="hero__inner">
       <div class="hero__content">
+        <!-- Logo opcional antes del antetítulo (Figma Hero-Program-CF: 240×63px Desktop/Tablet, 200×48px Mobile). -->
+        <img
+          v-if="logo"
+          :src="logo"
+          :alt="logoAlt || ''"
+          class="hero__logo"
+          width="240"
+          height="63"
+          :loading="eager ? 'eager' : 'lazy'"
+          decoding="async"
+          v-bind="edit('.logo')"
+        />
+
         <AtomText
           v-if="eyebrow"
           :as="seoHeadingSource === 'eyebrow' ? 'h1' : 'p'"
@@ -106,6 +119,8 @@ const edit = useEditTarget();
 withDefaults(
   defineProps<{
     seoHeadingSource: HeroSeoHeadingSource;
+    logo?: string;
+    logoAlt?: string;
     eyebrow: string;
     title: string;
     desc: string;

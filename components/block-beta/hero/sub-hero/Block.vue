@@ -10,6 +10,8 @@
     />
 
     <SubHeroContent
+      :logo="logo"
+      :logo-alt="logoAlt"
       :eyebrow="eyebrow"
       :eyebrow-as-h1="eyebrowAsH1"
       :title="title"
@@ -26,9 +28,12 @@ import {
   resolvePanelColorToken,
   resolvePanelContentToken,
 } from './shared/config';
+import { normalizeHeroLogo } from '../_shared/types';
 
 const props = defineProps<{ data: any }>();
 
+const logo = computed(() => normalizeHeroLogo(props.data?.logo));
+const logoAlt = computed(() => props.data?.logoAlt ?? '');
 const eyebrow = computed(() => props.data?.eyebrow ?? '');
 const eyebrowAsH1 = computed(() => props.data?.eyebrowAsH1 === true);
 const title = computed(() => props.data?.title ?? '');

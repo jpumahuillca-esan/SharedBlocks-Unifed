@@ -1,0 +1,386 @@
+/* ==========================================================================
+   ECOSYSTEM DPA ("Elige tu carrera") — 1:1 Figma [Section-ESAN-Ecosystem]
+   Desktop (2315:38427) | Tablet (2623:43301) | Mobile (2315:38637)
+   ========================================================================== */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .ecosystem-dpa {
+    width: 100%;
+    padding: 64px 20px;
+    box-sizing: border-box;
+    background-color: #F1F5F9;
+
+    @include bp.container-down('lg') {
+      padding: 48px 20px;
+    }
+
+    @include bp.container-down('sm') {
+      padding: 32px 16px;
+    }
+  }
+
+  .ecosystem-dpa__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+
+    @include bp.container-down('lg') {
+      max-width: 728px;
+    }
+
+    @include bp.container-down('sm') {
+      max-width: 328px;
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     Header (Title_section: 1280x134 on Desktop, 728x134 on Tablet, 328x167 on Mobile)
+     -------------------------------------------------------------------------- */
+  .ecosystem-dpa__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .ecosystem-dpa__eyebrow {
+    margin: 0;
+    color: #E3173E;
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .ecosystem-dpa__title {
+    margin: 0;
+    color: #000000;
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 50px;
+    letter-spacing: -0.4px;
+    text-align: left;
+
+    @include bp.container-down('sm') {
+      font-size: 26px;
+      line-height: 32.5px;
+      letter-spacing: -0.26px;
+    }
+  }
+
+  .ecosystem-dpa__rule {
+    display: block;
+    width: 40px;
+    height: 2px;
+    background-color: #E3173E;
+    flex-shrink: 0;
+  }
+
+  .ecosystem-dpa__desc {
+    margin: 0;
+    max-width: 750px;
+    color: #000000;
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 25.2px;
+    text-align: left;
+
+    @include bp.container-down('lg') {
+      max-width: 728px;
+    }
+
+    @include bp.container-down('sm') {
+      max-width: 328px;
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     List of Faculty Horizontal Banners (Body_section: gap 24px)
+     -------------------------------------------------------------------------- */
+  .ecosystem-dpa__list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+  }
+
+  /* --------------------------------------------------------------------------
+     Card (Banner-ESAN-Ecosystem-v2)
+     - Desktop: 1280px wide, horizontal, media 390px, wrapper 890px, left accent 6px
+     - Tablet: 728px wide, horizontal, media 200px, wrapper 528px, left accent 6px
+     - Mobile: 328px wide, vertical, media 328x204px, wrapper 328px, bottom accent 4px
+     -------------------------------------------------------------------------- */
+  .ecosystem-dpa-card {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    min-height: 200px;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    overflow: hidden;
+    box-sizing: border-box;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-left: 6px solid var(--ecosystem-dpa-card-color, #17245E);
+      border-radius: 8px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    @include bp.container-down('sm') {
+      flex-direction: column;
+      min-height: auto;
+
+      &::after {
+        border-left: 0;
+        border-bottom: 4px solid var(--ecosystem-dpa-card-color, #17245E);
+      }
+    }
+  }
+
+  .ecosystem-dpa-card__media-link {
+    position: relative;
+    display: block;
+    flex: 0 0 390px;
+    width: 390px;
+    align-self: stretch;
+    min-height: 200px;
+    text-decoration: none;
+    color: inherit;
+
+    @include bp.container-down('lg') {
+      flex: 0 0 200px;
+      width: 200px;
+    }
+
+    @include bp.container-down('sm') {
+      flex: 0 0 auto;
+      width: 100%;
+      height: 204px;
+      min-height: 204px;
+    }
+  }
+
+  .ecosystem-dpa-card__media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #E2E8F0;
+
+    @include bp.container-down('sm') {
+      position: relative;
+      inset: auto;
+      height: 204px;
+      border-radius: 0;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: var(--ecosystem-dpa-focus-web-x, 50%) var(--ecosystem-dpa-focus-web-y, 50%);
+
+      @include bp.container-down('lg') {
+        object-position: var(--ecosystem-dpa-focus-tablet-x, 50%) var(--ecosystem-dpa-focus-tablet-y, 50%);
+      }
+
+      @include bp.container-down('sm') {
+        object-position: var(--ecosystem-dpa-focus-mobile-x, 50%) var(--ecosystem-dpa-focus-mobile-y, 50%);
+      }
+    }
+  }
+
+  .ecosystem-dpa-card__media-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: #94A3B8;
+  }
+
+  /* --------------------------------------------------------------------------
+     Right Wrapper (890px on Desktop, 528px on Tablet, 328px on Mobile)
+     -------------------------------------------------------------------------- */
+  .ecosystem-dpa-card__wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 12px;
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 24px;
+    background-color: #FFFFFF;
+    border-left: 1px solid #E2E8F0;
+    border-right: 1px solid #E2E8F0;
+    box-sizing: border-box;
+
+    @include bp.container-down('sm') {
+      padding: 24px 16px;
+    }
+  }
+
+  .ecosystem-dpa-card__head {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .ecosystem-dpa-card__head-text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .ecosystem-dpa-card__title {
+    margin: 0;
+    color: #000000;
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 30px;
+    letter-spacing: -0.24px;
+
+    @include bp.container-down('sm') {
+      font-size: 20px;
+      line-height: 25px;
+      letter-spacing: -0.2px;
+    }
+  }
+
+  .ecosystem-dpa-card__desc {
+    margin: 0;
+    color: #4F5A6C;
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22.4px;
+  }
+
+  /* 50x50 button with radii 0/8/8/8 and fill #17245E (or faculty color) */
+  .ecosystem-dpa-card__arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    padding: 8px 12px;
+    flex: 0 0 50px;
+    border-radius: 0 8px 8px 8px;
+    background-color: var(--ecosystem-dpa-card-color, #17245E);
+    color: var(--ecosystem-dpa-card-content-color, #FFFFFF);
+    box-sizing: border-box;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .ecosystem-dpa-card__head:hover .ecosystem-dpa-card__arrow {
+    opacity: 0.92;
+    transform: translateX(2px);
+  }
+
+  /* --------------------------------------------------------------------------
+     Careers Grid (2 columns with 20px column-gap on Desktop & Tablet, 1 col on Mobile)
+     -------------------------------------------------------------------------- */
+  .ecosystem-dpa-card__links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 20px;
+    row-gap: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include bp.container-down('sm') {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .ecosystem-dpa-card__link-item {
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid #CCD3DC;
+
+    /* First row items have top border in 2-col layout */
+    &:nth-child(-n + 2) {
+      border-top: 1px solid #CCD3DC;
+    }
+
+    @include bp.container-down('sm') {
+      &:nth-child(2) {
+        border-top: 0;
+      }
+      &:first-child {
+        border-top: 1px solid #CCD3DC;
+      }
+    }
+  }
+
+  .ecosystem-dpa-card__link.btn.btn--list {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    min-height: 54px;
+    padding: 16px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #000000;
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22.4px;
+    text-align: left;
+    text-decoration: none;
+    box-sizing: border-box;
+
+    &:hover {
+      color: #E3173E;
+    }
+  }
+
+  .ecosystem-dpa-card__link-label {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .ecosystem-dpa-card__link-icon {
+    flex: 0 0 16px;
+    color: #E3173E;
+    transition: transform 0.2s ease;
+  }
+
+  .ecosystem-dpa-card__link.btn.btn--list:hover .ecosystem-dpa-card__link-icon {
+    transform: translateX(3px);
+  }
+}
+

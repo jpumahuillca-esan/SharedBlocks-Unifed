@@ -1,0 +1,249 @@
+/* ==========================================================================
+   STUDY MODALITIES DPA ("Modalidades de estudios") — 1:1 Figma [Sections-Banners-HL]
+   Desktop (2315:38502) | Tablet (2623:43483) | Mobile (2318:42098)
+   ========================================================================== */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .study-modalities {
+    width: 100%;
+    /* Extra top space on desktop so the 314px cutout image (which extends 88px above the 226px box) fits within the 354px section */
+    padding: 88px 20px 64px 20px;
+    box-sizing: border-box;
+
+    @include bp.container-down('lg') {
+      padding: 64px 20px;
+    }
+
+    @include bp.container-down('sm') {
+      padding: 32px 16px;
+    }
+  }
+
+  .study-modalities__container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1280px;
+    min-height: 226px;
+    margin-inline: auto;
+    padding: 48px;
+    border-radius: 16px 0 16px 0;
+    background-color: var(--study-modalities-bg, #17245E);
+    box-sizing: border-box;
+
+    @include bp.container-down('lg') {
+      max-width: 728px;
+      min-height: 380px;
+      padding: 0;
+      align-items: stretch;
+      overflow: hidden;
+    }
+
+    @include bp.container-down('sm') {
+      flex-direction: column;
+      max-width: 328px;
+      min-height: auto;
+      padding: 0;
+      overflow: hidden;
+    }
+  }
+
+  .study-modalities__bg-texture {
+    position: absolute;
+    inset: 0;
+    border-radius: 16px 0 16px 0;
+    background-size: cover;
+    background-position: center;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* --------------------------------------------------------------------------
+     Left Content Column
+     - Desktop: max-width 660px, gap 12px
+     - Tablet: 364px wide, padding 32px, gap 12px
+     - Mobile: 100% wide, padding 40px 20px, gap 12px
+     -------------------------------------------------------------------------- */
+  .study-modalities__content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    max-width: 660px;
+    box-sizing: border-box;
+
+    @include bp.container-down('lg') {
+      flex: 0 0 364px;
+      width: 364px;
+      max-width: 364px;
+      padding: 32px;
+      justify-content: center;
+    }
+
+    @include bp.container-down('sm') {
+      flex: 0 0 auto;
+      width: 100%;
+      max-width: 100%;
+      padding: 40px 20px;
+    }
+  }
+
+  .study-modalities__title {
+    margin: 0;
+    color: #FFFFFF;
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 35px;
+    letter-spacing: -0.28px;
+    text-align: left;
+
+    @include bp.container-down('sm') {
+      font-size: 22px;
+      line-height: 27.5px;
+      letter-spacing: -0.22px;
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     Badges Row / Stack (Frame 319)
+     - Desktop: horizontal row, gap 20px, badge height 46px, font 24px/30px
+     - Tablet: vertical stack, gap 12px, badge height 41px, font 20px/25px
+     - Mobile: vertical stack, gap 16px, badge height 41px, pad 8px 16px, font 20px/25px
+     -------------------------------------------------------------------------- */
+  .study-modalities__badges {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include bp.container-down('lg') {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    @include bp.container-down('sm') {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+  }
+
+  .study-modalities__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 8px 20px;
+    border-radius: 0 8px 0 8px;
+    background-color: #E3173E;
+    box-sizing: border-box;
+
+    @include bp.container-down('lg') {
+      min-height: 41px;
+      padding: 8px 20px;
+    }
+
+    @include bp.container-down('sm') {
+      min-height: 41px;
+      padding: 8px 16px;
+    }
+  }
+
+  .study-modalities__badge-text {
+    color: #FFFFFF;
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 30px;
+    letter-spacing: -0.24px;
+    text-align: center;
+    text-transform: uppercase;
+
+    @include bp.container-down('lg') {
+      font-size: 20px;
+      line-height: 25px;
+      letter-spacing: -0.2px;
+    }
+  }
+
+  .study-modalities__subtitle {
+    margin: 0;
+    color: #FFFFFF;
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 25.2px;
+    text-align: left;
+  }
+
+  /* --------------------------------------------------------------------------
+     Right Cutout Image
+     - Desktop: 447x314px anchored bottom-right (right: 0, bottom: 0), protruding 88px above container
+     - Tablet: 364x256px inside right half, anchored bottom-right
+     - Mobile: 328x230px at bottom of card
+     -------------------------------------------------------------------------- */
+  .study-modalities__media {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    width: 447px;
+    height: 314px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    pointer-events: none;
+
+    @include bp.container-down('lg') {
+      position: relative;
+      right: auto;
+      bottom: auto;
+      flex: 1 1 364px;
+      width: 364px;
+      height: auto;
+      min-height: 256px;
+    }
+
+    @include bp.container-down('sm') {
+      position: relative;
+      flex: 0 0 auto;
+      width: 100%;
+      height: 230px;
+      min-height: 230px;
+      justify-content: center;
+    }
+  }
+
+  .study-modalities__img {
+    display: block;
+    width: 447px;
+    height: 314px;
+    object-fit: contain;
+    object-position: bottom right;
+
+    @include bp.container-down('lg') {
+      width: 364px;
+      height: 256px;
+    }
+
+    @include bp.container-down('sm') {
+      width: 328px;
+      height: 230px;
+      object-position: bottom center;
+    }
+  }
+}
+

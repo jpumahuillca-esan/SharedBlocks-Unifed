@@ -46,6 +46,8 @@
         :key="active.id"
         v-bind="edit(`slides.${current}`)"
         :seo-heading-source="seoHeadingSource"
+        :logo="active.logo"
+        :logo-alt="active.logoAlt"
         :eyebrow="active.eyebrow"
         :title="active.title"
         :desc="active.desc"
@@ -99,10 +101,12 @@ import { ref, computed, watch, inject, onMounted, onBeforeUnmount } from 'vue';
 import HeroSlide from '../_shared/HeroSlide.vue';
 import HeroControls from '../_shared/HeroControls.vue';
 import {
+  heroContentWidthStyle,
   heroOverlayStyle,
   heroPanelStyle,
   normalizeHeroAction,
   normalizeHeroButtons,
+  normalizeHeroLogo,
   normalizeHeroMode,
   normalizeHeroSeoHeadingSource,
   resolveHeroActions,
@@ -130,6 +134,8 @@ const panelStyle = computed(() => ({
   ...heroPanelStyle(props.data?.panelColorToken),
   // Intensidad del velo sobre la foto: la hoja lo lee de --hero-overlay.
   ...heroOverlayStyle(props.data?.overlayOpacity),
+  // Ancho máximo del contenido: la hoja lo lee de --hero-content-max-width (864px por defecto).
+  ...heroContentWidthStyle(props.data?.contentWidth),
 }));
 
 /*
@@ -152,6 +158,8 @@ const slides = computed<HeroSlideItem[]>(() => {
 
     return ({
     id: slide?.id || `hero-${i}`,
+    logo: normalizeHeroLogo(slide?.logo),
+    logoAlt: slide?.logoAlt ?? '',
     eyebrow: slide?.eyebrow ?? '',
     title: slide?.title ?? '',
     desc: slide?.desc ?? '',
@@ -186,14 +194,28 @@ watch(
 
 const active = computed(() => slides.value[current.value] ?? slides.value[0]);
 
-const seoHeadingSource = computed(() =>
-  slides.value.length > 1
-    ? 'esan'
-    : normalizeHeroSeoHeadingSource(
+const seoHeadingSource = computed(() => {
+  if (slides.value.length > 1) return 'esan';
+
+  const source = normalizeHeroSeoHeadingSource(
     props.data?.seoHeadingSource,
     props.data?.showSeoHeading,
-      ),
-);
+  );
+
+  /*
+   * Si el H1 apunta a un texto que quedó vacío (p. ej. se quitó el antetítulo
+   * para poner un logo), la página se quedaría sin H1. Se toma el otro texto
+   * visible de la diapositiva para no perder el único H1 de la página.
+   */
+  const slide = active.value;
+  if (source === 'eyebrow' && !slide?.eyebrow?.trim()) {
+    return slide?.title?.trim() ? 'title' : 'esan';
+  }
+  if (source === 'title' && !slide?.title?.trim()) {
+    return slide?.eyebrow?.trim() ? 'eyebrow' : 'esan';
+  }
+  return source;
+});
 
 const seoHeadingText = computed(() => {
   if (seoHeadingSource.value !== 'esan') return '';

@@ -1,0 +1,190 @@
+/* ==========================================================================
+   ABOUT DPA ("¿Qué es ESAN DPA?") — 1:1 Figma [Section-ESAN-Ecosystem]
+   Desktop (2315:38479) | Tablet (2623:43399) | Mobile (2315:42065)
+   ========================================================================== */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .about-dpa {
+    width: 100%;
+    padding: 64px 20px;
+    box-sizing: border-box;
+    background-color: #FFFFFF;
+
+    @include bp.container-down('lg') {
+      padding: 64px 20px 0 20px;
+    }
+
+    @include bp.container-down('sm') {
+      padding: 48px 16px;
+    }
+  }
+
+  .about-dpa__inner {
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+
+    @include bp.container-down('lg') {
+      max-width: 728px;
+    }
+
+    @include bp.container-down('sm') {
+      max-width: 328px;
+    }
+  }
+
+  .about-dpa__row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+
+    @include bp.container-down('lg') {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  .about-dpa__col--text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .about-dpa__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .about-dpa__eyebrow {
+    margin: 0;
+    color: #E3173E;
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .about-dpa__title {
+    margin: 0;
+    color: #000000;
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 50px;
+    letter-spacing: -0.4px;
+    text-align: left;
+
+    @include bp.container-down('sm') {
+      font-size: 26px;
+      line-height: 32.5px;
+      letter-spacing: -0.26px;
+    }
+  }
+
+  .about-dpa__rule {
+    display: block;
+    width: 40px;
+    height: 2px;
+    background-color: #E3173E;
+    flex-shrink: 0;
+  }
+
+  .about-dpa__body {
+    width: 100%;
+  }
+
+  .about-dpa__desc {
+    margin: 0;
+    color: #000000;
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 25.2px;
+    text-align: left;
+  }
+
+  .about-dpa__actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    width: 100%;
+
+    @include bp.container-down('sm') {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
+  }
+
+  .about-dpa__btn-primary.btn {
+    min-height: 48px;
+    padding: 14px 32px;
+    border-radius: 4px;
+    background-color: #E3173E;
+    color: #FFFFFF;
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19.2px;
+    box-sizing: border-box;
+
+    @include bp.container-down('sm') {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .about-dpa__btn-link.btn.btn--link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 0;
+    color: #E3173E;
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19.2px;
+
+    @include bp.container-down('sm') {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .about-dpa__col--media {
+    flex: 1 1 0;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .about-dpa__video.video-preview {
+    width: 100%;
+    aspect-ratio: 628 / 352;
+    border-radius: 16px;
+    overflow: hidden;
+
+    @include bp.container-down('lg') {
+      aspect-ratio: 728 / 408;
+    }
+
+    @include bp.container-down('sm') {
+      aspect-ratio: 328 / 184;
+    }
+  }
+}
+

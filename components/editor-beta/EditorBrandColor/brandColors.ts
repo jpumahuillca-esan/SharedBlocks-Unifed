@@ -68,6 +68,10 @@ export const BRAND_COLOR_GROUPS: BrandColorGroup[] = [
         token: '--ds-color-university',
       },
       {
+        label: 'DPA',
+        token: '--ds-color-univ-dpa',
+      },
+      {
         label: 'Maestrías',
         token: '--ds-color-univ-maestrias',
       },

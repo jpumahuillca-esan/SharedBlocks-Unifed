@@ -112,8 +112,19 @@
     align-items: flex-start;
     /* Viñeta: espaciado vertical --ds-space-4. */
     gap: var(--ds-space-4);
-    /* Viñeta: columna de contenido con ancho máximo al 50%. */
-    max-width: 50%;
+    /* Figma Hero-Program-CF: columna de contenido de 864px (9/12 columnas en contenedor 1280px). */
+    width: 100%;
+    max-width: var(--hero-content-max-width, 864px);
+  }
+
+  .hero__logo {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 240px;
+    max-height: 63px;
+    object-fit: contain;
+    object-position: left center;
   }
 
   .hero__eyebrow {
@@ -146,10 +157,14 @@
 
   .hero__title {
     color: var(--ds-color-text-inverse);
+    width: 100%;
+    max-width: 100%;
   }
 
   .hero__desc {
     color: rgba(255, 255, 255, 0.85);
+    width: 100%;
+    max-width: 100%;
   }
 
   .hero__actions {
@@ -288,6 +303,7 @@
   }
 
   /* Texto: sube unos píxeles mientras aparece, escalonado. */
+  .hero__logo,
   .hero__eyebrow,
   .hero__title,
   .hero__desc,
@@ -295,6 +311,7 @@
     animation: hero-rise 700ms var(--hero-ease) both;
   }
 
+  .hero__logo,
   .hero__eyebrow { animation-delay: var(--hero-text-start); }
   .hero__title   { animation-delay: calc(var(--hero-text-start) + var(--hero-text-step)); }
   .hero__desc    { animation-delay: calc(var(--hero-text-start) + var(--hero-text-step) * 2); }
@@ -310,6 +327,7 @@
   /* Quien pide menos movimiento: todo aparece de una vez, sin desplazamientos. */
   @media (prefers-reduced-motion: reduce) {
     .hero__media,
+    .hero__logo,
     .hero__eyebrow,
     .hero__title,
     .hero__desc,
@@ -451,6 +469,11 @@
      * Psychology) piden texto oscuro: el bloque emite --hero-panel-content solo
      * en ese caso. Sin él, el panel conserva el blanco de siempre.
      */
+    .hero__logo {
+      max-width: 200px;
+      max-height: 48px;
+    }
+
     .hero__eyebrow,
     .hero__title {
       color: var(--hero-panel-content, var(--ds-color-text-inverse));

@@ -66,6 +66,26 @@
 
     <hr />
 
+    <h6 class="fw-bold small text-uppercase mb-1">Ancho del contenido</h6>
+    <div class="btn-group w-100" role="group" aria-label="Ancho del contenido de la portada">
+      <button
+        v-for="option in CONTENT_WIDTH_OPTIONS"
+        :key="option.value"
+        type="button"
+        class="btn btn-sm"
+        :class="localData.contentWidth === option.value ? 'btn-secondary' : 'btn-outline-secondary'"
+        :aria-pressed="localData.contentWidth === option.value"
+        @click="localData.contentWidth = option.value"
+      >
+        {{ option.label }}
+      </button>
+    </div>
+    <p class="hs-hint mt-1">
+      Amplio (864px, estándar de Figma Hero DPA/Pregrado), Estándar (50%) o Completo (100%).
+    </p>
+
+    <hr />
+
     <EditorBrandColor
       v-model="localData.panelColorToken"
       data-edit-target="panelColorToken"
@@ -130,6 +150,55 @@
       @remove="removeSlide(index)"
     >
       <div>
+        <!-- Logo superior — opcional (Figma Hero-Program-CF: 240×63px Desktop/Tablet, 200×48px Mobile) -->
+        <div class="hs-optional">
+          <div class="hs-optional__head">
+            <label class="form-label m-0">Logo superior</label>
+            <button
+              v-if="isOpen(slide, 'logo')"
+              type="button"
+              class="hs-optional__drop"
+              title="Quitar logo"
+              @click="clearField(slide, 'logo')"
+            >
+              <i class="las la-times"></i>
+            </button>
+          </div>
+
+          <template v-if="isOpen(slide, 'logo')">
+            <EditorImage
+              v-model="slide.logo"
+              v-model:alt="slide.logoAlt"
+              fit="contain"
+              noun="logo"
+              :height="72"
+              alt-only-with-image
+              alt-label="Texto alternativo del logo"
+              alt-placeholder="ESAN DPA - Carreras para gente que trabaja"
+              data-edit-target=".logo"
+              alt-edit-target=".logoAlt"
+              hint="Tamaño de referencia Figma: 240×63 px en Desktop/Tablet y 200×48 px en Mobile."
+              @select="$emit('select-image', { item: slide, field: 'logo' })"
+            />
+            <button
+              v-if="slide.logo !== DEFAULT_HERO_DPA_LOGO"
+              type="button"
+              class="btn btn-sm btn-outline-primary w-100 mt-1"
+              @click="applyDefaultDpaLogo(slide)"
+            >
+              <i class="las la-magic me-1"></i> Usar logo oficial ESAN DPA
+            </button>
+          </template>
+          <button
+            v-else
+            type="button"
+            class="btn btn-sm btn-outline-secondary w-100"
+            @click="openField(slide, 'logo')"
+          >
+            <i class="las la-plus me-1"></i> Agregar logo
+          </button>
+        </div>
+
         <!-- Antetítulo — opcional -->
         <div class="hs-optional">
           <div class="hs-optional__head">
@@ -320,14 +389,19 @@ import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
 import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import {
+  DEFAULT_HERO_DPA_LOGO,
+  DEFAULT_HERO_DPA_LOGO_ALT,
   newHeroSlideId,
   normalizeHeroAction,
   normalizeHeroButtons,
+  normalizeHeroLogo,
   normalizeHeroMode,
   normalizeHeroOverlay,
   normalizeHeroPanelColor,
   normalizeHeroSeoHeadingSource,
+  normalizeHeroContentWidth,
   type HeroButtons,
+  type HeroContentWidth,
   type HeroMode,
   type HeroSlideItem,
 } from '../_shared/types';
@@ -349,6 +423,12 @@ const MODE_OPTIONS: Array<{ value: HeroMode; label: string }> = [
   { value: 'single', label: 'Una diapositiva' },
 ];
 
+const CONTENT_WIDTH_OPTIONS: Array<{ value: HeroContentWidth; label: string }> = [
+  { value: 'wide', label: 'Amplio (864px)' },
+  { value: 'standard', label: 'Estándar (50%)' },
+  { value: 'full', label: 'Completo (100%)' },
+];
+
 const BUTTONS_OPTIONS: Array<{ value: HeroButtons; label: string }> = [
   { value: 'both', label: 'Ambos' },
   { value: 'primary', label: 'Solo principal' },
@@ -362,6 +442,8 @@ const buildSlide = (source: any): HeroSlideItem => {
 
   return {
     id: source?.id || newHeroSlideId(),
+    logo: normalizeHeroLogo(source?.logo),
+    logoAlt: source?.logoAlt ?? '',
     eyebrow: source?.eyebrow ?? '',
     title: source?.title ?? '',
     desc: source?.desc ?? '',
@@ -384,6 +466,7 @@ const build = (source: any) => ({
   seoHeadingSource: normalizeHeroSeoHeadingSource(source?.seoHeadingSource, source?.showSeoHeading),
   seoHeadingText: typeof source?.seoHeadingText === 'string' ? source.seoHeadingText : 'ESAN',
   mode: normalizeHeroMode(source?.mode),
+  contentWidth: normalizeHeroContentWidth(source?.contentWidth),
   panelColorToken: normalizeHeroPanelColor(source?.panelColorToken),
   overlayOpacity: normalizeHeroOverlay(source?.overlayOpacity),
   slides: Array.isArray(source?.slides) ? source.slides.map(buildSlide) : [],
@@ -433,7 +516,7 @@ const setMode = (mode: HeroMode) => {
  * para llegar a lo que de verdad se estaba editando. (El botón secundario ya no
  * es un opcional más: se elige con el selector "Botones" de cada diapositiva.)
  */
-type OptionalField = 'eyebrow' | 'desc';
+type OptionalField = 'logo' | 'eyebrow' | 'desc';
 
 /**
  * Campos desplegados, por diapositiva y campo.
@@ -449,8 +532,11 @@ const optionalOpen = ref<Record<string, boolean>>({});
 const fieldKey = (slide: HeroSlideItem, field: OptionalField) => `${slide.id}:${field}`;
 
 /** ¿Este campo opcional trae contenido guardado? */
-const hasContent = (slide: HeroSlideItem, field: OptionalField) =>
-  Boolean(field === 'eyebrow' ? slide.eyebrow : slide.desc);
+const hasContent = (slide: HeroSlideItem, field: OptionalField) => {
+  if (field === 'logo') return Boolean(slide.logo);
+  if (field === 'eyebrow') return Boolean(slide.eyebrow);
+  return Boolean(slide.desc);
+};
 
 /**
  * Sin decisión previa manda el dato, que es lo que hace que una diapositiva ya
@@ -459,14 +545,34 @@ const hasContent = (slide: HeroSlideItem, field: OptionalField) =>
 const isOpen = (slide: HeroSlideItem, field: OptionalField) =>
   optionalOpen.value[fieldKey(slide, field)] ?? hasContent(slide, field);
 
+const applyDefaultDpaLogo = (slide: HeroSlideItem) => {
+  slide.logo = DEFAULT_HERO_DPA_LOGO;
+  if (!slide.logoAlt) {
+    slide.logoAlt = DEFAULT_HERO_DPA_LOGO_ALT;
+  }
+};
+
 const openField = (slide: HeroSlideItem, field: OptionalField) => {
   optionalOpen.value[fieldKey(slide, field)] = true;
+  if (field === 'logo' && !slide.logo) {
+    applyDefaultDpaLogo(slide);
+  }
 };
 
 /** Se limpia el dato además de plegar: si no, el bloque seguiría dibujándolo. */
 const clearField = (slide: HeroSlideItem, field: OptionalField) => {
-  if (field === 'eyebrow') slide.eyebrow = '';
-  else slide.desc = '';
+  if (field === 'logo') {
+    slide.logo = '';
+    slide.logoAlt = '';
+  } else if (field === 'eyebrow') {
+    slide.eyebrow = '';
+    // Sin antetítulo no puede ser el H1: pasa al título para no dejar la página sin H1.
+    if (localData.value.seoHeadingSource === 'eyebrow') {
+      localData.value.seoHeadingSource = 'title';
+    }
+  } else {
+    slide.desc = '';
+  }
 
   optionalOpen.value[fieldKey(slide, field)] = false;
 };

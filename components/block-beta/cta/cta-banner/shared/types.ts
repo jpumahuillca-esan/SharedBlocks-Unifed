@@ -10,6 +10,12 @@ import {
 import { normalizeLinkTarget, type LinkTarget } from '../../../../../helpers/linkTarget';
 
 export interface CtaBannerData {
+  eyebrow?: string;
+  /**
+   * Si es true, el antetítulo se emite como <h2> para SEO y el título se emite como <p>
+   * conservando su aspecto visual de h3. Por defecto (false), el título es el <h2>.
+   */
+  eyebrowAsH2?: boolean;
   title: string;
   desc: string;
   buttonLabel: string;
@@ -29,6 +35,10 @@ export const normalizeCtaBannerData = (source: any): CtaBannerData => {
   const imageFocusY = normalizeImageFocus(source?.imageFocusY);
 
   return {
+    eyebrow: typeof source?.eyebrow === 'string' ? source.eyebrow : '',
+    eyebrowAsH2: typeof source?.eyebrowAsH2 === 'boolean'
+      ? source.eyebrowAsH2
+      : source?.seoHeadingSource === 'eyebrow',
     title: typeof source?.title === 'string' ? source.title : '',
     desc: typeof source?.desc === 'string' ? source.desc : '',
     buttonLabel: typeof source?.buttonLabel === 'string' ? source.buttonLabel : '',

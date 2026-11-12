@@ -6,6 +6,31 @@
       recomendamos una imagen horizontal de aproximadamente 592 × 266 px.
     </p>
 
+    <EditorText
+      v-model="localData.eyebrow"
+      data-edit-target="eyebrow"
+      class="mb-2"
+      label="Antetítulo (opcional)"
+      placeholder="Test vocacional"
+    />
+
+    <div class="form-check form-switch mb-3">
+      <input
+        :id="eyebrowAsH2SwitchId"
+        v-model="localData.eyebrowAsH2"
+        data-edit-target="eyebrowAsH2"
+        class="form-check-input"
+        type="checkbox"
+        role="switch"
+      />
+      <label class="form-check-label" :for="eyebrowAsH2SwitchId">
+        Invertir jerarquía SEO (Antetítulo como &lt;h2&gt;)
+      </label>
+      <div class="cta-banner-editor__hint">
+        Por defecto el título principal es el &lt;h2&gt;. Al activar esta opción se invierten: el antetítulo pasa a ser el &lt;h2&gt; y el título a &lt;p&gt;, conservando el diseño visual de cada uno.
+      </div>
+    </div>
+
     <EditorTextarea
       v-model="localData.title"
       data-edit-target="title"
@@ -114,6 +139,7 @@ const emit = defineEmits<{
 }>();
 
 const localData = ref(normalizeCtaBannerData(props.modelValue));
+const eyebrowAsH2SwitchId = nextFieldId('cta-banner-eyebrow-as-h2');
 const buttonNegativeSwitchId = nextFieldId('cta-banner-button-negative');
 const imageFocusModes = createImageFocusModes({
   web: '592 / 266',
