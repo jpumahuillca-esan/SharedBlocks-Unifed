@@ -1,5 +1,6 @@
 <template>
   <section
+    id="pregrado"
     class="cards-v2-section"
     v-bind="edit('backgroundColor')"
     :class="{ 'cards-v2-section--white': (data?.backgroundColor || normalized.backgroundColor) === '#FFFFFF' }"

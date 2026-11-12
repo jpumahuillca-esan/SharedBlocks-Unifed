@@ -48,6 +48,38 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         },
     },
 
+    AudienceSwitcher: {
+        label: 'Selector de Audiencia / Banners laterales',
+        icon: 'las la-columns',
+        group: 'Navigation',
+        beta: true,
+        isBoxed: true,
+        component: defineAsyncComponent(() => import('../components/block-beta/navigation/audience-switcher/Block.vue')),
+        initialData: {
+            title: '¿En qué momento estás?',
+            cards: [
+                {
+                    id: 'as-1',
+                    title: 'Terminé el colegio',
+                    desc: 'Conoce la carreras de pregrado para empezar tu vida universitaria.',
+                    image: '/storage/media/main/2026/09/1790349849_banner-image-wide.webp',
+                    imageAlt: 'Estudiantes de pregrado ESAN',
+                    href: '#pregrado',
+                    target: '_self',
+                },
+                {
+                    id: 'as-2',
+                    title: 'Ya trabajo',
+                    desc: 'Conoce las carreras universitarias para adultos con experiencia laboral.',
+                    image: '/storage/media/main/2026/09/1790349853_banner-image-wide-1.webp',
+                    imageAlt: 'Estudiantes DPA ESAN',
+                    href: '#dpa',
+                    target: '_self',
+                },
+            ],
+        },
+    },
+
     EventsFeatured: {
         label: 'Eventos destacados',
         icon: 'las la-calendar',
@@ -1165,6 +1197,245 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         },
     },
 
+    FaqAccordion: {
+        label: 'Preguntas frecuentes (Acordeón)',
+        icon: 'las la-question-circle',
+        group: 'Faq',
+        beta: true,
+        isBoxed: true,
+        component: defineAsyncComponent(() => import('../components/block-beta/faq/faq-accordion/Block.vue')),
+        initialData: {
+            eyebrow: '',
+            title: 'Preguntas Frecuentes',
+            desc: '',
+            showSearch: true,
+            searchPlaceholder: 'Busca tu pregunta (ej. becas, carreras, virtual, acreditación)...',
+            items: [
+                {
+                    id: 'faq-1',
+                    question: '¿Cuánto cuesta estudiar Administración?',
+                    answer: 'El costo de la carrera varía según la escala de pago asignada en el proceso de admisión. Contamos con diversas escalas y facilidades de financiamiento.',
+                    defaultOpen: false,
+                },
+                {
+                    id: 'faq-2',
+                    question: '¿Cómo se asigna mi escala de pago?',
+                    answer: 'La escala se determina mediante una evaluación socioeconómica familiar al momento de postular.',
+                    defaultOpen: false,
+                },
+                {
+                    id: 'faq-3',
+                    question: '¿Qué necesito para postular por examen regular?',
+                    answer: 'Haber culminado o estar cursando el quinto de secundaria, copia de DNI y completar la ficha de inscripción en línea.',
+                    defaultOpen: false,
+                },
+                {
+                    id: 'faq-4',
+                    question: '¿Cómo es el examen de admisión?',
+                    answer: 'Evalúa aptitud académica (razonamiento verbal y matemático) y conocimientos generales.',
+                    defaultOpen: false,
+                },
+                {
+                    id: 'faq-5',
+                    question: 'Horarios de clase',
+                    answer: 'Las clases se dictan en turnos regulares de lunes a viernes, con acceso a laboratorios y biblioteca.',
+                    defaultOpen: false,
+                },
+                {
+                    id: 'faq-6',
+                    question: '¿Qué es el Ciclo 0 y puedo convalidarlo?',
+                    answer: 'Es un ciclo de nivelación y pre-formación en Comunicaciones y Matemática que puedes convalidar mediante examen de suficiencia.',
+                    defaultOpen: false,
+                },
+            ],
+        },
+    },
+
+    MallaCurricular: {
+        label: 'Malla curricular (Ciclos)',
+        icon: 'las la-graduation-cap',
+        group: 'Curriculum',
+        beta: true,
+        isBoxed: true,
+        component: defineAsyncComponent(() => import('../components/block-beta/curriculum/malla-curricular/Block.vue')),
+        initialData: {
+            eyebrow: 'Diez ciclos y 200 créditos',
+            title: 'Malla curricular',
+            desc: 'Diez ciclos organizados en cinco años, con un ciclo cero de nivelación en Comunicaciones y Matemática que puedes convalidar por examen.',
+            showAlert: true,
+            alertText: 'El plan de estudios puede tener cambios y modificaciones.',
+            showDownload: true,
+            downloadLabel: 'Descargar malla curricular',
+            downloadUrl: '#',
+            modalities: [
+                { label: 'Presencial', url: '#' },
+                { label: 'Semipresencial', url: '#' },
+                { label: 'A distancia', url: '#' },
+            ],
+            years: [
+                {
+                    id: 'year-1',
+                    number: '01',
+                    title: 'Primer año',
+                    defaultOpen: true,
+                    cycles: [
+                        {
+                            id: 'cycle-0',
+                            name: 'Ciclo 0 (pre-formación)',
+                            note: 'Los cursos de Pre-Formación pueden ser convalidados por examen.',
+                            courses: [
+                                { id: 'c-0-1', name: 'Comunicaciones' },
+                                { id: 'c-0-2', name: 'Herramientas Digitales' },
+                                { id: 'c-0-3', name: 'Matemáticas' },
+                            ],
+                        },
+                        {
+                            id: 'cycle-1',
+                            name: 'Ciclo 1',
+                            courses: [
+                                { id: 'c-1-1', name: 'Gestión empresarial, finanzas y marketing' },
+                                { id: 'c-1-2', name: 'Análisis de Datos I' },
+                                { id: 'c-1-3', name: 'Comunicación y Literatura I' },
+                                { id: 'c-1-4', name: 'Filosofía y Ética' },
+                                { id: 'c-1-5', name: 'Pensamiento Crítico' },
+                                { id: 'c-1-6', name: 'Pre Cálculo' },
+                                { id: 'c-1-7', name: 'Taller: Desarrollo de Competencias Personales I' },
+                            ],
+                        },
+                        {
+                            id: 'cycle-2',
+                            name: 'Ciclo 2',
+                            courses: [
+                                { id: 'c-2-1', name: 'Cálculo I' },
+                                { id: 'c-2-2', name: 'Comportamiento Humano en las Organizaciones' },
+                                { id: 'c-2-3', name: 'Comunicación y Literatura II' },
+                                { id: 'c-2-4', name: 'Contabilidad General' },
+                                { id: 'c-2-5', name: 'Estadística y Probabilidades' },
+                                { id: 'c-2-6', name: 'Fundamentos de Marketing' },
+                                { id: 'c-2-7', name: 'Taller: Desarrollo de Competencias Profesionales I' },
+                                { id: 'c-2-8', name: 'Mérito de Complemento Curricular I' },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    id: 'year-2',
+                    number: '02',
+                    title: 'Segundo año',
+                    defaultOpen: false,
+                    cycles: [
+                        {
+                            id: 'cycle-3',
+                            name: 'Ciclo 3',
+                            courses: [
+                                { id: 'c-3-1', name: 'Microeconomía' },
+                                { id: 'c-3-2', name: 'Costos y Presupuestos' },
+                                { id: 'c-3-3', name: 'Fundamentos de Finanzas' },
+                                { id: 'c-3-4', name: 'Métodos Cuantitativos para los Negocios' },
+                                { id: 'c-3-5', name: 'Derecho Empresarial' },
+                            ],
+                        },
+                        {
+                            id: 'cycle-4',
+                            name: 'Ciclo 4',
+                            courses: [
+                                { id: 'c-4-1', name: 'Macroeconomía' },
+                                { id: 'c-4-2', name: 'Gestión del Talento Humano' },
+                                { id: 'c-4-3', name: 'Finanzas Corporativas' },
+                                { id: 'c-4-4', name: 'Investigación de Mercados' },
+                                { id: 'c-4-5', name: 'Operaciones y Logística' },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    id: 'year-3',
+                    number: '03',
+                    title: 'Tercer año',
+                    defaultOpen: false,
+                    cycles: [
+                        {
+                            id: 'cycle-5',
+                            name: 'Ciclo 5',
+                            courses: [
+                                { id: 'c-5-1', name: 'Estrategia Empresarial' },
+                                { id: 'c-5-2', name: 'Marketing Estratégico' },
+                                { id: 'c-5-3', name: 'Gestión de Procesos' },
+                                { id: 'c-5-4', name: 'Econometría Aplicada' },
+                            ],
+                        },
+                        {
+                            id: 'cycle-6',
+                            name: 'Ciclo 6',
+                            courses: [
+                                { id: 'c-6-1', name: 'Comercio y Negocios Internacionales' },
+                                { id: 'c-6-2', name: 'Evaluación Privada de Proyectos' },
+                                { id: 'c-6-3', name: 'Sistemas Integrados de Información (ERP)' },
+                                { id: 'c-6-4', name: 'Liderazgo y Negociación' },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    id: 'year-4',
+                    number: '04',
+                    title: 'Cuarto año',
+                    defaultOpen: false,
+                    cycles: [
+                        {
+                            id: 'cycle-7',
+                            name: 'Ciclo 7',
+                            courses: [
+                                { id: 'c-7-1', name: 'Innovación y Modelos de Negocio' },
+                                { id: 'c-7-2', name: 'Dirección Comercial' },
+                                { id: 'c-7-3', name: 'Finanzas Internacionales' },
+                                { id: 'c-7-4', name: 'Curso Electivo I' },
+                            ],
+                        },
+                        {
+                            id: 'cycle-8',
+                            name: 'Ciclo 8',
+                            courses: [
+                                { id: 'c-8-1', name: 'Supply Chain Management' },
+                                { id: 'c-8-2', name: 'Business Analytics' },
+                                { id: 'c-8-3', name: 'Gestión del Cambio Organizacional' },
+                                { id: 'c-8-4', name: 'Curso Electivo II' },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    id: 'year-5',
+                    number: '05',
+                    title: 'Quinto año',
+                    defaultOpen: false,
+                    cycles: [
+                        {
+                            id: 'cycle-9',
+                            name: 'Ciclo 9',
+                            courses: [
+                                { id: 'c-9-1', name: 'Seminario de Tesis I' },
+                                { id: 'c-9-2', name: 'Gerencia Estratégica Global' },
+                                { id: 'c-9-3', name: 'Ética y Responsabilidad Social Empresarial' },
+                                { id: 'c-9-4', name: 'Curso Electivo III' },
+                            ],
+                        },
+                        {
+                            id: 'cycle-10',
+                            name: 'Ciclo 10',
+                            courses: [
+                                { id: 'c-10-1', name: 'Seminario de Tesis II' },
+                                { id: 'c-10-2', name: 'Simulación de Negocios (Capstone)' },
+                                { id: 'c-10-3', name: 'Gobierno Corporativo' },
+                                { id: 'c-10-4', name: 'Curso Electivo IV' },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+
 
 };
 
@@ -1201,6 +1472,8 @@ const betaBaseGroups = [
     { id: 'Navigation', label: 'Navegación', color: 'outline-primary', icon: 'las la-compass' },
     // 'About' no coincide con ningún id de baseGroups: no se cuela en el catálogo clásico.
     { id: 'About', label: 'About', color: 'outline-info', icon: 'las la-id-card' },
+    { id: 'Faq', label: 'FAQ', color: 'outline-secondary', icon: 'las la-question-circle' },
+    { id: 'Curriculum', label: 'Malla / Carrera', color: 'outline-success', icon: 'las la-graduation-cap' },
 ];
 
 /** Claves de los bloques marcados como beta, sin agrupar. */

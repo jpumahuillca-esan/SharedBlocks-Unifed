@@ -1,0 +1,122 @@
+/* =========================================================================
+   AUDIENCE SWITCHER / SIDEBAR BANNERS — ARCIS Design System
+   Bloque de navegación lateral ("¿En qué momento estás?")
+   con tarjetas de acceso a Pregrado / DPA.
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .audience-switcher {
+    width: 100%;
+    box-sizing: border-box;
+
+    &__inner {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    &__title {
+      font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+      font-size: clamp(1.4rem, 2vw, 1.75rem);
+      font-weight: 600;
+      line-height: 1.25;
+      color: var(--ds-color-text-primary, #0f172a);
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+
+    &__cards {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+
+      @include bp.container-down('md') {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+    }
+
+    &__card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      width: 100%;
+      height: 260px;
+      border-radius: var(--ds-radius-md, 8px);
+      overflow: hidden;
+      padding: 20px;
+      box-sizing: border-box;
+      text-decoration: none;
+      background-color: #0f172a;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+      @include bp.container-down('md') {
+        flex: 1 1 calc(50% - 10px);
+        min-width: 260px;
+      }
+
+      @include bp.container-down('sm') {
+        flex: 1 1 100%;
+      }
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+
+        .audience-switcher__card-image {
+          transform: scale(1.04);
+        }
+      }
+    }
+
+    &__card-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+      z-index: 1;
+    }
+
+    &__card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(10, 19, 25, 0) 30%, rgba(10, 19, 25, 0.88) 85%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    &__card-content {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    &__card-title {
+      font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.25;
+      color: #ffffff;
+      margin: 0;
+    }
+
+    &__card-desc {
+      font-family: var(--ds-font-family-base, 'Plus Jakarta Sans', sans-serif);
+      font-size: 0.875rem;
+      font-weight: 400;
+      line-height: 1.4;
+      color: #e2e8f0;
+      margin: 0;
+    }
+  }
+}
+

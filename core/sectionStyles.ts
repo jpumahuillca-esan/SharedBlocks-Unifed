@@ -127,8 +127,8 @@ export const resolveColumnsStyle = (
             // Ancho (de 12) de la flotante: con él las columnas normales saben
             // cuánto hueco reservarle (ver sectionLayout.scss).
             '--ps-float-span': String(floatSpan(columns)),
-            // Ancho mínimo de la flotante: 400px aunque su proporción de 12 dé menos.
-            '--ps-float-min': px(FLOAT_MIN_WIDTH),
+            // Ancho mínimo de la flotante: 326px para float-start (sidebar), 400px para float-end (formulario).
+            '--ps-float-min': px(floatMinWidth(columns)),
             width: '100%',
             boxSizing: 'border-box',
         }
@@ -181,6 +181,15 @@ const floatSpan = (columns: FloatAwareColumn[]): number =>
         GRID_UNITS,
         Math.max(1, ...columns.filter(isFloatingColumn).map((c) => Math.round(Number(c.span) || 4))),
     );
+
+/** Ancho mínimo (px) de la columna flotante: 326px para float-start (sidebar), 400px para float-end (formulario). */
+const floatMinWidth = (columns: FloatAwareColumn[]): number => {
+    const floatCol = columns.find(isFloatingColumn);
+    if (floatCol?.placement === 'float-start') {
+        return 326;
+    }
+    return FLOAT_MIN_WIDTH;
+};
 
 /**
  * Clases de la grilla de una sección. Vacías si no hay columna flotante: las
