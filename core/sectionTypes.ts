@@ -10,6 +10,8 @@ export interface BlockItem {
     id: string;
     type: string;
     content: Record<string, any>;
+    /** Identificador de ancla legible opcional (ej. `pregrado`), independiente del #sec-<id>. */
+    anchorId?: string;
     global_block_id?: number | null;
     global_block_name?: string | null;
     is_global?: boolean;
@@ -44,6 +46,9 @@ export type ColumnPlacement = 'flow' | 'float-end' | 'float-start';
 /** Valor de `mobileAfterBlockId` para colocar la columna flotante antes de todo. */
 export const MOBILE_AFTER_START = '__start__';
 
+/** Valor de `mobileAfterBlockId` para colocar la columna flotante al final de la sección. */
+export const MOBILE_AFTER_END = '__end__';
+
 export interface SectionColumn {
     id: string;
     /**
@@ -57,8 +62,9 @@ export interface SectionColumn {
     /**
      * Solo para columnas flotantes: en móvil sus bloques pasan a ser un bloque
      * más y se colocan DEBAJO del bloque con este id (de las columnas normales
-     * de la misma sección). `MOBILE_AFTER_START` los pone antes de todo; vacío o
-     * un id que ya no existe, al final.
+     * de la misma sección). `MOBILE_AFTER_START` los pone antes de todo;
+     * `MOBILE_AFTER_END`, al final; vacío/nulo sigue el lado donde flota
+     * (`float-start` al inicio, `float-end` al final).
      */
     mobileAfterBlockId?: string | null;
     /**

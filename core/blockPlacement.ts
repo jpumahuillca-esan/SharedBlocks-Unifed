@@ -10,6 +10,7 @@
  * no hay contexto y el editor no muestra nada.
  */
 import type { InjectionKey, Ref } from 'vue';
+import { MOBILE_AFTER_END, MOBILE_AFTER_START, type ColumnPlacement } from './sectionTypes';
 
 /** Un bloque de la sección bajo el cual puede colocarse el flotante en móvil. */
 export interface PlacementAnchor {
@@ -22,10 +23,47 @@ export interface BlockPlacementContext {
     side: 'end' | 'start';
     /** Bloques normales de la sección, en el orden en que se leen. */
     anchors: PlacementAnchor[];
-    /** Bloque elegido (o MOBILE_AFTER_START); null = al final. */
+    /** Bloque elegido (MOBILE_AFTER_START, MOBILE_AFTER_END o id); null = automático según lado. */
     mobileAfterBlockId: string | null;
     setMobileAfter: (blockId: string | null) => void;
 }
+
+/** Construye la lista ordenada de bloques normales debajo de los cuales se puede insertar el flotante. */
+export const resolveFloatingAnchors = (
+    columns: ReadonlyArray<{
+        placement?: ColumnPlacement;
+        blocks?: Array<{ id: string; type: string; content?: Record<string, any> }>;
+    }>,
+    labels: Record<string, string> = {},
+): PlacementAnchor[] =>
+    columns
+        .filter((c) => (c.placement ?? 'flow') === 'flow')
+        .flatMap((c) => c.blocks ?? [])
+        .map((b, i) => {
+            const rawTitle = b.content?.title ?? b.content?.mainTitle;
+            const title = typeof rawTitle === 'string' ? rawTitle.trim() : '';
+            const label = labels[b.type] || b.type;
+            return { id: b.id, label: `${i + 1}. ${label}${title ? ` — ${title}` : ''}` };
+        });
+
+/**
+ * Resuelve el valor efectivo para el selector del editor: si es nulo o el bloque
+ * ya no existe, usa la posición natural del lado donde flota (`start` al inicio,
+ * `end` al final).
+ */
+export const resolveEffectiveMobileAfter = (
+    side: 'end' | 'start',
+    mobileAfterBlockId: string | null | undefined,
+    anchors: ReadonlyArray<PlacementAnchor>,
+): string => {
+    if (mobileAfterBlockId === MOBILE_AFTER_START || mobileAfterBlockId === MOBILE_AFTER_END) {
+        return mobileAfterBlockId;
+    }
+    if (mobileAfterBlockId && anchors.some((a) => a.id === mobileAfterBlockId)) {
+        return mobileAfterBlockId;
+    }
+    return side === 'start' ? MOBILE_AFTER_START : MOBILE_AFTER_END;
+};
 
 /** El inspector entrega un `Ref`: cambia con la selección y con cada edición. */
 export const BLOCK_PLACEMENT_KEY: InjectionKey<Ref<BlockPlacementContext | null>> = Symbol('block-placement');

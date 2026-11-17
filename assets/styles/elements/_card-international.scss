@@ -1,0 +1,192 @@
+/* =========================================================================
+   CARD INTERNATIONAL — ARCIS Design System
+
+   Tarjeta destacada de internacionalización (Pregrado / DPA) con título,
+   imagen panorámica, descripción enriquecida opcional, fila de beneficios
+   con íconos de 64px y CTA negativo (AtomButton variant="secondary" negative).
+   La usa el bloque block-beta/cards/card-international.
+   ========================================================================= */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .card-international-section {
+    position: relative;
+    width: 100%;
+    margin-block: var(--ds-space-4, 16px) var(--ds-space-8, 32px);
+    box-sizing: border-box;
+  }
+
+  .card-international__container {
+    width: 100%;
+    max-width: var(--ds-container-max, 1280px);
+    margin-inline: auto;
+    padding-inline: var(--ds-container-padding-x);
+    box-sizing: border-box;
+  }
+
+  .card-international__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-5, 20px);
+    border-radius: var(--ds-radius-lg, 16px);
+    padding: var(--ds-space-12, 48px) var(--ds-space-8, 32px);
+    box-sizing: border-box;
+    color: var(--ds-color-text-inverse, #ffffff);
+    overflow: hidden;
+
+    @include bp.container-down('md') {
+      padding: var(--ds-space-8, 32px) var(--ds-space-5, 20px);
+    }
+  }
+
+  .card-international__title {
+    font-family: var(--ds-font-family-display);
+    font-size: var(--ds-heading-lg, 32px);
+    font-weight: var(--ds-weight-semibold, 600);
+    line-height: var(--ds-line-height-125, 1.25);
+    letter-spacing: var(--ds-letter-spacing-075, -0.0075em);
+    color: var(--ds-color-text-inverse, #ffffff);
+    margin: 0;
+  }
+
+  .card-international__media {
+    position: relative;
+    width: 100%;
+    height: 282px;
+    margin: 0;
+    border-radius: var(--ds-radius-sm, 8px);
+    overflow: hidden;
+    background-color: var(--ds-color-white-20, rgba(255, 255, 255, 0.2));
+
+    @media (max-width: 1023.98px) {
+      height: 235px;
+    }
+
+    @include bp.container-down('md') {
+      height: 155px;
+      border-radius: var(--ds-radius-md, 16px);
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+    }
+  }
+
+  .card-international__desc {
+    font-family: var(--ds-font-family-base);
+    font-size: var(--ds-text-body-lg, 18px);
+    font-weight: var(--ds-weight-regular, 400);
+    line-height: 1.4;
+    color: var(--ds-color-text-inverse, #ffffff);
+    margin: 0;
+
+    @include bp.container-down('md') {
+      font-size: var(--ds-text-body, 16px);
+    }
+
+    strong,
+    b {
+      font-weight: var(--ds-weight-bold, 700);
+      color: var(--ds-color-text-inverse, #ffffff);
+    }
+  }
+
+  .card-international__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--card-intl-cols, 4), minmax(0, 1fr));
+    gap: var(--ds-space-5, 20px);
+    align-items: stretch;
+    margin: 0;
+
+    @include bp.container-down('md') {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--ds-space-4, 16px);
+    }
+  }
+
+  .card-international__item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--ds-space-2, 8px);
+    text-align: left;
+    min-width: 0;
+
+    @include bp.container-down('md') {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  .card-international__item-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: var(--ds-size-64, 64px);
+    height: var(--ds-size-64, 64px);
+    flex-shrink: 0;
+
+    @include bp.container-down('md') {
+      width: var(--ds-space-12, 48px);
+      height: var(--ds-space-12, 48px);
+      justify-content: center;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .atom-icon {
+      font-size: 40px;
+      color: var(--ds-color-text-inverse, #ffffff);
+
+      @include bp.container-down('md') {
+        width: 28px;
+        height: 28px;
+        font-size: 28px;
+      }
+    }
+  }
+
+  .card-international__item-text {
+    font-family: var(--ds-font-family-base);
+    font-size: var(--ds-text-body, 16px);
+    font-weight: var(--ds-weight-regular, 400);
+    line-height: 1.4;
+    color: var(--ds-color-text-inverse, #ffffff);
+    margin: 0;
+    min-width: 0;
+    overflow-wrap: break-word;
+
+    @include bp.container-down('md') {
+      flex: 1 1 auto;
+    }
+  }
+
+  .card-international__actions {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: var(--ds-space-3, 12px);
+
+    @include bp.container-down('cta') {
+      .card-international__btn {
+        width: 100%;
+        height: auto;
+        min-height: var(--ds-space-12, 48px);
+        white-space: normal;
+        text-align: center;
+        padding-block: var(--ds-space-3, 12px);
+      }
+    }
+  }
+}

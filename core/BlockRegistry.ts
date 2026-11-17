@@ -936,6 +936,47 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         },
     },
 
+    CardInternational: {
+        label: 'Tarjeta de Internacionalización',
+        icon: 'las la-globe-americas',
+        group: 'Cards',
+        beta: true,
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/cards/card-international/Block.vue')),
+        initialData: {
+            title: 'Internacionalización',
+            desc: 'Tenemos <strong>más de 130 convenios internacionales</strong> y tres tipos de programa. Al volver, convalidas los cursos que aprobaste.',
+            image: '/storage/media/pregrado/2026/10/img_hero_esan_internacional_001.webp',
+            imageAlt: 'Estudiantes de intercambio internacional ESAN',
+            backgroundColor: '#E3173E',
+            items: [
+                {
+                    id: 'item-1',
+                    icon: 'pin-globe',
+                    text: 'Internacionalización desde los primeros ciclos: Global Weeks, Summer & Winter Programs',
+                },
+                {
+                    id: 'item-2',
+                    icon: 'handshake',
+                    text: '+130 Intercambios internacionales',
+                },
+                {
+                    id: 'item-3',
+                    icon: 'grad-cap',
+                    text: '+11 oportunidades de Doble Grado',
+                },
+                {
+                    id: 'item-4',
+                    icon: 'alumni-group',
+                    text: '+300 alumnos han realizado programas de intercambio',
+                },
+            ],
+            buttonText: 'Ver más de Internacionalización',
+            buttonLink: '#',
+            buttonTarget: '_self',
+        },
+    },
+
     EcosystemDpa: {
         label: 'Elige tu carrera (DPA)',
         icon: 'las la-sitemap',

@@ -1,32 +1,5 @@
 <template>
   <div class="lf-editor">
-    <!--
-      Solo con el formulario en una columna FLOTANTE de la sección. Desde 1280px
-      flota sobre el contenido; por debajo entra en el flujo como un bloque más, y
-      aquí se decide debajo de cuál de los bloques de la sección.
-    -->
-    <section v-if="placement" class="lf-callout" data-edit-target="mobile_placement">
-      <div class="lf-callout__head">
-        <i class="las la-thumbtack"></i>
-        <strong>Flotante a la {{ placement.side === 'start' ? 'izquierda' : 'derecha' }}</strong>
-      </div>
-
-      <label class="lf-label" for="lead-mobile-after">En tableta y móvil, mostrar debajo de</label>
-      <select
-        id="lead-mobile-after"
-        class="form-select form-select-sm"
-        :value="mobileAfterValue"
-        @change="onMobileAfterChange"
-      >
-        <option :value="MOBILE_AFTER_START">Al inicio de la sección</option>
-        <option v-for="anchor in placement.anchors" :key="anchor.id" :value="anchor.id">
-          {{ anchor.label }}
-        </option>
-        <option value="">Al final de la sección</option>
-      </select>
-      <p class="lf-hint">Desde 1280px flota sobre el contenido y acompaña al scroll. Por debajo se coloca en este punto.</p>
-    </section>
-
     <!-- Textos -->
     <section class="lf-section">
       <h6 class="lf-title">Textos</h6>
@@ -133,40 +106,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, inject, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import HttpClient from '@/helpers/http-client';
 import { useAuthStore } from '@/stores/auth';
-import { BLOCK_PLACEMENT_KEY } from '../../../../core/blockPlacement';
-import { MOBILE_AFTER_START } from '../../../../core/sectionTypes';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
 import type { DynamicFormField } from './types/lead.types';
 
 const props = defineProps<{ modelValue: any }>();
 const emit = defineEmits(['update:modelValue']);
-
-/*
- * Colocación del bloque en la sección (core/blockPlacement.ts): solo existe si
- * el formulario está en una columna flotante. Sin inspector no hay contexto.
- */
-const placementRef = inject(BLOCK_PLACEMENT_KEY, null);
-const placement = computed(() => placementRef?.value ?? null);
-
-/**
- * Un bloque elegido que ya no existe (se borró o se movió de columna) cuenta
- * como "al final", que es lo que hace el sitio; así el select nunca queda
- * mostrando una opción que no está en la lista.
- */
-const mobileAfterValue = computed(() => {
-  const current = placement.value?.mobileAfterBlockId ?? '';
-  if (current === MOBILE_AFTER_START) return current;
-  return placement.value?.anchors.some((a) => a.id === current) ? current : '';
-});
-
-const onMobileAfterChange = (event: Event) => {
-  const value = (event.target as HTMLSelectElement).value;
-  placement.value?.setMobileAfter(value || null);
-};
 
 const authStore = useAuthStore();
 const campaigns = ref<any[]>([]);
@@ -471,29 +419,6 @@ onMounted(() => {
 .lf-reload:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-/* Colocación flotante: aviso destacado, con el color informativo del editor. */
-.lf-callout {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 12px;
-  border: 1px solid var(--ed-info, #0d6efd);
-  border-radius: var(--ed-radius-sm, 7px);
-  background: var(--ed-info-soft, rgba(13, 110, 253, 0.07));
-}
-
-.lf-callout__head {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12.5px;
-  color: var(--ed-text, #1f2733);
-}
-
-.lf-callout__head i {
-  color: var(--ed-info, #0d6efd);
 }
 
 .lf-pill {

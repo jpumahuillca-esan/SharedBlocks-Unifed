@@ -33,9 +33,11 @@
    */
   .breadcrumb-block {
     width: 100%;
+    margin: 0;
   }
 
   .breadcrumb-block > .divider {
+    margin: 0;
     opacity: 1;
   }
 
@@ -51,11 +53,27 @@
     padding-inline: var(--ds-container-padding-x);
   }
 
+  /*
+   * Anula el reset de .breadcrumb de Bootstrap 5 (margin-bottom: 1rem,
+   * padding, background-color, border-radius): en public-site main.scss carga
+   * Bootstrap después de SharedBlocks, por lo que sin este reinicio explícito
+   * con mayor especificidad (.arcis-scope .breadcrumb.breadcrumb--arcis),
+   * Bootstrap inyectaba 16px extra debajo del breadcrumb.
+   */
   .breadcrumb.breadcrumb--arcis {
+    --bs-breadcrumb-padding-x: 0;
+    --bs-breadcrumb-padding-y: 0;
+    --bs-breadcrumb-margin-bottom: 0;
+
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--ds-spacing-xxs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background-color: transparent;
+    border-radius: 0;
     font-size: var(--ds-text-body-compact);
     color: var(--ds-color-text-secondary);
   }

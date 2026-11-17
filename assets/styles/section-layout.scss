@@ -60,6 +60,7 @@ $ps-block-containers: (
   '.cards-r3__container',
   '.cards-v2__container',
   '.cards-dpa__container',
+  '.card-international__container',
   '.ctaband__inner',
   '.ctaband--compact',
   '.ecosystem__inner',
@@ -245,3 +246,23 @@ $ps-bleeding-containers: (
 }
 
 @include ps-float-desktop('.ps-columns--editor');
+
+/* Marcador de ancla legible sin impacto visual sobre el flujo del layout */
+.page-section__anchor {
+  display: block;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  pointer-events: none;
+  scroll-margin-top: 96px;
+}
+
+/* Margen superior al navegar por ancla (#sec-...) para evitar solape con la barra superior */
+.page-sections [id^="sec-"],
+.page-sections [data-block-id],
+.page-sections .page-section__anchor {
+  scroll-margin-top: 96px;
+}
