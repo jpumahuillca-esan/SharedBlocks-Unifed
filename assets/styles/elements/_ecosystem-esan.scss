@@ -517,7 +517,28 @@
       var(--ecosystem-esan-card-color);
 
     color:
-      var(--ecosystem-esan-card-content);
+      var(--ds-color-text-inverse);
+  }
+
+  /*
+   * Mantiene el color de la escuela en hover y solo le da una capa clara
+   * sutil. El ícono conserva el blanco sólido en todos los estados.
+   */
+  .ecosystem-esan-card__body .ecosystem-esan-card__action.btn.btn--surface:hover,
+  .ecosystem-esan-card__body .ecosystem-esan-card__action.btn.btn--surface:focus-visible {
+    background-color:
+      color-mix(in srgb, var(--ecosystem-esan-card-color) 85%, transparent);
+
+    color:
+      var(--ds-color-text-inverse);
+  }
+
+  .ecosystem-esan-card__body .ecosystem-esan-card__action.btn.btn--surface:active {
+    background-color:
+      color-mix(in srgb, var(--ecosystem-esan-card-color) 75%, transparent);
+
+    color:
+      var(--ds-color-text-inverse);
   }
 
   /* ==========================================================================
@@ -595,7 +616,7 @@
         min-height: 0;
         padding: var(--ds-spacing-xxs);
         background-color: var(--ecosystem-esan-card-color);
-        color: var(--ecosystem-esan-card-content);
+        color: var(--ds-color-text-inverse);
       }
 
       .ecosystem-esan__links {

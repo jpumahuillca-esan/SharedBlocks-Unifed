@@ -18,6 +18,7 @@ export const EDITOR_REGISTRY: Record<string, any> = {
     EcosystemAboutDpa: defineAsyncComponent(() => import('../components/block-beta/ecosystem/about-dpa/Editor.vue')),
     StudyModalitiesDpa: defineAsyncComponent(() => import('../components/block-beta/ecosystem/study-modalities/Editor.vue')),
     InfoMapamundi: defineAsyncComponent(() => import('../components/block-beta/info/mapamundi/Editor.vue')),
+    InfoInternationalMapamundi: defineAsyncComponent(() => import('../components/block-beta/info/international-mapamundi/Editor.vue')),
     InfoConveniosDpa: defineAsyncComponent(() => import('../components/block-beta/info/convenios-internacionales/Editor.vue')),
     InfoValuesCards: defineAsyncComponent(() => import('../components/block-beta/info/values-cards/Editor.vue')),
     InfoKeyFacts: defineAsyncComponent(() => import('../components/block-beta/info/key-facts/Editor.vue')),

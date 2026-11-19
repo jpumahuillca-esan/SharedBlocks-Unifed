@@ -510,6 +510,32 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         },
     },
 
+    InfoInternationalMapamundi: {
+        label: 'Mapamundi internacional',
+        icon: 'las la-globe-americas',
+        group: 'Info',
+        beta: true,
+        // El fondo y la franja roja llegan a los bordes de la ventana.
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/info/international-mapamundi/Block.vue')),
+        initialData: {
+            eyebrow: 'Internacionalización',
+            title: 'ESAN Global Experience',
+            subtitle: 'Una plataforma global para cada etapa de tu desarrollo profesional',
+            imageAlt: 'Pasaporte abierto con sellos de universidades y programas internacionales',
+            left: {
+                tag: 'Pregrado',
+                items: [
+                    { id: 'imm-1', icon: 'globe', text: 'Internacionalización desde los primeros ciclos: Global Weeks, Summer & Winter Programs' },
+                    { id: 'imm-2', icon: 'handshake', text: '+130 Intercambios internacionales' },
+                    { id: 'imm-3', icon: 'graduation-cap', text: '+11 oportunidades de Doble Grado' },
+                    { id: 'imm-4', icon: 'alumni', text: '+300 alumnos han realizado programas de intercambio' },
+                ],
+            },
+            button: { label: 'Descubre ESAN Internacional', url: '', target: '' },
+        },
+    },
+
     InfoValuesCards: {
         label: 'Tarjetas de valor (con filtros)',
         icon: 'las la-layer-group',

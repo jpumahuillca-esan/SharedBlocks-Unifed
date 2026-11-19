@@ -1,0 +1,311 @@
+/* Internacionalización: tarjeta-ticket, libro ilustrado y franja roja. */
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .international-mapamundi {
+    --international-mapamundi-dome: 72px;
+    --international-mapamundi-red-height: 180px;
+
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+    padding-block: var(--ds-spacing-xl);
+    background-color: var(--ds-color-background-light);
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .international-mapamundi__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-spacing-sm);
+    width: min(100%, var(--ds-container-max));
+    margin-inline: auto;
+    padding-inline: var(--ds-container-padding-x);
+    box-sizing: border-box;
+  }
+
+  .international-mapamundi__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--ds-space-4);
+    text-align: center;
+  }
+
+  .international-mapamundi__eyebrow {
+    color: var(--ds-color-esan-corp);
+    font-family: var(--ds-font-family-base);
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .international-mapamundi__title {
+    color: var(--ds-color-text-primary);
+    line-height: 1.25;
+  }
+
+  .international-mapamundi__rule {
+    width: 40px;
+    height: 2px;
+    flex: 0 0 auto;
+    background-color: var(--ds-color-esan-corp);
+  }
+
+  .international-mapamundi__subtitle {
+    max-width: 70ch;
+    color: var(--ds-color-text-primary);
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .international-mapamundi__stage {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 960px);
+    height: 520px;
+    margin-inline: auto;
+    overflow: hidden;
+  }
+
+  .international-mapamundi-card {
+    position: absolute;
+    z-index: 1;
+    top: var(--ds-space-1);
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    width: 364px;
+    height: calc(100% - var(--ds-space-1));
+    overflow: hidden;
+    background-color: var(--ds-color-surface-primary);
+    border-radius: var(--ds-radius-lg);
+    box-shadow: var(--ds-shadow-md);
+  }
+
+  .international-mapamundi-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 88px;
+    height: 88px;
+    min-height: 88px;
+    margin: 0;
+    padding: var(--ds-space-5);
+    gap: 10px;
+    box-sizing: border-box;
+    background-color: var(--ds-color-surface-primary);
+    color: var(--ds-color-text-inverse);
+  }
+
+  .international-mapamundi-card__logo {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 40px;
+  }
+
+  .international-mapamundi-card__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    padding: var(--ds-space-4) var(--ds-space-5) var(--ds-space-6);
+    border-radius: var(--ds-radius-md) var(--ds-radius-md) 0 0;
+    background-color: var(--ds-color-background-default);
+  }
+
+  .international-mapamundi-card__tag.badge.badge--brand-solid {
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: var(--ds-space-2) var(--ds-space-6);
+    border-radius: 0 var(--ds-radius-sm) 0 var(--ds-radius-sm);
+    background-color: var(--ds-color-surface-primary);
+    color: var(--ds-color-text-inverse);
+    font-weight: var(--ds-weight-semibold);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .international-mapamundi-card__list {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin: var(--ds-space-2) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .international-mapamundi-card__item {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: var(--ds-space-4);
+    padding-block: var(--ds-space-4);
+  }
+
+  .international-mapamundi-card__item + .international-mapamundi-card__item {
+    border-top: var(--ds-border-width-sm) solid var(--ds-color-border-subtle);
+  }
+
+  .international-mapamundi-card__text {
+    min-width: 0;
+    color: var(--ds-color-text-primary);
+    line-height: 1.4;
+  }
+
+  .international-mapamundi-card__barcode {
+    display: block;
+    box-sizing: content-box;
+    height: 28px;
+    margin-top: var(--ds-space-2);
+    padding-top: var(--ds-space-4);
+    border-top: var(--ds-border-width-sm) dashed var(--ds-color-border-subtle);
+    background-clip: content-box;
+    background-image:
+      repeating-linear-gradient(90deg, var(--ds-color-border-default) 0 2px, transparent 2px 5px),
+      repeating-linear-gradient(90deg, transparent 0 3px, var(--ds-color-border-default) 3px 4px, transparent 4px 9px);
+    opacity: 0.7;
+  }
+
+  .international-mapamundi__artwork {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: calc(100% - 678px);
+    width: 678px;
+    height: 520px;
+    transform: translateY(var(--ds-space-2)) rotate(1deg);
+  }
+
+  .international-mapamundi__image {
+    display: block;
+    width: 678px;
+    height: 520px;
+    aspect-ratio: 678 / 520;
+    object-fit: contain;
+  }
+
+  .international-mapamundi__base {
+    position: absolute;
+    z-index: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: calc(var(--international-mapamundi-red-height) - var(--international-mapamundi-dome));
+    background-color: var(--ds-color-surface-primary);
+  }
+
+  .international-mapamundi__base::before {
+    position: absolute;
+    right: -6%;
+    bottom: 100%;
+    left: -6%;
+    height: var(--international-mapamundi-dome);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    background-color: var(--ds-color-surface-primary);
+    content: '';
+    pointer-events: none;
+  }
+
+  .international-mapamundi__compass {
+    position: absolute;
+    inset: calc(-1 * var(--international-mapamundi-dome)) 0 0;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .international-mapamundi__compass img {
+    display: block;
+    width: min(540px, 100%);
+    height: auto;
+    align-self: flex-start;
+  }
+
+  .international-mapamundi__action.btn {
+    position: relative;
+    z-index: 1;
+    align-self: center;
+    box-sizing: border-box;
+    width: min(318px, 100%);
+    height: 48px;
+    min-height: 48px;
+    gap: var(--ds-space-2);
+    padding: var(--ds-space-4) var(--ds-space-8);
+    border-radius: var(--ds-radius-xs);
+  }
+
+  @include bp.container-down('lg') {
+    .international-mapamundi {
+      --international-mapamundi-dome: 48px;
+    }
+  }
+
+  @include bp.container-down('sm') {
+    .international-mapamundi {
+      --international-mapamundi-dome: 32px;
+    }
+
+    .international-mapamundi__header {
+      align-items: center;
+      text-align: center;
+    }
+
+    .international-mapamundi__subtitle {
+      text-align: center;
+    }
+
+    .international-mapamundi__stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      height: auto;
+      aspect-ratio: auto;
+      gap: 0;
+      overflow: visible;
+    }
+
+    .international-mapamundi__artwork {
+      position: relative;
+      top: auto;
+      left: auto;
+      grid-row: 1;
+      width: 100%;
+      height: auto;
+      margin: 0;
+      transform: none;
+    }
+
+    .international-mapamundi__image {
+      width: 100%;
+      height: auto;
+    }
+
+    .international-mapamundi-card {
+      position: relative;
+      top: auto;
+      left: auto;
+      grid-row: 2;
+      width: 100%;
+      height: auto;
+      min-height: 420px;
+      margin-top: calc(-1 * var(--ds-space-5));
+    }
+
+  }
+
+  @include bp.container-down('cta') {
+    .international-mapamundi__action.btn {
+      flex: 0 1 318px;
+    }
+  }
+}
