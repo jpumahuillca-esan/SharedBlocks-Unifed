@@ -10,6 +10,7 @@ import {
     BOXED_MAX_WIDTH,
     FLOAT_MIN_WIDTH,
     GRID_UNITS,
+    MOBILE_AFTER_END,
     MOBILE_AFTER_START,
     type ColumnPlacement,
     type SectionBehavior,
@@ -127,8 +128,8 @@ export const resolveColumnsStyle = (
             // Ancho (de 12) de la flotante: con él las columnas normales saben
             // cuánto hueco reservarle (ver sectionLayout.scss).
             '--ps-float-span': String(floatSpan(columns)),
-            // Ancho mínimo de la flotante: 400px aunque su proporción de 12 dé menos.
-            '--ps-float-min': px(FLOAT_MIN_WIDTH),
+            // Ancho mínimo de la flotante: 326px para float-start (sidebar), 400px para float-end (formulario).
+            '--ps-float-min': px(floatMinWidth(columns)),
             width: '100%',
             boxSizing: 'border-box',
         }
@@ -181,6 +182,15 @@ const floatSpan = (columns: FloatAwareColumn[]): number =>
         GRID_UNITS,
         Math.max(1, ...columns.filter(isFloatingColumn).map((c) => Math.round(Number(c.span) || 4))),
     );
+
+/** Ancho mínimo (px) de la columna flotante: 326px para float-start (sidebar), 400px para float-end (formulario). */
+const floatMinWidth = (columns: FloatAwareColumn[]): number => {
+    const floatCol = columns.find(isFloatingColumn);
+    if (floatCol?.placement === 'float-start') {
+        return 326;
+    }
+    return FLOAT_MIN_WIDTH;
+};
 
 /**
  * Clases de la grilla de una sección. Vacías si no hay columna flotante: las
@@ -265,9 +275,12 @@ export const resolveColumnStyles = (
  * (móvil), por id de bloque.
  *
  * Los bloques de las columnas normales llevan números pares y los de la columna
- * flotante, el impar que cae justo después del bloque elegido: así el formulario
- * entra en el flujo sin duplicarse en el HTML. Sin elección (o con un bloque que
- * ya no existe) va al final; `MOBILE_AFTER_START`, antes de todo.
+ * flotante, el impar que cae justo después del bloque elegido: así el bloque
+ * flotante entra en el flujo sin duplicarse en el HTML.
+ * - `MOBILE_AFTER_START`: antes de todo (orden -1).
+ * - `MOBILE_AFTER_END`: debajo del último bloque.
+ * - Sin elección (o con ancla eliminada): sigue el lado donde flota en
+ *   escritorio (`float-start` al inicio antes de todo; `float-end` al final).
  */
 export const resolveBlockOrders = (columns: FloatAwareColumn[]): Record<string, number> => {
     const orders: Record<string, number> = {};
@@ -279,11 +292,17 @@ export const resolveBlockOrders = (columns: FloatAwareColumn[]): Record<string, 
 
     columns.filter(isFloatingColumn).forEach((column) => {
         const anchor = column.mobileAfterBlockId;
-        const anchorIndex = anchor === MOBILE_AFTER_START
-            ? -1
-            : flow.findIndex((block) => block.id === anchor);
-        // Sin ancla válida: debajo del último bloque.
-        const rank = anchor === MOBILE_AFTER_START || anchorIndex >= 0 ? anchorIndex : flow.length - 1;
+        const defaultRank = column.placement === 'float-start' ? -1 : flow.length - 1;
+
+        let rank: number;
+        if (anchor === MOBILE_AFTER_START) {
+            rank = -1;
+        } else if (anchor === MOBILE_AFTER_END) {
+            rank = flow.length - 1;
+        } else {
+            const anchorIndex = anchor ? flow.findIndex((block) => block.id === anchor) : -1;
+            rank = anchorIndex >= 0 ? anchorIndex : defaultRank;
+        }
 
         (column.blocks ?? []).forEach((block) => {
             orders[block.id] = rank * 2 + 1;

@@ -51,7 +51,7 @@
     <EditorTextarea
       v-model="localData.desc"
       data-edit-target="desc"
-      class="mb-3"
+      class="mb-2"
       label="Descripción de apoyo (opcional)"
       :rows="2"
       placeholder="Descripción o subtítulo opcional de la sección"

@@ -31,9 +31,13 @@ export const EDITOR_REGISTRY: Record<string, any> = {
     CardsReasonVersion3: defineAsyncComponent(() => import('../components/block-beta/cards/cards-reason-version-3/Editor.vue')),
     CardsPillars: defineAsyncComponent(() => import('../components/block-beta/cards/cards-pillars/Editor.vue')),
     CardsDpa: defineAsyncComponent(() => import('../components/block-beta/cards/cards-dpa/Editor.vue')),
+    CardInternational: defineAsyncComponent(() => import('../components/block-beta/cards/card-international/Editor.vue')),
 
     HeroLeadForm: defineAsyncComponent(() => import('../components/block-beta/formularios/lead-form/Editor.vue')),
     Breadcrumb: defineAsyncComponent(() => import('../components/block-beta/navigation/breadcrumb/Editor.vue')),
+    FaqAccordion: defineAsyncComponent(() => import('../components/block-beta/faq/faq-accordion/Editor.vue')),
+    MallaCurricular: defineAsyncComponent(() => import('../components/block-beta/curriculum/malla-curricular/Editor.vue')),
+    AudienceSwitcher: defineAsyncComponent(() => import('../components/block-beta/navigation/audience-switcher/Editor.vue')),
 };
 
 export const resolveEditor = (type: string) => EDITOR_REGISTRY[type] || null;   

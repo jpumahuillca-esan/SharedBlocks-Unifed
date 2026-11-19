@@ -362,6 +362,8 @@ export function useDynamicLeadForm(props: DynamicLeadFormProps) {
   };
 
   const submit = async () => {
+    if (isSubmitting.value) return;
+
     if (!aceptaCondiciones.value) {
       await notify('warning', 'Atención', 'Debes aceptar las condiciones de tratamiento de datos personales.');
       return;
@@ -421,9 +423,12 @@ export function useDynamicLeadForm(props: DynamicLeadFormProps) {
     try {
       let recaptchaToken = 'public_bypass';
       if (typeof window !== 'undefined' && (window as any).grecaptcha) {
-        try {
-          recaptchaToken = await (window as any).grecaptcha.execute(undefined, { action: 'submit_lead' });
-        } catch (_) {}
+        const siteKey = (window as any).__NUXT__?.config?.public?.recaptchaSiteKey || '';
+        if (siteKey) {
+          try {
+            recaptchaToken = await (window as any).grecaptcha.execute(siteKey, { action: 'submit_lead' });
+          } catch (_) {}
+        }
       }
 
       const segments = typeof window !== 'undefined' ? window.location.pathname.split('/').filter(Boolean) : [];

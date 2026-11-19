@@ -212,18 +212,18 @@ const handleScroll = () => {
 };
 
 const resolvedChatbotApiUrl = computed(() => {
+  if (props.chatbotApiUrl && props.chatbotApiUrl.trim()) {
+    return props.chatbotApiUrl.trim();
+  }
   if (typeof window !== 'undefined') {
     const host = window.location.hostname;
-    // Si el usuario navega desde localhost / 127.0.0.1
     if (host === 'localhost' || host === '127.0.0.1') {
       return 'http://127.0.0.1:5005/api/v1/chat';
     }
-    // Si navega desde la IP de red local (ej: 172.59.1.134), apuntar al mismo host en el puerto 5005
     if (host) {
       return `http://${host}:5005/api/v1/chat`;
     }
   }
-  if (props.chatbotApiUrl) return props.chatbotApiUrl;
   return 'http://127.0.0.1:5005/api/v1/chat';
 });
 

@@ -1,34 +1,48 @@
 import type { PublicLeadPayload, PublicLeadResponse } from '../types/lead.types';
 
+const resolveDefaultLaravelBase = (explicitBase = ''): string => {
+  if (explicitBase) return explicitBase;
+
+  if (typeof window !== 'undefined') {
+    const nuxtLaravel = (window as any).__NUXT__?.config?.public?.laravelApiUrl;
+    if (typeof nuxtLaravel === 'string' && nuxtLaravel.trim()) {
+      return nuxtLaravel.trim();
+    }
+  }
+
+  const viteApiUrl = (import.meta as any)?.env?.VITE_API_URL;
+  if (typeof viteApiUrl === 'string' && viteApiUrl.trim()) {
+    return viteApiUrl.trim();
+  }
+
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') {
+      return 'http://127.0.0.1:8000';
+    }
+    return '';
+  }
+
+  return 'http://127.0.0.1:8000';
+};
+
 export class PublicLeadService {
   static async submit(
     data: PublicLeadPayload,
     academicUnitSlugOrId: string | number,
     apiBase: string = ''
   ): Promise<PublicLeadResponse> {
-    // 1. Si no viene apiBase, resolver la URL del backend de Laravel
-    let base = apiBase;
-    if (!base) {
-      if (typeof window !== 'undefined') {
-        base = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-          ? 'http://127.0.0.1:8000'
-          : '';
-      } else {
-        base = 'http://127.0.0.1:8000';
-      }
-    }
-
+    const base = resolveDefaultLaravelBase(apiBase);
     const cleanBase = base.replace(/\/+$/, '');
-    const endpoint = cleanBase.endsWith('/api') 
-      ? `${cleanBase}/public/leads` 
+    const endpoint = cleanBase.endsWith('/api')
+      ? `${cleanBase}/public/leads`
       : `${cleanBase}/api/public/leads`;
 
-
     const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'X-Academic-Unit': String(data.academic_unit_id || academicUnitSlugOrId),
-    'IdentifyAcademicUnit': String(data.academic_unit_id || academicUnitSlugOrId),
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'X-Academic-Unit': String(data.academic_unit_id || academicUnitSlugOrId),
+      IdentifyAcademicUnit: String(data.academic_unit_id || academicUnitSlugOrId),
     };
 
     const res = await fetch(endpoint, {
@@ -37,10 +51,18 @@ export class PublicLeadService {
       body: JSON.stringify(data),
     });
 
-    const json = await res.json();
+    const rawText = await res.text();
+    let json: any = {};
+    if (rawText) {
+      try {
+        json = JSON.parse(rawText);
+      } catch {
+        json = {};
+      }
+    }
 
     if (!res.ok) {
-      throw new Error(json.message || `Error HTTP ${res.status}`);
+      throw new Error(json?.message || `Error HTTP ${res.status}`);
     }
 
     return {

@@ -14,6 +14,7 @@
       <div class="mmb-drawer__bar">
         <component
           :is="linkTag"
+          v-if="searchUrl"
           v-bind="getLinkProps(searchUrl)"
           class="mmb-drawer__search"
           aria-label="Buscar"

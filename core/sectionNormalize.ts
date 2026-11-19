@@ -11,6 +11,7 @@ import { BLOCK_REGISTRY } from './BlockRegistry';
 import {
     DEFAULT_SECTION_SETTINGS,
     GRID_UNITS,
+    MOBILE_AFTER_END,
     MOBILE_AFTER_START,
     type BlockItem,
     type ColumnPlacement,
@@ -115,6 +116,27 @@ export const sanitizeSettings = (raw: unknown): SectionSettings => {
     };
 };
 
+/**
+ * Normaliza un identificador de ancla personalizado (quita `#` inicial,
+ * convierte espacios en guiones y filtra caracteres no válidos en HTML `id`).
+ */
+export const normalizeAnchorId = (raw: unknown): string | undefined => {
+    if (typeof raw !== 'string') return undefined;
+    const cleaned = raw
+        .trim()
+        .replace(/^#+/, '')
+        .replace(/\s+/g, '-')
+        .replace(/[^A-Za-z0-9_-]/g, '');
+    return cleaned || undefined;
+};
+
+/**
+ * Resuelve el alias de ancla de un bloque, priorizando `block.anchorId` con
+ * respaldo retroactivo a `block.content.sectionId` (usado antes en CardsVersion2).
+ */
+export const resolveBlockAnchorId = (block: Partial<BlockItem> | null | undefined): string =>
+    normalizeAnchorId(block?.anchorId) ?? normalizeAnchorId(block?.content?.sectionId) ?? '';
+
 const sanitizeBlock = (raw: unknown): BlockItem | null => {
     if (!isRecord(raw) || typeof raw.type !== 'string' || !raw.type) return null;
 
@@ -123,10 +145,15 @@ const sanitizeBlock = (raw: unknown): BlockItem | null => {
             ? Number(raw.global_block_id)
             : null;
 
+    const anchorId =
+        normalizeAnchorId(raw.anchorId) ??
+        (isRecord(raw.content) ? normalizeAnchorId(raw.content.sectionId) : undefined);
+
     return {
         id: typeof raw.id === 'string' && raw.id ? raw.id : createId(),
         type: raw.type,
         content: isRecord(raw.content) ? raw.content : {},
+        ...(anchorId ? { anchorId } : {}),
         ...(gId ? { global_block_id: gId } : {}),
         ...(typeof raw.global_block_name === 'string' && raw.global_block_name.trim()
             ? { global_block_name: raw.global_block_name.trim() }
@@ -205,7 +232,14 @@ const reconcileFloatingColumns = (columns: SectionColumn[]): SectionColumn[] => 
 
     return fixed.map((column) => {
         const anchor = column.mobileAfterBlockId;
-        if (!anchor || anchor === MOBILE_AFTER_START || flowBlockIds.has(anchor)) return column;
+        if (
+            !anchor
+            || anchor === MOBILE_AFTER_START
+            || anchor === MOBILE_AFTER_END
+            || flowBlockIds.has(anchor)
+        ) {
+            return column;
+        }
         return { ...column, mobileAfterBlockId: null };
     });
 };

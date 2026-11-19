@@ -42,9 +42,9 @@
               </a>
 
               <!-- Botón de Brochure descargable si está presente -->
-              <div v-if="page.brochureUrl" class="brochure-bar">
+              <div v-if="safeHref(page.brochureUrl)" class="brochure-bar">
                 <a
-                  :href="page.brochureUrl"
+                  :href="safeHref(page.brochureUrl)!"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="brochure-badge-link"
@@ -100,6 +100,16 @@ const emit = defineEmits<{
   (e: 'select-suggestion', sug: string): void;
   (e: 'navigate-page', url: string): void;
 }>();
+
+const safeHref = (rawUrl?: string | null): string | null => {
+  if (!rawUrl || typeof rawUrl !== 'string') return null;
+  const trimmed = rawUrl.trim();
+  if (!trimmed) return null;
+  if (/^https?:\/\//i.test(trimmed) || (trimmed.startsWith('/') && !trimmed.startsWith('//'))) {
+    return trimmed;
+  }
+  return null;
+};
 
 const containerRef = ref<HTMLElement | null>(null);
 

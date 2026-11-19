@@ -1,5 +1,6 @@
 <template>
   <section
+    id="dpa"
     class="cards-dpa-section"
     v-bind="edit('backgroundColor')"
     :style="sectionStyle"

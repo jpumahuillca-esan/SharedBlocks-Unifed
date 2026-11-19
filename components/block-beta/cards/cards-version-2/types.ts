@@ -17,6 +17,8 @@ export interface CardVersion2Item {
 export type CardsVersion2Background = '#F1F5F9' | '#FFFFFF';
 
 export interface CardsVersion2Data {
+  layout?: 'grid' | 'list' | string;
+  sectionId?: string;
   backgroundColor?: CardsVersion2Background | string;
   eyebrow?: string;
   eyebrowColorToken?: string;
@@ -38,6 +40,8 @@ export const buildCard = (source: any): CardVersion2Item => ({
 });
 
 export const buildCardsVersion2Data = (source: any): CardsVersion2Data => ({
+  ...(typeof source?.layout === 'string' && source.layout ? { layout: source.layout } : {}),
+  sectionId: typeof source?.sectionId === 'string' ? source.sectionId.trim().replace(/^#+/, '') : '',
   backgroundColor: source?.backgroundColor === '#FFFFFF' ? '#FFFFFF' : '#F1F5F9',
   eyebrow: typeof source?.eyebrow === 'string' ? source.eyebrow : '+ PREGRADO',
   eyebrowColorToken: typeof source?.eyebrowColorToken === 'string'

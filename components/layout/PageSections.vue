@@ -34,6 +34,12 @@
                 class="page-section__block"
                 :style="{ order: blockOrders(section)[block.id] }"
               >
+                <span
+                  v-if="anchorOf(block.id)"
+                  :id="anchorOf(block.id)"
+                  class="page-section__anchor"
+                  aria-hidden="true"
+                ></span>
                 <component
                   v-if="resolveBlock(block.type)"
                   :is="resolveBlock(block.type)"
@@ -48,6 +54,12 @@
               </div>
 
               <template v-else>
+                <span
+                  v-if="anchorOf(block.id)"
+                  :id="anchorOf(block.id)"
+                  class="page-section__anchor"
+                  aria-hidden="true"
+                ></span>
                 <component
                   v-if="resolveBlock(block.type)"
                   :is="resolveBlock(block.type)"
@@ -72,7 +84,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { resolveBlock } from '../../core/BlockRegistry';
-import { normalizeToSections } from '../../core/sectionNormalize';
+import { normalizeToSections, resolveBlockAnchorId } from '../../core/sectionNormalize';
 import {
   hasFloatingColumn,
   resolveBlockOrders,
@@ -126,6 +138,31 @@ const blockOrdersBySection = computed(() =>
   Object.fromEntries(sections.value.map((section) => [section.id, resolveBlockOrders(section.columns)])),
 );
 const blockOrders = (section: SectionItem) => blockOrdersBySection.value[section.id] ?? {};
+
+/* Alias legibles opcionales (#pregrado, #dpa...) garantizando unicidad HTML en la página. */
+const anchorByBlockId = computed<Record<string, string>>(() => {
+  const usedIds = new Set<string>();
+  const map: Record<string, string> = {};
+  const activeBlocks = sections.value.flatMap((section) =>
+    section.columns.flatMap((column) => column.blocks.filter((block) => block.is_active !== false)),
+  );
+
+  for (const block of activeBlocks) {
+    usedIds.add(`sec-${block.id}`);
+  }
+
+  for (const block of activeBlocks) {
+    const alias = resolveBlockAnchorId(block);
+    if (alias && !usedIds.has(alias)) {
+      usedIds.add(alias);
+      map[block.id] = alias;
+    }
+  }
+
+  return map;
+});
+
+const anchorOf = (blockId: string): string => anchorByBlockId.value[blockId] ?? '';
 </script>
 
 <style scoped>
