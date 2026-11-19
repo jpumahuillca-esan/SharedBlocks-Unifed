@@ -28,6 +28,24 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         },
     },
 
+    CourseCatalogGrid: {
+        label: '🎓 Catálogo Dinámico de Cursos / Idiomas / Titulación',
+        icon: 'las la-chalkboard-teacher',
+        group: 'Programs',
+        beta: true,
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/courses/course-catalog/Block.vue')),
+        initialData: {
+            title: 'Catálogo de Programas y Cursos',
+            subtitle: 'Filtra por área temática o buscador en tiempo real',
+            academic_unit_id: null,
+            unit_slug: '',
+            course_type: '',
+            category_slug: '',
+            items: [],
+        },
+    },
+
     Breadcrumb: {
         label: 'Ruta de navegación (Breadcrumb)',
         icon: 'las la-angle-double-right',

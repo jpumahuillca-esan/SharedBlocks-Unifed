@@ -68,58 +68,13 @@ interface AwardItem {
 
 const props = defineProps<{ data: any }>();
 
+import { sanitizeTitleHtml } from '../../../../helpers/sanitizeTitleHtml';
+
 const backgroundColorToken = computed(() =>
   normalizeBrandColorToken(props.data?.backgroundColorToken),
 );
 
-const titleContent = computed(() => {
-  const value = props.data?.title;
-  if (typeof value !== 'string' || !value) return { html: '', text: '' };
-  if (typeof DOMParser === 'undefined') {
-    const text = value.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
-    const html = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return { html, text };
-  }
-
-  const parsed = new DOMParser().parseFromString(value, 'text/html');
-  const output = document.createElement('span');
-  const allowedTags = new Set(['SPAN', 'STRONG', 'B', 'EM', 'I', 'U', 'S']);
-  const blockedTags = new Set(['SCRIPT', 'STYLE', 'IFRAME', 'OBJECT', 'SVG', 'MATH', 'TEMPLATE']);
-
-  const copyNode = (source: Node, target: HTMLElement): void => {
-    if (source.nodeType === Node.TEXT_NODE) {
-      target.appendChild(document.createTextNode(source.textContent || ''));
-      return;
-    }
-    if (!(source instanceof HTMLElement) || blockedTags.has(source.tagName)) return;
-    if (source.tagName === 'BR') {
-      target.appendChild(document.createElement('br'));
-      return;
-    }
-    if (source.tagName === 'P' || source.tagName === 'DIV') {
-      if (target.childNodes.length) target.appendChild(document.createElement('br'));
-      source.childNodes.forEach((child) => copyNode(child, target));
-      return;
-    }
-    if (allowedTags.has(source.tagName)) {
-      const clean = document.createElement(source.tagName.toLowerCase());
-      if (source.tagName === 'SPAN') {
-        const color = source.style.color.trim();
-        if (color && typeof CSS !== 'undefined' && CSS.supports('color', color)) clean.style.color = color;
-      }
-      source.childNodes.forEach((child) => copyNode(child, clean));
-      target.appendChild(clean);
-      return;
-    }
-    source.childNodes.forEach((child) => copyNode(child, target));
-  };
-
-  parsed.body.childNodes.forEach((node) => copyNode(node, output));
-  return {
-    html: output.innerHTML.replace(/(?:<br>)+$/, ''),
-    text: (output.textContent || '').replace(/\s+/g, ' ').trim(),
-  };
-});
+const titleContent = computed(() => sanitizeTitleHtml(props.data?.title));
 
 const awards = computed<AwardItem[]>(() => {
   const raw = Array.isArray(props.data?.awards) ? props.data.awards : [];
