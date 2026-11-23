@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 
 const props = defineProps<{
   data: {
@@ -84,9 +84,10 @@ const props = defineProps<{
 const searchTerm = ref('');
 const selectedCategory = ref('');
 const fetchedItems = ref<any[]>([]);
+const hasFetchedFromApi = ref(false);
 
 const sourceItems = computed(() => {
-  if (fetchedItems.value.length > 0) return fetchedItems.value;
+  if (hasFetchedFromApi.value) return fetchedItems.value;
   return Array.isArray(props.data?.items) ? props.data.items : [];
 });
 
@@ -111,7 +112,7 @@ const filteredItems = computed(() => {
   });
 });
 
-onMounted(async () => {
+const fetchCatalog = async () => {
   try {
     const params = new URLSearchParams();
     params.set('per_page', '100');
@@ -129,10 +130,26 @@ onMounted(async () => {
     const res = await fetch(`${apiBase}/courses?${params.toString()}`).catch(() => null);
     if (res && res.ok) {
       const json = await res.json();
-      if (Array.isArray(json?.data) && json.data.length > 0) {
+      if (Array.isArray(json?.data)) {
         fetchedItems.value = json.data;
+        hasFetchedFromApi.value = true;
       }
     }
   } catch {}
-});
+};
+
+onMounted(fetchCatalog);
+
+watch(
+  () => [
+    props.data?.academic_unit_id,
+    props.data?.unit_slug,
+    props.data?.course_type,
+    props.data?.category_slug,
+  ],
+  () => {
+    selectedCategory.value = '';
+    fetchCatalog();
+  },
+);
 </script>

@@ -202,7 +202,7 @@ const sanitizeColumn = (raw: unknown): SectionColumn => {
  *   normales. Si el bloque se borró o se movió, vuelve a "al final" en lugar de
  *   dejar una referencia que ya no lleva a ninguna parte.
  */
-const reconcileFloatingColumns = (columns: SectionColumn[]): SectionColumn[] => {
+export const reconcileFloatingColumns = (columns: SectionColumn[]): SectionColumn[] => {
     const seenSides = new Set<ColumnPlacement>();
 
     // Una flotante que vuelve a la grilla deja también de estar anclada: el
