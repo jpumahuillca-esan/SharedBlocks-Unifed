@@ -1,0 +1,178 @@
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .admission-section {
+    width: 100%;
+    padding-block: var(--ds-spacing-xl);
+    background: transparent;
+    box-sizing: border-box;
+  }
+
+  .admission-section__container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-8);
+    width: min(100%, var(--ds-container-max));
+    margin-inline: auto;
+    padding-inline: var(--ds-container-padding-x);
+    box-sizing: border-box;
+  }
+
+  .admission-section__header.card-section__header {
+    display: block;
+  }
+
+  .admission-section__header .card-section__heading {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .admission-section__header .card-section__title {
+    font-size: var(--ds-heading-xl);
+    line-height: var(--ds-line-height-125);
+    font-weight: var(--ds-weight-semibold);
+  }
+
+  .admission-section__header .card-section__desc {
+    color: var(--ds-color-text-primary);
+    font-family: var(--ds-font-family-base);
+    font-size: var(--ds-text-body);
+    line-height: 1.4;
+  }
+
+  .admission-section__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-8);
+    width: 100%;
+  }
+
+  .admission-section__schedule-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    align-items: center;
+    gap: var(--ds-space-4);
+    padding-block: var(--ds-spacing-sm);
+    border-bottom: 1px solid var(--ds-color-border-subtle);
+  }
+
+  .admission-section__schedule-label {
+    color: var(--ds-color-text-secondary);
+    line-height: 1.4;
+  }
+
+  .admission-section__schedule-value {
+    color: var(--ds-color-text-primary);
+    font-family: var(--ds-font-family-display);
+    line-height: 1.25;
+  }
+
+  .admission-section__steps-section,
+  .admission-section__modalities-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-4);
+  }
+
+  .admission-section__subheading {
+    margin: 0;
+    color: var(--ds-color-text-primary);
+    font-family: var(--ds-font-family-display);
+    font-size: var(--ds-heading-xs);
+    font-weight: var(--ds-weight-semibold);
+    line-height: 1.25;
+  }
+
+  .admission-section__steps {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: var(--ds-space-4);
+  }
+
+  .admission-section__step {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: var(--ds-space-4);
+    min-width: 0;
+    padding: var(--ds-spacing-sm);
+    border: 1px solid var(--ds-color-border-subtle);
+    border-radius: var(--ds-radius-sm);
+    background: var(--ds-color-background-default);
+    box-sizing: border-box;
+  }
+
+  .admission-section__step-number {
+    color: var(--ds-color-esan-corp);
+    font-family: var(--ds-font-family-display);
+    font-size: var(--ds-heading-2xl);
+    font-weight: var(--ds-weight-semibold);
+    line-height: 1.25;
+    letter-spacing: -.01em;
+  }
+
+  .admission-section__step-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-2);
+    min-width: 0;
+  }
+
+  .admission-section__step-title {
+    margin: 0;
+    color: var(--ds-color-text-primary);
+    line-height: 1.25;
+  }
+
+  .admission-section__step-description {
+    color: var(--ds-color-text-secondary);
+    line-height: 1.4;
+  }
+
+  .admission-section__step-link.btn {
+    width: fit-content;
+    min-height: 0;
+    padding: 0;
+    justify-content: flex-start;
+    color: var(--ds-color-action-primary);
+    white-space: normal;
+    text-align: left;
+  }
+
+  .admission-section__modalities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ds-space-2);
+  }
+
+  .admission-section__modality-button.btn {
+    min-height: var(--ds-space-12);
+    border-color: var(--ds-color-action-tertiary);
+    background: transparent;
+    color: var(--ds-color-action-tertiary);
+    font-size: var(--ds-text-body);
+    white-space: normal;
+  }
+
+  .admission-section__modality-button.btn::before {
+    background: var(--ds-color-action-tertiary);
+  }
+
+  .admission-section__modality-button.btn:hover {
+    color: var(--ds-color-text-inverse);
+  }
+
+  @include bp.container-down('sm') {
+    .admission-section__schedule-row {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--ds-space-2);
+    }
+
+    .admission-section__steps {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .admission-section__step { gap: var(--ds-space-3); }
+  }
+}

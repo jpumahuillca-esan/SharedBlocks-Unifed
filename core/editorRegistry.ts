@@ -19,6 +19,7 @@ export const EDITOR_REGISTRY: Record<string, any> = {
     StudyModalitiesDpa: defineAsyncComponent(() => import('../components/block-beta/ecosystem/study-modalities/Editor.vue')),
     InfoMapamundi: defineAsyncComponent(() => import('../components/block-beta/info/mapamundi/Editor.vue')),
     InfoInternationalMapamundi: defineAsyncComponent(() => import('../components/block-beta/info/international-mapamundi/Editor.vue')),
+    Admission: defineAsyncComponent(() => import('../components/block-beta/info/admission/Editor.vue')),
     InfoConveniosDpa: defineAsyncComponent(() => import('../components/block-beta/info/convenios-internacionales/Editor.vue')),
     InfoValuesCards: defineAsyncComponent(() => import('../components/block-beta/info/values-cards/Editor.vue')),
     InfoKeyFacts: defineAsyncComponent(() => import('../components/block-beta/info/key-facts/Editor.vue')),
@@ -32,6 +33,8 @@ export const EDITOR_REGISTRY: Record<string, any> = {
     CardsPillars: defineAsyncComponent(() => import('../components/block-beta/cards/cards-pillars/Editor.vue')),
     CardsDpa: defineAsyncComponent(() => import('../components/block-beta/cards/cards-dpa/Editor.vue')),
     CardInternational: defineAsyncComponent(() => import('../components/block-beta/cards/card-international/Editor.vue')),
+    CardsInternationalSectionV2: defineAsyncComponent(() => import('../components/block-beta/cards/international-section-v2/Editor.vue')),
+    GraduateProfile: defineAsyncComponent(() => import('../components/block-beta/cards/graduate-profile/Editor.vue')),
 
     HeroLeadForm: defineAsyncComponent(() => import('../components/block-beta/formularios/lead-form/Editor.vue')),
     Breadcrumb: defineAsyncComponent(() => import('../components/block-beta/navigation/breadcrumb/Editor.vue')),
