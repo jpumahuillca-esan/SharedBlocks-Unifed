@@ -68,14 +68,16 @@
           </span>
         </div>
 
-        <AtomText
+        <AtomHeading
           v-if="description"
+          :level="2"
           size="body"
+          weight="regular"
           class="ecosystem-esan-card__desc"
           v-bind="edit('.desc')"
         >
           {{ description }}
-        </AtomText>
+        </AtomHeading>
       </AtomLink>
 
       <span

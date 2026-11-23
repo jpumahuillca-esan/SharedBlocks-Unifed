@@ -8,15 +8,16 @@
         v-if="dataNormalized.eyebrow || dataNormalized.title || dataNormalized.desc"
         class="ecosystem-esan__header"
       >
-        <AtomText
+        <AtomHeading
           v-if="dataNormalized.eyebrow"
+          :level="1"
           size="body-sm"
           weight="semibold"
           class="ecosystem-esan__eyebrow"
           v-bind="edit('eyebrow')"
         >
           {{ dataNormalized.eyebrow }}
-        </AtomText>
+        </AtomHeading>
 
         <AtomHeading
           v-if="dataNormalized.title"

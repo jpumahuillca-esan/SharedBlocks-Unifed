@@ -560,6 +560,70 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         },
     },
 
+    InfoInternationalMapamundi: {
+        label: 'Mapamundi internacional',
+        icon: 'las la-globe-americas',
+        group: 'Info',
+        beta: true,
+        // El fondo y la franja roja llegan a los bordes de la ventana.
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/info/international-mapamundi/Block.vue')),
+        initialData: {
+            eyebrow: 'Internacionalización',
+            title: 'ESAN Global Experience',
+            subtitle: 'Una plataforma global para cada etapa de tu desarrollo profesional',
+            imageAlt: 'Pasaporte abierto con sellos de universidades y programas internacionales',
+            left: {
+                tag: 'Pregrado',
+                items: [
+                    { id: 'imm-1', icon: 'globe', text: 'Internacionalización desde los primeros ciclos: Global Weeks, Summer & Winter Programs' },
+                    { id: 'imm-2', icon: 'handshake', text: '+130 Intercambios internacionales' },
+                    { id: 'imm-3', icon: 'graduation-cap', text: '+11 oportunidades de Doble Grado' },
+                    { id: 'imm-4', icon: 'alumni', text: '+300 alumnos han realizado programas de intercambio' },
+                ],
+            },
+            button: { label: 'Descubre ESAN Internacional', url: '', target: '' },
+        },
+    },
+
+    Admission: {
+        label: 'Admisión',
+        icon: 'las la-user-graduate',
+        group: 'Info',
+        beta: true,
+        isBoxed: true,
+        component: defineAsyncComponent(() => import('../components/block-beta/info/admission/Block.vue')),
+        initialData: {
+            eyebrow: 'Admisión 2027-I',
+            title: 'Postula en 4 pasos',
+            description: 'El examen regular es para estudiantes de quinto de secundaria. Las clases empiezan en marzo de 2027.',
+            schedule: [
+                { id: 'admission-date-1', label: 'Examen de admisión regular', value: '26 de septiembre de 2026' },
+                { id: 'admission-date-2', label: 'Inscripción', value: '28 de septiembre de 2026' },
+                { id: 'admission-date-3', label: 'Inscripción extemporánea', value: '16 de octubre de 2026' },
+                { id: 'admission-date-4', label: 'Publicación de resultados', value: '26 de octubre de 2026' },
+                { id: 'admission-date-5', label: 'Inicio de clases', value: 'Marzo de 2027 - I' },
+            ],
+            stepsTitle: 'Pasos para postular',
+            steps: [
+                { id: 'admission-step-1', title: 'Preinscríbete', description: 'Completa el formulario con tus datos y la carrera que te interesa.', linkLabel: 'Preinscríbete aquí', linkUrl: '', linkTarget: '' },
+                { id: 'admission-step-2', title: 'Completa tu ficha', description: 'Recibirás por correo tu usuario y contraseña del portal del postulante.', linkLabel: '', linkUrl: '', linkTarget: '' },
+                { id: 'admission-step-3', title: 'Envía tus documentos', description: 'En PDF o JPG, al correo de admisión.', linkLabel: '', linkUrl: '', linkTarget: '' },
+                { id: 'admission-step-4', title: 'Paga tu derecho de postulación', description: 'Te enviamos las cuentas bancarias después del paso 3.', linkLabel: '', linkUrl: '', linkTarget: '' },
+            ],
+            modalitiesTitle: 'Elige tu modalidad',
+            modalities: [
+                { id: 'admission-modality-1', label: 'Examen de Admisión Regular', url: '', target: '' },
+                { id: 'admission-modality-2', label: 'Reconocimiento al Rendimiento Escolar (REE)', url: '', target: '' },
+                { id: 'admission-modality-3', label: 'PRE Universidad ESAN', url: '', target: '' },
+                { id: 'admission-modality-4', label: 'Bachillerato Internacional', url: '', target: '' },
+                { id: 'admission-modality-5', label: 'Convenios con Colegios', url: '', target: '' },
+                { id: 'admission-modality-6', label: 'Traslado Externo', url: '', target: '' },
+                { id: 'admission-modality-7', label: 'Otras modalidades', url: '', target: '' },
+            ],
+        },
+    },
+
     InfoValuesCards: {
         label: 'Tarjetas de valor (con filtros)',
         icon: 'las la-layer-group',
@@ -992,6 +1056,64 @@ export const BLOCK_REGISTRY: Record<string, any> = {
             buttonText: 'Ver más de Internacionalización',
             buttonLink: '#',
             buttonTarget: '_self',
+        },
+    },
+
+    CardsInternationalSectionV2: {
+        label: 'Sección internacional (versión 2)',
+        icon: 'las la-globe-americas',
+        group: 'Cards',
+        beta: true,
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/cards/international-section-v2/Block.vue')),
+        initialData: {
+            backgroundToken: '--ds-color-university',
+            eyebrow: 'Internacionalización',
+            title: 'Estudia un año de tu carrera en otro país',
+            description: 'Tenemos <strong>más de 130 convenios internacionales</strong> y tres tipos de programa. Al volver, convalidas los cursos que aprobaste.',
+            image: '',
+            imageAlt: '',
+            rows: [
+                { id: 'international-row-1', title: 'Doble grado', text: 'Dos semestres en <strong>International American University</strong>, en Estados Unidos. Terminas con el bachiller de ESAN y un Bachelor of Business Administration.' },
+                { id: 'international-row-2', title: 'Intercambio', text: 'Uno o dos semestres en una universidad extranjera, desde el quinto ciclo y con créditos aprobados.' },
+                { id: 'international-row-3', title: 'Programas cortos y Global Week', text: 'Cursos de 3 a 4 semanas en inglés, en verano o invierno, con profesores de otros países.' },
+            ],
+            buttonText: 'Conoce los programas internacionales',
+            buttonLink: '',
+            buttonTarget: '_self',
+        },
+    },
+
+    GraduateProfile: {
+        label: 'Perfil del egresado',
+        icon: 'las la-user-graduate',
+        group: 'Cards',
+        beta: true,
+        isBoxed: false,
+        component: defineAsyncComponent(() => import('../components/block-beta/cards/graduate-profile/Block.vue')),
+        initialData: {
+            title: 'Perfil del egresado',
+            cards: [
+                {
+                    id: 'graduate-profile-card-1',
+                    title: 'Lo que vas a lograr',
+                    intro: 'Al terminar la carrera, podrás:',
+                    items: [
+                        { id: 'graduate-profile-item-1', text: 'Liderar equipos diversos, gestionar proyectos con liderazgo transformador y comunicar ideas con claridad, resolviendo problemas y negociando con eficacia en entornos multiculturales.' },
+                        { id: 'graduate-profile-item-2', text: 'Tomar decisiones estratégicas a partir de técnicas estadísticas y de los fundamentos teóricos y prácticos de la contabilidad financiera y de gestión, apoyado en la tecnología y la innovación empresarial.' },
+                    ],
+                },
+                {
+                    id: 'graduate-profile-card-2',
+                    title: 'Dónde vas a trabajar',
+                    intro: 'Podrás desempeñarte en:',
+                    items: [
+                        { id: 'graduate-profile-item-3', text: 'Roles directivos y de asesoramiento en diversos sectores empresariales, como gerente de operaciones, consultor empresarial y analista de procesos.' },
+                        { id: 'graduate-profile-item-4', text: 'El sector público o entidades sin fines de lucro.' },
+                        { id: 'graduate-profile-item-5', text: 'La docencia y la investigación en gestión empresarial.' },
+                    ],
+                },
+            ],
         },
     },
 

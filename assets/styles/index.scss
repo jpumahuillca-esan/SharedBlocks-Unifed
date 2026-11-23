@@ -44,6 +44,7 @@
 @use './elements/study-modalities';
 @use './elements/pictograms';
 @use './elements/mapamundi';
+@use './elements/international-mapamundi';
 @use './elements/convenios-internacionales';
 @use './elements/key-facts';
 @use './elements/about-career';
@@ -56,10 +57,13 @@
 @use './elements/cards-pillars';
 @use './elements/admision-pregrado';
 @use './elements/cards-dpa';
+@use './elements/graduate-profile';
 @use './elements/faq-accordion';
 @use './elements/malla-curricular';
 @use './elements/audience-switcher';
 @use './elements/card-international';
+@use './elements/international-section-v2';
+@use './elements/admission';
 @use './elements/footer-v1';
 @use './elements/topbar-v1';
 @use './elements/mega-menu-beta';
