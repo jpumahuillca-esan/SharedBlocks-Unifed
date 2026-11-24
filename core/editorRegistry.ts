@@ -20,6 +20,7 @@ export const EDITOR_REGISTRY: Record<string, any> = {
     InfoMapamundi: defineAsyncComponent(() => import('../components/block-beta/info/mapamundi/Editor.vue')),
     InfoInternationalMapamundi: defineAsyncComponent(() => import('../components/block-beta/info/international-mapamundi/Editor.vue')),
     Admission: defineAsyncComponent(() => import('../components/block-beta/info/admission/Editor.vue')),
+    InfoFrequentlyAskedQuestions: defineAsyncComponent(() => import('../components/block-beta/info/frequently-asked-questions/Editor.vue')),
     InfoConveniosDpa: defineAsyncComponent(() => import('../components/block-beta/info/convenios-internacionales/Editor.vue')),
     InfoValuesCards: defineAsyncComponent(() => import('../components/block-beta/info/values-cards/Editor.vue')),
     InfoKeyFacts: defineAsyncComponent(() => import('../components/block-beta/info/key-facts/Editor.vue')),

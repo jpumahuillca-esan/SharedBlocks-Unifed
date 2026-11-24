@@ -47,6 +47,49 @@
             </template>
           </div>
         </section>
+
+        <section v-if="content.cards.length" class="admission-section__cards-section">
+          <div v-if="content.cardsTitle" class="admission-section__cards-heading" v-bind="edit('cardsTitle')">{{ content.cardsTitle }}</div>
+          <div class="admission-section__cards">
+            <article
+              v-for="(card, index) in content.cards"
+              :key="card.id"
+              class="admission-section__card"
+              :style="{ backgroundColor: `var(${card.backgroundToken})`, color: `var(${resolveBrandContentToken(card.backgroundToken)})` }"
+              v-bind="edit(`cards.${index}`)"
+            >
+              <div class="admission-section__card-media" v-bind="edit('.image')">
+                <img
+                  v-if="card.image"
+                  class="admission-section__card-image image-focus-responsive"
+                  :src="card.image"
+                  :alt="card.imageAlt"
+                  :style="imageFocusProfilesStyle(card.imageFocusProfiles, card.imageFocusX, card.imageFocusY)"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span v-else class="admission-section__card-image-placeholder">Imagen de la tarjeta</span>
+              </div>
+              <div class="admission-section__card-content">
+                <p v-if="card.eyebrow" class="admission-section__card-eyebrow" v-bind="edit('.eyebrow')">{{ card.eyebrow }}</p>
+                <h3 v-if="card.title" class="admission-section__card-title" v-bind="edit('.title')">{{ card.title }}</h3>
+                <p v-if="card.description" class="admission-section__card-description" v-bind="edit('.description')">{{ card.description }}</p>
+                <AtomButton
+                  v-if="card.buttonLabel"
+                  variant="primary"
+                  :negative="card.backgroundToken === '--ds-color-esan-corp'"
+                  class="admission-section__card-button"
+                  :href="card.buttonUrl || undefined"
+                  :target="card.buttonTarget || undefined"
+                  v-bind="edit('.buttonLabel')"
+                >
+                  {{ card.buttonLabel }}
+                  <AtomIcon name="arrow-right" :size="16" />
+                </AtomButton>
+              </div>
+            </article>
+          </div>
+        </section>
       </div>
     </div>
   </section>
@@ -60,6 +103,8 @@ import AtomIcon from '../../../atoms/AtomIcon.vue';
 import AtomText from '../../../atoms/AtomText.vue';
 import CardSectionHeader from '../../events/_shared/CardSectionHeader.vue';
 import { useEditTarget } from '../../../../core/editFocus';
+import { imageFocusProfilesStyle } from '../../../../helpers/imageFocus';
+import { resolveBrandContentToken } from '../../../editor-beta/EditorBrandColor/brandColors';
 import { normalizeAdmissionData, type AdmissionData } from './shared/types';
 
 const props = defineProps<{ data?: Partial<AdmissionData> }>();
