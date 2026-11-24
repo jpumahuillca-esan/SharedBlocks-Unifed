@@ -4,7 +4,7 @@
   .international-section-v2 {
     width: 100%;
     padding-block: var(--ds-spacing-xl);
-    color: var(--ds-color-text-inverse);
+    color: var(--intl-v2-fg, var(--ds-color-text-inverse));
     box-sizing: border-box;
   }
 
@@ -27,7 +27,7 @@
 
   .international-section-v2__eyebrow {
     margin: 0;
-    color: var(--ds-color-text-inverse);
+    color: var(--intl-v2-fg, var(--ds-color-text-inverse));
     font-family: var(--ds-font-family-base);
     font-size: var(--ds-text-body-sm);
     font-weight: var(--ds-weight-semibold);
@@ -38,7 +38,7 @@
 
   .international-section-v2__title {
     margin: 0;
-    color: var(--ds-color-text-inverse);
+    color: var(--intl-v2-fg, var(--ds-color-text-inverse));
     font-family: var(--ds-font-family-display);
     font-size: var(--ds-heading-xl);
     font-weight: var(--ds-weight-semibold);
@@ -50,7 +50,7 @@
     display: block;
     width: 40px;
     height: 2px;
-    background: var(--ds-color-text-inverse);
+    background: var(--intl-v2-rule, var(--ds-color-text-inverse));
   }
 
   .international-section-v2__body {
@@ -62,7 +62,7 @@
   .international-section-v2__description,
   .international-section-v2__row-text {
     margin: 0;
-    color: var(--ds-color-text-inverse);
+    color: var(--intl-v2-fg, var(--ds-color-text-inverse));
     font-family: var(--ds-font-family-base);
     font-size: var(--ds-text-body);
     font-weight: var(--ds-weight-regular);
@@ -92,12 +92,12 @@
     grid-template-columns: minmax(0, 266px) minmax(0, 1fr);
     gap: var(--ds-space-5);
     padding-block: var(--ds-spacing-sm);
-    border-top: 1px solid var(--ds-color-border-inverse, #f1f5f9);
+    border-top: 1px solid var(--intl-v2-border, var(--ds-color-border-inverse, #f1f5f9));
   }
 
   .international-section-v2__row-title {
     margin: 0;
-    color: var(--ds-color-text-inverse);
+    color: var(--intl-v2-fg, var(--ds-color-text-inverse));
     font-family: var(--ds-font-family-display);
     font-size: var(--ds-heading-sm);
     font-weight: var(--ds-weight-semibold);

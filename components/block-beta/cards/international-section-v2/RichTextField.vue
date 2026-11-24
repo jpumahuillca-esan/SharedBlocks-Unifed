@@ -1,6 +1,10 @@
 <template>
   <div class="isv2-richtext-field" :class="$attrs.class">
     <label v-if="label" class="form-label">{{ label }}</label>
+    <div class="isv2-richtext-field__toolbar mb-1">
+      <button type="button" class="btn btn-sm btn-light" aria-label="Negrita" title="Negrita" @mousedown.prevent="formatBold"><strong>B</strong></button>
+      <span v-if="hint" class="small text-muted">{{ hint }}</span>
+    </div>
     <div
       ref="editor"
       class="form-control form-control-sm isv2-richtext-field__editor"
@@ -12,7 +16,6 @@
       @input="updateValue"
       @keydown.ctrl.b.prevent="formatBold"
     ></div>
-    <small v-if="hint" class="form-text">{{ hint }}</small>
   </div>
 </template>
 
@@ -30,7 +33,9 @@ const controlAttrs = computed(() => Object.fromEntries(
 
 const sync = async () => {
   await nextTick();
-  if (editor.value && editor.value.innerHTML !== model.value) editor.value.innerHTML = model.value;
+  if (editor.value && editor.value.innerHTML !== model.value && document.activeElement !== editor.value) {
+    editor.value.innerHTML = model.value;
+  }
 };
 const updateValue = () => { model.value = editor.value?.innerHTML ?? ''; };
 const formatBold = () => {
@@ -39,10 +44,11 @@ const formatBold = () => {
   updateValue();
 };
 
-watch(model, sync, { immediate: true });
+watch([model, editor], sync, { immediate: true });
 </script>
 
 <style scoped>
+.isv2-richtext-field__toolbar { display: flex; align-items: center; gap: 8px; }
 .isv2-richtext-field__editor { min-height: 88px; overflow-y: auto; }
 .isv2-richtext-field__editor:focus { border-color: #86b7fe; outline: 0; box-shadow: 0 0 0 .15rem rgba(13, 110, 253, .15); }
 </style>

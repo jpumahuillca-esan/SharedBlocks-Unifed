@@ -1080,7 +1080,7 @@ export const BLOCK_REGISTRY: Record<string, any> = {
             ],
             buttonText: 'Conoce los programas internacionales',
             buttonLink: '',
-            buttonTarget: '_self',
+            buttonTarget: '',
         },
     },
 

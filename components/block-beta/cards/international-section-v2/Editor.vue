@@ -1,12 +1,12 @@
 <template>
   <div class="international-section-v2-editor">
     <h6 class="fw-bold small text-uppercase mb-1">Apariencia</h6>
-    <EditorBrandColor v-model="localData.backgroundToken" label="Fondo de la sección" class="mb-3" />
+    <EditorBrandColor v-model="localData.backgroundToken" data-edit-target="backgroundToken" label="Fondo de la sección" class="mb-3" />
 
     <hr />
     <h6 class="fw-bold small text-uppercase mb-1">Encabezado</h6>
-    <EditorText v-model="localData.eyebrow" label="Antetítulo" placeholder="Internacionalización" class="mb-2" />
-    <EditorText v-model="localData.title" label="Título" placeholder="Estudia un año de tu carrera en otro país" class="mb-3" />
+    <EditorText v-model="localData.eyebrow" data-edit-target="eyebrow" label="Antetítulo" placeholder="Internacionalización" class="mb-2" />
+    <EditorText v-model="localData.title" data-edit-target="title" label="Título" placeholder="Estudia un año de tu carrera en otro país" class="mb-3" />
 
     <hr />
     <h6 class="fw-bold small text-uppercase mb-1">Contenido</h6>
@@ -43,6 +43,7 @@
       class="mb-3"
       @select="emit('select-image', { item: localData, field: 'image' })"
       @update:focus-values="saveImageFocusProfiles(localData, $event)"
+      @remove="resetImageExtras"
     />
 
     <hr />
@@ -70,8 +71,8 @@
 
     <hr />
     <h6 class="fw-bold small text-uppercase mb-1">Botón</h6>
-    <EditorText v-model="localData.buttonText" label="Texto del botón" class="mb-2" />
-    <EditorUrl v-model="localData.buttonLink" v-model:target="localData.buttonTarget" label="Enlace del botón" />
+    <EditorText v-model="localData.buttonText" data-edit-target="buttonText" label="Texto del botón" class="mb-2" />
+    <EditorUrl v-model="localData.buttonLink" v-model:target="localData.buttonTarget" :sections="availableSections" data-edit-target="buttonLink" label="Enlace del botón" />
   </div>
 </template>
 
@@ -83,7 +84,7 @@ import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
 import RichTextField from './RichTextField.vue';
-import { createImageFocusModes, saveImageFocusProfiles } from '../../../../helpers/imageFocus';
+import { createImageFocusModes, normalizeImageFocusProfiles, saveImageFocusProfiles } from '../../../../helpers/imageFocus';
 import { createInternationalRow, MAX_INTERNATIONAL_ROWS, normalizeInternationalSection, type InternationalSectionData } from './shared/types';
 
 const props = defineProps<{ modelValue?: Partial<InternationalSectionData>; availableSections?: Array<{ id: string; title?: string }> }>();
@@ -93,10 +94,16 @@ const openIndex = ref<number | null>(0);
 const descriptionEditor = ref<HTMLElement | null>(null);
 const imageFocusModes = createImageFocusModes('840 / 292');
 
+const resetImageExtras = () => {
+  localData.value.imageAlt = '';
+  localData.value.imageFocusProfiles = normalizeImageFocusProfiles(undefined, 50, 50);
+};
 const syncDescriptionEditor = async () => {
   await nextTick();
   if (descriptionEditor.value && descriptionEditor.value.innerHTML !== localData.value.description) {
-    descriptionEditor.value.innerHTML = localData.value.description;
+    if (document.activeElement !== descriptionEditor.value) {
+      descriptionEditor.value.innerHTML = localData.value.description;
+    }
   }
 };
 const updateDescription = () => {
@@ -122,13 +129,14 @@ const moveRow = (index: number, delta: -1 | 1) => {
   if (target < 0 || target >= localData.value.rows.length) return;
   [localData.value.rows[index], localData.value.rows[target]] = [localData.value.rows[target], localData.value.rows[index]];
   if (openIndex.value === index) openIndex.value = target;
+  else if (openIndex.value === target) openIndex.value = index;
 };
 
 watch(() => props.modelValue, (value) => {
   const next = normalizeInternationalSection(value);
   if (JSON.stringify(next) !== JSON.stringify(localData.value)) localData.value = next;
 }, { deep: true });
-watch(() => localData.value.description, syncDescriptionEditor, { immediate: true });
+watch([() => localData.value.description, descriptionEditor], syncDescriptionEditor, { immediate: true });
 watch(localData, (value) => emit('update:modelValue', JSON.parse(JSON.stringify(value))), { deep: true });
 </script>
 

@@ -1,7 +1,13 @@
 <template>
   <section
     class="international-section-v2"
-    :style="{ backgroundColor: `var(${content.backgroundToken})` }"
+    :class="{ 'is-light-bg': isDarkTextBg }"
+    :style="{
+      backgroundColor: `var(${content.backgroundToken})`,
+      '--intl-v2-fg': `var(${contentColorToken})`,
+      '--intl-v2-rule': `var(${contentColorToken})`,
+      '--intl-v2-border': isDarkTextBg ? 'rgba(15, 23, 42, 0.22)' : 'var(--ds-color-border-inverse, #f1f5f9)',
+    }"
     v-bind="edit('backgroundToken')"
   >
     <div class="international-section-v2__container">
@@ -32,7 +38,7 @@
         <div v-if="content.buttonText" class="international-section-v2__actions" v-bind="edit('buttonText')">
           <AtomButton
             variant="secondary"
-            negative
+            :negative="!isDarkTextBg"
             :href="content.buttonLink || undefined"
             :target="content.buttonTarget || undefined"
             class="international-section-v2__button"
@@ -47,6 +53,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import AtomButton from '../../../atoms/AtomButton.vue';
+import { DARK_TEXT_BACKGROUND_TOKENS, resolveBrandContentToken } from '../../../editor-beta/EditorBrandColor/brandColors';
 import { useEditTarget } from '../../../../core/editFocus';
 import { imageFocusProfilesStyle } from '../../../../helpers/imageFocus';
 import { normalizeInternationalSection, type InternationalSectionData } from './shared/types';
@@ -54,5 +61,7 @@ import { normalizeInternationalSection, type InternationalSectionData } from './
 const props = defineProps<{ data?: Partial<InternationalSectionData> }>();
 const edit = useEditTarget();
 const content = computed(() => normalizeInternationalSection(props.data));
+const contentColorToken = computed(() => resolveBrandContentToken(content.value.backgroundToken));
+const isDarkTextBg = computed(() => DARK_TEXT_BACKGROUND_TOKENS.has(content.value.backgroundToken));
 const imageFocusStyle = computed(() => imageFocusProfilesStyle(content.value.imageFocusProfiles));
 </script>
