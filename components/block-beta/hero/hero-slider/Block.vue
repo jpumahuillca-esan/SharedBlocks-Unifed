@@ -211,6 +211,9 @@ const seoHeadingSource = computed(() => {
   if (source === 'eyebrow' && !slide?.eyebrow?.trim()) {
     return slide?.title?.trim() ? 'title' : 'esan';
   }
+  if (source === 'eyebrow-title' && !slide?.eyebrow?.trim() && !slide?.title?.trim()) {
+    return 'esan';
+  }
   if (source === 'title' && !slide?.title?.trim()) {
     return slide?.eyebrow?.trim() ? 'eyebrow' : 'esan';
   }

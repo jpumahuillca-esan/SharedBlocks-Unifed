@@ -29,8 +29,17 @@
           v-bind="edit('.logo')"
         />
 
+        <h1 v-if="seoHeadingSource === 'eyebrow-title'" class="hero__combined-heading">
+          <AtomText v-if="eyebrow" as="span" size="body-compact" class="hero__eyebrow" v-bind="edit('.eyebrow')">
+            {{ eyebrow }}
+          </AtomText>
+          <AtomHeading v-if="title" as="span" size="h1" weight="bold" class="hero__title" v-bind="edit('.title')">
+            {{ title }}
+          </AtomHeading>
+        </h1>
+
         <AtomText
-          v-if="eyebrow"
+          v-if="eyebrow && seoHeadingSource !== 'eyebrow-title'"
           :as="seoHeadingSource === 'eyebrow' ? 'h1' : 'p'"
           size="body-compact"
           class="hero__eyebrow"
@@ -39,15 +48,9 @@
           {{ eyebrow }}
         </AtomText>
 
-        <!--
-          El título solo se vuelve H1 si se elige como título principal en el
-          editor; el aspecto lo conserva AtomHeading.
-
-          El aspecto no cambia: `as` solo sustituye la etiqueta, el tamaño lo
-          sigue poniendo el átomo.
-        -->
+        <!-- AtomHeading conserva el estilo visual cuando cambia su etiqueta a H1. -->
         <AtomHeading
-          v-if="title"
+          v-if="title && seoHeadingSource !== 'eyebrow-title'"
           :as="seoHeadingSource === 'title' ? 'h1' : 'p'"
           size="h1"
           weight="bold"

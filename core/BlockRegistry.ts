@@ -423,7 +423,7 @@ export const BLOCK_REGISTRY: Record<string, any> = {
         component: defineAsyncComponent(() => import('../components/block-beta/hero/hero-slider/Block.vue')),
         initialData: {
             // Fuente del único <h1> SEO: ESAN, título/antetítulo activo o ninguno.
-            seoHeadingSource: 'esan',
+            seoHeadingSource: 'title',
             seoHeadingText: 'ESAN',
             // Ancho del contenido: 'wide' (864px según Figma), 'standard' (50%) o 'full' (100%).
             contentWidth: 'wide',
