@@ -74,6 +74,115 @@
     gap: var(--ds-space-4);
   }
 
+  .admission-section__cards-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-4);
+  }
+
+  .admission-section__cards-heading {
+    color: var(--ds-color-text-primary);
+    font-family: var(--ds-font-family-display);
+    font-size: var(--ds-heading-xs);
+    font-weight: var(--ds-weight-semibold);
+    line-height: 1.25;
+  }
+
+  .admission-section__cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: var(--ds-space-4);
+  }
+
+  .admission-section__card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: var(--ds-radius-sm);
+    color: var(--ds-color-text-inverse);
+  }
+
+  .admission-section__card-media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: inherit;
+  }
+
+  .admission-section__card-image,
+  .admission-section__card-image-placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .admission-section__card-image {
+    object-fit: cover;
+    /* La foto cae en diagonal sobre el panel, como en CTA Banner con imagen. */
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - var(--ds-space-4)));
+  }
+
+  .admission-section__card-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ds-color-text-secondary);
+    font-size: var(--ds-text-body-compact);
+    background: var(--ds-color-background-light);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - var(--ds-space-4)));
+  }
+
+  .admission-section__card-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--ds-spacing-xs);
+    padding: var(--ds-spacing-sm);
+  }
+
+  .admission-section__card-eyebrow,
+  .admission-section__card-title,
+  .admission-section__card-description {
+    margin: 0;
+    color: inherit;
+  }
+
+  .admission-section__card-eyebrow {
+    font-size: var(--ds-text-body-compact);
+    font-weight: var(--ds-weight-semibold);
+    letter-spacing: .08em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .admission-section__card-title {
+    font-family: var(--ds-font-family-display);
+    font-size: var(--ds-heading-xs);
+    font-weight: var(--ds-weight-semibold);
+    line-height: 1.25;
+  }
+
+  .admission-section__card-description {
+    font-size: var(--ds-text-body-compact);
+    line-height: 1.4;
+  }
+
+  .admission-section__card-button.btn {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-height: var(--ds-space-10);
+    margin-top: auto;
+    padding: var(--ds-space-2) var(--ds-space-3);
+    font-size: var(--ds-text-body-compact);
+  }
+
   .admission-section__subheading {
     margin: 0;
     color: var(--ds-color-text-primary);
@@ -174,5 +283,9 @@
     }
 
     .admission-section__step { gap: var(--ds-space-3); }
+  }
+
+  @include bp.container-down('md') {
+    .admission-section__cards { grid-template-columns: minmax(0, 1fr); }
   }
 }

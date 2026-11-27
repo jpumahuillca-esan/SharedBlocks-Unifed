@@ -13,8 +13,7 @@
     box-sizing: border-box;
 
     &__inner {
-      width: 100%;
-      max-width: var(--ds-container-max, 1280px);
+      width: min(100%, var(--ds-container-max, 1280px));
       margin-inline: auto;
       padding-block: var(--ds-spacing-xxl, 64px);
       padding-inline: var(--ds-container-padding-x);

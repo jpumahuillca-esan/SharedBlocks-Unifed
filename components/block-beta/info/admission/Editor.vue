@@ -75,6 +75,49 @@
       <EditorText v-model="item.label" data-edit-target=".label" label="Texto del botón" class="mb-2" />
       <EditorUrl v-model="item.url" v-model:target="item.target" data-edit-target=".url" label="Destino" />
     </CardAccordionItem>
+
+    <hr />
+    <div class="d-flex align-items-center justify-content-between mb-1">
+      <h6 class="fw-bold small text-uppercase m-0">Tarjetas de admisión</h6>
+      <button type="button" class="btn btn-sm btn-outline-primary" @click="addCard">+ Agregar</button>
+    </div>
+    <EditorText v-model="localData.cardsTitle" data-edit-target="cardsTitle" label="Título del grupo (opcional)" class="mb-2" />
+    <CardAccordionItem
+      v-for="(card, index) in localData.cards"
+      :key="card.id"
+      :edit-key="`cards.${index}`"
+      :title="card.title || `Tarjeta ${index + 1}`"
+      :index="index"
+      :total="localData.cards.length"
+      :open="openCard === index"
+      item-label="Tarjeta"
+      @toggle="openCard = openCard === index ? null : index"
+      @move="moveItem(localData.cards, index, $event, 'cards')"
+      @remove="removeItem(localData.cards, index, 'cards')"
+    >
+      <EditorBrandColor v-model="card.backgroundToken" data-edit-target=".backgroundToken" label="Color de fondo" class="mb-2" />
+      <EditorImage
+        v-model="card.image"
+        v-model:alt="card.imageAlt"
+        data-edit-target=".image"
+        alt-edit-target=".imageAlt"
+        label="Imagen"
+        noun="imagen"
+        alt-label="Texto alternativo"
+        alt-placeholder="Describe la imagen de la tarjeta"
+        :focus-values="card.imageFocusProfiles"
+        :focus-modes="imageFocusModes"
+        focus-crop-preview
+        class="mb-2"
+        @select="emit('select-image', { item: card, field: 'image' })"
+        @update:focus-values="saveImageFocusProfiles(card, $event)"
+      />
+      <EditorText v-model="card.eyebrow" data-edit-target=".eyebrow" label="Antetítulo" class="mb-2" />
+      <EditorText v-model="card.title" data-edit-target=".title" label="Título" class="mb-2" />
+      <EditorTextarea v-model="card.description" data-edit-target=".description" label="Descripción" :rows="3" class="mb-2" />
+      <EditorText v-model="card.buttonLabel" data-edit-target=".buttonLabel" label="Texto del botón" class="mb-2" />
+      <EditorUrl v-model="card.buttonUrl" v-model:target="card.buttonTarget" data-edit-target=".buttonUrl" label="Destino del botón" />
+    </CardAccordionItem>
   </div>
 </template>
 
@@ -84,7 +127,11 @@ import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
 import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
+import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
+import EditorBrandColor from '../../../editor-beta/EditorBrandColor/EditorBrandColor.vue';
+import { createImageFocusModes, saveImageFocusProfiles } from '../../../../helpers/imageFocus';
 import {
+  createAdmissionCard,
   createAdmissionModality,
   createAdmissionScheduleItem,
   createAdmissionStep,
@@ -93,25 +140,32 @@ import {
 } from './shared/types';
 
 const props = defineProps<{ modelValue?: Partial<AdmissionData>; availableSections?: Array<{ id: string; title?: string }> }>();
-const emit = defineEmits<{ (event: 'update:modelValue', value: AdmissionData): void }>();
+const emit = defineEmits<{
+  (event: 'update:modelValue', value: AdmissionData): void;
+  (event: 'select-image', payload: { item: any; field: string }): void;
+}>();
 const localData = ref(normalizeAdmissionData(props.modelValue));
 const openSchedule = ref<number | null>(null);
 const openStep = ref<number | null>(null);
 const openModality = ref<number | null>(null);
+const openCard = ref<number | null>(null);
+const imageFocusModes = createImageFocusModes('16 / 9');
 
 const addScheduleItem = () => { localData.value.schedule.push(createAdmissionScheduleItem()); openSchedule.value = localData.value.schedule.length - 1; };
 const addStep = () => { localData.value.steps.push(createAdmissionStep()); openStep.value = localData.value.steps.length - 1; };
 const addModality = () => { localData.value.modalities.push(createAdmissionModality()); openModality.value = localData.value.modalities.length - 1; };
+const addCard = () => { localData.value.cards.push(createAdmissionCard()); openCard.value = localData.value.cards.length - 1; };
 
-type ListKey = 'schedule' | 'steps' | 'modalities';
+type ListKey = 'schedule' | 'steps' | 'modalities' | 'cards';
 const setOpenIndex = (key: ListKey, index: number | null) => {
   if (key === 'schedule') openSchedule.value = index;
   else if (key === 'steps') openStep.value = index;
-  else openModality.value = index;
+  else if (key === 'modalities') openModality.value = index;
+  else openCard.value = index;
 };
 const removeItem = <T,>(list: T[], index: number, key: ListKey) => {
   list.splice(index, 1);
-  const open = key === 'schedule' ? openSchedule.value : key === 'steps' ? openStep.value : openModality.value;
+  const open = key === 'schedule' ? openSchedule.value : key === 'steps' ? openStep.value : key === 'modalities' ? openModality.value : openCard.value;
   if (open === index) setOpenIndex(key, null);
   else if (open !== null && open > index) setOpenIndex(key, open - 1);
 };
@@ -119,7 +173,7 @@ const moveItem = <T,>(list: T[], index: number, delta: number, key: ListKey) => 
   const target = index + delta;
   if (target < 0 || target >= list.length) return;
   [list[index], list[target]] = [list[target], list[index]];
-  const open = key === 'schedule' ? openSchedule.value : key === 'steps' ? openStep.value : openModality.value;
+  const open = key === 'schedule' ? openSchedule.value : key === 'steps' ? openStep.value : key === 'modalities' ? openModality.value : openCard.value;
   if (open === index) setOpenIndex(key, target);
   else if (open === target) setOpenIndex(key, index);
 };

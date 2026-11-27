@@ -11,9 +11,10 @@
         class="form-select form-select-sm"
       >
         <option value="esan">Texto fijo (ESAN por defecto)</option>
-        <option value="title" :disabled="!canUseSlideHeading">Título de la diapositiva</option>
-        <option value="eyebrow" :disabled="!canUseSlideHeading">Antetítulo de la diapositiva</option>
-        <option value="none" :disabled="!canUseSlideHeading">No emitir H1</option>
+        <option value="title" :disabled="!isSingle">Título de la diapositiva</option>
+        <option value="eyebrow" :disabled="!isSingle">Antetítulo de la diapositiva</option>
+        <option value="eyebrow-title" :disabled="!isSingle">Antetítulo + título (un solo H1)</option>
+        <option value="none" :disabled="!isSingle">No emitir H1</option>
       </select>
     </div>
     <EditorText
@@ -25,13 +26,13 @@
       placeholder="ESAN"
     />
     <p class="hs-hint">
-      <template v-if="canUseSlideHeading">
-        Puedes usar el título o antetítulo visible como H1. El texto fijo se mantiene
-        oculto. Cada página debe tener <strong>uno solo</strong>.
+      <template v-if="isSingle">
+        Puedes usar el título, el antetítulo o ambos juntos en un solo H1. El diseño
+        visible de cada texto se conserva. Cada página debe tener <strong>uno solo</strong>.
       </template>
       <template v-else>
-        Con varias diapositivas, el H1 debe ser fijo para no cambiar al avanzar el
-        carrusel. Cada página debe tener <strong>uno solo</strong>.
+        En carrusel el H1 queda fijo como ESAN o el título de la primera diapositiva.
+        Cambia a una sola diapositiva para seleccionar el título, el antetítulo, ambos juntos o no emitir H1.
       </template>
     </p>
 
@@ -109,11 +110,11 @@
     <EditorBrandColor
       v-model="localData.panelColorToken"
       data-edit-target="panelColorToken"
-      label="Color de la franja"
+      label="Color del panel en móvil"
     />
     <p class="hs-hint mt-1">
-      Es el color de la franja diagonal que se ve en teléfono. Aplica a todas
-      las diapositivas.
+      Es el color del panel diagonal que aparece debajo de la imagen en teléfono.
+      Aplica a todas las diapositivas.
     </p>
 
     <hr />
@@ -474,7 +475,7 @@ const imageFocusModes = createImageFocusModes({
 
 const MODE_OPTIONS: Array<{ value: HeroMode; label: string }> = [
   { value: 'carousel', label: 'Carrusel' },
-  { value: 'single', label: 'Una diapositiva' },
+  { value: 'single', label: 'Portada(1 Diapositiva)' },
 ];
 
 const CONTENT_ALIGN_OPTIONS: Array<{ value: HeroContentAlign; label: string }> = [
@@ -541,21 +542,15 @@ const localData = ref(build(props.modelValue));
 
 const isSingle = computed(() => localData.value.mode === 'single');
 
+watch(isSingle, (single) => {
+  if (!single && localData.value.seoHeadingSource !== 'esan') {
+    localData.value.seoHeadingSource = 'title';
+  }
+}, { immediate: true });
+
 /** En modo de una sola diapositiva solo se edita la primera; las demás se conservan. */
 const visibleSlides = computed(() =>
   isSingle.value ? localData.value.slides.slice(0, 1) : localData.value.slides,
-);
-
-const canUseSlideHeading = computed(() => visibleSlides.value.length === 1);
-
-watch(
-  () => visibleSlides.value.length,
-  (length) => {
-    if (length > 1 && localData.value.seoHeadingSource !== 'esan') {
-      localData.value.seoHeadingSource = 'esan';
-    }
-  },
-  { immediate: true },
 );
 
 const setMode = (mode: HeroMode) => {

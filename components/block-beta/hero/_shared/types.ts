@@ -223,11 +223,11 @@ export const heroContentWidthStyle = (value: unknown): Record<string, string> =>
     '--hero-content-max-width': HERO_CONTENT_WIDTHS[normalizeHeroContentWidth(value)],
 });
 
-export type HeroSeoHeadingSource = 'esan' | 'title' | 'eyebrow' | 'none';
+export type HeroSeoHeadingSource = 'esan' | 'title' | 'eyebrow' | 'eyebrow-title' | 'none';
 
-const HERO_SEO_HEADING_SOURCES: readonly HeroSeoHeadingSource[] = ['esan', 'title', 'eyebrow', 'none'];
+const HERO_SEO_HEADING_SOURCES: readonly HeroSeoHeadingSource[] = ['esan', 'title', 'eyebrow', 'eyebrow-title', 'none'];
 
-/** Old boolean values remain readable: true meant ESAN and false meant no H1. */
+/** Legacy booleans stay readable; a missing value now defaults to the visible title. */
 export const normalizeHeroSeoHeadingSource = (
     value: unknown,
     legacyShowSeoHeading?: unknown,
@@ -236,7 +236,9 @@ export const normalizeHeroSeoHeadingSource = (
         return value as HeroSeoHeadingSource;
     }
 
-    return legacyShowSeoHeading === false ? 'none' : 'esan';
+    if (legacyShowSeoHeading === false) return 'none';
+    if (legacyShowSeoHeading === true) return 'esan';
+    return 'title';
 };
 
 /** Normaliza una acción, tolerando contenido incompleto. */

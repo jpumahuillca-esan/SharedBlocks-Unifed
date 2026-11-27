@@ -1,4 +1,22 @@
 import { normalizeLinkTarget, type LinkTarget } from '../../../../../helpers/linkTarget';
+import { normalizeImageFocus, normalizeImageFocusProfiles, type ImageFocusProfiles } from '../../../../../helpers/imageFocus';
+import { normalizeBrandColorToken } from '../../../../editor-beta/EditorBrandColor/brandColors';
+
+export interface AdmissionCard {
+  id: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  image: string;
+  imageAlt: string;
+  imageFocusX: number;
+  imageFocusY: number;
+  imageFocusProfiles: ImageFocusProfiles;
+  backgroundToken: string;
+  buttonLabel: string;
+  buttonUrl: string;
+  buttonTarget: LinkTarget | '';
+}
 
 export interface AdmissionScheduleItem {
   id: string;
@@ -31,7 +49,25 @@ export interface AdmissionData {
   steps: AdmissionStep[];
   modalitiesTitle: string;
   modalities: AdmissionModality[];
+  cardsTitle: string;
+  cards: AdmissionCard[];
 }
+
+export const createAdmissionCard = (): AdmissionCard => ({
+  id: `admission-card-${Date.now()}`,
+  eyebrow: '',
+  title: 'Nueva modalidad',
+  description: '',
+  image: '',
+  imageAlt: '',
+  imageFocusX: 50,
+  imageFocusY: 50,
+  imageFocusProfiles: normalizeImageFocusProfiles(undefined, 50, 50),
+  backgroundToken: '--ds-color-esan-corp',
+  buttonLabel: 'Conoce más',
+  buttonUrl: '',
+  buttonTarget: '',
+});
 
 export const createAdmissionScheduleItem = (): AdmissionScheduleItem => ({
   id: `admission-date-${Date.now()}`,
@@ -83,6 +119,39 @@ export const DEFAULT_ADMISSION_DATA: AdmissionData = {
     { id: 'admission-modality-6', label: 'Traslado Externo', url: '', target: '' },
     { id: 'admission-modality-7', label: 'Otras modalidades', url: '', target: '' },
   ],
+  cardsTitle: '',
+  cards: [
+    {
+      id: 'admission-card-1',
+      eyebrow: 'Modalidad de titulación',
+      title: 'Curso de Actualización para titulación',
+      description: 'Para bachilleres de ESAN que quieren obtener su título profesional.',
+      image: '',
+      imageAlt: '',
+      imageFocusX: 50,
+      imageFocusY: 50,
+      imageFocusProfiles: normalizeImageFocusProfiles(undefined, 50, 50),
+      backgroundToken: '--ds-color-esan-corp',
+      buttonLabel: 'Conoce el curso',
+      buttonUrl: '',
+      buttonTarget: '',
+    },
+    {
+      id: 'admission-card-2',
+      eyebrow: 'Sistema de aprendizaje',
+      title: 'Sistema de aprendizaje ESAN - SAE',
+      description: 'Suma certificaciones y especializaciones durante la carrera, con mentorías personalizadas y la Global Week.',
+      image: '',
+      imageAlt: '',
+      imageFocusX: 50,
+      imageFocusY: 50,
+      imageFocusProfiles: normalizeImageFocusProfiles(undefined, 50, 50),
+      backgroundToken: '--ds-color-univ-management',
+      buttonLabel: 'Conoce SAE',
+      buttonUrl: '',
+      buttonTarget: '',
+    },
+  ],
 };
 
 export const normalizeAdmissionData = (raw?: Partial<AdmissionData> | null): AdmissionData => {
@@ -112,5 +181,28 @@ export const normalizeAdmissionData = (raw?: Partial<AdmissionData> | null): Adm
       url: typeof item?.url === 'string' ? item.url : '',
       target: normalizeLinkTarget(item?.target),
     })),
+    cardsTitle: typeof source.cardsTitle === 'string' ? source.cardsTitle : DEFAULT_ADMISSION_DATA.cardsTitle,
+    cards: (Array.isArray(source.cards) ? source.cards : DEFAULT_ADMISSION_DATA.cards).map((card, index) => {
+      const imageFocusX = normalizeImageFocus(card?.imageFocusX);
+      const imageFocusY = normalizeImageFocus(card?.imageFocusY);
+      return {
+        id: String(card?.id || `admission-card-${index + 1}`),
+        eyebrow: typeof card?.eyebrow === 'string' ? card.eyebrow : '',
+        title: typeof card?.title === 'string' ? card.title : '',
+        description: typeof card?.description === 'string' ? card.description : '',
+        image: typeof card?.image === 'string' ? card.image : '',
+        imageAlt: typeof card?.imageAlt === 'string' ? card.imageAlt : '',
+        imageFocusX,
+        imageFocusY,
+        imageFocusProfiles: normalizeImageFocusProfiles(card?.imageFocusProfiles, imageFocusX, imageFocusY),
+        backgroundToken: typeof card?.backgroundToken === 'string'
+          && normalizeBrandColorToken(card.backgroundToken) === card.backgroundToken
+          ? card.backgroundToken
+          : '--ds-color-esan-corp',
+        buttonLabel: typeof card?.buttonLabel === 'string' ? card.buttonLabel : '',
+        buttonUrl: typeof card?.buttonUrl === 'string' ? card.buttonUrl : '',
+        buttonTarget: normalizeLinkTarget(card?.buttonTarget),
+      };
+    }),
   };
 };
