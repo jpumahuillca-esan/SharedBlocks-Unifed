@@ -137,23 +137,12 @@
           placeholder="Conoce las certificaciones"
         />
 
-        <label class="form-label">Ícono</label>
-        <div class="d-flex align-items-center gap-2 mb-2">
-          <!--
-            Vista previa del ícono elegido. Se dibuja aquí con AtomIcon porque,
-            a diferencia de los pictogramas, este átomo no depende de los
-            estilos de .arcis-scope: trae su tamaño en el propio SVG.
-          -->
-          <span class="ac-icon-preview" :class="{ 'is-empty': !link.icon }" aria-hidden="true">
-            <AtomIcon v-if="link.icon" :name="link.icon" :size="18" />
-          </span>
-          <select v-model="link.icon" data-edit-target=".icon" class="form-select form-select-sm">
-            <option value="">Sin ícono</option>
-            <option v-for="name in ICON_SUGGESTIONS" :key="name" :value="name">
-              {{ name }}
-            </option>
-          </select>
-        </div>
+        <EditorIcon
+          v-model="link.icon"
+          data-edit-target=".icon"
+          class="mb-2"
+          label="Ícono (opcional)"
+        />
 
         <EditorUrl
           v-model="link.url"
@@ -185,12 +174,11 @@ import { ref, watch } from 'vue';
  * lugar común.
  */
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
+import EditorIcon from '../../../editor-beta/EditorIcon/EditorIcon.vue';
 import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
 import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
-import AtomIcon from '../../../atoms/AtomIcon.vue';
-import { ICON_SUGGESTIONS } from '../../../../helpers/iconOptions';
 import { toVideoSource } from '../../../../helpers/video';
 import {
   createImageFocusModes,

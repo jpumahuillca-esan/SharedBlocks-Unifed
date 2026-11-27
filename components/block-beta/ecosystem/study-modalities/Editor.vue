@@ -113,6 +113,7 @@ import {
   normalizeStudyModalitiesData,
   createEmptyStudyModalityBadge,
 } from './types';
+import { stripBundledAssetsDeep } from '../../../../helpers/bundledAssets';
 
 const props = defineProps<{
   modelValue: any;
@@ -128,7 +129,7 @@ const localData = reactive(normalizeStudyModalitiesData(props.modelValue));
 watch(
   localData,
   (val) => {
-    emit('update:modelValue', JSON.parse(JSON.stringify(val)));
+    emit('update:modelValue', stripBundledAssetsDeep(JSON.parse(JSON.stringify(val))));
   },
   { deep: true },
 );

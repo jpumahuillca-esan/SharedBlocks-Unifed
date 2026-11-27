@@ -1,0 +1,440 @@
+/* ==========================================================================
+   ACADEMIC OFFER ([Section-Categorias] / [Section-Carreras-Pregradol])
+   Figma: 3464:28926 (Desktop 1366) | 3543:41389 (Tablet 768) | 3543:36192 (Mobile 360)
+   ========================================================================== */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .academic-offer {
+    width: 100%;
+    padding: 64px 0;
+    box-sizing: border-box;
+    background-color: #F1F5F9;
+
+    @include bp.container-down('sm') {
+      padding: 32px 0;
+    }
+  }
+
+  .academic-offer__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+    max-width: var(--ds-container-max, 1280px);
+    margin-inline: auto;
+    padding-inline: var(--ds-container-padding-x, 32px);
+    box-sizing: border-box;
+
+    @include bp.container-down('lg') {
+      padding-inline: 20px;
+    }
+
+    @include bp.container-down('sm') {
+      padding-inline: 12px;
+    }
+  }
+
+  .academic-offer__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .academic-offer__eyebrow {
+    margin: 0;
+  }
+
+  .academic-offer__title {
+    margin: 0;
+    color: var(--ds-color-text-primary, #000000);
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: var(--ds-heading-xl, 40px);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-align: left;
+  }
+
+  .academic-offer__rule {
+    display: block;
+    width: 40px;
+    height: 2px;
+    background-color: var(--ds-color-esan-corp, #E3173E);
+    flex-shrink: 0;
+  }
+
+  .academic-offer__desc {
+    margin: 0;
+    max-width: 750px;
+    color: var(--ds-color-text-secondary, #4F5A6C);
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: var(--ds-text-body-lg, 18px);
+    line-height: 1.4;
+  }
+
+  .academic-offer__body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+
+    @include bp.container-down('lg') {
+      gap: 20px;
+    }
+
+    @include bp.container-down('sm') {
+      gap: 16px;
+    }
+  }
+
+  /* Tarjeta compartida */
+  .academic-offer-card {
+    position: relative;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--ds-shadow-sm, 0 2px 8px rgb(0 0 0 / 0.06));
+    box-sizing: border-box;
+  }
+
+  .academic-offer-card__media {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #E2E8F0;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .academic-offer-card__media-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 120px;
+    color: #94A3B8;
+  }
+
+  .academic-offer-card__title {
+    margin: 0;
+    color: var(--ds-color-text-primary, #000000);
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: var(--ds-heading-sm, 24px);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+
+    @include bp.container-down('sm') {
+      font-size: var(--ds-heading-sm, 20px);
+    }
+  }
+
+  .academic-offer-card__desc {
+    margin: 0;
+    color: var(--ds-color-text-primary, #000000);
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: var(--ds-text-body, 16px);
+    font-weight: 400;
+    line-height: 1.375;
+  }
+
+  .academic-offer-card__arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    flex: 0 0 50px;
+    padding: 8px 12px;
+    border-radius: 0 8px 8px 8px;
+    background-color: var(--ao-card-color, #E3173E);
+    color: var(--ao-card-fg, #FFFFFF);
+    box-sizing: border-box;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .academic-offer-card__head:hover .academic-offer-card__arrow,
+  .academic-offer-card__compact-link:hover .academic-offer-card__arrow {
+    opacity: 0.92;
+    transform: translateX(2px);
+  }
+
+  /* --------------------------------------------------------------------------
+     Featured Card (Banner-ESAN-Ecosystem-v2 horizontal con grilla de links)
+     -------------------------------------------------------------------------- */
+  .academic-offer-card--featured {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    min-height: 250px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-left: 4px solid var(--ao-card-color, #E3173E);
+      border-radius: 8px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .academic-offer-card__media-link {
+      position: relative;
+      display: block;
+      flex: 0 0 390px;
+      width: 390px;
+      align-self: stretch;
+      text-decoration: none;
+      color: inherit;
+
+      @include bp.container-down('lg') {
+        flex: 0 0 200px;
+        width: 200px;
+      }
+
+      @include bp.container-down('sm') {
+        flex: 0 0 auto;
+        width: 100%;
+        height: 208px;
+      }
+    }
+
+    .academic-offer-card__media {
+      position: absolute;
+      inset: 0;
+      border-radius: 8px 0 0 8px;
+
+      @include bp.container-down('sm') {
+        position: relative;
+        height: 208px;
+        border-radius: 0;
+      }
+    }
+
+    .academic-offer-card__wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 12px;
+      flex: 1 1 auto;
+      min-width: 0;
+      padding: 24px;
+      background-color: #FFFFFF;
+      box-sizing: border-box;
+
+      @include bp.container-down('sm') {
+        padding: 24px 16px;
+      }
+    }
+
+    .academic-offer-card__head {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .academic-offer-card__head-text {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    @include bp.container-down('sm') {
+      flex-direction: column;
+      min-height: auto;
+
+      &::after {
+        border-left: 0;
+        border-bottom: 4px solid var(--ao-card-color, #E3173E);
+      }
+    }
+  }
+
+  .academic-offer-card__links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 20px;
+    row-gap: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include bp.container-down('sm') {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .academic-offer-card__link-item {
+    border-bottom: 1px solid #CCD3DC;
+
+    &:nth-child(-n + 2) {
+      border-top: 1px solid #CCD3DC;
+    }
+
+    @include bp.container-down('sm') {
+      &:nth-child(2) {
+        border-top: 0;
+      }
+      &:first-child {
+        border-top: 1px solid #CCD3DC;
+      }
+    }
+  }
+
+  .academic-offer-card__link.btn.btn--list {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    min-height: 54px;
+    padding: 16px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--ds-color-text-primary, #000000);
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.375;
+    text-align: left;
+    text-decoration: none;
+    box-sizing: border-box;
+
+    &:hover {
+      color: var(--ao-card-color, #E3173E);
+    }
+  }
+
+  .academic-offer-card__link-label {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .academic-offer-card__link-icon {
+    flex: 0 0 16px;
+    color: var(--ao-card-color, #E3173E);
+    transition: transform 0.2s ease;
+  }
+
+  .academic-offer-card__link.btn.btn--list:hover .academic-offer-card__link-icon {
+    transform: translateX(3px);
+  }
+
+  /* --------------------------------------------------------------------------
+     Grid de tarjetas compactas (Banner-ESAN-Ecosystem-v2 vertical)
+     3 cols Desktop | 2 cols Tablet | 1 col Mobile
+     -------------------------------------------------------------------------- */
+  .academic-offer__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    width: 100%;
+
+    @include bp.container-down('lg') {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @include bp.container-down('sm') {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .academic-offer-card--compact {
+    display: flex;
+    flex-direction: column;
+    min-height: 255px;
+    height: 100%;
+    border-bottom: 4px solid var(--ao-card-color, #E3173E);
+
+    .academic-offer-card__compact-link {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      width: 100%;
+      height: 100%;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .academic-offer-card__media {
+      flex: 1 1 auto;
+      min-height: 99px;
+    }
+
+    /* Labio blanco superior redondeado que solapa levemente la foto */
+    .academic-offer-card__wrapper {
+      position: relative;
+      z-index: 1;
+      flex: 0 0 auto;
+      margin-top: -8px;
+      padding: 20px 20px 24px;
+      background-color: #FFFFFF;
+      border-top: 1px solid var(--ao-card-color, #E3173E);
+      border-inline: 1px solid var(--ao-card-color, #E3173E);
+      border-radius: 8px 8px 0 0;
+      box-sizing: border-box;
+
+      @include bp.container-down('sm') {
+        padding: 16px 16px 24px;
+      }
+    }
+
+    .academic-offer-card__head--compact {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .academic-offer-card__head-text {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+  }
+}
+
+/* Cuando convive en una sección con columna flotante (~829px útiles), adapta el card destacado y la grilla a 2 columnas */
+@mixin academic-offer-float-reserve($root) {
+  #{$root}:is(.ps-columns--reserve-end, .ps-columns--reserve-start) > .ps-col--full {
+    .academic-offer-card--featured .academic-offer-card__media-link {
+      flex: 0 0 220px;
+      width: 220px;
+    }
+
+    .academic-offer__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+}
+
+@media (min-width: 1280px) {
+  @include academic-offer-float-reserve('.ps-columns');
+}
+
+@include academic-offer-float-reserve('.ps-columns--editor');

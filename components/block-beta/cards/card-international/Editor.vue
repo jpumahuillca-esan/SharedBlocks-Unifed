@@ -80,38 +80,28 @@
       @remove="removeItem(index)"
     >
       <div class="mb-2">
-        <label class="form-label mb-1">Ícono</label>
-        <div class="d-flex align-items-center gap-2">
-          <div class="card-intl-editor__icon-preview">
-            <img
-              v-if="resolveBuiltinIcon(item.icon)"
-              :src="resolveBuiltinIcon(item.icon)"
-              alt=""
-              aria-hidden="true"
-            />
-            <AtomIcon
-              v-else-if="item.icon"
-              :name="item.icon"
-              :size="18"
-              aria-hidden="true"
-            />
-          </div>
-          <select v-model="item.icon" class="form-select form-select-sm flex-grow-1">
-            <option
-              v-for="opt in CARD_INTERNATIONAL_ICON_OPTIONS"
-              :key="opt.value"
-              :value="opt.value"
-            >
-              {{ opt.label }}
-            </option>
-            <option
-              v-if="item.icon && !isKnownOption(item.icon)"
-              :value="item.icon"
-            >
-              Personalizado ({{ item.icon }})
-            </option>
-          </select>
+        <label class="form-label mb-1">Íconos internacionales ESAN</label>
+        <div class="card-intl-editor__presets mb-2" role="group" aria-label="Íconos internacionales predefinidos">
+          <button
+            v-for="preset in ESAN_PRESET_ICONS"
+            :key="preset.value"
+            type="button"
+            class="card-intl-editor__preset-btn"
+            :class="{ 'is-active': item.icon === preset.value }"
+            :title="preset.label"
+            @click="item.icon = preset.value"
+          >
+            <img :src="preset.src" alt="" aria-hidden="true" />
+            <span>{{ preset.shortLabel }}</span>
+          </button>
         </div>
+
+        <EditorIcon
+          :model-value="resolveBuiltinIcon(item.icon) ? '' : (item.icon || '')"
+          label="O elige un ícono de la librería Lucide"
+          :optional="false"
+          @update:model-value="item.icon = $event"
+        />
       </div>
 
       <EditorTextarea
@@ -147,9 +137,9 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import AtomIcon from '../../../atoms/AtomIcon.vue';
 import EditorBrandColor from '../../../editor-beta/EditorBrandColor/EditorBrandColor.vue';
 import EditorHint from '../../../editor-beta/EditorHint/EditorHint.vue';
+import EditorIcon from '../../../editor-beta/EditorIcon/EditorIcon.vue';
 import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
@@ -161,7 +151,6 @@ import {
   saveImageFocusProfiles,
 } from '../../../../helpers/imageFocus';
 import {
-  CARD_INTERNATIONAL_ICON_OPTIONS,
   normalizeCardInternationalData,
   tokenToLegacyBackgroundHex,
   type CardInternationalData,
@@ -182,6 +171,13 @@ const BUILTIN_ICONS: Record<string, string> = {
   'alumni-group': iconAlumniGroup,
   'icon-alumni': iconAlumniGroup,
 };
+
+const ESAN_PRESET_ICONS = [
+  { value: 'pin-globe', shortLabel: 'Global', label: 'Globo / Ubicación (ESAN)', src: iconPinGlobe },
+  { value: 'handshake', shortLabel: 'Convenio', label: 'Apretón de manos / Intercambio (ESAN)', src: iconHandshake },
+  { value: 'grad-cap', shortLabel: 'Grado', label: 'Birrete / Doble Grado (ESAN)', src: iconGradCap },
+  { value: 'alumni-group', shortLabel: 'Comunidad', label: 'Comunidad de alumnos (ESAN)', src: iconAlumniGroup },
+];
 
 interface AvailableSectionOption {
   id: string;
@@ -217,9 +213,6 @@ const resolveBuiltinIcon = (iconName?: string) => {
   }
   return '';
 };
-
-const isKnownOption = (value?: string) =>
-  Boolean(value && CARD_INTERNATIONAL_ICON_OPTIONS.some((opt) => opt.value === value));
 
 const resetImageExtras = () => {
   localData.value.imageAlt = '';
@@ -290,21 +283,50 @@ watch(
 </script>
 
 <style scoped>
-.card-intl-editor__icon-preview {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 30px;
-  height: 30px;
-  border-radius: 6px;
-  background: #17245e;
-  color: #fff;
+.card-intl-editor__presets {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
 }
 
-.card-intl-editor__icon-preview img {
-  width: 18px;
-  height: 18px;
+.card-intl-editor__preset-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 7px 4px;
+  border: 1px solid #d7dde6;
+  border-radius: 7px;
+  background: #17245e;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+}
+
+.card-intl-editor__preset-btn:hover {
+  border-color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.card-intl-editor__preset-btn.is-active {
+  border-color: #e3173e;
+  box-shadow: 0 0 0 2px rgba(227, 23, 62, 0.25);
+}
+
+.card-intl-editor__preset-btn img {
+  width: 20px;
+  height: 20px;
   object-fit: contain;
+}
+
+.card-intl-editor__preset-btn span {
+  width: 100%;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

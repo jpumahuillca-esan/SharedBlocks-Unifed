@@ -86,6 +86,26 @@
 
     <hr />
 
+    <h6 class="fw-bold small text-uppercase mb-1">Alineación vertical</h6>
+    <div class="btn-group w-100" role="group" aria-label="Alineación vertical de la portada">
+      <button
+        v-for="option in CONTENT_ALIGN_OPTIONS"
+        :key="option.value"
+        type="button"
+        class="btn btn-sm"
+        :class="localData.contentAlign === option.value ? 'btn-secondary' : 'btn-outline-secondary'"
+        :aria-pressed="localData.contentAlign === option.value"
+        @click="localData.contentAlign = option.value"
+      >
+        {{ option.label }}
+      </button>
+    </div>
+    <p class="hs-hint mt-1">
+      Centrado para carrusel estándar o Inferior (Hero Programa CF) con panel sólido en móvil.
+    </p>
+
+    <hr />
+
     <EditorBrandColor
       v-model="localData.panelColorToken"
       data-edit-target="panelColorToken"
@@ -228,6 +248,38 @@
             @click="openField(slide, 'eyebrow')"
           >
             <i class="las la-plus me-1"></i> Agregar antetítulo
+          </button>
+        </div>
+
+        <!-- Subtítulo encima del título (sin filete) — opcional -->
+        <div class="hs-optional">
+          <div class="hs-optional__head">
+            <label class="form-label m-0">Subtítulo superior</label>
+            <button
+              v-if="isOpen(slide, 'subtitle')"
+              type="button"
+              class="hs-optional__drop"
+              title="Quitar subtítulo superior"
+              @click="clearField(slide, 'subtitle')"
+            >
+              <i class="las la-times"></i>
+            </button>
+          </div>
+
+          <template v-if="isOpen(slide, 'subtitle')">
+            <EditorText
+              v-model="slide.subtitle"
+              data-edit-target=".subtitle"
+              placeholder="Expande tus habilidades con"
+            />
+          </template>
+          <button
+            v-else
+            type="button"
+            class="btn btn-sm btn-outline-secondary w-100"
+            @click="openField(slide, 'subtitle')"
+          >
+            <i class="las la-plus me-1"></i> Agregar subtítulo superior
           </button>
         </div>
 
@@ -394,6 +446,7 @@ import {
   newHeroSlideId,
   normalizeHeroAction,
   normalizeHeroButtons,
+  normalizeHeroContentAlign,
   normalizeHeroLogo,
   normalizeHeroMode,
   normalizeHeroOverlay,
@@ -401,6 +454,7 @@ import {
   normalizeHeroSeoHeadingSource,
   normalizeHeroContentWidth,
   type HeroButtons,
+  type HeroContentAlign,
   type HeroContentWidth,
   type HeroMode,
   type HeroSlideItem,
@@ -421,6 +475,11 @@ const imageFocusModes = createImageFocusModes({
 const MODE_OPTIONS: Array<{ value: HeroMode; label: string }> = [
   { value: 'carousel', label: 'Carrusel' },
   { value: 'single', label: 'Una diapositiva' },
+];
+
+const CONTENT_ALIGN_OPTIONS: Array<{ value: HeroContentAlign; label: string }> = [
+  { value: 'center', label: 'Centrado' },
+  { value: 'bottom', label: 'Inferior (Programa CF)' },
 ];
 
 const CONTENT_WIDTH_OPTIONS: Array<{ value: HeroContentWidth; label: string }> = [
@@ -445,6 +504,7 @@ const buildSlide = (source: any): HeroSlideItem => {
     logo: normalizeHeroLogo(source?.logo),
     logoAlt: source?.logoAlt ?? '',
     eyebrow: source?.eyebrow ?? '',
+    subtitle: typeof source?.subtitle === 'string' ? source.subtitle : '',
     title: source?.title ?? '',
     desc: source?.desc ?? '',
     image: source?.image ?? '',
@@ -466,6 +526,7 @@ const build = (source: any) => ({
   seoHeadingSource: normalizeHeroSeoHeadingSource(source?.seoHeadingSource, source?.showSeoHeading),
   seoHeadingText: typeof source?.seoHeadingText === 'string' ? source.seoHeadingText : 'ESAN',
   mode: normalizeHeroMode(source?.mode),
+  contentAlign: normalizeHeroContentAlign(source?.contentAlign),
   contentWidth: normalizeHeroContentWidth(source?.contentWidth),
   panelColorToken: normalizeHeroPanelColor(source?.panelColorToken),
   overlayOpacity: normalizeHeroOverlay(source?.overlayOpacity),
@@ -516,7 +577,7 @@ const setMode = (mode: HeroMode) => {
  * para llegar a lo que de verdad se estaba editando. (El botón secundario ya no
  * es un opcional más: se elige con el selector "Botones" de cada diapositiva.)
  */
-type OptionalField = 'logo' | 'eyebrow' | 'desc';
+type OptionalField = 'logo' | 'eyebrow' | 'subtitle' | 'desc';
 
 /**
  * Campos desplegados, por diapositiva y campo.
@@ -535,6 +596,7 @@ const fieldKey = (slide: HeroSlideItem, field: OptionalField) => `${slide.id}:${
 const hasContent = (slide: HeroSlideItem, field: OptionalField) => {
   if (field === 'logo') return Boolean(slide.logo);
   if (field === 'eyebrow') return Boolean(slide.eyebrow);
+  if (field === 'subtitle') return Boolean(slide.subtitle);
   return Boolean(slide.desc);
 };
 
@@ -570,6 +632,8 @@ const clearField = (slide: HeroSlideItem, field: OptionalField) => {
     if (localData.value.seoHeadingSource === 'eyebrow') {
       localData.value.seoHeadingSource = 'title';
     }
+  } else if (field === 'subtitle') {
+    slide.subtitle = '';
   } else {
     slide.desc = '';
   }

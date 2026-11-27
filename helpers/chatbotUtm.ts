@@ -57,15 +57,46 @@ export const isInternalUrl = (url: string): boolean => {
 };
 
 /**
- * Agrega parámetros UTM de seguimiento a cualquier URL del portal para trazabilidad de conversiones
+ * Verifica si una URL apunta al portal ESAN (para no inyectar UTMs en sitios web externos)
+ */
+const shouldAppendEsanUtm = (url: string): boolean => {
+  if (!url || /^(mailto:|tel:|javascript:|#)/i.test(url)) return false;
+  if (url.startsWith('/') && !url.startsWith('//')) return true;
+  if (/^https?:\/\//i.test(url)) {
+    try {
+      const host = new URL(url).hostname.toLowerCase();
+      if (
+        host === 'esan.edu.pe' ||
+        host.endsWith('.esan.edu.pe') ||
+        host === 'uesan.edu.pe' ||
+        host.endsWith('.uesan.edu.pe') ||
+        host === 'ue.edu.pe' ||
+        host.endsWith('.ue.edu.pe') ||
+        host === 'localhost' ||
+        host === '127.0.0.1'
+      ) {
+        return true;
+      }
+      if (typeof window !== 'undefined' && host === window.location.hostname.toLowerCase()) {
+        return true;
+      }
+    } catch {
+      return false;
+    }
+  }
+  return false;
+};
+
+/**
+ * Agrega parámetros UTM de seguimiento a las URLs del ecosistema ESAN para trazabilidad de conversiones
  */
 export const appendChatbotUtm = (
   url: string,
   customUtm?: UtmTrackingParams
 ): string => {
   if (!url) return url;
-  // Si es un documento o archivo directo (PDF, DOC), no alterar la URL
-  if (isDownloadableFile(url)) {
+  // Si es un documento o archivo directo (PDF, DOC) o enlace de terceros, no alterar la URL
+  if (isDownloadableFile(url) || !shouldAppendEsanUtm(url)) {
     return url;
   }
 

@@ -3,6 +3,7 @@
     v-if="slides.length"
     ref="root"
     class="hero"
+    :class="{ 'hero--align-bottom': contentAlign === 'bottom' }"
     :style="panelStyle"
     @pointerenter="onPointerEnter"
     @pointerleave="onPointerLeave"
@@ -49,6 +50,7 @@
         :logo="active.logo"
         :logo-alt="active.logoAlt"
         :eyebrow="active.eyebrow"
+        :subtitle="active.subtitle"
         :title="active.title"
         :desc="active.desc"
         :image="active.image"
@@ -106,6 +108,7 @@ import {
   heroPanelStyle,
   normalizeHeroAction,
   normalizeHeroButtons,
+  normalizeHeroContentAlign,
   normalizeHeroLogo,
   normalizeHeroMode,
   normalizeHeroSeoHeadingSource,
@@ -128,6 +131,8 @@ const HERO_FADE_MS = 900;
 const edit = useEditTarget();
 
 const props = defineProps<{ data: any }>();
+
+const contentAlign = computed(() => normalizeHeroContentAlign(props.data?.contentAlign));
 
 /* Color de la franja: la hoja lo lee de --hero-panel-bg (ver _hero.scss). */
 const panelStyle = computed(() => ({
@@ -161,6 +166,7 @@ const slides = computed<HeroSlideItem[]>(() => {
     logo: normalizeHeroLogo(slide?.logo),
     logoAlt: slide?.logoAlt ?? '',
     eyebrow: slide?.eyebrow ?? '',
+    subtitle: typeof slide?.subtitle === 'string' ? slide.subtitle : '',
     title: slide?.title ?? '',
     desc: slide?.desc ?? '',
     image: slide?.image ?? '',

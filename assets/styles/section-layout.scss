@@ -55,6 +55,7 @@ $ps-float-breakpoint: 1280px;
  */
 $ps-block-containers: (
   '.about-career__inner',
+  '.academic-offer__inner',
   '.admission-section__container',
   '.breadcrumb-block__inner--boxed',
   '.cards-pillars__container',
@@ -62,9 +63,16 @@ $ps-block-containers: (
   '.cards-v2__container',
   '.cards-dpa__container',
   '.card-international__container',
+  '.course-about__inner',
+  '.course-catalog__inner',
+  '.course-faculty__inner',
+  '.course-general-info__inner',
+  '.course-related__inner',
   '.ctaband__inner',
   '.ctaband--compact',
+  '.details-band__inner',
   '.ecosystem__inner',
+  '.ecosystem-dpa__inner',
   '.ecosystem-esan__inner',
   '.faq-accordion-block__inner',
   '.graduate-profile-section__container',
@@ -75,7 +83,8 @@ $ps-block-containers: (
   '.key-facts__inner',
   '.malla-curricular__inner',
   '.mapamundi__inner',
-  '.subhero__inner'
+  '.subhero__inner',
+  '.why-choose__inner'
 );
 
 /*

@@ -1,8 +1,10 @@
 /* ============================================================
    ARCIS Design System — ESAN University
    Bloque: FaqAccordion (Preguntas Frecuentes)
-   Lámina Figma: [FAQs] (node 2319:45851)
+   Lámina Figma: [FAQs] (node 2319:45851 / 3464:28940 / 3541:34586)
    ============================================================ */
+
+@use '../breakpoints' as bp;
 
 .arcis-scope {
   .faq-accordion-block {
@@ -12,43 +14,53 @@
 
     &__inner {
       width: 100%;
+      max-width: var(--ds-container-max, 1280px);
+      margin-inline: auto;
+      padding-block: var(--ds-spacing-xxl, 64px);
+      padding-inline: var(--ds-container-padding-x);
+      box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 32px;
+
+      @include bp.container-down('sm') {
+        gap: 20px;
+      }
     }
 
     &__header {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 8px;
+      gap: 16px;
     }
 
     &__eyebrow {
       margin: 0;
-      color: var(--ds-color-primary-default, #e31140);
-      font-size: 14px;
-      font-weight: 700;
+      color: var(--ds-color-primary-default, #e3173e);
+      font-size: 12px;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
     }
 
     &__title {
       margin: 0;
-      color: var(--ds-color-text-default, #0f172a);
-      font-size: 32px;
+      color: var(--ds-color-text-primary, #000000);
+      font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+      font-size: var(--ds-heading-xl, 40px);
       line-height: 1.25;
-      font-weight: 700;
+      font-weight: 600;
+      letter-spacing: -0.01em;
     }
 
     &__rule {
       display: block;
-      width: 48px;
-      height: 3px;
-      background-color: var(--ds-color-primary-default, #e31140);
-      border-radius: 2px;
-      margin-top: 4px;
-      margin-bottom: 4px;
+      width: 40px;
+      height: 2px;
+      background-color: var(--ds-color-esan-corp, #e3173e);
+      border-radius: 0;
+      margin: 0;
     }
 
     &__desc {
@@ -129,6 +141,24 @@
       flex-direction: column;
       gap: 12px;
       width: 100%;
+
+      .collapse.collapse--arcis {
+        border-color: var(--ds-color-border-subtle, #d5d7e1);
+      }
+
+      .collapse.collapse--arcis + .collapse.collapse--arcis {
+        margin-top: 0;
+      }
+
+      .collapse__trigger {
+        min-height: 76px;
+        padding: 16px 24px;
+        font-size: 16px;
+        line-height: 1.25;
+        font-weight: 600;
+        color: var(--ds-color-text-primary, #000000);
+        box-sizing: border-box;
+      }
     }
 
     &__empty {

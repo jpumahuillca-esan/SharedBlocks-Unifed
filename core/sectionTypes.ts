@@ -14,6 +14,7 @@ export interface BlockItem {
     anchorId?: string;
     global_block_id?: number | null;
     global_block_name?: string | null;
+    global_anchor_id?: string | null;
     is_global?: boolean;
     is_active?: boolean;
 }

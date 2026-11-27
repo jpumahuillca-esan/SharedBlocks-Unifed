@@ -1,0 +1,165 @@
+/* ==========================================================================
+   COURSE FACULTY ([Plana-Docente]) — ARCIS Design System
+   Figma: 2664:49673 (Desktop 1366) | 3552:13600 (Tablet 768) | 3543:39358 (Mobile 360)
+   Tolerante a sección con columna flotante vía `.course-faculty__inner` en `$ps-block-containers`.
+   ========================================================================== */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .course-faculty {
+    width: 100%;
+    background-color: var(--ds-color-background-light, #F1F5F9);
+    box-sizing: border-box;
+  }
+
+  .course-faculty__inner {
+    width: 100%;
+    max-width: var(--ds-container-max, 1280px);
+    margin-inline: auto;
+    padding: var(--ds-spacing-xl, 64px) var(--ds-container-padding-x, 32px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-sizing: border-box;
+
+    @include bp.container-down('lg') {
+      padding: var(--ds-spacing-xl, 64px) 20px;
+    }
+
+    @container (max-width: 639.98px) {
+      padding: var(--ds-spacing-md, 32px) 12px;
+      gap: 20px;
+    }
+  }
+
+  .course-faculty__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .course-faculty__title {
+    margin: 0;
+    color: var(--ds-color-text-primary, #000000);
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: var(--ds-heading-xl, 40px);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-align: left;
+  }
+
+  .course-faculty__rule {
+    display: block;
+    width: 40px;
+    height: 2px;
+    background-color: var(--ds-color-esan-corp, #E3173E);
+    flex-shrink: 0;
+  }
+
+  .course-faculty__list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: 100%;
+  }
+
+  .course-faculty__item {
+    width: 100%;
+  }
+
+  .course-faculty__card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    padding: 32px;
+    border-left: 4px solid var(--ds-color-esan-corp, #E3173E);
+    border-radius: var(--ds-radius-sm, 8px);
+    background-color: var(--ds-color-background-default, #FFFFFF);
+    box-sizing: border-box;
+
+    @container (max-width: 639.98px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px;
+    }
+  }
+
+  .course-faculty__photo {
+    flex: 0 0 100px;
+    width: 100px;
+    height: 100px;
+    border-radius: var(--ds-radius-md, 16px);
+    overflow: hidden;
+    background-color: var(--ds-color-background-light, #F1F5F9);
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .course-faculty__photo-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ds-color-text-secondary, #4F5A6C);
+  }
+
+  .course-faculty__info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .course-faculty__name {
+    margin: 0;
+    color: var(--ds-color-text-primary, #000000);
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: var(--ds-heading-sm, 24px);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+
+    @container (max-width: 639.98px) {
+      font-size: 20px;
+    }
+  }
+
+  .course-faculty__name-link {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--ds-color-esan-corp, #E3173E);
+      text-decoration: underline;
+    }
+  }
+
+  .course-faculty__bio {
+    margin: 0;
+    color: var(--ds-color-text-primary, #000000);
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: var(--ds-text-body-sm, 14px);
+    font-weight: 400;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+}

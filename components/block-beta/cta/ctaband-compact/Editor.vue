@@ -13,19 +13,13 @@
     <hr />
 
     <h6 class="fw-bold small text-uppercase mb-1">Ícono</h6>
-    <p class="cta-hint">
-      Se dibuja en un círculo a la izquierda. Déjalo vacío para quitarlo.
-    </p>
-    <EditorText
+    <EditorIcon
       v-model="localData.icon"
       data-edit-target="icon"
       class="mb-3"
-      list="cta-compact-icons"
-      placeholder="help-circle"
+      label="Ícono (opcional)"
+      hint="Se dibuja en un círculo a la izquierda. Déjalo vacío para quitarlo."
     />
-    <datalist id="cta-compact-icons">
-      <option v-for="name in ICON_SUGGESTIONS" :key="name" :value="name" />
-    </datalist>
 
     <hr />
 
@@ -52,10 +46,10 @@
  * Editor del CTA Band compacto.
  */
 import { ref, watch } from 'vue';
+import EditorIcon from '../../../editor-beta/EditorIcon/EditorIcon.vue';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
 import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
-import { ICON_SUGGESTIONS } from '../_shared/iconOptions';
 import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 
 const props = defineProps<{

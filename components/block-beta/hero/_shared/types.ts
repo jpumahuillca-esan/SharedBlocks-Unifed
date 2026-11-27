@@ -78,19 +78,30 @@ export const normalizeHeroMode = (value: unknown): HeroMode =>
     value === 'single' ? 'single' : 'carousel';
 
 /**
+ * Alineación vertical del contenido dentro de la portada.
+ * - `center`: centrado vertical (portada institucional / carrusel estándar).
+ * - `bottom`: apoyado en la base (`Hero-Program-CF` / Extended Learning Figma).
+ */
+export type HeroContentAlign = 'center' | 'bottom';
+
+export const normalizeHeroContentAlign = (value: unknown): HeroContentAlign =>
+    value === 'bottom' ? 'bottom' : 'center';
+
+/**
  * Una diapositiva de la portada.
  *
- * `desc` y `secondary` son opcionales por diseño (así lo marcan las viñetas de
- * la maqueta: "El texto de descripción es opcional" y "El Button secundario es
- * opcional"). Vacíos, no se dibujan.
+ * `subtitle`, `desc` y `secondary` son opcionales por diseño.
+ * Vacíos, no se dibujan.
  */
 export interface HeroSlideItem {
     id: string;
     /** Logo opcional sobre/antes del antetítulo (240×63px en Desktop/Tablet, 200×48px en Mobile). */
     logo: string;
     logoAlt: string;
-    /** Línea corta sobre el título. */
+    /** Línea corta sobre el título (con filete rojo). */
     eyebrow: string;
+    /** Subtítulo opcional encima del título en Bricolage Grotesque regular (sin filete). */
+    subtitle?: string;
     title: string;
     /** Opcional. */
     desc: string;
@@ -116,6 +127,8 @@ export interface HeroSliderData {
     seoHeadingText: string;
     /** Carrusel o una sola diapositiva (ver `HeroMode`). */
     mode: HeroMode;
+    /** Alineación vertical del contenido (`center` | `bottom`). */
+    contentAlign?: HeroContentAlign;
     /** Ancho máximo de la columna de contenido (ver `HeroContentWidth`). */
     contentWidth?: HeroContentWidth;
     /**

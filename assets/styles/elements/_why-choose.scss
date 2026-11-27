@@ -1,0 +1,238 @@
+/* ==========================================================================
+   WHY CHOOSE BAND ([Section-Porque-Elegir]) — ARCIS Design System
+   Figma: 3466:29596 (Desktop 1366) | 3543:42703 (Tablet 768) | 3543:34765 (Mobile 360)
+   ========================================================================== */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .why-choose {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    padding: 64px 0;
+    overflow: hidden;
+    background-color: var(--wc-bg, var(--ds-color-blue-dark-700, #1A2B3C));
+    color: var(--wc-fg, var(--ds-color-text-inverse, #FFFFFF));
+    box-sizing: border-box;
+
+    @include bp.container-down('lg') {
+      padding: 64px 0;
+    }
+
+    @include bp.container-down('sm') {
+      padding: 48px 0;
+    }
+  }
+
+  .why-choose__texture {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .why-choose__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 821fr) minmax(0, 427fr);
+    align-items: stretch;
+    gap: 32px;
+    width: 100%;
+    max-width: var(--ds-container-max, 1280px);
+    margin-inline: auto;
+    padding-inline: var(--ds-container-padding-x, 32px);
+    box-sizing: border-box;
+
+    @include bp.container-down('lg') {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+      padding-inline: 12px;
+    }
+
+    @include bp.container-down('sm') {
+      gap: 20px;
+      padding-inline: 12px;
+    }
+  }
+
+  .why-choose__content {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    min-width: 0;
+  }
+
+  .why-choose__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .why-choose__eyebrow {
+    margin: 0;
+  }
+
+  .why-choose__title {
+    margin: 0;
+    color: var(--wc-fg, #FFFFFF);
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: var(--ds-heading-xl, 40px);
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: left;
+  }
+
+  .why-choose__rule {
+    display: block;
+    width: 40px;
+    height: 2px;
+    background-color: var(--wc-rule, #FFFFFF);
+    flex-shrink: 0;
+  }
+
+  .why-choose__desc {
+    margin: 0;
+    color: var(--wc-fg, #FFFFFF);
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: var(--ds-text-body-lg, 18px);
+    font-weight: 400;
+    line-height: 1.39;
+    text-align: left;
+  }
+
+  .why-choose__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 20px;
+    row-gap: 20px;
+    width: 100%;
+
+    @include bp.container-down('lg') {
+      column-gap: 20px;
+      row-gap: 18px;
+    }
+
+    @include bp.container-down('sm') {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 0;
+    }
+  }
+
+  .why-choose__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px 0;
+    min-width: 0;
+    box-sizing: border-box;
+
+    @include bp.container-down('sm') {
+      gap: 16px;
+      padding: 16px 0;
+    }
+  }
+
+  .why-choose__icon {
+    flex: 0 0 64px;
+    width: 64px;
+    height: 64px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--wc-fg, #FFFFFF);
+  }
+
+  .why-choose__item-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .why-choose__item-title {
+    margin: 0;
+    color: var(--wc-fg, #FFFFFF);
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: var(--ds-heading-sm, 24px);
+    font-weight: 600;
+    line-height: 1.25;
+
+    @include bp.container-down('sm') {
+      font-size: var(--ds-heading-sm, 20px);
+    }
+  }
+
+  .why-choose__item-desc {
+    margin: 0;
+    color: var(--wc-fg, #FFFFFF);
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: var(--ds-text-body, 16px);
+    font-weight: 400;
+    line-height: 1.375;
+  }
+
+  .why-choose__media {
+    width: 100%;
+    min-height: 369px;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: var(--ds-color-background-light, #F1F5F9);
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @include bp.container-down('lg') {
+      min-height: 280px;
+    }
+
+    @include bp.container-down('sm') {
+      display: block !important;
+      min-height: 240px;
+      height: 240px;
+    }
+  }
+
+  .why-choose--hide-tablet-media .why-choose__media {
+    @include bp.container-down('lg') {
+      display: none;
+    }
+
+    @include bp.container-down('sm') {
+      display: block;
+    }
+  }
+}
+
+/* Cuando convive en una sección con columna flotante, evita comprimir el grid 2x2 y apila la foto debajo */
+@mixin why-choose-float-reserve($root) {
+  #{$root}:is(.ps-columns--reserve-end, .ps-columns--reserve-start) > .ps-col--full {
+    .why-choose__inner {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+    }
+
+    .why-choose__media {
+      min-height: 280px;
+      max-height: 360px;
+    }
+  }
+}
+
+@media (min-width: 1280px) {
+  @include why-choose-float-reserve('.ps-columns');
+}
+
+@include why-choose-float-reserve('.ps-columns--editor');

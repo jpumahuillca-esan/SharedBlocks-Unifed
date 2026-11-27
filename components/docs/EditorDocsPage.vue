@@ -5,18 +5,22 @@ import EditorText from '../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../editor-beta/EditorTextarea/EditorTextarea.vue';
 import EditorUrl from '../editor-beta/EditorUrl/EditorUrl.vue';
 import EditorBrandColor from '../editor-beta/EditorBrandColor/EditorBrandColor.vue';
+import EditorIcon from '../editor-beta/EditorIcon/EditorIcon.vue';
 import EditorImage from '../editor-beta/EditorImage/EditorImage.vue';
+import EditorPictogram from '../editor-beta/EditorPictogram/EditorPictogram.vue';
 import demoImageUrl from './editor-demo-image.svg';
 import {
   DEFAULT_BRAND_COLOR_TOKEN,
   resolveBrandContentToken,
 } from '../editor-beta/EditorBrandColor/brandColors';
 
-type EditorCodeKey = 'text' | 'link' | 'color' | 'image';
+type EditorCodeKey = 'text' | 'link' | 'color' | 'image' | 'icon' | 'pictogram';
 
 const createDemoData = () => ({
   title: 'Expande tus habilidades con Extended Learning',
   desc: 'Aprende con programas prácticos, diseñados para impulsar tu camino y adaptarse a tus objetivos.',
+  icon: 'graduation-cap',
+  pictogram: 'elearning',
   buttonLabel: 'Inscríbete ahora',
   buttonUrl: '/programas/extended-learning',
   buttonTarget: '',
@@ -45,12 +49,13 @@ const editorCodeTabs: Array<{
   { key: 'link', label: 'Enlace', description: 'EditorUrl combina la dirección con el switch de enlace interno o página externa al enlazar v-model:target.', defaultLine: 6 },
   { key: 'color', label: 'Color', description: 'EditorBrandColor guarda el token seleccionado; Block.vue resuelve ese token como fondo y elige el color de texto con contraste.', defaultLine: 4 },
   { key: 'image', label: 'Imagen', description: 'Vincula alt y foco de forma opcional; focus-ratio muestra el recorte real y @select conecta con el selector de medios.', defaultLine: 4 },
+  { key: 'icon', label: 'Íconos', description: 'EditorIcon abre una galería visual con búsqueda en español/inglés conectada a todo @lucide/vue. Ya está registrado globalmente.', defaultLine: 4 },
+  { key: 'pictogram', label: 'Pictogramas', description: 'EditorPictogram muestra los pictogramas SVG de marca en una grilla clicable con buscador y superficie adaptable.', defaultLine: 4 },
 ];
 
 const editorCodeExamples: Record<EditorCodeKey, string> = {
-  text: `<!-- Editor.vue -->
-import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue'
-import EditorText from '../../../editor-beta/EditorText/EditorText.vue'
+  text: `<!-- Editor.vue (disponible globalmente o vía @shared/components/editor-beta) -->
+import { EditorText, EditorTextarea } from '@shared/components/editor-beta'
 
 <EditorTextarea
   v-model="localData.title"
@@ -74,7 +79,7 @@ import EditorText from '../../../editor-beta/EditorText/EditorText.vue'
   :counter="false"
 />`,
   link: `<!-- Editor.vue -->
-import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue'
+import { EditorUrl } from '@shared/components/editor-beta'
 
 <EditorUrl
   v-model="localData.buttonUrl"
@@ -84,7 +89,7 @@ import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue'
   placeholder="/ruta o https://"
 />`,
   color: `<!-- Editor.vue -->
-import EditorBrandColor from '../../../editor-beta/EditorBrandColor/EditorBrandColor.vue'
+import { EditorBrandColor } from '@shared/components/editor-beta'
 
 <EditorBrandColor
   v-model="localData.panelColorToken"
@@ -101,7 +106,7 @@ const panelColorStyle = computed(() => ({
   '--cta-banner-content-color': \`var(\${resolveBrandContentToken(banner.value.panelColorToken)})\`,
 }))`,
   image: `<!-- Editor.vue -->
-import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue'
+import { EditorImage } from '@shared/components/editor-beta'
 
 <EditorImage
   v-model="localData.image"
@@ -119,6 +124,28 @@ import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue'
 const selectImage = () => {
   emit('select-image', { item: localData.value, field: 'image' });
 }`,
+  icon: `<!-- Disponible globalmente en cualquier Editor.vue (también importable desde @shared/components/editor-beta) -->
+<EditorIcon
+  v-model="item.icon"
+  data-edit-target=".icon"
+  label="Ícono (opcional)"
+/>
+
+<!-- O en botones con selector de posición antes/después del texto -->
+<EditorIcon
+  v-model="slide.primary.icon"
+  v-model:position="slide.primary.iconPosition"
+  with-position
+  :optional="true"
+/>`,
+  pictogram: `<!-- Disponible globalmente en cualquier Editor.vue (también importable desde @shared/components/editor-beta) -->
+<EditorPictogram
+  v-model="item.pictogram"
+  data-edit-target=".pictogram"
+  label="Pictograma"
+  :optional="false"
+  preview-surface="dark"
+/>`,
 };
 
 const activeCodeKey = ref<EditorCodeKey>('text');
@@ -359,6 +386,28 @@ const edit = useEditTarget();
               />
             </div>
 
+            <div class="editor-demo__field">
+              <button class="editor-demo__code-link" type="button" @click="showCode('icon', 2)">
+                <i class="las la-code" aria-hidden="true"></i> Ver código
+              </button>
+              <EditorIcon
+                v-model="demoData.icon"
+                class="mb-3"
+                label="Ícono (global)"
+              />
+            </div>
+
+            <div class="editor-demo__field">
+              <button class="editor-demo__code-link" type="button" @click="showCode('pictogram', 2)">
+                <i class="las la-code" aria-hidden="true"></i> Ver código
+              </button>
+              <EditorPictogram
+                v-model="demoData.pictogram"
+                class="mb-3"
+                label="Pictograma de marca (global)"
+              />
+            </div>
+
             <input
               ref="imageInput"
               class="editor-demo__file-input"
@@ -535,12 +584,13 @@ const edit = useEditTarget();
     <section id="editor-beta-consumption" class="editor-docs__section">
       <h2>Cómo se consumen en un <code>Editor.vue</code></h2>
       <p>
-        Cada editor importa los controles que necesita desde <code>components/editor-beta</code>,
-        los coloca en su formulario y conecta cada valor con los datos del bloque mediante
-        <code>v-model</code>. Las props permiten ajustar etiquetas, ayudas, límites y variaciones.
+        Todos los controles de <code>components/editor-beta</code> están registrados globalmente vía
+        <code>EditorBetaPlugin</code> (<code>main.ts</code>) y también pueden importarse desde
+        <code>@shared/components/editor-beta</code>. Cada editor coloca solo los campos que necesita y los
+        conecta con los datos del bloque mediante <code>v-model</code>.
       </p>
       <ol>
-        <li>Importa el control, por ejemplo <code>EditorTextarea</code>, en el <code>Editor.vue</code>.</li>
+        <li>Úsalo directo en el template (p. ej. <code>&lt;EditorIcon v-model="item.icon" /&gt;</code>) o impórtalo desde <code>@shared/components/editor-beta</code>.</li>
         <li>Conecta el campo con la propiedad correspondiente, como <code>v-model="localData.title"</code>.</li>
         <li>Configura sus opciones con props y, si aplica, enlaza modelos adicionales como <code>target</code>, <code>alt</code> o el punto focal.</li>
         <li>El editor emite los datos actualizados y el bloque los refleja en la vista previa.</li>
@@ -548,7 +598,7 @@ const edit = useEditTarget();
       <div class="editor-docs__note">
         <strong>Son controles para construir formularios.</strong>
         Los componentes de <code>editor-beta</code> no son bloques de contenido ni se agregan al lienzo
-        por sí solos: se reutilizan dentro del editor de cada bloque.
+        por sí solos: se reutilizan dentro del editor de cada bloque o vista administrativa.
       </div>
     </section>
 
@@ -564,6 +614,8 @@ const edit = useEditTarget();
         <li><code>EditorUrl</code>: acepta rutas internas o URL completas; <code>v-model:target</code> agrega el switch de pestaña.</li>
         <li><code>EditorImage</code>: seleccionar, cambiar o quitar una imagen; alt y controles de foco aparecen al enlazar sus modelos.</li>
         <li><code>EditorBrandColor</code>: elige un color institucional y guarda su token de diseño.</li>
+        <li><code>EditorIcon</code>: galería visual conectada a <code>@lucide/vue</code> (~1,800 íconos) con búsqueda en español/inglés y soporte de posición (<code>with-position</code>).</li>
+        <li><code>EditorPictogram</code>: grilla visual con buscador para elegir pictogramas de marca SVG (<code>helpers/pictograms.ts</code>).</li>
         <li><code>EditorImageFocus</code>: ajusta qué parte de la imagen queda visible al recortarla.</li>
         <li><code>EditorLinkTarget</code>: configura si un enlace abre en la misma pestaña o en otra.</li>
         <li><code>EditorFieldShell</code> y <code>EditorHint</code>: estructura común para etiquetas, ayuda y avisos.</li>

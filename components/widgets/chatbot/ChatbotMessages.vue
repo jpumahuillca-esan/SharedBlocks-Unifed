@@ -13,49 +13,6 @@
           v-html="formatMessage(msg.content)"
           @click="onBubbleContentClick"
         ></div>
-
-        <!-- Tarjetas de Páginas Sugeridas / Encontradas en el Portal -->
-        <div v-if="msg.suggestedPages && msg.suggestedPages.length > 0" class="suggested-pages-box mt-2">
-          <span class="suggested-pages-title">
-            <i class="las la-compass"></i> Páginas recomendadas de ESAN:
-          </span>
-          <div class="suggested-pages-list">
-            <div
-              v-for="(page, pIdx) in msg.suggestedPages"
-              :key="pIdx"
-              class="page-suggestion-card"
-            >
-              <a
-                :href="appendChatbotUtm(page.url)"
-                class="page-suggestion-item"
-                data-spa-link="true"
-                @click.prevent="$emit('navigate-page', page.url)"
-              >
-                <div class="page-item-icon">
-                  <i :class="page.icon || 'las la-file-alt'"></i>
-                </div>
-                <div class="page-item-content">
-                  <span class="page-item-title">{{ page.title }}</span>
-                  <small v-if="page.description" class="page-item-desc">{{ page.description }}</small>
-                </div>
-                <i class="las la-arrow-right page-item-arrow"></i>
-              </a>
-
-              <!-- Botón de Brochure descargable si está presente -->
-              <div v-if="safeHref(page.brochureUrl)" class="brochure-bar">
-                <a
-                  :href="safeHref(page.brochureUrl)!"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="brochure-badge-link"
-                  title="Descargar Brochure Oficial"
-                >
-                  <i class="las la-file-pdf text-danger"></i> Folleto Oficial (PDF)
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -68,18 +25,20 @@
       </div>
     </div>
 
-    <!-- Chips de Sugerencias Rápidas -->
-    <div v-if="suggestions.length > 0 && !isTyping" class="chat-suggestions-area mt-2">
-      <span class="small text-muted d-block mb-1 fs-11">Preguntas y acciones sugeridas:</span>
+    <!-- Únicamente botones previos contextuales compactos (máx. 3), sin tarjetas ni listas abrumadoras -->
+    <div v-if="visibleContextButtons.length > 0 && !isTyping" class="chat-suggestions-area mt-1">
+      <span class="small text-muted d-block mb-1 fs-11">
+        <i class="las la-tags text-danger"></i> Sugerido en esta página:
+      </span>
       <div class="d-flex flex-wrap gap-1">
         <button
-          v-for="(sug, sIdx) in suggestions"
-          :key="sIdx"
+          v-for="(btn, bIdx) in visibleContextButtons"
+          :key="`ctx-${bIdx}`"
           type="button"
-          class="suggestion-chip"
-          @click="$emit('select-suggestion', sug)"
+          class="suggestion-chip suggestion-chip--context"
+          @click="$emit('select-suggestion', btn.label)"
         >
-          {{ sug }}
+          {{ btn.label }}
         </button>
       </div>
     </div>
@@ -87,29 +46,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { formatMessage, appendChatbotUtm, type ChatMessageItem } from '../../../composables/useChatbot';
+import { ref, computed } from 'vue';
+import {
+  formatMessage,
+  type ChatMessageItem,
+  type ContextQuickButton
+} from '../../../composables/useChatbot';
 
-defineProps<{
+const props = defineProps<{
   messages: ChatMessageItem[];
   isTyping: boolean;
   suggestions: string[];
+  contextButtons?: ContextQuickButton[];
 }>();
+
+const visibleContextButtons = computed(() => {
+  return Array.isArray(props.contextButtons) ? props.contextButtons.slice(0, 3) : [];
+});
 
 const emit = defineEmits<{
   (e: 'select-suggestion', sug: string): void;
   (e: 'navigate-page', url: string): void;
 }>();
-
-const safeHref = (rawUrl?: string | null): string | null => {
-  if (!rawUrl || typeof rawUrl !== 'string') return null;
-  const trimmed = rawUrl.trim();
-  if (!trimmed) return null;
-  if (/^https?:\/\//i.test(trimmed) || (trimmed.startsWith('/') && !trimmed.startsWith('//'))) {
-    return trimmed;
-  }
-  return null;
-};
 
 const containerRef = ref<HTMLElement | null>(null);
 
@@ -142,9 +100,13 @@ defineExpose({
 
 <style scoped>
 .chatbot-body {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
   padding: 14px;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   background: #f8fafc;
   display: flex;
   flex-direction: column;
@@ -165,11 +127,11 @@ defineExpose({
 }
 
 .chat-bubble {
-  max-width: 86%;
+  max-width: 92%;
   padding: 10px 14px;
   border-radius: 14px;
-  font-size: 0.82rem;
-  line-height: 1.45;
+  font-size: 0.83rem;
+  line-height: 1.48;
 }
 
 .bubble-user {
@@ -184,6 +146,34 @@ defineExpose({
   border: 1px solid #e2e8f0;
   border-bottom-left-radius: 2px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+:deep(.chat-bullet-item) {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 5px;
+  line-height: 1.42;
+}
+
+:deep(.chat-bullet-dot) {
+  color: #e31140;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: -1px;
+}
+
+:deep(.chat-paragraph-gap) {
+  height: 7px;
+}
+
+:deep(.chat-inline-code) {
+  background: #f1f5f9;
+  color: #0f172a;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 :deep(.chat-inline-link) {
@@ -225,127 +215,6 @@ defineExpose({
   text-decoration: underline;
 }
 
-/* TARJETAS DE PÁGINAS SUGERIDAS (CATÁLOGO DE RUTAS ESAN) */
-.suggested-pages-box {
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px dashed #fecdd3;
-}
-
-.suggested-pages-title {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #e31140;
-  margin-bottom: 6px;
-  display: block;
-}
-
-.suggested-pages-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.page-suggestion-card {
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  border: 1px solid #fecdd3;
-  border-left: 3px solid #e31140;
-  border-radius: 8px;
-  overflow: hidden;
-  transition: all 0.2s ease;
-}
-
-.page-suggestion-card:hover {
-  background: #fff1f2;
-  border-color: #fda4af;
-  transform: translateX(2px);
-}
-
-.page-suggestion-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  color: #1e293b;
-  text-decoration: none;
-}
-
-.brochure-bar {
-  padding: 3px 10px 6px;
-  background: rgba(254, 205, 211, 0.2);
-  border-top: 1px dotted #fecdd3;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.brochure-badge-link {
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: #b91c1c;
-  background: #ffffff;
-  border: 1px solid #fca5a5;
-  border-radius: 4px;
-  padding: 2px 7px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  transition: all 0.15s ease;
-}
-
-.brochure-badge-link:hover {
-  background: #e31140;
-  color: #ffffff;
-  border-color: #e31140;
-}
-
-.page-item-icon {
-  width: 26px;
-  height: 26px;
-  background: #fff1f2;
-  color: #e31140;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  flex-shrink: 0;
-}
-
-.page-item-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.page-item-title {
-  font-size: 0.76rem;
-  font-weight: 700;
-  color: #0f172a;
-  display: block;
-  line-height: 1.2;
-}
-
-.page-item-desc {
-  font-size: 0.68rem;
-  color: #64748b;
-  display: block;
-  line-height: 1.15;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.page-item-arrow {
-  color: #e31140;
-  font-size: 13px;
-  flex-shrink: 0;
-}
-
 /* TYPING DOTS */
 .typing-bubble {
   display: flex;
@@ -377,15 +246,42 @@ defineExpose({
   color: #e31140;
   font-size: 0.72rem;
   font-weight: 600;
-  padding: 5px 10px;
+  padding: 6px 10px;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: normal;
+  text-align: left;
+  line-height: 1.3;
+  max-width: 100%;
+  word-break: break-word;
+}
+
+.suggestion-chip--context {
+  background: #fff1f2;
+  border-color: #fda4af;
+  color: #be123c;
 }
 
 .suggestion-chip:hover {
   background: #fff1f2;
   border-color: #fda4af;
+}
+
+@media (max-width: 640px) {
+  .chatbot-body {
+    padding: 12px;
+  }
+
+  .chat-bubble {
+    max-width: 90%;
+    font-size: 0.86rem;
+  }
+
+  .suggestion-chip {
+    font-size: 0.76rem;
+    padding: 7px 11px;
+  }
 }
 
 .custom-scroll::-webkit-scrollbar {

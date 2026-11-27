@@ -186,6 +186,7 @@ import {
   type EcosystemDpaItem,
   type EcosystemDpaFocusProfiles,
 } from './types';
+import { stripBundledAssetsDeep } from '../../../../helpers/bundledAssets';
 
 const props = defineProps<{
   modelValue: any;
@@ -208,7 +209,7 @@ const focusModes = [
 watch(
   localData,
   (val) => {
-    emit('update:modelValue', JSON.parse(JSON.stringify(val)));
+    emit('update:modelValue', stripBundledAssetsDeep(JSON.parse(JSON.stringify(val))));
   },
   { deep: true },
 );

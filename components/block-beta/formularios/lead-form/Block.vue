@@ -1,5 +1,8 @@
 <template>
-  <div class="lead-form">
+  <div
+    class="lead-form"
+    :data-lead-form-redirect="cfg.showFloatingRedirect ? 'true' : 'false'"
+  >
     <div class="lead-form__header">
       <AtomHeading :level="3" size="h5" class="lead-form__title" v-bind="edit('mainTitle')">{{ cfg.mainTitle }}</AtomHeading>
       <AtomText v-if="cfg.subTitle" size="body-compact" class="lead-form__subtitle" v-bind="edit('subTitle')">{{ cfg.subTitle }}</AtomText>

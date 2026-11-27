@@ -6,6 +6,7 @@ import {
   normalizeLinkTarget,
   type LinkTarget,
 } from '../../../../helpers/linkTarget';
+import { resolveBundledImageFallback } from '../../../../helpers/bundledAssets';
 import dpaManagementImg from '../../../../assets/images/dpa-faculty-management.jpg';
 import dpaEngineeringImg from '../../../../assets/images/dpa-faculty-engineering.jpg';
 import dpaLawImg from '../../../../assets/images/dpa-faculty-law.jpg';
@@ -17,6 +18,13 @@ const DEFAULT_FACULTY_IMAGES = [
   dpaLawImg,
   dpaPsychologyImg,
 ];
+
+const DPA_DEFAULT_ASSETS: Record<string, string> = {
+  'dpa-faculty-management': dpaManagementImg,
+  'dpa-faculty-engineering': dpaEngineeringImg,
+  'dpa-faculty-law': dpaLawImg,
+  'dpa-faculty-psychology': dpaPsychologyImg,
+};
 
 const LEGACY_UNSPLASH_URLS = new Set([
   'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop',
@@ -115,7 +123,8 @@ export const normalizeEcosystemDpaItem = (
 
   const rawImage = typeof raw?.image === 'string' ? raw.image.trim() : '';
   const fallbackImage = DEFAULT_FACULTY_IMAGES[index % DEFAULT_FACULTY_IMAGES.length] || dpaManagementImg;
-  const resolvedImage = !rawImage || LEGACY_UNSPLASH_URLS.has(rawImage) ? fallbackImage : rawImage;
+  const normalizedRaw = LEGACY_UNSPLASH_URLS.has(rawImage) ? '' : rawImage;
+  const resolvedImage = resolveBundledImageFallback(normalizedRaw, fallbackImage, DPA_DEFAULT_ASSETS);
 
   return {
     id: raw?.id || `edpa-card-${index}`,

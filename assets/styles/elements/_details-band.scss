@@ -1,0 +1,138 @@
+/* ==========================================================================
+   INFO DETAILS BAND ([Detalles] / [Reconocimiento]) — ARCIS Design System
+   Figma: 3464:28904 (Desktop 1366) | 3543:42266 (Tablet 768) | 3541:33418 (Mobile 360)
+   ========================================================================== */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .details-band {
+    width: 100%;
+    background-color: var(--details-band-bg, var(--ds-color-esan-corp, #E3173E));
+    color: var(--details-band-fg, var(--ds-color-text-inverse, #FFFFFF));
+    border-bottom: 1px solid var(--ds-color-background-light, #F1F5F9);
+    box-sizing: border-box;
+  }
+
+  .details-band__inner {
+    width: 100%;
+    max-width: var(--ds-container-max, 1280px);
+    margin-inline: auto;
+    padding: 48px var(--ds-container-padding-x, 32px);
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    box-sizing: border-box;
+
+    @include bp.container-down('lg') {
+      padding: 48px 20px;
+    }
+
+    @include bp.container-down('sm') {
+      padding: 32px 16px;
+    }
+  }
+
+  /* Mantiene el ancho útil de 838px en escritorio cuando convive sin sección flotante */
+  .details-band--wide .details-band__header,
+  .details-band--wide .details-band__grid {
+    max-width: 838px;
+
+    @include bp.container-down('lg') {
+      max-width: 100%;
+    }
+  }
+
+  .details-band__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .details-band__eyebrow {
+    margin: 0;
+  }
+
+  .details-band__title {
+    margin: 0;
+    color: var(--details-band-fg, #FFFFFF);
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: var(--ds-heading-md, 28px);
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: left;
+
+    @include bp.container-down('sm') {
+      font-size: var(--ds-heading-sm, 20px);
+    }
+  }
+
+  .details-band__rule {
+    display: block;
+    width: 40px;
+    height: 2px;
+    background-color: var(--details-band-rule, #F1F5F9);
+    flex-shrink: 0;
+  }
+
+  .details-band__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    width: 100%;
+
+    @include bp.container-down('sm') {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+    }
+  }
+
+  .details-band__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  .details-band__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    color: var(--details-band-fg, #FFFFFF);
+  }
+
+  .details-band__item-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .details-band__item-title {
+    margin: 0;
+    color: var(--details-band-fg, #FFFFFF);
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: var(--ds-heading-sm, 24px);
+    font-weight: 600;
+    line-height: 1.25;
+
+    @include bp.container-down('sm') {
+      font-size: var(--ds-heading-sm, 20px);
+    }
+  }
+
+  .details-band__item-desc {
+    margin: 0;
+    color: var(--details-band-fg, #FFFFFF);
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: var(--ds-text-body, 16px);
+    font-weight: 400;
+    line-height: 1.375;
+  }
+}

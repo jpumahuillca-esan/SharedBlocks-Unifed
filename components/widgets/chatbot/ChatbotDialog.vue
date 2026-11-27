@@ -1,22 +1,32 @@
 <template>
   <transition name="chat-window-anim">
-    <div v-if="isOpen" class="chatbot-dialog shadow-2xl">
+    <div v-if="isOpen" class="chatbot-dialog shadow-2xl" :class="position === 'bottom-left' ? 'is-left' : 'is-right'">
       <!-- Cabecera del Chat con Identidad Institucional ESAN -->
       <div class="chatbot-header d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center gap-2">
-          <div class="chat-avatar position-relative">
+        <div class="d-flex align-items-center gap-2 min-w-0">
+          <div class="chat-avatar position-relative flex-shrink-0">
             <div class="avatar-circle">
               <i class="las la-robot fs-20 text-white"></i>
             </div>
             <span class="online-dot"></span>
           </div>
-          <div>
-            <h6 class="mb-0 fw-bold fs-14 text-white">Asistente ESAN</h6>
-            <small class="text-white-50 fs-11">Orientación y Admisión 24/7</small>
+          <div class="min-w-0">
+            <h6 class="mb-0 fw-bold fs-14 text-white text-truncate">Arcis ESAN</h6>
+            <small class="text-white-50 fs-11 d-block text-truncate">Orientación y Admisión 24/7</small>
           </div>
         </div>
 
-        <div class="chat-header-actions d-flex align-items-center">
+        <div class="chat-header-actions d-flex align-items-center gap-1 flex-shrink-0">
+          <button
+            v-if="hasHistory"
+            type="button"
+            class="chat-btn-header"
+            @click="$emit('reset-chat')"
+            title="Nueva conversación"
+            aria-label="Nueva conversación"
+          >
+            <i class="las la-redo-alt fs-16"></i>
+          </button>
           <button
             type="button"
             class="chat-btn-header"
@@ -35,6 +45,7 @@
         :messages="messages"
         :is-typing="isTyping"
         :suggestions="suggestions"
+        :context-buttons="contextButtons"
         @select-suggestion="onSuggestionSelected"
         @navigate-page="$emit('navigate-page', $event)"
       />
@@ -67,21 +78,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick } from 'vue';
+import { ref, computed, watch, nextTick } from 'vue';
 import ChatbotMessages from './ChatbotMessages.vue';
-import type { ChatMessageItem } from '../../../composables/useChatbot';
+import type { ChatMessageItem, ContextQuickButton } from '../../../composables/useChatbot';
 
 const props = defineProps<{
   isOpen: boolean;
   messages: ChatMessageItem[];
   isTyping: boolean;
   suggestions: string[];
+  contextButtons?: ContextQuickButton[];
+  position?: string;
   placeholder?: string;
   modelValue?: string;
 }>();
 
+const hasHistory = computed(() => props.messages.some((m) => m.role === 'user'));
+
 const emit = defineEmits<{
   (e: 'close'): void;
+  (e: 'reset-chat'): void;
   (e: 'update:modelValue', val: string): void;
   (e: 'send-message', query?: string): void;
   (e: 'navigate-page', url: string): void;
@@ -104,25 +120,64 @@ watch(internalQuery, (val) => {
   emit('update:modelValue', val);
 });
 
-const scrollToBottom = async () => {
+const scrollForMessages = async (forceBottom = false) => {
   await nextTick();
-  const el = messagesView.value?.containerRef;
-  if (el) {
-    el.scrollTop = el.scrollHeight;
+  const run = () => {
+    const el = messagesView.value?.containerRef;
+    if (!el) return;
+
+    if (forceBottom) {
+      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+      return;
+    }
+
+    const lastMsg = props.messages[props.messages.length - 1];
+    if (!lastMsg) return;
+
+    // Al enviar mensaje el usuario, ir al fondo para ver su mensaje y los puntos de escritura
+    if (lastMsg.role === 'user') {
+      el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+      return;
+    }
+
+    // Al responder el bot o reabrir el chat, enfocar en el último mensaje enviado por el usuario
+    // (o al inicio de la respuesta del bot si el mensaje del usuario es muy largo) para no perder contexto
+    const userRows = el.querySelectorAll('.chat-bubble-row.row-user');
+    const botRows = el.querySelectorAll('.chat-bubble-row.row-bot');
+    const lastUserRow = userRows.length > 0 ? (userRows[userRows.length - 1] as HTMLElement) : null;
+    const lastBotRow = botRows.length > 0 ? (botRows[botRows.length - 1] as HTMLElement) : null;
+
+    if (!lastUserRow) {
+      el.scrollTo({ top: 0, behavior: 'auto' });
+      return;
+    }
+
+    const targetRow = lastUserRow.offsetHeight <= 140 ? lastUserRow : (lastBotRow || lastUserRow);
+    const targetScrollTop = Math.max(0, targetRow.offsetTop - 10);
+
+    el.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
+  };
+
+  if (typeof requestAnimationFrame === 'function') {
+    requestAnimationFrame(run);
+  } else {
+    run();
   }
 };
 
 watch(
   () => props.messages.length,
   () => {
-    scrollToBottom();
+    scrollForMessages(false);
   }
 );
 
 watch(
   () => props.isTyping,
-  () => {
-    scrollToBottom();
+  (typing) => {
+    if (typing) {
+      scrollForMessages(true);
+    }
   }
 );
 
@@ -130,7 +185,7 @@ watch(
   () => props.isOpen,
   (val) => {
     if (val) {
-      scrollToBottom();
+      scrollForMessages(false);
       nextTick(() => {
         inputField.value?.focus();
       });
@@ -155,18 +210,23 @@ const onSuggestionSelected = (suggestionText: string) => {
   position: absolute;
   bottom: calc(100% + 14px);
   right: 0;
-  width: 400px;
+  width: min(400px, calc(100vw - 32px));
   max-width: calc(100vw - 32px);
   height: 570px;
-  max-height: calc(100vh - 120px);
+  max-height: calc(100dvh - 116px);
   background: #ffffff;
   border-radius: 18px;
   box-shadow: 0 16px 40px -8px rgba(15, 23, 42, 0.28), 0 0 1px 1px rgba(15, 23, 42, 0.08);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  z-index: 1050;
+  z-index: 1120;
   border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.chatbot-dialog.is-left {
+  left: 0;
+  right: auto;
 }
 
 .chatbot-header {
@@ -294,17 +354,38 @@ const onSuggestionSelected = (suggestionText: string) => {
   transform: translateY(18px) scale(0.96);
 }
 
-@media (max-width: 576px) {
+@media (max-width: 640px) {
   .chatbot-dialog {
     position: fixed;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100vw !important;
-    max-width: 100vw !important;
+    inset: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
     height: 100dvh !important;
     max-height: 100dvh !important;
     border-radius: 0 !important;
+    border: none !important;
+    z-index: 1120 !important;
+  }
+
+  .chatbot-header {
+    padding: max(12px, env(safe-area-inset-top)) 14px 12px;
+  }
+
+  .chat-btn-header {
+    width: 38px;
+    height: 38px;
+  }
+
+  .chatbot-footer {
+    padding: 10px 12px max(12px, env(safe-area-inset-bottom));
+  }
+
+  /* 16px evita que iOS Safari haga zoom automático al enfocar el input */
+  .chat-input {
+    font-size: 16px;
+    min-width: 0;
+    padding: 10px 12px;
   }
 }
 </style>

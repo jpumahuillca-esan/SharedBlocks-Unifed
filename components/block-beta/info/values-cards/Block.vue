@@ -109,7 +109,7 @@
 
 <script setup lang="ts">
 /**
- * Tarjetas de valor con filtros.
+ *   con filtros.
  *
  * Una fila de pestañas —los pilares de la propuesta de valor— y, debajo, la
  * tarjeta del pilar elegido: texto a la izquierda y video a la derecha. El

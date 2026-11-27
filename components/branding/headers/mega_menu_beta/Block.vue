@@ -8,8 +8,6 @@
     v-bind="$attrs"
     class="arcis-scope mmb-host"
     :class="{ 'is-pinned': pinned, 'is-shown': shown, 'is-animated': animated }"
-    @pointerleave="onHostPointerLeave"
-    @pointerenter="cancelClose"
     @keydown.esc="closePanelAndRestoreFocus"
     @focusin="onHostFocusIn"
   >
@@ -23,12 +21,23 @@
       :style="{ '--mmb-logo-height': `${logoHeight}px` }"
     >
       <div class="mmb__bar">
-        <component :is="linkTag" v-bind="{ ...getLinkProps(logoLink), ...edit('logoUrl') }" class="mmb__logo">
+        <component
+          :is="linkTag"
+          v-bind="{ ...getLinkProps(logoLink), ...edit('logoUrl') }"
+          class="mmb__logo"
+          @click="onDirectLinkClick"
+        >
           <img class="mmb__logo-image" :src="logoSrc" :alt="logoAlt" />
         </component>
 
         <!-- Primer nivel. Solo en escritorio: en tableta y móvil va al menú lateral. -->
-        <nav v-if="roots.length" class="mmb__nav" aria-label="Menú principal">
+        <nav
+          v-if="roots.length"
+          class="mmb__nav"
+          aria-label="Menú principal"
+          @pointerenter="cancelClose"
+          @pointerleave="onZonePointerLeave"
+        >
           <ul class="mmb__menu">
             <li
               v-for="item in roots"
@@ -57,7 +66,13 @@
                 {{ item.title }}
                 <AtomIcon name="chevron-down" :size="14" />
               </a>
-              <component v-else :is="linkTag" v-bind="getLinkProps(item.url)" class="mmb__menu-link">
+              <component
+                v-else
+                :is="linkTag"
+                v-bind="getLinkProps(item.url)"
+                class="mmb__menu-link"
+                @click="onDirectLinkClick"
+              >
                 {{ item.title }}
               </component>
             </li>
@@ -72,6 +87,7 @@
             v-bind="{ ...getLinkProps(searchUrl), ...edit('searchUrl') }"
             class="mmb__search"
             aria-label="Buscar"
+            @click="onDirectLinkClick"
           >
             <AtomIcon name="search" :size="22" />
           </component>
@@ -100,7 +116,12 @@
         antes. Con una transición por panel, los dos se fundirían uno sobre otro.
       -->
       <Transition name="mmb-panel">
-        <div v-show="activeRoot" class="mmb-panels">
+        <div
+          v-show="activeRoot"
+          class="mmb-panels"
+          @pointerenter="cancelClose"
+          @pointerleave="onZonePointerLeave"
+        >
           <MegaPanel
             v-for="item in panelRoots"
             v-show="activeId === item.id"
@@ -159,7 +180,7 @@
 import { ref, computed, watch, inject, nextTick, onMounted, onBeforeUnmount } from 'vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 import { useDynamicLink } from '../../../../composables/useDynamicLink';
-import { useEditTarget } from '../../../../core/editFocus';
+import { EDIT_CANVAS_KEY, useEditTarget } from '../../../../core/editFocus';
 import { BRANDING_TOPBAR_KEY } from '../../../../helpers/branding';
 import defaultLogo from '../../../../assets/images/logos/logo-esan-official.svg';
 import MegaPanel from './MegaPanel.vue';
@@ -197,6 +218,7 @@ const { linkTag, getLinkProps } = useDynamicLink(props.linkComponent);
 
 /* Enfoque de campos: clic en una pieza del lienzo → su campo en el editor (core/editFocus.ts). */
 const edit = useEditTarget();
+const inCanvas = inject(EDIT_CANVAS_KEY, false);
 
 const text = (value: unknown) => (typeof value === 'string' ? value : '');
 
@@ -266,9 +288,29 @@ const closePanel = () => {
   activeId.value = null;
 };
 
+const onDirectLinkClick = () => {
+  if (!inCanvas) closePanel();
+};
+
 const togglePanel = (id: string) => {
   cancelClose();
   activeId.value = activeId.value === id ? null : id;
+};
+
+/* Evita que topbar y megamenú permanezcan abiertos superpuestos al mismo tiempo. */
+watch(activeId, (id) => {
+  if (id && typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('arcis:branding-menu-open', { detail: 'mega' }));
+  }
+});
+
+const onExternalMenuOpen = (event: Event) => {
+  if ((event as CustomEvent)?.detail !== 'mega') closePanel();
+};
+
+const onRouteChanged = () => {
+  closePanel();
+  drawerOpen.value = false;
 };
 
 /*
@@ -299,8 +341,10 @@ const onItemPointerEnter = (event: PointerEvent, item: MenuRoot) => {
   activeId.value = item.children.length ? item.id : null;
 };
 
-const onHostPointerLeave = (event: PointerEvent) => {
+/* Cerrar si el cursor sale del área activa (barra de menú + megapanel) hacia logo/lupa/espacio/página. */
+const onZonePointerLeave = (event: PointerEvent) => {
   if (event.pointerType !== 'mouse' || !activeId.value) return;
+  cancelClose();
   closeTimer = setTimeout(() => (activeId.value = null), CLOSE_DELAY);
 };
 
@@ -477,6 +521,9 @@ watch(revealEnabled, (enabled: boolean) => {
 
 onMounted(() => {
   document.addEventListener('click', onDocumentClick);
+  window.addEventListener('arcis:branding-menu-open', onExternalMenuOpen);
+  window.addEventListener('arcis:route-changed', onRouteChanged);
+  window.addEventListener('popstate', onRouteChanged);
 
   if (typeof ResizeObserver !== 'undefined' && root.value) {
     observer = new ResizeObserver(onResize);
@@ -488,6 +535,9 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   document.removeEventListener('click', onDocumentClick);
+  window.removeEventListener('arcis:branding-menu-open', onExternalMenuOpen);
+  window.removeEventListener('arcis:route-changed', onRouteChanged);
+  window.removeEventListener('popstate', onRouteChanged);
   observer?.disconnect();
   cancelClose();
   stopReveal();

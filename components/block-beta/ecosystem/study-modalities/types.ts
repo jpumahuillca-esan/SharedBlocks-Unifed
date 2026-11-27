@@ -2,7 +2,12 @@ import {
   DEFAULT_BRAND_COLOR_TOKEN,
   normalizeBrandColorToken,
 } from '../../../editor-beta/EditorBrandColor/brandColors';
+import { resolveBundledImageFallback } from '../../../../helpers/bundledAssets';
 import defaultModalitiesBgImg from '../../../../assets/images/dpa-modalities-bg.jpg';
+
+const MODALITIES_DEFAULT_ASSETS: Record<string, string> = {
+  'dpa-modalities-bg': defaultModalitiesBgImg,
+};
 
 export interface StudyModalityBadge {
   id: string;
@@ -45,10 +50,11 @@ export const normalizeStudyModalitiesData = (raw: any): StudyModalitiesData => {
     image: typeof raw?.image === 'string' ? raw.image : '',
     imageAlt:
       typeof raw?.imageAlt === 'string' ? raw.imageAlt.slice(0, 140) : '',
-    backgroundImage:
-      typeof raw?.backgroundImage === 'string' && raw.backgroundImage.trim()
-        ? raw.backgroundImage.trim()
-        : defaultModalitiesBgImg,
+    backgroundImage: resolveBundledImageFallback(
+      raw?.backgroundImage,
+      defaultModalitiesBgImg,
+      MODALITIES_DEFAULT_ASSETS,
+    ),
     backgroundOverlayOpacity: Number.isFinite(opacityNum)
       ? Math.min(100, Math.max(0, opacityNum))
       : 20,

@@ -7,6 +7,23 @@
       <EditorText v-model="localForm.mainTitle" data-edit-target="mainTitle" label="Título principal" label-class="lf-label" />
       <EditorTextarea v-model="localForm.subTitle" data-edit-target="subTitle" label="Subtítulo" label-class="lf-label" :rows="2" />
       <EditorText v-model="localForm.button_text" data-edit-target="button_text" label="Texto del botón" label-class="lf-label" />
+
+      <div class="lf-field-group">
+        <label class="form-check form-switch d-flex align-items-center gap-2 m-0" style="cursor: pointer;" for="lead-floating-redirect">
+          <input
+            id="lead-floating-redirect"
+            v-model="localForm.showFloatingRedirect"
+            data-edit-target="showFloatingRedirect"
+            class="form-check-input m-0"
+            type="checkbox"
+            role="switch"
+          />
+          <span class="lf-label m-0">Mostrar redireccionamiento</span>
+        </label>
+        <p class="lf-hint">
+          Muestra el botón flotante de acceso directo cuando el formulario sale de la vista en pantalla.
+        </p>
+      </div>
     </section>
 
     <!-- Integración: de dónde salen los campos y adónde llega el lead -->
@@ -167,6 +184,7 @@ const build = (source: any) => ({
   success_title: props.modelValue?.success_title || '¡Solicitud recibida!',
   success_message: props.modelValue?.success_message || 'Un asesor se pondrá en contacto muy pronto.',
   cod_form_old: props.modelValue?.cod_form_old || '',
+  showFloatingRedirect: props.modelValue?.showFloatingRedirect !== false,
   fields: Array.isArray(props.modelValue?.fields) && props.modelValue.fields.length > 0 
     ? [...props.modelValue.fields] 
     : [...DEFAULT_FIELDS]

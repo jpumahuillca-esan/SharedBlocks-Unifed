@@ -3,7 +3,7 @@
     <button
       v-if="visible"
       type="button"
-      class="floating-widget floating-scrolltop shadow-sm"
+      class="floating-widget floating-scrolltop"
       :class="position === 'bottom-left' ? 'pos-left' : 'pos-right'"
       :style="{ bottom }"
       @click="handleClick"
@@ -26,7 +26,7 @@ const props = withDefaults(
   }>(),
   {
     visible: false,
-    position: 'bottom-right',
+    position: 'bottom-left',
     bottom: '24px'
   }
 );
@@ -69,13 +69,14 @@ const handleClick = () => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(9, 8, 31, 0.12);
   transition: all 0.25s ease;
 }
 
 .floating-scrolltop:hover {
   background-color: #e31140;
   transform: translateY(-3px);
-  box-shadow: 0 4px 14px rgba(227, 17, 64, 0.4);
+  box-shadow: 0 6px 16px rgba(9, 8, 31, 0.18);
 }
 
 .scrolltop-icon {

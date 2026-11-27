@@ -1,5 +1,5 @@
 <template>
-  <div class="floating-widgets-container" aria-live="polite">
+  <div class="floating-widgets-container" :class="{ 'is-chat-open': isChatOpen }" aria-live="polite">
     <!-- WIDGET 1: WHATSAPP FLOTANTE -->
     <FloatingWhatsApp
       v-if="isWhatsAppActive"
@@ -15,16 +15,24 @@
     <!-- WIDGET 2: BOTÓN VOLVER ARRIBA (SCROLL TO TOP) -->
     <FloatingScrollTop
       :visible="isScrollTopVisible"
-      :position="config?.scrollTop?.position"
+      :position="scrollTopPosition"
       :bottom="stackBottom.scrollTop"
       @click="scrollToTop"
     />
 
-    <!-- WIDGET 3: CHATBOT FLOTANTE INTERACTIVO -->
+    <!-- WIDGET 3: ACCESO DIRECTO AL FORMULARIO (SOLO CUANDO SALE DE VISTA) -->
+    <FloatingFormScroll
+      :visible="isFormScrollVisible"
+      :position="formScrollPosition"
+      :bottom="stackBottom.formScroll"
+      @click="scrollToLeadForm"
+    />
+
+    <!-- WIDGET 4: CHATBOT FLOTANTE INTERACTIVO -->
     <div
       v-if="isChatbotActive"
       class="floating-widget floating-chatbot-wrapper"
-      :class="chatbotPositionClass"
+      :class="[chatbotPositionClass, { 'is-chat-open': isChatOpen }]"
       :style="{ bottom: stackBottom.chatbot }"
     >
       <!-- Botón Gatillo del Chatbot -->
@@ -40,8 +48,11 @@
         :messages="chatMessages"
         :is-typing="isTyping"
         :suggestions="suggestions"
+        :context-buttons="contextButtons"
+        :position="config?.chatbot?.position"
         :placeholder="inputPlaceholder"
         @close="isChatOpen = false"
+        @reset-chat="clearConversation"
         @send-message="handleSendMessage"
         @navigate-page="navigateToPage"
       />
@@ -50,13 +61,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import FloatingWhatsApp from './FloatingWhatsApp.vue';
 import FloatingScrollTop from './FloatingScrollTop.vue';
+import FloatingFormScroll from './FloatingFormScroll.vue';
 import ChatbotTrigger from './chatbot/ChatbotTrigger.vue';
 import ChatbotDialog from './chatbot/ChatbotDialog.vue';
-import { useChatbot, appendChatbotUtm } from '../../composables/useChatbot';
+import {
+  useChatbot,
+  appendChatbotUtm,
+  type ChatbotPageContext
+} from '../../composables/useChatbot';
 import { isInternalUrl, isDownloadableFile } from '../../helpers/chatbotUtm';
 
 const props = withDefaults(
@@ -65,12 +81,14 @@ const props = withDefaults(
     academicUnitId?: number | string;
     chatbotApiUrl?: string;
     leadEndpoint?: string;
+    pageContext?: ChatbotPageContext | null;
   }>(),
   {
     config: null,
     academicUnitId: 1,
     chatbotApiUrl: '',
-    leadEndpoint: ''
+    leadEndpoint: '',
+    pageContext: null
   }
 );
 
@@ -81,10 +99,22 @@ const {
   inputPlaceholder,
   chatMessages,
   suggestions,
+  contextButtons,
+  hydrateStorage,
+  clearConversation,
+  loadContextSuggestions,
   sendMessage
 } = useChatbot();
 
 const isScrolled = ref(false);
+const isTabletOrMobile = ref(false);
+const hasTargetForm = ref(false);
+const isFormOutOfView = ref(false);
+let observedFormEl: HTMLElement | null = null;
+let formIntersectionObserver: IntersectionObserver | null = null;
+let formDomObserver: MutationObserver | null = null;
+let formSyncRaf: number | null = null;
+let viewportMediaQuery: MediaQueryList | null = null;
 
 const isWhatsAppActive = computed(() => {
   const wa = props.config?.whatsapp;
@@ -107,12 +137,26 @@ const chatbotPositionClass = computed(() => {
   return props.config?.chatbot?.position === 'bottom-left' ? 'pos-left' : 'pos-right';
 });
 
-type WidgetKey = 'whatsapp' | 'chatbot' | 'scrollTop';
+type WidgetKey = 'whatsapp' | 'chatbot' | 'formScroll' | 'scrollTop';
 type WidgetSide = 'left' | 'right';
 
-const STACK_ORDER: WidgetKey[] = ['whatsapp', 'chatbot', 'scrollTop'];
+const STACK_ORDER: WidgetKey[] = ['whatsapp', 'chatbot', 'formScroll', 'scrollTop'];
+
+const scrollTopPosition = computed<'bottom-left' | 'bottom-right'>(() => {
+  return props.config?.scrollTop?.position === 'bottom-right' ? 'bottom-right' : 'bottom-left';
+});
+
+const formScrollPosition = computed<'bottom-left' | 'bottom-right'>(() => {
+  return props.config?.chatbot?.position === 'bottom-left' ? 'bottom-left' : 'bottom-right';
+});
 
 const sideOf = (key: WidgetKey): WidgetSide => {
+  if (key === 'scrollTop') {
+    return scrollTopPosition.value === 'bottom-right' ? 'right' : 'left';
+  }
+  if (key === 'formScroll') {
+    return formScrollPosition.value === 'bottom-left' ? 'left' : 'right';
+  }
   return props.config?.[key]?.position === 'bottom-left' ? 'left' : 'right';
 };
 
@@ -124,10 +168,20 @@ const isScrollTopVisible = computed(() => {
   );
 });
 
+const isFormScrollVisible = computed(() => {
+  return (
+    isTabletOrMobile.value &&
+    hasTargetForm.value &&
+    isFormOutOfView.value &&
+    !(isChatbotActive.value && isChatOpen.value && sideOf('chatbot') === sideOf('formScroll'))
+  );
+});
+
 const stackBottom = computed(() => {
   const visible: Record<WidgetKey, boolean> = {
     whatsapp: isWhatsAppActive.value,
     chatbot: isChatbotActive.value,
+    formScroll: isFormScrollVisible.value,
     scrollTop: isScrollTopVisible.value
   };
 
@@ -143,14 +197,115 @@ const stackBottom = computed(() => {
   return bottom;
 });
 
+const findTargetLeadForm = (): HTMLElement | null => {
+  if (typeof document === 'undefined') return null;
+
+  const isEligibleForm = (el: Element | null): el is HTMLElement => {
+    if (!(el instanceof HTMLElement)) return false;
+    if (el.dataset.leadFormRedirect === 'false') return false;
+    if (el.closest('[aria-hidden="true"]')) return false;
+    return true;
+  };
+
+  // 1. Priorizar el formulario asociado al alias explícito #contacto
+  const contactoEl = document.getElementById('contacto');
+  if (contactoEl) {
+    const contactoCandidates = [
+      contactoEl.closest('.lead-form'),
+      contactoEl.parentElement?.querySelector('.lead-form') ?? null,
+      contactoEl.nextElementSibling?.matches('.lead-form')
+        ? contactoEl.nextElementSibling
+        : contactoEl.nextElementSibling?.querySelector('.lead-form') ?? null,
+    ];
+    for (const candidate of contactoCandidates) {
+      if (isEligibleForm(candidate)) return candidate;
+    }
+  }
+
+  // 2. Respaldo automático: cualquier HeroLeadForm habilitado dentro de la página
+  const root = document.querySelector('.page-content') || document;
+  const forms = Array.from(root.querySelectorAll('.lead-form'));
+  return forms.find((el) => isEligibleForm(el)) || null;
+};
+
+const cleanupFormObserver = () => {
+  if (formIntersectionObserver) {
+    formIntersectionObserver.disconnect();
+    formIntersectionObserver = null;
+  }
+  observedFormEl = null;
+};
+
+const syncTargetLeadForm = () => {
+  if (typeof window === 'undefined') return;
+
+  const target = findTargetLeadForm();
+  if (!target) {
+    cleanupFormObserver();
+    hasTargetForm.value = false;
+    isFormOutOfView.value = false;
+    return;
+  }
+
+  hasTargetForm.value = true;
+  if (observedFormEl === target && formIntersectionObserver) return;
+
+  cleanupFormObserver();
+  observedFormEl = target;
+
+  if (typeof IntersectionObserver !== 'function') {
+    isFormOutOfView.value = window.scrollY > 300;
+    return;
+  }
+
+  formIntersectionObserver = new IntersectionObserver(
+    (entries) => {
+      const entry = entries[0];
+      if (!entry) return;
+      isFormOutOfView.value = !entry.isIntersecting;
+    },
+    { threshold: 0 },
+  );
+  formIntersectionObserver.observe(target);
+};
+
+const scheduleSyncTargetLeadForm = () => {
+  if (typeof window === 'undefined') return;
+  if (formSyncRaf !== null) cancelAnimationFrame(formSyncRaf);
+  formSyncRaf = requestAnimationFrame(() => {
+    formSyncRaf = null;
+    syncTargetLeadForm();
+  });
+};
+
+const syncViewportBreakpoint = () => {
+  if (typeof window === 'undefined') return;
+  isTabletOrMobile.value = viewportMediaQuery
+    ? viewportMediaQuery.matches
+    : window.innerWidth < 1280;
+};
+
+const scrollToLeadForm = () => {
+  if (typeof window === 'undefined') return;
+  const target = findTargetLeadForm();
+  if (!target) return;
+
+  const rect = target.getBoundingClientRect();
+  const topOffset = 108;
+  const destinationY = Math.max(0, Math.round(window.scrollY + rect.top - topOffset));
+  window.scrollTo({ top: destinationY, behavior: 'smooth' });
+};
+
 const scrollToTop = () => {
   if (typeof window !== 'undefined') {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 };
 
+let route: any = null;
 let router: any = null;
 try {
+  route = useRoute();
   router = useRouter();
 } catch (_) {}
 
@@ -184,6 +339,11 @@ const navigateToPage = (url: string) => {
   } catch (_) {}
 
   const cleanUrl = routePath.startsWith('/') ? routePath : `/${routePath}`;
+
+  // En pantalla completa móvil minimizamos el cajón al navegar para mostrar la página destino (el historial sigue vivo)
+  if (window.innerWidth <= 640) {
+    isChatOpen.value = false;
+  }
 
   // Intento A: Vue Router push (transición SPA fluida in-place en Nuxt 3 y Vue 3)
   if (router && typeof router.push === 'function') {
@@ -296,11 +456,63 @@ const injectChatbotScript = () => {
   }
 };
 
+const syncMobileScrollLock = () => {
+  if (typeof document === 'undefined' || typeof window === 'undefined') return;
+  const shouldLock = isChatOpen.value && window.innerWidth <= 640;
+  if (shouldLock) {
+    document.body.dataset.esanChatScrollLocked = '1';
+    document.body.style.overflow = 'hidden';
+  } else if (document.body.dataset.esanChatScrollLocked === '1') {
+    delete document.body.dataset.esanChatScrollLocked;
+    document.body.style.overflow = '';
+  }
+};
+
+watch(isChatOpen, () => {
+  syncMobileScrollLock();
+});
+
+watch(
+  [() => props.pageContext, resolvedChatbotApiUrl],
+  () => {
+    if (typeof window !== 'undefined' && isChatbotActive.value) {
+      loadContextSuggestions(resolvedChatbotApiUrl.value, props.pageContext);
+    }
+  },
+  { deep: true }
+);
+
 onMounted(() => {
   if (typeof window !== 'undefined') {
+    hydrateStorage();
+    syncMobileScrollLock();
+    if (isChatbotActive.value) {
+      loadContextSuggestions(resolvedChatbotApiUrl.value, props.pageContext);
+    }
+
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', syncMobileScrollLock, { passive: true });
+    window.addEventListener('resize', syncViewportBreakpoint, { passive: true });
+    if (typeof window.matchMedia === 'function') {
+      viewportMediaQuery = window.matchMedia('(max-width: 1279.98px)');
+      viewportMediaQuery.addEventListener?.('change', syncViewportBreakpoint);
+    }
+    syncViewportBreakpoint();
     handleScroll();
     injectChatbotScript();
+
+    // Sincronizar detección de formulario en pantalla (#contacto / .lead-form)
+    nextTick().then(syncTargetLeadForm);
+    if (typeof MutationObserver === 'function') {
+      const domRoot = document.querySelector('.page-content') || document.body;
+      formDomObserver = new MutationObserver(scheduleSyncTargetLeadForm);
+      formDomObserver.observe(domRoot, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['data-lead-form-redirect', 'id'],
+      });
+    }
 
     // Capturar y persistir atribución UTM de campañas (ej: referidos del Chatbot)
     try {
@@ -326,8 +538,34 @@ onMounted(() => {
 onUnmounted(() => {
   if (typeof window !== 'undefined') {
     window.removeEventListener('scroll', handleScroll);
+    window.removeEventListener('resize', syncMobileScrollLock);
+    window.removeEventListener('resize', syncViewportBreakpoint);
+    viewportMediaQuery?.removeEventListener?.('change', syncViewportBreakpoint);
+    viewportMediaQuery = null;
+    cleanupFormObserver();
+    if (formDomObserver) {
+      formDomObserver.disconnect();
+      formDomObserver = null;
+    }
+    if (formSyncRaf !== null) {
+      cancelAnimationFrame(formSyncRaf);
+      formSyncRaf = null;
+    }
+    if (typeof document !== 'undefined' && document.body.dataset.esanChatScrollLocked === '1') {
+      delete document.body.dataset.esanChatScrollLocked;
+      document.body.style.overflow = '';
+    }
   }
 });
+
+if (route) {
+  watch(
+    () => route.fullPath,
+    () => {
+      nextTick().then(scheduleSyncTargetLeadForm);
+    },
+  );
+}
 </script>
 
 <style scoped>
@@ -340,15 +578,20 @@ onUnmounted(() => {
   --fw-icon-sm: 24px;
 
   position: fixed;
-  z-index: 1045;
+  z-index: 1065;
   pointer-events: none;
   inset: 0;
+}
+
+.floating-widgets-container.is-chat-open,
+.floating-chatbot-wrapper.is-chat-open {
+  z-index: 1120;
 }
 
 .floating-widget {
   position: fixed;
   pointer-events: auto;
-  z-index: 1045;
+  z-index: 1065;
 }
 
 .pos-right {
@@ -367,7 +610,7 @@ onUnmounted(() => {
   left: var(--fw-edge);
 }
 
-@media (max-width: 576px) {
+@media (max-width: 640px) {
   .floating-widgets-container {
     --fw-size: 44px;
     --fw-base: 16px;
@@ -375,6 +618,11 @@ onUnmounted(() => {
     --fw-edge: 14px;
     --fw-icon: 22px;
     --fw-icon-sm: 20px;
+  }
+
+  .floating-chatbot-wrapper.is-chat-open {
+    inset: 0 !important;
+    bottom: 0 !important;
   }
 }
 </style>

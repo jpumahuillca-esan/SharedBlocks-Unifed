@@ -154,7 +154,7 @@ const brandUrl = computed(() => text(props.config?.brandUrl).trim());
 const startItems = computed(() => toItems(props.config?.startItems, 'start'));
 const endItems = computed(() => toItems(props.config?.endItems, 'end'));
 
-/* Opciones del desplegable como enlaces: con `href`, MoleculeDropdown navega. */
+/* Opciones del desplegable: si hay destino navega; vacío queda como acción sin añadir '#' a la URL. */
 const toDropdownItems = (item: TopbarItem): DropdownItem[] =>
-  item.children.map((child) => ({ label: child.label, href: child.url || '#' }));
+  item.children.map((child) => ({ label: child.label, href: child.url || undefined }));
 </script>

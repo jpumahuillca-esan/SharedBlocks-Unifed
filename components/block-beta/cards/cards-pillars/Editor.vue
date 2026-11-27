@@ -39,21 +39,13 @@
       @remove="removeCard(index)"
     >
       <div>
-        <label class="form-label">Icono</label>
-        <div class="d-flex align-items-center gap-2 mb-3">
-          <span class="cp-icon-preview" aria-hidden="true">
-            <AtomIcon :name="card.icon" :size="22" />
-          </span>
-          <select
-            v-model="card.icon"
-            data-edit-target=".icon"
-            class="form-select form-select-sm"
-          >
-            <option v-for="name in ICON_SUGGESTIONS" :key="name" :value="name">
-              {{ name }}
-            </option>
-          </select>
-        </div>
+        <EditorIcon
+          v-model="card.icon"
+          data-edit-target=".icon"
+          class="mb-3"
+          label="Ícono"
+          :optional="false"
+        />
 
         <label class="form-label">Título de la tarjeta</label>
         <input
@@ -83,9 +75,8 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import AtomIcon from '../../../atoms/AtomIcon.vue';
+import EditorIcon from '../../../editor-beta/EditorIcon/EditorIcon.vue';
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
-import { ICON_SUGGESTIONS } from '../../../../helpers/iconOptions';
 import { buildCardsPillarsData, buildPillarCard } from './_shared/types';
 import { CARDS_PILLARS_CONTENT_RULES } from './_shared/rules';
 

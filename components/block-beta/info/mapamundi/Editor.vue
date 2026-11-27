@@ -59,27 +59,12 @@
         @remove="removeItem(side.key, index)"
       >
         <div>
-          <label class="form-label">Pictograma</label>
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <!--
-              Vista previa del dibujo elegido: los nombres solos no bastan para
-              distinguir dos pictogramas de personas. Se pinta con v-html y no
-              con AtomPictogram porque el panel no está dentro de .arcis-scope y
-              la clase del átomo no tendría estilos aquí.
-            -->
-            <span
-              class="mm-icon-preview"
-              :class="{ 'is-empty': !pictogramSvg(item.icon) }"
-              aria-hidden="true"
-              v-html="pictogramSvg(item.icon)"
-            ></span>
-            <select v-model="item.icon" data-edit-target=".icon" class="form-select form-select-sm">
-              <option value="">Sin pictograma</option>
-              <option v-for="option in PICTOGRAM_OPTIONS" :key="option.value" :value="option.value">
-                {{ option.label }}
-              </option>
-            </select>
-          </div>
+          <EditorPictogram
+            v-model="item.icon"
+            data-edit-target=".icon"
+            class="mb-2"
+            label="Pictograma (opcional)"
+          />
 
           <EditorTextarea
             v-model="item.text"
@@ -134,11 +119,11 @@ import { ref, watch } from 'vue';
  * en un cambio aparte que toque los tres editores a la vez.
  */
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
+import EditorPictogram from '../../../editor-beta/EditorPictogram/EditorPictogram.vue';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
 import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
-import { PICTOGRAM_OPTIONS, getPictogramSvg } from '../../../../helpers/pictograms';
 
 type SideKey = 'left' | 'right';
 

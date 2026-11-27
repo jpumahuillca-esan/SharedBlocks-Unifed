@@ -131,10 +131,10 @@
  * lista con banner). La cabecera (Block.vue) monta uno por cada entrada con
  * submenú y muestra el de la entrada elegida.
  */
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, inject } from 'vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
 import { useDynamicLink } from '../../../../composables/useDynamicLink';
-import { useEditTarget } from '../../../../core/editFocus';
+import { EDIT_CANVAS_KEY, useEditTarget } from '../../../../core/editFocus';
 import type { MenuRoot, MenuTab } from './menu';
 
 const props = defineProps<{
@@ -150,6 +150,7 @@ const { linkTag, getLinkProps } = useDynamicLink(props.linkComponent);
 
 /* Enfoque de campos: clic en una pieza del lienzo → su campo en el editor (core/editFocus.ts). */
 const edit = useEditTarget();
+const inCanvas = inject(EDIT_CANVAS_KEY, false);
 
 /*
  * De entrada, la primera pestaña: el panel nunca se abre con la derecha vacía.
@@ -177,11 +178,14 @@ const onTabPointerEnter = (event: PointerEvent, id: string) => {
   if (event.pointerType === 'mouse') activeTabId.value = id;
 };
 
+let suppressTabClose = false;
+
 const onTabClick = (event: MouseEvent, tab: MenuTab) => {
   // Sin destino, o primer toque en una pestaña no activa: solo se activa.
   if (!tab.url || activeTabId.value !== tab.id) {
     event.preventDefault();
     activeTabId.value = tab.id;
+    suppressTabClose = true;
   }
 };
 
@@ -192,9 +196,17 @@ const onTabKeydown = (event: KeyboardEvent, tab: MenuTab) => {
   activeTabId.value = tab.id;
 };
 
-/* Al seguir un enlace del panel, se cierra: si no, quedaría abierto sobre la página nueva. */
+/*
+ * Al seguir un enlace del panel en PC, se cierra de inmediato aunque NuxtLink/RouterLink
+ * haya hecho preventDefault() para navegación SPA. En el lienzo del admin (`inCanvas`),
+ * en cambio, se mantiene abierto para permitir seleccionar piezas en el inspector.
+ */
 const closeOnLink = (event: MouseEvent) => {
+  const skipTabSwitch = suppressTabClose;
+  suppressTabClose = false;
+  if (skipTabSwitch || inCanvas) return;
+
   const link = (event.target as HTMLElement | null)?.closest('a[href]');
-  if (link && !event.defaultPrevented) emit('close');
+  if (link) emit('close');
 };
 </script>

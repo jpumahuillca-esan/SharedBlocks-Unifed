@@ -41,13 +41,12 @@
       @remove="removeItem(index)"
     >
       <div>
-        <label class="form-label">Pictograma</label>
-        <select v-model="item.icon" data-edit-target=".icon" class="form-select form-select-sm mb-2">
-          <option value="">Sin pictograma</option>
-          <option v-for="option in PICTOGRAM_OPTIONS" :key="option.value" :value="option.value">
-            {{ option.label }}
-          </option>
-        </select>
+        <EditorPictogram
+          v-model="item.icon"
+          data-edit-target=".icon"
+          class="mb-2"
+          label="Pictograma (opcional)"
+        />
         <EditorTextarea
           v-model="item.text"
           data-edit-target=".text"
@@ -94,10 +93,10 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import CardAccordionItem from '../../events/_shared/CardAccordionItem.vue';
+import EditorPictogram from '../../../editor-beta/EditorPictogram/EditorPictogram.vue';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
 import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
-import { PICTOGRAM_OPTIONS } from '../../../../helpers/pictograms';
 import { normalizeLinkTarget } from '../../../../helpers/linkTarget';
 
 const props = defineProps<{ modelValue: any; availableSections?: Array<{ id: string; title: string }> }>();

@@ -30,6 +30,7 @@ export interface FormConfig {
   success_title?: string;
   success_message?: string;
   themeColor?: string;
+  showFloatingRedirect?: boolean;
   fields: DynamicFormField[];
   cod_form_old?: number | string;
 }

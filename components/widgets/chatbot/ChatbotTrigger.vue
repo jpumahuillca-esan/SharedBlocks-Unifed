@@ -2,10 +2,10 @@
   <button
     v-if="!isOpen"
     type="button"
-    class="chatbot-toggle-btn shadow-lg"
+    class="chatbot-toggle-btn"
     @click="$emit('toggle')"
-    title="Abrir Asistente Virtual ESAN"
-    aria-label="Abrir Asistente Virtual ESAN"
+    title="Abrir Arcis ESAN"
+    aria-label="Abrir Arcis ESAN"
   >
     <div class="chatbot-icon-inner">
       <i class="las la-robot fs-28"></i>
@@ -42,13 +42,13 @@ defineEmits<{
   justify-content: center;
   position: relative;
   cursor: pointer;
-  box-shadow: 0 4px 18px rgba(227, 17, 64, 1);
+  box-shadow: 0 4px 12px rgba(9, 8, 31, 0.12);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .chatbot-toggle-btn:hover {
   transform: scale(1.08);
-  box-shadow: 0 6px 24px rgba(227, 17, 64, 1);
+  box-shadow: 0 6px 16px rgba(9, 8, 31, 0.18);
 }
 
 .chatbot-icon-inner {

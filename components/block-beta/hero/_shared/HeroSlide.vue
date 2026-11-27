@@ -39,6 +39,18 @@
           {{ eyebrow }}
         </AtomText>
 
+        <!-- Subtítulo opcional encima del título (sin filete, ej. "Expande tus habilidades con") -->
+        <AtomHeading
+          v-if="subtitle"
+          as="p"
+          size="h6"
+          weight="regular"
+          class="hero__subtitle"
+          v-bind="edit('.subtitle')"
+        >
+          {{ subtitle }}
+        </AtomHeading>
+
         <!--
           El título solo se vuelve H1 si se elige como título principal en el
           editor; el aspecto lo conserva AtomHeading.
@@ -122,6 +134,7 @@ withDefaults(
     logo?: string;
     logoAlt?: string;
     eyebrow: string;
+    subtitle?: string;
     title: string;
     desc: string;
     image: string;

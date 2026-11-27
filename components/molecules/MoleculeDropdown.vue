@@ -76,7 +76,21 @@ const rootRef = useTemplateRef<HTMLElement>('root');
 const isOpen = computed(() => openDropdownId.value === id);
 
 const toggle = () => {
-  openDropdownId.value = isOpen.value ? null : id;
+  const next = isOpen.value ? null : id;
+  openDropdownId.value = next;
+  if (next && typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('arcis:branding-menu-open', { detail: 'topbar' }));
+  }
+};
+
+const onExternalMenuOpen = (event: Event) => {
+  if ((event as CustomEvent)?.detail !== 'topbar' && isOpen.value) {
+    openDropdownId.value = null;
+  }
+};
+
+const onRouteChanged = () => {
+  if (isOpen.value) openDropdownId.value = null;
 };
 
 const selectItem = (item: DropdownItem, index: number) => {
@@ -111,11 +125,17 @@ const onTriggerKeydown = (event: KeyboardEvent) => {
 onMounted(() => {
   document.addEventListener('click', onDocumentClick);
   document.addEventListener('keydown', onKeydown);
+  window.addEventListener('arcis:branding-menu-open', onExternalMenuOpen);
+  window.addEventListener('arcis:route-changed', onRouteChanged);
+  window.addEventListener('popstate', onRouteChanged);
 });
 
 onBeforeUnmount(() => {
   document.removeEventListener('click', onDocumentClick);
   document.removeEventListener('keydown', onKeydown);
+  window.removeEventListener('arcis:branding-menu-open', onExternalMenuOpen);
+  window.removeEventListener('arcis:route-changed', onRouteChanged);
+  window.removeEventListener('popstate', onRouteChanged);
   if (isOpen.value) openDropdownId.value = null;
 });
 

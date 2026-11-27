@@ -1,0 +1,123 @@
+/* ==========================================================================
+   COURSE RELATED ([Section-Cursos-Relacionados]) — ARCIS Design System
+   Figma: 2664:49897 (Desktop 1366) | 3552:14167 (Tablet 768) | 3543:38568 (Mobile 360)
+   Reutiliza `.course-catalog-card` y `.card-slider` sin duplicar CSS de tarjeta.
+   Tolerante a sección con columna flotante vía `$ps-block-containers` y mixin float-reserve.
+   ========================================================================== */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .course-related {
+    width: 100%;
+    background-color: var(--ds-color-background-light, #F1F5F9);
+    box-sizing: border-box;
+  }
+
+  .course-related__inner {
+    width: 100%;
+    max-width: var(--ds-container-max, 1280px);
+    margin-inline: auto;
+    padding: var(--ds-spacing-xl, 64px) var(--ds-container-padding-x, 32px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-spacing-md, 32px);
+    box-sizing: border-box;
+
+    @include bp.container-down('lg') {
+      padding: var(--ds-spacing-xl, 64px) 20px;
+    }
+
+    @container (max-width: 639.98px) {
+      padding: var(--ds-spacing-lg, 48px) 16px;
+      gap: 20px;
+    }
+  }
+
+  .course-related__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .course-related__title {
+    margin: 0;
+    color: var(--ds-color-text-primary, #000000);
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: var(--ds-heading-xl, 40px);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-align: left;
+  }
+
+  .course-related__rule {
+    display: block;
+    width: 40px;
+    height: 2px;
+    background-color: var(--ds-color-esan-corp, #E3173E);
+    flex-shrink: 0;
+  }
+
+  .course-related__slider {
+    width: 100%;
+    min-width: 0;
+    --card-section-padding-x: 0px;
+
+    .card-slider {
+      gap: 12px;
+    }
+
+    .card-section__grid {
+      margin-inline: 0;
+      padding-inline: 0;
+      gap: 20px;
+      align-items: stretch;
+      scroll-padding-inline: 0;
+    }
+
+    .card-section__grid > * {
+      flex: 0 0 max(
+        260px,
+        calc(
+          (100% - (var(--course-related-columns, 2) - 1) * 20px)
+          / var(--course-related-columns, 2)
+        )
+      );
+
+      @container (max-width: 639.98px) {
+        flex: 0 0 100%;
+      }
+    }
+
+    .card-slider__dots {
+      padding-block: 12px;
+    }
+
+    .card-slider__dot {
+      background-color: var(--ds-color-action-secondary, #4F5A6C);
+
+      &.is-active {
+        width: 32px;
+        background-color: var(--ds-color-action-primary, #E3173E);
+      }
+    }
+  }
+}
+
+/* Bajo columna flotante (~829px útiles), fija máximo 2 columnas en el carril para evitar recorte */
+@mixin course-related-float-reserve($root) {
+  #{$root}:is(.ps-columns--reserve-end, .ps-columns--reserve-start) > .ps-col--full {
+    .course-related {
+      --course-related-columns: 2 !important;
+    }
+  }
+}
+
+@media (min-width: 1280px) {
+  @include course-related-float-reserve('.ps-columns');
+}
+
+@include course-related-float-reserve('.ps-columns--editor');

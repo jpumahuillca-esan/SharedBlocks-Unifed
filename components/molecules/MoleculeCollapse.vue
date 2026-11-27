@@ -77,9 +77,9 @@ const classes = computed(() => [
     </a>
     <div class="collapse__panel" :id="panelId">
       <div class="collapse__panel-inner">
-        <p class="collapse__body">
+        <div class="collapse__body">
           <slot />
-        </p>
+        </div>
       </div>
     </div>
   </div>

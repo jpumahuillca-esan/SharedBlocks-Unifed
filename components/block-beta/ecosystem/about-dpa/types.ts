@@ -7,7 +7,12 @@ import {
   normalizeLinkTarget,
   type LinkTarget,
 } from '../../../../helpers/linkTarget';
+import { resolveBundledImageFallback } from '../../../../helpers/bundledAssets';
 import defaultAboutVideoImg from '../../../../assets/images/dpa-about-video.jpg';
+
+const ABOUT_DPA_DEFAULT_ASSETS: Record<string, string> = {
+  'dpa-about-video': defaultAboutVideoImg,
+};
 
 const LEGACY_ABOUT_UNSPLASH =
   'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop';
@@ -70,12 +75,11 @@ export const normalizeAboutDpaData = (raw: any): AboutDpaData => {
           : '',
       target: normalizeLinkTarget(raw?.secondaryButton?.target),
     },
-    image:
-      typeof raw?.image === 'string' &&
-      raw.image.trim() &&
-      raw.image.trim() !== LEGACY_ABOUT_UNSPLASH
-        ? raw.image.trim()
-        : defaultAboutVideoImg,
+    image: resolveBundledImageFallback(
+      typeof raw?.image === 'string' && raw.image.trim() !== LEGACY_ABOUT_UNSPLASH ? raw.image : '',
+      defaultAboutVideoImg,
+      ABOUT_DPA_DEFAULT_ASSETS,
+    ),
     imageAlt:
       typeof raw?.imageAlt === 'string' ? raw.imageAlt.slice(0, 140) : '',
     imageFocusX,

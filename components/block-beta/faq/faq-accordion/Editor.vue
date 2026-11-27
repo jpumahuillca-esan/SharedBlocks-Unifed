@@ -72,13 +72,13 @@
         :total="localData.items.length"
         :open="openIndex === index"
         @toggle="toggleItem(index)"
-        @move-up="moveItem(index, -1)"
-        @move-down="moveItem(index, 1)"
+        @move="moveItem(index, $event)"
         @remove="removeItem(index)"
       >
         <div class="p-2">
           <EditorText
             v-model="item.question"
+            data-edit-target=".question"
             label="Pregunta"
             placeholder="¿Cuánto cuesta estudiar Administración?"
             class="mb-2"
@@ -86,6 +86,7 @@
 
           <EditorTextarea
             v-model="item.answer"
+            data-edit-target=".answer"
             label="Respuesta"
             :rows="4"
             placeholder="Escribe la respuesta detallada..."

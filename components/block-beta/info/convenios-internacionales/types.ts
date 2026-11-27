@@ -7,10 +7,18 @@ import {
   normalizeLinkTarget,
   type LinkTarget,
 } from '../../../../helpers/linkTarget';
+import { resolveBundledImageFallback } from '../../../../helpers/bundledAssets';
 import defaultFgcuCampus from '../../../../assets/images/dpa-fgcu-campus.jpg';
 import defaultIauCampus from '../../../../assets/images/dpa-iau-campus.jpg';
 import defaultFgcuLogo from '../../../../assets/images/logos/logo-fgcu.svg';
 import defaultIauLogo from '../../../../assets/images/logos/logo-iau.svg';
+
+const CONVENIOS_DEFAULT_ASSETS: Record<string, string> = {
+  'dpa-fgcu-campus': defaultFgcuCampus,
+  'dpa-iau-campus': defaultIauCampus,
+  'logo-fgcu': defaultFgcuLogo,
+  'logo-iau': defaultIauLogo,
+};
 
 export interface ConvenioCardItem {
   id: string;
@@ -56,10 +64,11 @@ export const normalizeConvenioCard = (
 
   return {
     id: raw?.id || `conv-card-${index}`,
-    image:
-      typeof raw?.image === 'string' && raw.image.trim()
-        ? raw.image
-        : defaultCampus,
+    image: resolveBundledImageFallback(
+      raw?.image,
+      defaultCampus,
+      CONVENIOS_DEFAULT_ASSETS,
+    ),
     imageAlt:
       typeof raw?.imageAlt === 'string'
         ? raw.imageAlt.slice(0, 140)
@@ -72,10 +81,11 @@ export const normalizeConvenioCard = (
       x: imageFocusX,
       y: imageFocusY,
     }),
-    logo:
-      typeof raw?.logo === 'string' && raw.logo.trim()
-        ? raw.logo
-        : defaultLogo,
+    logo: resolveBundledImageFallback(
+      raw?.logo,
+      defaultLogo,
+      CONVENIOS_DEFAULT_ASSETS,
+    ),
     logoAlt:
       typeof raw?.logoAlt === 'string'
         ? raw.logoAlt.slice(0, 140)

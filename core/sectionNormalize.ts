@@ -145,9 +145,12 @@ const sanitizeBlock = (raw: unknown): BlockItem | null => {
             ? Number(raw.global_block_id)
             : null;
 
+    const globalAnchorId = normalizeAnchorId(raw.global_anchor_id);
+
     const anchorId =
         normalizeAnchorId(raw.anchorId) ??
-        (isRecord(raw.content) ? normalizeAnchorId(raw.content.sectionId) : undefined);
+        (isRecord(raw.content) ? normalizeAnchorId(raw.content.sectionId) : undefined) ??
+        (gId ? globalAnchorId : undefined);
 
     return {
         id: typeof raw.id === 'string' && raw.id ? raw.id : createId(),
@@ -158,6 +161,7 @@ const sanitizeBlock = (raw: unknown): BlockItem | null => {
         ...(typeof raw.global_block_name === 'string' && raw.global_block_name.trim()
             ? { global_block_name: raw.global_block_name.trim() }
             : {}),
+        ...(globalAnchorId ? { global_anchor_id: globalAnchorId } : {}),
         ...(typeof raw.is_global === 'boolean'
             ? { is_global: raw.is_global }
             : gId

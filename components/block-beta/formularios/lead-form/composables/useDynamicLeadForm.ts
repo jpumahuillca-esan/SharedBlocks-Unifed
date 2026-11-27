@@ -58,6 +58,8 @@ export function useDynamicLeadForm(props: DynamicLeadFormProps) {
       success_title: source.success_title || '¡Solicitud enviada!',
       success_message: source.success_message || '',
       cod_form_old: source.cod_form_old || 0,
+      careerName: typeof source.careerName === 'string' ? source.careerName.trim() : '',
+      showFloatingRedirect: source.showFloatingRedirect !== false,
       fields: Array.isArray(source.fields) ? (source.fields as DynamicFormField[]) : [],
     };
   });
@@ -350,7 +352,7 @@ export function useDynamicLeadForm(props: DynamicLeadFormProps) {
         utm_campaign: utmCampaign,
         external_campaign_id: externalCampaignId,
         study_program_id: studyProgramId,
-        programa_origen: props.careerName || '',
+        programa_origen: props.careerName || cfg.value.careerName || '',
         acepta_condiciones: aceptaCondiciones.value,
         acepta_publicidad: aceptaPublicidad.value,
         url_slug: currentSlug,

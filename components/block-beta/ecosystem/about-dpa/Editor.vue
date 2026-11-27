@@ -123,6 +123,7 @@ import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.v
 import EditorImage from '../../../editor-beta/EditorImage/EditorImage.vue';
 import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import { type ImageFocusProfiles } from '../../../../helpers/imageFocus';
+import { stripBundledAssetsDeep } from '../../../../helpers/bundledAssets';
 import { normalizeAboutDpaData } from './types';
 
 const props = defineProps<{
@@ -145,7 +146,7 @@ const imageFocusModes = [
 watch(
   localData,
   (val) => {
-    emit('update:modelValue', JSON.parse(JSON.stringify(val)));
+    emit('update:modelValue', stripBundledAssetsDeep(JSON.parse(JSON.stringify(val))));
   },
   { deep: true },
 );

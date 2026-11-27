@@ -1,0 +1,151 @@
+/* ==========================================================================
+   COURSE GENERAL INFO ([Datos Generales]) — ARCIS Design System
+   Figma: 2664:49752 (Desktop 1366) | 3552:13634 (Tablet 768) | 3543:38453 (Mobile 360)
+   Tolerante a sección con columna flotante vía `.course-general-info__inner` en `$ps-block-containers`.
+   ========================================================================== */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .course-general-info {
+    width: 100%;
+    background-color: var(--ds-color-background-default, #FFFFFF);
+    box-sizing: border-box;
+
+    @container (max-width: 639.98px) {
+      border-bottom: var(--ds-border-width-sm, 1px) solid var(--ds-color-border-subtle, #CCD3DC);
+    }
+  }
+
+  .course-general-info__inner {
+    width: 100%;
+    max-width: var(--ds-container-max, 1280px);
+    margin-inline: auto;
+    padding: var(--ds-spacing-xl, 64px) var(--ds-container-padding-x, 32px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-spacing-md, 32px);
+    box-sizing: border-box;
+
+    @include bp.container-down('lg') {
+      padding: var(--ds-spacing-xl, 64px) 20px;
+    }
+
+    @container (max-width: 639.98px) {
+      padding: var(--ds-spacing-lg, 48px) 16px;
+      gap: 20px;
+    }
+  }
+
+  .course-general-info__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .course-general-info__title {
+    margin: 0;
+    color: var(--ds-color-text-primary, #000000);
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: var(--ds-heading-xl, 40px);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-align: left;
+  }
+
+  .course-general-info__rule {
+    display: block;
+    width: 40px;
+    height: 2px;
+    background-color: var(--ds-color-esan-corp, #E3173E);
+    flex-shrink: 0;
+  }
+
+  .course-general-info__body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+
+    @container (max-width: 639.98px) {
+      gap: 16px;
+    }
+  }
+
+  .course-general-info__table {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  .course-general-info__row {
+    display: grid;
+    grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    padding-block: 20px;
+    border-bottom: var(--ds-border-width-sm, 1px) solid var(--ds-color-border-subtle, #CCD3DC);
+    width: 100%;
+    box-sizing: border-box;
+
+    @container (max-width: 639.98px) {
+      grid-template-columns: minmax(0, 1fr);
+      align-items: flex-start;
+      gap: 12px;
+      padding-block: 16px;
+    }
+  }
+
+  .course-general-info__label {
+    margin: 0;
+    color: var(--ds-color-text-secondary, #4F5A6C);
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: var(--ds-text-body, 16px);
+    font-weight: 600;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+
+  .course-general-info__value {
+    margin: 0;
+    min-width: 0;
+    color: var(--ds-color-text-primary, #000000);
+    word-break: break-word;
+
+    &--display {
+      font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+      font-size: var(--ds-text-body-lg, 18px);
+      font-weight: 500;
+      line-height: 1.25;
+    }
+
+    &--body {
+      font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+      font-size: var(--ds-text-body, 16px);
+      font-weight: 400;
+      line-height: 1.4;
+    }
+  }
+
+  .course-general-info__footnotes {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .course-general-info__footnote {
+    margin: 0;
+    color: var(--ds-color-text-secondary, #4F5A6C);
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: var(--ds-text-body-sm, 14px);
+    font-weight: 400;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+}

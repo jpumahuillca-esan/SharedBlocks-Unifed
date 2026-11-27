@@ -182,7 +182,7 @@ export function useChatbotLead(
         content:
           `¡Todo listo, **${clientName}**! 🎉\n\n` +
           `${customConfirmation}\n\n` +
-          `Además, te enviamos un correo oficial de bienvenida ("*Gracias por registrarte con EsanBot*") a tu correo electrónico.\n\n` +
+          `Además, te enviamos un correo oficial de confirmación desde **Arcis ESAN** a tu correo electrónico.\n\n` +
           `¡Muchos éxitos en tu camino profesional! ¿Deseas consultar alguna otra página del portal?`
       });
 

@@ -25,12 +25,20 @@
 import airplane from '../assets/icons/pictograms/airplane.svg?raw';
 import alumni from '../assets/icons/pictograms/alumni.svg?raw';
 import awards from '../assets/icons/pictograms/awards.svg?raw';
+import brainAreas from '../assets/icons/pictograms/brain-areas.svg?raw';
+import businessHierarchy from '../assets/icons/pictograms/business-hierarchy.svg?raw';
+import certificateRibbon from '../assets/icons/pictograms/certificate-ribbon.svg?raw';
 import chats from '../assets/icons/pictograms/chats.svg?raw';
+import elearning from '../assets/icons/pictograms/elearning.svg?raw';
+import facultyGroup from '../assets/icons/pictograms/faculty-group.svg?raw';
 import familyHold from '../assets/icons/pictograms/family-hold.svg?raw';
 import graduateDoc from '../assets/icons/pictograms/graduate-doc.svg?raw';
 import globe from '../assets/icons/pictograms/globe.svg?raw';
 import graduationCap from '../assets/icons/pictograms/graduation-cap.svg?raw';
 import handshake from '../assets/icons/pictograms/handshake.svg?raw';
+import ideaExchange from '../assets/icons/pictograms/idea-exchange.svg?raw';
+import practicalLearning from '../assets/icons/pictograms/practical-learning.svg?raw';
+import virtualClassroom from '../assets/icons/pictograms/virtual-classroom.svg?raw';
 
 export interface PictogramDefinition {
     /** Nombre legible para el selector del editor. */
@@ -48,16 +56,23 @@ export const PICTOGRAMS: Record<string, PictogramDefinition> = {
     airplane: { label: 'Avión — movilidad e intercambios', svg: airplane },
     alumni: { label: 'Egresado — titulación y grados', svg: alumni },
     awards: { label: 'Medalla — reconocimientos y logros', svg: awards },
+    'brain-areas': { label: 'Cerebro — variedad de áreas', svg: brainAreas },
+    'business-hierarchy': { label: 'Maletín y red — enfoque empresarial', svg: businessHierarchy },
+    'certificate-ribbon': { label: 'Certificado con cinta — acredita tu perfil', svg: certificateRibbon },
     chats: { label: 'Comunidad — personas conectadas', svg: chats },
+    elearning: { label: 'Laptop e-learning — cursos y formación digital', svg: elearning },
+    'faculty-group': { label: 'Plana docente — equipo y estudio', svg: facultyGroup },
     'family-hold': { label: 'Red — personas acompañadas', svg: familyHold },
     'graduate-doc': { label: 'Documento — programas y certificados', svg: graduateDoc },
     /*
-     * Estos tres son de trazo (stroke) y no rellenos como los demás: salen de
-     * Lucide, con el grosor ajustado para que pesen igual que los del kit.
+     * Estos son de trazo (stroke) y usan stroke="currentColor" para integrarse con tokens ARCIS.
      */
     globe: { label: 'Globo — alcance internacional', svg: globe },
     'graduation-cap': { label: 'Birrete — estudios y grados', svg: graduationCap },
     handshake: { label: 'Apretón de manos — convenios y alianzas', svg: handshake },
+    'idea-exchange': { label: 'Intercambio de ideas — metodología activa', svg: ideaExchange },
+    'practical-learning': { label: 'Aprendizaje práctico — birrete e idea', svg: practicalLearning },
+    'virtual-classroom': { label: 'Monitor aula — moderna infraestructura', svg: virtualClassroom },
 };
 
 /** Opciones listas para un <select>, en el orden del catálogo. */
