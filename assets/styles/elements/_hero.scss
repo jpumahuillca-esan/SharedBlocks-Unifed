@@ -413,6 +413,14 @@
       min-height: 0;
     }
 
+    /* La foto termina en el corte diagonal; no continúa detrás de todo el panel. */
+    .hero__media {
+      inset: 0 0 auto;
+      height: auto;
+      aspect-ratio: 4 / 3;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - var(--hero-slant)));
+    }
+
     /*
      * Hueco de la foto: reserva arriba la altura que antes ocupaba la caja 4/3
      * de la foto, para que el hero mida lo mismo. La foto en sí ya no vive
