@@ -38,7 +38,44 @@
         ></span>
       </header>
 
-      <div v-if="content.items.length" class="details-band__grid">
+      <!-- Variante 2 (Figma Talleres para Adolescentes 2679:51664): texto libre ancho completo + link -->
+      <div
+        v-if="content.layoutMode === 'narrative' && (narrativeParagraphs.length || content.linkLabel)"
+        class="details-band__narrative"
+      >
+        <div
+          v-if="narrativeParagraphs.length"
+          class="details-band__narrative-body"
+          v-bind="edit('bodyText')"
+        >
+          <p
+            v-for="(para, pIdx) in narrativeParagraphs"
+            :key="pIdx"
+            class="details-band__narrative-text"
+          >
+            <template v-for="(seg, sIdx) in para" :key="sIdx">
+              <strong v-if="seg.bold">{{ seg.text }}</strong>
+              <template v-else>{{ seg.text }}</template>
+            </template>
+          </p>
+        </div>
+
+        <AtomButton
+          v-if="content.linkLabel"
+          variant="link"
+          :negative="isOnDark"
+          :href="content.linkUrl || undefined"
+          :target="content.linkUrl ? content.linkTarget : undefined"
+          class="details-band__link"
+          v-bind="edit('linkLabel')"
+        >
+          <span>{{ content.linkLabel }}</span>
+          <AtomIcon v-if="content.linkIcon" :name="content.linkIcon" :size="16" aria-hidden="true" />
+        </AtomButton>
+      </div>
+
+      <!-- Variante 1 (Figma Landing Extended Learning 3464:28904): 2 columnas de tarjetas -->
+      <div v-else-if="content.items.length" class="details-band__grid">
         <article
           v-for="(item, index) in content.items"
           :key="item.id"
@@ -84,13 +121,15 @@
 <script setup lang="ts">
 /**
  * Banda de detalles / público objetivo en color institucional.
- * Reutiliza AtomEyebrow, AtomHeading, AtomText, AtomIcon y EditorBrandColor.
+ * Soporta tarjetas en 2 columnas o texto narrativo con enlace opcional.
  */
 import { computed, type CSSProperties } from 'vue';
+import AtomButton from '../../../atoms/AtomButton.vue';
 import AtomEyebrow from '../../../atoms/AtomEyebrow.vue';
 import AtomHeading from '../../../atoms/AtomHeading.vue';
-import AtomText from '../../../atoms/AtomText.vue';
 import AtomIcon from '../../../atoms/AtomIcon.vue';
+import AtomText from '../../../atoms/AtomText.vue';
+import { parseInlineBoldParagraphs } from '../../../../helpers/inlineMarkdown';
 import { resolveBrandContentToken } from '../../../editor-beta/EditorBrandColor/brandColors';
 import { useEditTarget } from '../../../../core/editFocus';
 import { normalizeDetailsBandData } from './types';
@@ -101,14 +140,16 @@ const edit = useEditTarget();
 const content = computed(() => normalizeDetailsBandData(props.data));
 
 const contentToken = computed(() => resolveBrandContentToken(content.value.colorToken));
-const eyebrowVariant = computed(() => (contentToken.value === '--ds-color-text-inverse' ? 'inverse' : 'brand'));
+const isOnDark = computed(() => contentToken.value === '--ds-color-text-inverse');
+const eyebrowVariant = computed(() => (isOnDark.value ? 'inverse' : 'brand'));
 
-const bandStyle = computed<CSSProperties>(() => {
-  const onDark = contentToken.value === '--ds-color-text-inverse';
-  return {
-    '--details-band-bg': `var(${content.value.colorToken})`,
-    '--details-band-fg': `var(${contentToken.value})`,
-    '--details-band-rule': onDark ? 'var(--ds-color-background-light, #F1F5F9)' : 'var(--ds-color-esan-corp, #E3173E)',
-  } as CSSProperties;
-});
+const narrativeParagraphs = computed(() => parseInlineBoldParagraphs(content.value.bodyText));
+
+const bandStyle = computed<CSSProperties>(() => ({
+  '--details-band-bg': `var(${content.value.colorToken})`,
+  '--details-band-fg': `var(${contentToken.value})`,
+  '--details-band-rule': isOnDark.value
+    ? 'var(--ds-color-background-light, #F1F5F9)'
+    : 'var(--ds-color-esan-corp, #E3173E)',
+}) as CSSProperties);
 </script>

@@ -43,14 +43,22 @@
             {{ content.objectivesTitle }}
           </AtomHeading>
 
-          <AtomText
-            v-if="content.objectivesIntro"
-            size="body"
-            class="course-about__objectives-intro"
+          <div
+            v-if="objectivesIntroParagraphs.length"
+            class="course-about__objectives-intro-group"
             v-bind="edit('objectivesIntro')"
           >
-            {{ content.objectivesIntro }}
-          </AtomText>
+            <p
+              v-for="(para, pIdx) in objectivesIntroParagraphs"
+              :key="`intro-${pIdx}`"
+              class="course-about__objectives-intro"
+            >
+              <template v-for="(seg, sIdx) in para" :key="sIdx">
+                <strong v-if="seg.bold">{{ seg.text }}</strong>
+                <template v-else>{{ seg.text }}</template>
+              </template>
+            </p>
+          </div>
 
           <ul v-if="visibleObjectives.length" class="course-about__objectives-list">
             <li
@@ -96,40 +104,18 @@
 import { computed } from 'vue';
 import AtomHeading from '../../../atoms/AtomHeading.vue';
 import AtomPictogram from '../../../atoms/AtomPictogram.vue';
-import AtomText from '../../../atoms/AtomText.vue';
+import { parseInlineBoldParagraphs } from '../../../../helpers/inlineMarkdown';
 import { useEditTarget } from '../../../../core/editFocus';
 import { normalizeCourseAboutData } from './types';
-
-interface TextSegment {
-  text: string;
-  bold: boolean;
-}
 
 const props = defineProps<{ data: any }>();
 const edit = useEditTarget();
 
 const content = computed(() => normalizeCourseAboutData(props.data));
 
-const parseInlineBold = (line: string): TextSegment[] => {
-  const parts = line.split(/(\*\*[^*]+\*\*)/g);
-  return parts
-    .filter(Boolean)
-    .map((part) =>
-      part.startsWith('**') && part.endsWith('**') && part.length > 4
-        ? { text: part.slice(2, -2), bold: true }
-        : { text: part, bold: false },
-    );
-};
+const paragraphs = computed(() => parseInlineBoldParagraphs(content.value.description));
 
-const paragraphs = computed<TextSegment[][]>(() => {
-  const text = content.value.description.trim();
-  if (!text) return [];
-  return text
-    .split(/\n{2,}/)
-    .map((block) => block.trim())
-    .filter(Boolean)
-    .map(parseInlineBold);
-});
+const objectivesIntroParagraphs = computed(() => parseInlineBoldParagraphs(content.value.objectivesIntro));
 
 const visibleObjectives = computed(() =>
   content.value.objectives

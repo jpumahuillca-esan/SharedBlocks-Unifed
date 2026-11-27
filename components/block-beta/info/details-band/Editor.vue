@@ -51,67 +51,124 @@
       </p>
     </div>
 
+    <div class="mb-3">
+      <label class="form-label small fw-bold d-block">Formato del contenido</label>
+      <div class="btn-group w-100" role="group" aria-label="Formato del contenido">
+        <button
+          v-for="opt in LAYOUT_OPTIONS"
+          :key="opt.value"
+          type="button"
+          class="btn btn-sm"
+          :class="localData.layoutMode === opt.value ? 'btn-secondary' : 'btn-outline-secondary'"
+          @click="localData.layoutMode = opt.value"
+        >
+          {{ opt.label }}
+        </button>
+      </div>
+    </div>
+
     <hr />
 
-    <div class="d-flex align-items-center justify-content-between mb-1">
-      <h6 class="fw-bold small text-uppercase m-0">Perfiles / Puntos clave</h6>
-      <span class="badge bg-secondary">{{ localData.items.length }}/{{ rules.maxItems }}</span>
-    </div>
-    <p class="db-hint">
-      Se muestran en 2 columnas en PC/Tablet y apilados en móvil.
-    </p>
+    <template v-if="localData.layoutMode === 'narrative'">
+      <h6 class="fw-bold small text-uppercase mb-2">Texto narrativo y enlace</h6>
 
-    <CardAccordionItem
-      v-for="(item, index) in localData.items"
-      :key="item.id"
-      :edit-key="`items.${index}`"
-      :title="item.title || `Detalle ${index + 1}`"
-      :index="index"
-      :total="localData.items.length"
-      :open="openIndex === index"
-      remove-label="Quitar detalle"
-      @toggle="toggle(index)"
-      @move="moveItem(index, $event)"
-      @remove="removeItem(index)"
-    >
-      <div>
-        <EditorIcon
-          v-model="item.icon"
-          data-edit-target=".icon"
-          class="mb-2"
-          label="Ícono (opcional)"
-          hint="Opcional (32×32 px). Déjalo vacío para ocultarlo."
-        />
+      <EditorTextarea
+        v-model="localData.bodyText"
+        data-edit-target="bodyText"
+        class="mb-3"
+        label="Descripción principal"
+        :rows="5"
+        :maxlength="rules.bodyText.maxLength"
+        placeholder="**Adolescentes de 14 a 17 años** que quieren descubrir sus talentos..."
+        hint="Separa párrafos con Enter doble. Usa **texto** para resaltar en negrita."
+      />
 
-        <EditorText
-          v-model="item.title"
-          data-edit-target=".title"
-          class="mb-2"
-          label="Título"
-          :maxlength="rules.item.title.maxLength"
-          placeholder="A futuros profesionales"
-        />
+      <EditorText
+        v-model="localData.linkLabel"
+        data-edit-target="linkLabel"
+        class="mb-2"
+        label="Texto del enlace inferior (opcional)"
+        :maxlength="rules.linkLabel.maxLength"
+        placeholder="Conoce el protocolo para cursos presenciales"
+      />
 
-        <EditorTextarea
-          v-model="item.desc"
-          data-edit-target=".desc"
-          class="mb-1"
-          label="Descripción"
-          :rows="3"
-          :maxlength="rules.item.desc.maxLength"
-          placeholder="Si eres estudiante y deseas fortalecer tus habilidades..."
-        />
+      <EditorUrl
+        v-model="localData.linkUrl"
+        v-model:target="localData.linkTarget"
+        class="mb-2"
+        label="Destino del enlace"
+        placeholder="/universidad/extended-learning/... o https://..."
+      />
+
+      <EditorIcon
+        v-model="localData.linkIcon"
+        class="mb-1"
+        label="Ícono del enlace (opcional)"
+        hint="Ej. chevron-down o arrow-right. Déjalo vacío para ocultarlo."
+      />
+    </template>
+
+    <template v-else>
+      <div class="d-flex align-items-center justify-content-between mb-1">
+        <h6 class="fw-bold small text-uppercase m-0">Perfiles / Puntos clave</h6>
+        <span class="badge bg-secondary">{{ localData.items.length }}/{{ rules.maxItems }}</span>
       </div>
-    </CardAccordionItem>
+      <p class="db-hint">
+        Se muestran en 2 columnas en PC/Tablet y apilados en móvil.
+      </p>
 
-    <button
-      type="button"
-      class="btn btn-sm btn-danger w-100 mt-2"
-      :disabled="localData.items.length >= rules.maxItems"
-      @click="addItem"
-    >
-      <i class="las la-plus me-1"></i> Agregar detalle
-    </button>
+      <CardAccordionItem
+        v-for="(item, index) in localData.items"
+        :key="item.id"
+        :edit-key="`items.${index}`"
+        :title="item.title || `Detalle ${index + 1}`"
+        :index="index"
+        :total="localData.items.length"
+        :open="openIndex === index"
+        remove-label="Quitar detalle"
+        @toggle="toggle(index)"
+        @move="moveItem(index, $event)"
+        @remove="removeItem(index)"
+      >
+        <div>
+          <EditorIcon
+            v-model="item.icon"
+            data-edit-target=".icon"
+            class="mb-2"
+            label="Ícono (opcional)"
+            hint="Opcional (32×32 px). Déjalo vacío para ocultarlo."
+          />
+
+          <EditorText
+            v-model="item.title"
+            data-edit-target=".title"
+            class="mb-2"
+            label="Título"
+            :maxlength="rules.item.title.maxLength"
+            placeholder="A futuros profesionales"
+          />
+
+          <EditorTextarea
+            v-model="item.desc"
+            data-edit-target=".desc"
+            class="mb-1"
+            label="Descripción"
+            :rows="3"
+            :maxlength="rules.item.desc.maxLength"
+            placeholder="Si eres estudiante y deseas fortalecer tus habilidades..."
+          />
+        </div>
+      </CardAccordionItem>
+
+      <button
+        type="button"
+        class="btn btn-sm btn-danger w-100 mt-2"
+        :disabled="localData.items.length >= rules.maxItems"
+        @click="addItem"
+      >
+        <i class="las la-plus me-1"></i> Agregar detalle
+      </button>
+    </template>
   </div>
 </template>
 
@@ -122,11 +179,13 @@ import EditorBrandColor from '../../../editor-beta/EditorBrandColor/EditorBrandC
 import EditorIcon from '../../../editor-beta/EditorIcon/EditorIcon.vue';
 import EditorText from '../../../editor-beta/EditorText/EditorText.vue';
 import EditorTextarea from '../../../editor-beta/EditorTextarea/EditorTextarea.vue';
+import EditorUrl from '../../../editor-beta/EditorUrl/EditorUrl.vue';
 import {
   DETAILS_BAND_CONTENT_RULES,
   createEmptyDetailsBandItem,
   normalizeDetailsBandData,
   type DetailsBandContentWidth,
+  type DetailsBandLayoutMode,
 } from './types';
 
 const props = defineProps<{ modelValue: any }>();
@@ -139,6 +198,11 @@ const openIndex = ref<number | null>(0);
 const WIDTH_OPTIONS: Array<{ value: DetailsBandContentWidth; label: string }> = [
   { value: 'full', label: 'Completo (100%)' },
   { value: 'wide', label: 'Compacto (838px)' },
+];
+
+const LAYOUT_OPTIONS: Array<{ value: DetailsBandLayoutMode; label: string }> = [
+  { value: 'columns', label: 'Tarjetas (2 cols)' },
+  { value: 'narrative', label: 'Texto + enlace' },
 ];
 
 const toggle = (index: number) => {

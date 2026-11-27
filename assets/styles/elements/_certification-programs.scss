@@ -1,0 +1,441 @@
+/* ==========================================================================
+   CERTIFICATION PROGRAMS (Acordeones numerados 01/02 + PowerPay + Notas)
+   ARCIS Design System — ESAN University (Extended Learning)
+   Figma:
+     - Certificaciones: 3262:5701 (1366) | 3552:14982 (768) | 3543:39895 (360)
+     - CFA Nivel I y II: 3262:17330 (1366) | 3552:14987 (768) | 3543:40738 (360)
+   Tolerante a columna lateral flotante (`ps-columns--float`) vía `.certification-programs__inner`.
+   ========================================================================== */
+
+@use '../breakpoints' as bp;
+
+.arcis-scope {
+  .certification-programs {
+    width: 100%;
+    background-color: var(--ds-color-background-default, #FFFFFF);
+    box-sizing: border-box;
+  }
+
+  .certification-programs__inner {
+    width: 100%;
+    max-width: var(--ds-container-max, 1280px);
+    margin-inline: auto;
+    padding: 48px var(--ds-container-padding-x, 32px) 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    box-sizing: border-box;
+
+    @include bp.container-down('lg') {
+      padding: 48px 20px;
+    }
+
+    @container (max-width: 639.98px) {
+      padding: 36px 16px 48px;
+      gap: 24px;
+    }
+  }
+
+  .certification-programs__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .certification-programs__eyebrow {
+    margin: 0;
+  }
+
+  .certification-programs__title {
+    margin: 0;
+    color: var(--ds-color-text-primary, #000000);
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: var(--ds-heading-lg, 32px);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+
+    @container (max-width: 639.98px) {
+      font-size: var(--ds-heading-sm, 20px);
+    }
+  }
+
+  .certification-programs__rule {
+    display: block;
+    width: 40px;
+    height: 2px;
+    background-color: var(--ds-color-esan-corp, #E3173E);
+    flex-shrink: 0;
+  }
+
+  .certification-programs__body {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+  }
+
+  /* ------------------------------------------------------------------------
+     Acordeones Collapse-programs
+     ------------------------------------------------------------------------ */
+  .certification-programs__list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .cert-program {
+    width: 100%;
+    background-color: var(--ds-color-background-default, #FFFFFF);
+    border: var(--ds-border-width-sm, 1px) solid var(--ds-color-border-subtle, #CCD3DC);
+    border-top: 4px solid var(--ds-color-esan-corp, #E3173E);
+    border-radius: var(--ds-radius-sm, 8px);
+    overflow: hidden;
+    box-sizing: border-box;
+    transition: box-shadow var(--ds-ease-base, 250ms ease);
+
+    &.is-open {
+      box-shadow: var(--ds-shadow-sm, 0 2px 8px rgb(9 8 31 / 0.08));
+    }
+  }
+
+  .cert-program__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    padding: 20px;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    box-sizing: border-box;
+
+    @container (max-width: 639.98px) {
+      padding: 16px;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--ds-color-esan-corp, #E3173E);
+      outline-offset: -2px;
+    }
+  }
+
+  .cert-program__trigger-main {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .cert-program__number {
+    flex-shrink: 0;
+    color: var(--ds-color-esan-corp, #E3173E);
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: var(--ds-heading-sm, 24px);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+
+    @container (max-width: 639.98px) {
+      font-size: 20px;
+    }
+  }
+
+  .cert-program__title {
+    flex: 1 1 auto;
+    min-width: 0;
+    color: var(--ds-color-text-primary, #000000);
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: var(--ds-heading-sm, 24px);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    word-break: break-word;
+
+    @container (max-width: 639.98px) {
+      font-size: 20px;
+    }
+  }
+
+  .cert-program__toggle-icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    color: var(--ds-color-text-primary, #0A1319);
+  }
+
+  .cert-program__body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 20px 24px;
+    width: 100%;
+    box-sizing: border-box;
+
+    @container (max-width: 639.98px) {
+      padding: 0 16px 20px;
+    }
+  }
+
+  .cert-program__description {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .cert-program__text {
+    margin: 0;
+    color: var(--ds-color-text-primary, #000000);
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: var(--ds-text-body, 16px);
+    font-weight: 400;
+    line-height: 1.4;
+    word-break: break-word;
+
+    strong {
+      font-weight: 700;
+    }
+  }
+
+  .cert-program__subsection {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .cert-program__subtitle {
+    margin: 0;
+    color: var(--ds-color-text-primary, #000000);
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: var(--ds-heading-sm, 24px);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+
+    @container (max-width: 639.98px) {
+      font-size: 20px;
+    }
+  }
+
+  .cert-program__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .cert-program__cal-link.btn.btn--link,
+  .cert-program__sec-link.btn.btn--link {
+    padding-inline: 0;
+    min-height: 48px;
+  }
+
+  .cert-program__cal-btn.btn.btn--secondary {
+    min-height: 48px;
+    padding-inline: 24px;
+    gap: 8px;
+  }
+
+  /* Listas con viñeta cuadrada roja (Objetivos / Cursos y Talleres) */
+  .cert-program__bullet-list {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: 100%;
+  }
+
+  .cert-program__bullet-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding-block: 12px;
+    border-top: var(--ds-border-width-sm, 1px) solid var(--ds-color-border-subtle, #CCD3DC);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .cert-program__bullet {
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &::before {
+      content: '';
+      display: block;
+      width: 8px;
+      height: 8px;
+      background-color: var(--ds-color-esan-corp, #E3173E);
+    }
+  }
+
+  .cert-program__bullet-text {
+    flex: 1 1 auto;
+    min-width: 0;
+    color: var(--ds-color-text-primary, #000000);
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: var(--ds-text-body, 16px);
+    font-weight: 400;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+
+  /* Tabla de Información general dentro de cada acordeón */
+  .cert-program__info-table {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  .cert-program__info-row {
+    display: grid;
+    grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    padding-block: 20px;
+    border-bottom: var(--ds-border-width-sm, 1px) solid var(--ds-color-border-subtle, #CCD3DC);
+    width: 100%;
+    box-sizing: border-box;
+
+    @container (max-width: 639.98px) {
+      grid-template-columns: minmax(0, 1fr);
+      align-items: flex-start;
+      gap: 12px;
+      padding-block: 16px;
+    }
+  }
+
+  .cert-program__info-label {
+    margin: 0;
+    color: var(--ds-color-text-secondary, #4F5A6C);
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: var(--ds-text-body, 16px);
+    font-weight: 600;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+
+  .cert-program__info-value {
+    margin: 0;
+    min-width: 0;
+    color: var(--ds-color-text-primary, #000000);
+    word-break: break-word;
+  }
+
+  .cert-program__info-text--display {
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: var(--ds-text-body-lg, 18px);
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  .cert-program__info-text--body {
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: var(--ds-text-body, 16px);
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .cert-program__info-bullets {
+    margin: 0;
+    padding-left: 20px;
+    list-style: disc;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-family: var(--ds-font-family-display, 'Bricolage Grotesque', sans-serif);
+    font-size: var(--ds-text-body-lg, 18px);
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--ds-color-text-primary, #000000);
+  }
+
+  /* ------------------------------------------------------------------------
+     Banda Formas de Pago (PowerPay) + Notas Legales
+     ------------------------------------------------------------------------ */
+  .certification-programs__payment {
+    display: grid;
+    grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    padding-block: 20px;
+    border-bottom: var(--ds-border-width-sm, 1px) solid var(--ds-color-border-subtle, #CCD3DC);
+    width: 100%;
+    box-sizing: border-box;
+
+    @container (max-width: 639.98px) {
+      grid-template-columns: minmax(0, 1fr);
+      align-items: flex-start;
+      gap: 16px;
+      padding-block: 16px;
+    }
+  }
+
+  .certification-programs__payment-label {
+    margin: 0;
+    color: var(--ds-color-text-secondary, #4F5A6C);
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: var(--ds-text-body, 16px);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .certification-programs__payment-detail {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  .certification-programs__payment-text {
+    margin: 0;
+    color: var(--ds-color-text-primary, #000000);
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: var(--ds-text-body, 16px);
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .certification-programs__payment-logo {
+    display: block;
+    width: 165px;
+    height: 48px;
+    object-fit: contain;
+  }
+
+  .certification-programs__footnotes {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .certification-programs__footnote {
+    margin: 0;
+    color: var(--ds-color-text-secondary, #4F5A6C);
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: var(--ds-text-body-sm, 14px);
+    font-weight: 400;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+}

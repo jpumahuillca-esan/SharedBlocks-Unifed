@@ -35,7 +35,8 @@
 
   /* Mantiene el ancho útil de 838px en escritorio cuando convive sin sección flotante */
   .details-band--wide .details-band__header,
-  .details-band--wide .details-band__grid {
+  .details-band--wide .details-band__grid,
+  .details-band--wide .details-band__narrative {
     max-width: 838px;
 
     @include bp.container-down('lg') {
@@ -134,5 +135,46 @@
     font-size: var(--ds-text-body, 16px);
     font-weight: 400;
     line-height: 1.375;
+  }
+
+  .details-band__narrative {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .details-band__narrative-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .details-band__narrative-text {
+    margin: 0;
+    color: var(--details-band-fg, #FFFFFF);
+    font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+    font-size: var(--ds-text-body-lg, 18px);
+    font-weight: 400;
+    line-height: 1.4;
+    word-break: break-word;
+
+    strong {
+      font-weight: 700;
+    }
+
+    @include bp.container-down('sm') {
+      font-size: var(--ds-text-body, 16px);
+    }
+  }
+
+  .details-band__link.btn.btn--link {
+    padding-inline: 0;
+    min-height: 48px;
+    justify-content: flex-start;
+    white-space: normal;
+    text-align: left;
   }
 }

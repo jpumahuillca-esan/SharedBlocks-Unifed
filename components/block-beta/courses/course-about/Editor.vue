@@ -39,9 +39,10 @@
       data-edit-target="objectivesIntro"
       class="mb-2"
       label="Texto introductorio"
-      :rows="2"
+      :rows="3"
       :maxlength="rules.objectivesIntro.maxLength"
       placeholder="Al final de este curso, esperamos que cada estudiante logre lo siguiente:"
+      hint="Separa párrafos con Enter doble. Usa **texto** para resaltar en negrita."
     />
 
     <div class="d-flex align-items-center justify-content-between mb-1">

@@ -22,7 +22,7 @@ export const COURSE_ABOUT_RULES = {
   title: { maxLength: 120 },
   description: { maxLength: 2400 },
   objectivesTitle: { maxLength: 120 },
-  objectivesIntro: { maxLength: 240 },
+  objectivesIntro: { maxLength: 1200 },
   objectiveText: { maxLength: 240 },
   highlightText: { maxLength: 90 },
   maxHighlights: 8,

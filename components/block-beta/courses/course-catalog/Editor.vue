@@ -33,6 +33,15 @@
       />
     </div>
 
+    <EditorText
+      v-model="localData.eyebrow"
+      data-edit-target="eyebrow"
+      class="mb-2"
+      label="Antetítulo (opcional)"
+      :maxlength="rules.eyebrow.maxLength"
+      placeholder="Nuestra oferta académica"
+    />
+
     <EditorTextarea
       v-model="localData.title"
       data-edit-target="title"
@@ -41,6 +50,15 @@
       :rows="2"
       :maxlength="rules.title.maxLength"
       placeholder="Explora nuestros cursos y talleres"
+    />
+
+    <EditorText
+      v-model="localData.eyebrow"
+      data-edit-target="eyebrow"
+      class="mb-2"
+      label="Antetítulo (opcional)"
+      :maxlength="rules.eyebrow.maxLength"
+      placeholder="Nuestra oferta académica"
     />
 
     <EditorTextarea
@@ -52,6 +70,69 @@
       :maxlength="rules.subtitle.maxLength"
       placeholder="Opcional: texto breve bajo la línea de acento"
     />
+
+    <div class="mb-3">
+      <label class="form-label small fw-bold d-block">Diseño del catálogo</label>
+      <div class="btn-group w-100 mb-2" role="group" aria-label="Diseño del catálogo">
+        <button
+          type="button"
+          class="btn btn-sm"
+          :class="localData.layoutMode === 'sidebar-grid' ? 'btn-secondary' : 'btn-outline-secondary'"
+          @click="setLayoutMode('sidebar-grid')"
+        >
+          Sidebar + filtros
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm"
+          :class="localData.layoutMode === 'top-search-grid' ? 'btn-secondary' : 'btn-outline-secondary'"
+          @click="setLayoutMode('top-search-grid')"
+        >
+          Buscador superior (Talleres)
+        </button>
+      </div>
+
+      <div class="row g-2 mb-2">
+        <div class="col-6">
+          <label class="form-label small fw-semibold mb-1">Columnas (PC)</label>
+          <div class="btn-group w-100" role="group">
+            <button
+              type="button"
+              class="btn btn-sm"
+              :class="localData.columns === 2 ? 'btn-secondary' : 'btn-outline-secondary'"
+              @click="localData.columns = 2"
+            >
+              2 cols
+            </button>
+            <button
+              type="button"
+              class="btn btn-sm"
+              :class="localData.columns === 3 ? 'btn-secondary' : 'btn-outline-secondary'"
+              @click="localData.columns = 3"
+            >
+              3 cols
+            </button>
+          </div>
+        </div>
+        <div class="col-6">
+          <label class="form-label small fw-semibold mb-1">Fondo de sección</label>
+          <select v-model="localData.backgroundToken" class="form-select form-select-sm">
+            <option v-for="bg in CATALOG_BACKGROUND_OPTIONS" :key="bg.value || 'white'" :value="bg.value">
+              {{ bg.label }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <EditorText
+        v-if="localData.layoutMode === 'top-search-grid' && localData.showSearchFilter"
+        v-model="localData.searchPlaceholder"
+        data-edit-target="searchPlaceholder"
+        label="Placeholder de búsqueda superior"
+        :maxlength="rules.searchPlaceholder.maxLength"
+        placeholder="Buscar curso por nombre"
+      />
+    </div>
 
     <div class="mb-3">
       <label class="form-label small fw-bold d-block">Jerarquía semántica (SEO)</label>
@@ -172,7 +253,7 @@
         class="form-range"
         :min="rules.minPerPage"
         :max="rules.maxPerPage"
-        step="2"
+        step="1"
       />
     </div>
 
@@ -185,18 +266,20 @@
         <input id="cc-f-search" v-model="localData.showSearchFilter" type="checkbox" class="form-check-input" />
         <label for="cc-f-search" class="form-check-label small">Filtro "Buscar por nombre"</label>
       </div>
-      <div class="form-check form-switch">
-        <input id="cc-f-cat" v-model="localData.showCategoryFilter" type="checkbox" class="form-check-input" />
-        <label for="cc-f-cat" class="form-check-label small">Filtro "Área de interés"</label>
-      </div>
-      <div class="form-check form-switch">
-        <input id="cc-f-mod" v-model="localData.showModalityFilter" type="checkbox" class="form-check-input" />
-        <label for="cc-f-mod" class="form-check-label small">Filtro "Modalidad"</label>
-      </div>
-      <div class="form-check form-switch">
-        <input id="cc-f-start" v-model="localData.showStartDateFilter" type="checkbox" class="form-check-input" />
-        <label for="cc-f-start" class="form-check-label small">Filtro "Inicio" (fechas)</label>
-      </div>
+      <template v-if="localData.layoutMode === 'sidebar-grid'">
+        <div class="form-check form-switch">
+          <input id="cc-f-cat" v-model="localData.showCategoryFilter" type="checkbox" class="form-check-input" />
+          <label for="cc-f-cat" class="form-check-label small">Filtro "Área de interés"</label>
+        </div>
+        <div class="form-check form-switch">
+          <input id="cc-f-mod" v-model="localData.showModalityFilter" type="checkbox" class="form-check-input" />
+          <label for="cc-f-mod" class="form-check-label small">Filtro "Modalidad"</label>
+        </div>
+        <div class="form-check form-switch">
+          <input id="cc-f-start" v-model="localData.showStartDateFilter" type="checkbox" class="form-check-input" />
+          <label for="cc-f-start" class="form-check-label small">Filtro "Inicio" (fechas)</label>
+        </div>
+      </template>
     </div>
 
     <EditorText
@@ -209,10 +292,54 @@
 
     <EditorText
       v-model="localData.syllabusCtaLabel"
+      class="mb-3"
       label="Enlace secundario de tarjeta"
       :maxlength="rules.syllabusCtaLabel.maxLength"
       placeholder="Ver temario"
     />
+
+    <hr />
+
+    <div class="form-check form-switch mb-2">
+      <input
+        id="cc-show-alert"
+        v-model="localData.showBottomAlert"
+        type="checkbox"
+        class="form-check-input"
+      />
+      <label for="cc-show-alert" class="form-check-label small fw-bold text-uppercase">
+        Alerta informativa inferior
+      </label>
+    </div>
+
+    <div v-if="localData.showBottomAlert" class="ps-2 border-start border-2 mb-2">
+      <div class="mb-2">
+        <label class="form-label small fw-semibold mb-1">Variante de alerta</label>
+        <select v-model="localData.bottomAlertVariant" class="form-select form-select-sm">
+          <option value="info">Información (Azul)</option>
+          <option value="warning">Advertencia (Ámbar)</option>
+          <option value="success">Éxito (Verde)</option>
+          <option value="error">Crítico (Rojo)</option>
+        </select>
+      </div>
+
+      <EditorText
+        v-model="localData.bottomAlertTitle"
+        class="mb-2"
+        label="Título de alerta"
+        :maxlength="rules.bottomAlertTitle.maxLength"
+        placeholder="Importante:"
+      />
+
+      <EditorTextarea
+        v-model="localData.bottomAlertText"
+        data-edit-target="bottomAlertText"
+        label="Mensaje informativo"
+        :rows="3"
+        :maxlength="rules.bottomAlertText.maxLength"
+        placeholder="Los cupos son limitados. La matrícula para cursos presenciales..."
+      />
+    </div>
   </div>
 </template>
 
@@ -221,10 +348,12 @@ import { onMounted, ref, watch } from 'vue';
 import { PUBLIC_API_URL } from '../../../../config/apiConfig';
 import { useBreadcrumb } from '../../../../composables/useBreadcrumb';
 import {
+  CATALOG_BACKGROUND_OPTIONS,
   COURSE_CATALOG_RULES,
   COURSE_TYPE_OPTIONS,
   normalizeCourseCatalogData,
   type CourseCatalogData,
+  type CourseCatalogLayoutMode,
 } from './types';
 
 interface CourseCategoryOption {
@@ -283,6 +412,17 @@ const toggleCourseType = (typeValue: string, checked: boolean) => {
   localData.value.course_types = Array.from(next);
   localData.value.course_type = localData.value.course_types.join(',');
   loadCategories();
+};
+
+const setLayoutMode = (mode: CourseCatalogLayoutMode) => {
+  localData.value.layoutMode = mode;
+  if (mode === 'top-search-grid') {
+    localData.value.columns = 3;
+    if (localData.value.perPage === 10) localData.value.perPage = 9;
+  } else if (mode === 'sidebar-grid') {
+    localData.value.columns = 2;
+    if (localData.value.perPage === 9) localData.value.perPage = 10;
+  }
 };
 
 const onUnitSelected = () => {

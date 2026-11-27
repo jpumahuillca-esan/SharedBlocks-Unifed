@@ -45,6 +45,7 @@ export const EDITOR_REGISTRY: Record<string, any> = {
     CourseAbout: defineAsyncComponent(() => import('../components/block-beta/courses/course-about/Editor.vue')),
     CourseFaculty: defineAsyncComponent(() => import('../components/block-beta/courses/course-faculty/Editor.vue')),
     CourseGeneralInfo: defineAsyncComponent(() => import('../components/block-beta/courses/course-general-info/Editor.vue')),
+    CertificationPrograms: defineAsyncComponent(() => import('../components/block-beta/courses/certification-programs/Editor.vue')),
     CourseRelated: defineAsyncComponent(() => import('../components/block-beta/courses/course-related/Editor.vue')),
     Breadcrumb: defineAsyncComponent(() => import('../components/block-beta/navigation/breadcrumb/Editor.vue')),
     FaqAccordion: defineAsyncComponent(() => import('../components/block-beta/faq/faq-accordion/Editor.vue')),
